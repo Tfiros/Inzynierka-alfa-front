@@ -1,8 +1,11 @@
 import { Link, NavLink } from 'react-router-dom'
 import { User as UserIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useState } from 'react'
+import AuthModal from '@/shared/AuthModal'
 
 export default function TopNav() {
+  const [openRegisterModal, setOpenRegisterModal] = useState(false)
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 w-full items-center justify-between px-6">
@@ -27,6 +30,18 @@ export default function TopNav() {
               <UserIcon className="h-5 w-5" />
             </Link>
           </Button>
+          <Button
+            onClick={() => {
+              setOpenRegisterModal(true)
+            }}
+            className="bg-black text-white hover:bg-black/90 cursor-pointer"
+          >
+            Register
+          </Button>
+          <AuthModal
+            open={openRegisterModal}
+            onOpenChange={setOpenRegisterModal}
+          />
         </nav>
       </div>
     </header>
