@@ -36,7 +36,7 @@ export default function TopNav() {
             }}
             className="bg-black text-white hover:bg-black/90 cursor-pointer"
           >
-            Register
+            Zaloguj się
           </Button>
           <AuthModal
             open={openRegisterModal}

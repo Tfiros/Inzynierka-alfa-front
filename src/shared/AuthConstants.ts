@@ -10,8 +10,7 @@ export const authTitles: Record<AuthModalView, string> = {
 }
 
 export const authDescriptions: Record<AuthModalView, string> = {
-  login:
-    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat accusamus officia itaque',
+  login: 'Zaloguj się, aby zacząć korzystać z wszystkich funkcji CrossTrade',
   register:
     'Utwórz konto, aby zacząć korzystać z wszystkich funkcji CrossTrade',
   'forgot-email': 'Wprowadź swój email, aby otrzymać kod do zresetowania hasła',
