@@ -1,9 +1,9 @@
 import { Outlet } from 'react-router-dom'
-import TopNav from './navbar'
-import Footer from './footer'
-import QuestNavbar from './unLoggednavbar'
-export default function MainLayout() {
-  const isLogged = true
+import {TopNav} from './navbar/views/navbar'
+import {Footer} from './footer'
+import QuestNavbar from './navbar/unLoggednavbar'
+export const MainLayout = () => {
+  const isLogged = true;
   return (
     <div className="flex min-h-screen flex-col">
       {isLogged ? <TopNav /> : <QuestNavbar />}

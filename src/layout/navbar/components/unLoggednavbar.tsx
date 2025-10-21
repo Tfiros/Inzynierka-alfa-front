@@ -1,5 +1,5 @@
-import { Link, NavLink } from 'react-router-dom'
-import { User as UserIcon } from 'lucide-react'
+import { Link } from 'react-router-dom'
+//import { User as UserIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import CrossTradeLogo from '@/photos/CrossTradeLogo.png'
 
@@ -35,17 +35,3 @@ export default function TopNav() {
   )
 }
 
-function NavItem({ to, label }: { to: string; label: string }) {
-  return (
-    <NavLink
-      to={to}
-      className={({ isActive }) =>
-        `transition-colors hover:text-foreground ${
-          isActive ? 'text-foreground' : 'text-foreground/70'
-        }`
-      }
-    >
-      {label}
-    </NavLink>
-  )
-}

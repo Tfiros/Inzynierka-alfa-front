@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import HomeDashboard from '@/homeDashboard/homeDashboard'
-import MainLayout from '@/layout/MainLayout'
-import LandingPage from './landingPage/landingPage'
+import {MainDashboard} from '@/homeDashboard/views/MainDashboard'
+import {MainLayout} from '@/layout/MainLayout'
+import {LandingPage} from './landingPage/landingPage'
 import './App.css'
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
-          <Route path="/dashboard" element={<HomeDashboard />} />
+          <Route path="/dashboard" element={<MainDashboard />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="oferty" element={<div>Oferty</div>} />
           <Route path="faqs" element={<div>FAQs</div>} />
