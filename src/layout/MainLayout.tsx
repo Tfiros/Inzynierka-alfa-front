@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { UserNavbar} from './navbar/views/UserNavbar'
-import { Footer } from './Footer';
+import { Footer } from './Footer.tsx';
 import GuestNavbar from './navbar/views/GuestNavbar';
 export const MainLayout = () => {
   const isLogged = true;
