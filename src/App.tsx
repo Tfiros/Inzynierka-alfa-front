@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import {MainDashboard} from '@/homeDashboard/views/MainDashboard'
 import {MainLayout} from '@/layout/MainLayout'
-import {LandingPage} from './landingPage/LandingPage'
+import {LandingPage} from '@/landingPage/LandingPage'
 import './App.css'
 
 function App() {
