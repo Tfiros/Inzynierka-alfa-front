@@ -14,7 +14,7 @@ export const ProfileMenu = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="rounded-full"
+                  className="rounded-full cursor-pointer"
                   aria-label="Profil"
                   title="Profil"
                 >
