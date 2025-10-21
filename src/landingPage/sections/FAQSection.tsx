@@ -3,7 +3,7 @@ import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "@/components/ui/accordion";
+} from '@/components/ui/accordion'
 
 export const FAQSection = () => {
   return (
@@ -21,9 +21,10 @@ export const FAQSection = () => {
             <AccordionTrigger className="cursor-pointer">
               Jak działa CrossTrade?
             </AccordionTrigger>
-            <AccordionContent>
-              Tworzysz ofertę wymiany lub korzystasz z CrossCoins. System automatycznie
-              przeprowadza transakcję po akceptacji drugiej strony.
+            <AccordionContent className="text-left">
+              Tworzysz ofertę wymiany lub korzystasz z CrossCoins. System
+              automatycznie przeprowadza transakcję po akceptacji drugiej
+              strony.
             </AccordionContent>
           </AccordionItem>
 
@@ -31,9 +32,9 @@ export const FAQSection = () => {
             <AccordionTrigger className="cursor-pointer">
               Czy korzystanie z platformy jest bezpłatne?
             </AccordionTrigger>
-            <AccordionContent>
-              Przeglądanie i wystawianie ofert jest darmowe. Prowizja pojawia się dopiero
-              przy finalizacji wymiany / zakupie CrossCoins.
+            <AccordionContent className="text-left">
+              Przeglądanie i wystawianie ofert jest darmowe. Prowizja pojawia
+              się dopiero przy finalizacji wymiany / zakupie CrossCoins.
             </AccordionContent>
           </AccordionItem>
 
@@ -41,9 +42,9 @@ export const FAQSection = () => {
             <AccordionTrigger className="cursor-pointer">
               Jak zapewniacie bezpieczeństwo transakcji?
             </AccordionTrigger>
-            <AccordionContent>
-              Weryfikujemy konta, monitorujemy anomalie, a escrow trzyma przedmioty do czasu
-              akceptacji obu stron.
+            <AccordionContent className="text-left">
+              Weryfikujemy konta, monitorujemy anomalie, a escrow trzyma
+              przedmioty do czasu akceptacji obu stron.
             </AccordionContent>
           </AccordionItem>
 
@@ -51,8 +52,9 @@ export const FAQSection = () => {
             <AccordionTrigger className="cursor-pointer">
               Jakie itemki mogę wymieniać?
             </AccordionTrigger>
-            <AccordionContent>
-              Obsługujemy m.in. CS:GO, Dota 2, Rust, TF2 i kolejne tytuły — listę znajdziesz w aplikacji.
+            <AccordionContent className="text-left">
+              Obsługujemy m.in. CS:GO, Dota 2, Rust, TF2 i kolejne tytuły —
+              listę znajdziesz w aplikacji.
             </AccordionContent>
           </AccordionItem>
 
@@ -60,12 +62,13 @@ export const FAQSection = () => {
             <AccordionTrigger className="cursor-pointer">
               Czy mogę anulować wymianę?
             </AccordionTrigger>
-            <AccordionContent>
-              Tak, dopóki druga strona nie zaakceptuje transakcji. Po akceptacji obowiązują zasady escrow.
+            <AccordionContent className="text-left">
+              Tak, dopóki druga strona nie zaakceptuje transakcji. Po akceptacji
+              obowiązują zasady escrow.
             </AccordionContent>
           </AccordionItem>
         </Accordion>
       </div>
     </section>
-  );
-};
+  )
+}
