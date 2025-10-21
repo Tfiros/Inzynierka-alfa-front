@@ -1,5 +1,6 @@
-import { Step } from "../components/Step";
+
 import { Handshake, Search, DownloadCloud } from "lucide-react";
+import Tile from "../components/Tile";
 
 export const HowItWorksSection = () => {
   return (
@@ -10,20 +11,17 @@ export const HowItWorksSection = () => {
       </p>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <Step
-          number="1"
+        <Tile
           title="Przeglądaj itemki"
           description="Znajdź itemki z Twoich ulubionych gier wśród tysięcy dostępnych przedmiotów."
           icon={<Search className="h-6 w-6" aria-hidden="true" />}
         />
-        <Step
-          number="2"
+        <Tile
           title="Proponuj wymianę"
           description="Wybierz itemki, które chcesz wymienić i złóż ofertę za pomocą naszej waluty."
           icon={<Handshake className="h-6 w-6" aria-hidden="true" />}
         />
-        <Step
-          number="3"
+        <Tile
           title="Odbierz itemki"
           description="Po akceptacji transakcji przedmioty są automatycznie przenoszone na Twoje konto."
           icon={<DownloadCloud className="h-6 w-6" aria-hidden="true" />}

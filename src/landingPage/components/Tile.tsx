@@ -1,14 +1,14 @@
-import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 
-export type StepProps = {
-  number: string;
+
+export type TileProps = {
   title: string;
   description: string;
   icon: React.ReactNode;
 };
 
-export const Step = ({ title, description, icon }: StepProps) => {
+
+const Tile = ({ title, description, icon }: TileProps) => {
   return (
     <Card className="relative overflow-hidden">
       <CardContent className="p-6">
@@ -22,4 +22,6 @@ export const Step = ({ title, description, icon }: StepProps) => {
       </CardContent>
     </Card>
   );
-};
+}
+
+export default Tile

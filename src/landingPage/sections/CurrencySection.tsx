@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Value } from "../components/Value";
 import { Handshake, Star, Gift } from "lucide-react";
 import { Link } from "react-router-dom";
+import Tile from "../components/Tile";
 
 export const CurrencySection = () => {
   return (
@@ -15,20 +15,20 @@ export const CurrencySection = () => {
         </p>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
-          <Value
+          <Tile
             icon={<Handshake className="h-5 w-5" />}
             title="Łatwe wymiany"
-            desc="Używaj CrossCoins zamiast bezpośredniej wymiany itemków."
+            description="Używaj CrossCoins zamiast bezpośredniej wymiany itemków."
           />
-          <Value
+          <Tile
             icon={<Star className="h-5 w-5" />}
             title="Ekskluzywne itemki"
-            desc="Dostęp do rzadkich przedmiotów dostępnych tylko za CrossCoins."
+            description="Dostęp do rzadkich przedmiotów dostępnych tylko za CrossCoins."
           />
-          <Value
+          <Tile
             icon={<Gift className="h-5 w-5" />}
             title="Bonusy i promocje"
-            desc="Otrzymuj bonusy za aktywność i udział w promocjach."
+            description="Otrzymuj bonusy za aktywność i udział w promocjach."
           />
         </div>
 
