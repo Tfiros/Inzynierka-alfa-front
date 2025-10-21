@@ -3,10 +3,10 @@ import { Button } from '@/components/ui/button'
 import CrossTradeLogo from '@/photos/CrossTradeLogo.png'
 import PointsIcon from '@/photos/PointsIcon.svg'
 import NoifyIcon from '@/photos/NotificationIcon.svg'
-import { NavItem } from '../components/navItem';
-import { ProfileMenu } from '../components/profileMenu';
+import { NavItem } from '../components/NavItem';
+import { ProfileMenu } from '../components/ProfileMenu';
 
-export const TopNav = () => {
+export const UserNavbar = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
