@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button'
 import CrossTradeLogo from '@/photos/CrossTradeLogo.png'
 import PointsIcon from '@/photos/PointsIcon.svg'
 import NoifyIcon from '@/photos/NotificationIcon.svg'
-import { NavItem } from '../navItem';
-import { ProfileMenu } from '../profileMenu';
+import { NavItem } from '../components/navItem';
+import { ProfileMenu } from '../components/profileMenu';
 
 export const TopNav = () => {
 

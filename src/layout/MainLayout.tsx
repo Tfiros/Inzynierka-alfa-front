@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import {TopNav} from './navbar/views/navbar'
 import {Footer} from './footer'
-import QuestNavbar from './navbar/unLoggednavbar'
+import QuestNavbar from './navbar/views/unLoggednavbar'
 export const MainLayout = () => {
   const isLogged = true;
   return (
