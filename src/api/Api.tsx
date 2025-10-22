@@ -1,4 +1,5 @@
 import axios, { HttpStatusCode, type AxiosResponse } from "axios";
+import type {RawBodyResponse, BodyDetailsResponseDto}  from "@/shared/types/authTypes/AuthErrorTypes";
 import type { ApiResult } from "./ApiResult";
 type ErrorBody = { message?: string; [k: string]: unknown };
 
@@ -17,13 +18,12 @@ apiClient.interceptors.response.use(
       const status =
         (error.response?.status as HttpStatusCode) ??
         HttpStatusCode.InternalServerError;
-
-      const message =
-        error.response?.data?.message ??
-        error.message ??
-        "Request failed";
-
-      return Promise.reject<ApiResult<never>>({ status, message });
+      const data = error?.response?.data as Partial<RawBodyResponse> | undefined;
+      if (data?.message && data?.details) {
+      return Promise.reject({ status, ...data });
+    }
+    const msg = error?.message ?? "Request failed";
+    return Promise.reject({ status, message: msg, details: { text: msg } as BodyDetailsResponseDto });
     }
     const message =
       error instanceof Error ? error.message : "Unknown error";

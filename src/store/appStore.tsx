@@ -6,6 +6,11 @@ type AppState = {
   reset: (id: string) => void;
 
   notify: (msg: string) => string;
+  // auth state
+  isAuthenticated: boolean;
+  userId?: string | null;
+  setAuthenticated: (value: boolean, userId?: string | null) => void;
+  logout: () => void;
 };
 
 export const useAppStore = create<AppState>((set) => ({
@@ -23,6 +28,11 @@ export const useAppStore = create<AppState>((set) => ({
       console.log("Notification:", msg);
       return msg;
     }
+    ,
+    isAuthenticated: false,
+    userId: null,
+    setAuthenticated: (value: boolean, userId: string | null = null) => set({ isAuthenticated: value, userId }),
+    logout: () => set({ isAuthenticated: false, userId: null }),
 }));
 
 export const selectCounter = (id: string) => (s: AppState) => s.counters[id] ?? 0;
