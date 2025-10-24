@@ -1,26 +1,26 @@
 export type LoginResponseDto = {
-  accessToken?: string;
-  idToken?: string;
-  refreshToken?: string;
+  accessToken: string;
+  idToken?: string | null;
   userId?: string | null;
+  expiresIn?: number;
 };
 
 export type RefreshResponseDto = {
-  AccessToken?: string;
-  IdToken?: string;
-  RefreshToken?: string;
-  UserId?: string | null;
+  accessToken: string;
+  idToken?: string | null;
+  userId?: string | null;
+  expiresIn?: number;
 };
 
 export type RegisterResponseDto = {
-  Message?: string;
-  UserId?: string;
+  message?: string;
+  userId?: string | null;
 };
 
 export type ForgotPasswordResponseDto = {
-  Message?: string;
+  message?: string;
 };
 
 export type LogoutResponseDto = {
-  Message?: string;
+  message?: string;
 };

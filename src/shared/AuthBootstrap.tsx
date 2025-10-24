@@ -1,16 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppStore } from "@/store/appStore";
-import AuthService from "@/api/services/AuthService";
-
-const readCookie = (name: string): string | null => {
-  if (!document.cookie) return null;
-  const parts = document.cookie.split(";");
-  for (const part of parts) {
-    const [k, ...v] = part.trim().split("=");
-    if (k === name) return decodeURIComponent(v.join("="));
-  }
-  return null;
-};
+import { AuthService }  from "@/api/services/AuthService";
 
 const base64UrlDecode = (input: string): string => {
   const pad = (s: string) => s + "===".slice((s.length + 3) % 4);
@@ -18,7 +8,7 @@ const base64UrlDecode = (input: string): string => {
   return atob(b64);
 };
 
-const parseJwt = (token: string): any => {
+const parseJwt = (token: string) => {
   try {
     const [, payload] = token.split(".");
     if (!payload) return null;
@@ -38,47 +28,35 @@ const isExpired = (token: string, skewMs = 5000): boolean => {
 };
 
 export const useAuthBootstrap = (): boolean => {
-  const setAuthenticated = useAppStore((s) => s.setAuthenticated);
+  const setAccessToken = useAppStore((s) => s.setAccessToken);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     void (async () => {
       try {
-        // 1) Spróbuj accessToken z sessionStorage
         const token = sessionStorage.getItem("accessToken");
+
         if (token && !isExpired(token)) {
-          const payload = parseJwt(token);
-          const userId = payload?.sub ?? payload?.user_id ?? null;
-          setAuthenticated(true, userId);
+          setAccessToken(token);
           return;
         }
-
-        const rt = readCookie("refreshToken");
-        if (!rt) {
-          setAuthenticated(false, null);
-          return;
+        try {
+          const refreshed = await AuthService.refresh();
+          if (refreshed.data?.accessToken) {
+            sessionStorage.setItem("accessToken", refreshed.data?.accessToken);
+            setAccessToken(refreshed.data?.accessToken);
+            return;
+          }
+        } catch {
+          // Refresh nie powiódł się
         }
-        const res = await AuthService.refresh({ refreshToken: rt });
-        const data = (res && typeof res === "object" && "AccessToken" in res) ? res : (res as any)?.data ?? res;
-
-        const newAccess: string | null = data?.AccessToken ?? data?.IdToken ?? null;
-        const userIdResp: string | null = data?.UserId ?? null;
-
-        if (newAccess) {
-          sessionStorage.setItem("accessToken", newAccess);
-          const payload = parseJwt(newAccess);
-          const userId = userIdResp ?? payload?.sub ?? payload?.user_id ?? null;
-          setAuthenticated(true, userId);
-        } else {
-          setAuthenticated(false, null);
-        }
-      } catch {
-        setAuthenticated(false, null);
+        sessionStorage.removeItem("accessToken");
+        setAccessToken(undefined);
       } finally {
         setReady(true);
       }
     })();
-  }, [setAuthenticated]);
+  }, [setAccessToken]);
 
   return ready;
 };

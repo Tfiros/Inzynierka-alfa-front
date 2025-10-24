@@ -10,7 +10,7 @@ export async function get<T>(
   config?: AxiosRequestConfig
 ): Promise<ApiResult<T>> {
   try {
-    const res = await api.get<ApiResult<T>>(url, { params, ...(config ?? {}) });
+    const res = await api.get<ApiResult<T>>(url, { params, ...(config) });
     return res.data;
   } catch (e) {
     return e as ApiResult<T>;
