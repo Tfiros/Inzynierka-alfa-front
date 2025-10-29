@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import type { ModalViewPropsTypes } from "../ModalTypes";
 import { AuthService}  from "@/api/services/AuthService";
 import { useAppStore } from "@/store/appStore";
+import PasswordInput from "../components/PasswordInput";
 
 const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
   const [email, setEmail] = useState("");
@@ -58,9 +59,9 @@ const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
 
         <div className="flex flex-col gap-y-1">
           <Label htmlFor="password">Hasło</Label>
-          <Input
+          <PasswordInput
             id="password"
-            type="password"
+            name="password"
             required
             value={password}
             onChange={(e) => setPassword(e.currentTarget.value)}
