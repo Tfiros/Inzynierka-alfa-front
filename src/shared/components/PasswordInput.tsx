@@ -1,27 +1,43 @@
-import { Input } from '@/components/ui/input'
-import { Eye, EyeOff } from 'lucide-react'
-import { useState } from 'react'
+import * as React from "react";
+import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
 
-const PasswordInput = () => {
-  const [showPassword, setShowPassword] = useState(false)
-  return (
-    <div className="w-full relative">
-      <Input
-        id="password"
-        type={showPassword ? 'text' : 'password'}
-        required
-        className="pr-10"
-      />
-      <button
-        type="button"
-        onClick={() => setShowPassword(!showPassword)}
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
-        tabIndex={-1}
-      >
-        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-      </button>
-    </div>
-  )
-}
+type PasswordInputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "type"
+> & {
+  errorText?: string;
+};
 
-export default PasswordInput
+const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
+  ({ className, errorText, ...props }, ref) => {
+    const [show, setShow] = React.useState(false);
+
+    return (
+      <div className="relative w-full">
+        <Input
+          ref={ref}
+          type={show ? "text" : "password"}
+          className={`pr-10 ${className ?? ""}`}
+          {...props}
+        />
+        <button
+          type="button"
+          aria-label={show ? "Ukryj hasło" : "Pokaż hasło"}
+          aria-pressed={show}
+          onClick={() => setShow((v) => !v)}
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+          tabIndex={-1}
+        >
+          {show ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+        {errorText && (
+          <p className="mt-1 text-xs text-red-600">{errorText}</p>
+        )}
+      </div>
+    );
+  }
+);
+
+PasswordInput.displayName = "PasswordInput";
+export default PasswordInput;

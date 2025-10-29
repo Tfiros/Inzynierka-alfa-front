@@ -2,9 +2,13 @@ import { Link } from 'react-router-dom'
 //import { User as UserIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import CrossTradeLogo from '@/photos/CrossTradeLogo.png'
+import { useState } from 'react'
+import AuthModal from '@/shared/AuthModal'
 
 export default function GuestNavbar() {
+  const [open, setOpen] = useState(false)
   return (
+    <>
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 w-full items-center justify-between px-6">
         <div className="w-20" />
@@ -23,7 +27,7 @@ export default function GuestNavbar() {
         <nav className="flex items-center gap-4 text-sm">
           <div className="flex gap-1">
             <div className="flex gap-4 w-full max-w-sm">
-              <Button className="flex-1">Zaloguj</Button>
+              <Button className="flex-1" onClick={() => setOpen(true)}>Zaloguj</Button>
               <Button className="flex-1" variant="secondary">
                 Zarejestruj
               </Button>
@@ -32,6 +36,8 @@ export default function GuestNavbar() {
         </nav>
       </div>
     </header>
+    <AuthModal open={open} onOpenChange={setOpen} />
+    </>
   )
 }
 

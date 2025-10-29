@@ -1,28 +1,14 @@
 import { create } from "zustand";
+import { createUiSlice, type UiSlice } from "./storeParts/uiSlice";
+import { createAuthSlice, type AuthSlice } from "./storeParts/authSlice";
 
-type AppState = {
-  counters: Record<string, number>;
-  inc: (id: string, by?: number) => void;
-  reset: (id: string) => void;
+export type AppState = UiSlice & AuthSlice;
 
-  notify: (msg: string) => string;
-};
-
-export const useAppStore = create<AppState>((set) => ({
-  counters: {},
-  inc: (id, by = 1) =>
-    set((s) => ({ counters: { ...s.counters, [id]: (s.counters[id] ?? 0) + by } })),
-  reset: (id) =>
-    set((s) => {
-      const next = { ...s.counters };
-      delete next[id];
-      return { counters: next };
-    }),
-
-    notify: (msg: string) =>  {
-      console.log("Notification:", msg);
-      return msg;
-    }
+export const useAppStore = create<AppState>()((set, get, api) => ({
+  ...createUiSlice(set, get, api),
+  ...createAuthSlice(set, get, api),
 }));
 
 export const selectCounter = (id: string) => (s: AppState) => s.counters[id] ?? 0;
+export const selectAuth = (s: AppState) => ({ isAuthenticated: s.isAuthenticated, userLogin: s.userLogin });
+export const selectAccessToken = (s: AppState) => s.accessToken;

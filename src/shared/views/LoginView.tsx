@@ -1,45 +1,109 @@
-import PasswordInput from '@/shared/components/PasswordInput'
-
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import type { ModalViewPropsTypes } from '../ModalTypes'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import type { ModalViewPropsTypes } from "../ModalTypes";
+import { AuthService}  from "@/api/services/AuthService";
+import { useAppStore } from "@/store/appStore";
+import PasswordInput from "../components/PasswordInput";
 
 const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const setAccessToken = useAppStore((s) => s.setAccessToken);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (busy) return;
+
+    setBusy(true);
+    setError(null);
+
+    try {
+      const result = await AuthService.login({ email, password });
+      const accessToken = result.accessToken;
+
+      if (!accessToken) {
+        setError("Brak access tokena w odpowiedzi serwera.");
+        return;
+      }
+
+      sessionStorage.setItem("accessToken",accessToken);
+      setAccessToken(accessToken);
+    } catch (err: any) {
+      console.error("Login error:", err);
+      setError(err.message ?? "Wystąpił błąd podczas logowania.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <>
-      <form className="gap-y-4 flex flex-col mt-4">
-        <div className="gap-y-1 flex flex-col">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 mt-4">
+        <div className="flex flex-col gap-y-1">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" required />
+          <Input
+            id="email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.currentTarget.value)}
+            autoComplete="username"
+            disabled={busy}
+          />
         </div>
-        <div className="gap-y-1 flex flex-col">
+
+        <div className="flex flex-col gap-y-1">
           <Label htmlFor="password">Hasło</Label>
-          <PasswordInput />
+          <PasswordInput
+            id="password"
+            name="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.currentTarget.value)}
+            autoComplete="current-password"
+            disabled={busy}
+          />
         </div>
+
+        {error && (
+          <p className="text-sm text-red-600" role="alert">
+            {error}
+          </p>
+        )}
+
         <div className="flex items-end">
           <button
-            onClick={() => onSwitch('forgot-email')}
+            type="button"
+            onClick={() => onSwitch("forgot-email")}
             className="text-sm font-semibold cursor-pointer"
+            disabled={busy}
           >
             Zapomniałeś hasła?
           </button>
         </div>
-        <Button type="submit" className="w-full cursor-pointer">
-          Zaloguj się
+
+        <Button type="submit" className="w-full" disabled={busy}>
+          {busy ? "Logowanie…" : "Zaloguj się"}
         </Button>
       </form>
+
       <p className="text-center text-sm mt-4">
-        Nie masz konta?{' '}
+        Nie masz konta?{" "}
         <button
-          onClick={() => onSwitch('register')}
+          onClick={() => onSwitch("register")}
           className="text-blue-500 cursor-pointer"
+          disabled={busy}
         >
           Zarejestruj się
         </button>
       </p>
     </>
-  )
-}
+  );
+};
 
-export default LoginView
+export default LoginView;
