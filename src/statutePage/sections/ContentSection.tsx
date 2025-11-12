@@ -1,41 +1,8 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+import { Section } from '../component/Section'
+import { Definitions } from '../component/Definitions'
 
-function Section({
-  title,
-  children,
-}: {
-  title: string
-  children: React.ReactNode
-}) {
-  return (
-    <section className="scroll-mt-24">
-      <h2 className="mb-3 text-xl font-bold tracking-tight">{title}</h2>
-      <div className="prose-sm max-w-none text-[15px] leading-7 [&_ol]:space-y-2">
-        {children}
-      </div>
-      <Separator className="my-6" />
-    </section>
-  )
-}
-
-function Definitions({ items }: { items: [string, string][] }) {
-  return (
-    <dl className="space-y-3">
-      {items.map(([term, def]) => (
-        <div
-          key={term}
-          className="grid grid-cols-[140px_1fr] gap-3 max-sm:grid-cols-1"
-        >
-          <dt className="font-medium">{term}</dt>
-          <dd className="text-muted-foreground">{def}</dd>
-        </div>
-      ))}
-    </dl>
-  )
-}
-
-export function ContentSection() {
+export const ContentSection: React.FC = () => {
   return (
     <Card>
       <CardContent className="p-6 md:p-10 leading-7">
