@@ -1,11 +1,11 @@
 import { Outlet } from 'react-router-dom'
-import { UserNavbar} from './navbar/views/UserNavbar'
-import { Footer } from './Footer'
-import GuestNavbar from './navbar/views/GuestNavbar';
 import { useAppStore } from '@/store/appStore'
 
+import { UserNavbar } from './navbar/views/UserNavbar'
+import { Footer } from './Footer'
+import GuestNavbar from './navbar/views/GuestNavbar'
 export const MainLayout = () => {
-  const isLogged = useAppStore((s) => s.isAuthenticated);
+  const isLogged = useAppStore((s) => s.isAuthenticated)
   return (
     <div className="flex min-h-screen flex-col">
       {isLogged ? <UserNavbar /> : <GuestNavbar />}
