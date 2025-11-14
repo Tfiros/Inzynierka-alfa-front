@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import {MainDashboard} from '@/homeDashboard/views/MainDashboard'
-import {MainLayout} from '@/layout/MainLayout'
-import {LandingPage} from './landingPage/LandingPage'
+import { MainDashboard } from '@/homeDashboard/views/MainDashboard'
+import { MainLayout } from '@/layout/MainLayout'
+import { LandingPage } from './landingPage/LandingPage'
 import './App.css'
-import { useAuthBootstrap } from "@/shared/AuthBootstrap"; 
-const Splash = () => <div className="p-6">Ładowanie…</div>;
+import { useAuthBootstrap } from '@/shared/AuthBootstrap'
+const Splash = () => <div className="p-6">Ładowanie…</div>
 function App() {
-  const ready = useAuthBootstrap();
+  const ready = useAuthBootstrap()
 
-  if (!ready) return <Splash />; 
+  if (!ready) return <Splash />
   return (
     <BrowserRouter>
       <Routes>
@@ -16,7 +16,7 @@ function App() {
           <Route path="/dashboard" element={<MainDashboard />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="oferty" element={<div>Oferty</div>} />
-          <Route path="faqs" element={<div>FAQs</div>} />
+          <Route path="faqs" element={<FAQs />} />
           <Route path="points" element={<div>Points</div>} />
         </Route>
       </Routes>
