@@ -1,4 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import './App.css'
+import { useAuthBootstrap } from '@/shared/AuthBootstrap'
+const Splash = () => <div className="p-6">Ładowanie…</div>
 import { MainDashboard } from '@/homeDashboard/views/MainDashboard'
 import { MainLayout } from '@/layout/MainLayout'
 import { LandingPage } from './landingPage/LandingPage'
@@ -7,6 +10,9 @@ import { UserProfilePage } from '@/profilePage/profilePage'
 import { StatutePage } from '@/statutePage/statutePage'
 
 function App() {
+  const ready = useAuthBootstrap()
+
+  if (!ready) return <Splash />
   return (
     <BrowserRouter>
       <Routes>
