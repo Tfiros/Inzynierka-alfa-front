@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button'
 import CrossTradeLogo from '@/photos/CrossTradeLogo.png'
 import { useState } from 'react'
 import AuthModal from '@/shared/AuthModal'
+import type { AuthModalView } from '@/shared/ModalTypes'
 
 export default function GuestNavbar() {
   const [open, setOpen] = useState(false)
+  const [initialView, setInitialView] = useState<AuthModalView>('login');
   return (
     <>
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -27,8 +29,8 @@ export default function GuestNavbar() {
         <nav className="flex items-center gap-4 text-sm">
           <div className="flex gap-1">
             <div className="flex gap-4 w-full max-w-sm">
-              <Button className="flex-1" onClick={() => setOpen(true)}>Zaloguj</Button>
-              <Button className="flex-1" variant="secondary">
+              <Button className="flex-1" onClick={() => { setInitialView('login'); setOpen(true);}}>Zaloguj</Button>
+              <Button className="flex-1" onClick={() => {setInitialView('register'); setOpen(true);} } variant="secondary">
                 Zarejestruj
               </Button>
             </div>
@@ -36,7 +38,7 @@ export default function GuestNavbar() {
         </nav>
       </div>
     </header>
-    <AuthModal open={open} onOpenChange={setOpen} />
+    <AuthModal open={open} onOpenChange={setOpen} initialView={initialView} />
     </>
   )
 }
