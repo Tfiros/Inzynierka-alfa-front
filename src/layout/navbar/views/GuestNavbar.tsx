@@ -29,7 +29,7 @@ export default function GuestNavbar() {
         <nav className="flex items-center gap-4 text-sm">
           <div className="flex gap-1">
             <div className="flex gap-4 w-full max-w-sm">
-              <Button className="flex-1" onClick={() => setOpen(true)}>Zaloguj</Button>
+              <Button className="flex-1" onClick={() => { setInitialView('login'); setOpen(true);}}>Zaloguj</Button>
               <Button className="flex-1" onClick={() => {setInitialView('register'); setOpen(true);} } variant="secondary">
                 Zarejestruj
               </Button>
