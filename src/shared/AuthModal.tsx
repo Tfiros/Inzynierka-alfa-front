@@ -10,17 +10,15 @@ import { authDescriptions, authTitles } from './AuthConstants'
 import LoginModalView from './views/LoginView'
 import RegisterModalView from './views/RegisterView'
 import RecoveryEmailView from './views/RecoveryEmailView'
-import RecoveryCodeView from './views/RecoveryCodeView'
 import SuccessChangeView from './views/SuccessChangeView'
-import NewPasswordView from './views/NewPasswordView'
 
-const AuthModal = ({ open, onOpenChange }: AuthModalPropsTypes) => {
-  const [view, setView] = useState<AuthModalView>('login')
+const AuthModal = ({ open, onOpenChange, initialView ='login' }: AuthModalPropsTypes) => {
+  const [view, setView] = useState<AuthModalView>(initialView)
   useEffect(() => {
     if (!open) {
-      setView('login')
+      setView(initialView)
     }
-  }, [open])
+  }, [open, initialView])
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md rounded-2xl gap-0">
@@ -39,8 +37,6 @@ const AuthModal = ({ open, onOpenChange }: AuthModalPropsTypes) => {
         {view === 'login' && <LoginModalView onSwitch={setView} />}
         {view === 'register' && <RegisterModalView onSwitch={setView} />}
         {view === 'forgot-email' && <RecoveryEmailView onSwitch={setView} />}
-        {view === 'forgot-code' && <RecoveryCodeView onSwitch={setView} />}
-        {view === 'forgot-reset' && <NewPasswordView onSwitch={setView} />}
         {view === 'forgot-success' && <SuccessChangeView onSwitch={setView} />}
       </DialogContent>
     </Dialog>

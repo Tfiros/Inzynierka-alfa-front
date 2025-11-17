@@ -5,6 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import type { ModalViewPropsTypes } from "../ModalTypes";
 import { AuthService} from "@/api/services/AuthService";
 
@@ -14,7 +19,7 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-
+  const [birthDate, setBirthDate] = useState<Date | undefined>(undefined);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [okMsg, setOkMsg] = useState<string | null>(null);
@@ -28,13 +33,23 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
 
     if (!email.trim()) return setError("Podaj email.");
     if (!password) return setError("Podaj hasło.");
-    if (password.length < 6) return setError("Hasło musi mieć co najmniej 6 znaków.");
+    if (password.length < 8) return setError("Hasło musi mieć co najmniej 8 znaków.");
     if (password !== confirm) return setError("Hasła nie są takie same.");
+    const hasLower = /[a-z]/.test(password);
+    const hasUpper = /[A-Z]/.test(password);
+    const hasDigit = /[0-9]/.test(password);
+    const hasSpecial = /[^A-Za-z0-9]/.test(password);
+
+    const typesCount = [hasLower, hasUpper, hasDigit, hasSpecial].filter(Boolean).length;
+
+    if (typesCount < 3) {
+      return setError("Hasło musi zawierać co najmniej 3 z 4 typów znaków: małe litery, wielkie litery, cyfry, znaki specjalne.");
+    }
     if (!checked) return setError("Musisz zaakceptować regulamin i politykę prywatności.");
 
     setBusy(true);
     try {
-      const res = await AuthService.register({ email, password });
+      const res = await AuthService.register({ email, password, username , birthDate});
 
       setOkMsg(res?.message ?? "Konto zostało utworzone.");
       setTimeout(() => onSwitch("login"), 800);
@@ -65,7 +80,39 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
             disabled={busy}
           />
         </div>
-
+        <div className="gap-y-1 flex flex-col">
+          <Label htmlFor="birthDate">Data urodzenia</Label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                className={cn(
+                  "w-full justify-start text-left font-normal",
+                  !birthDate && "text-muted-foreground"
+                )}
+                disabled={busy}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {birthDate ? format(birthDate, "dd.MM.yyyy") : "Wybierz datę"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={birthDate}
+                onSelect={setBirthDate}
+                initialFocus
+                captionLayout="dropdown"
+                fromYear={1900}
+                toYear={new Date().getFullYear()}
+                disabled={(date) =>
+                  date > new Date() || date < new Date("1900-01-01")
+                }
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
         <div className="gap-y-1 flex flex-col">
           <Label htmlFor="username">Nazwa Użytkownika</Label>
           <Input
@@ -111,7 +158,7 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
           />
           <Label htmlFor="terms" className="text-sm">
             Akceptuję{" "}
-            <a href="#" className="underline">Regulamin</a> oraz{" "}
+            <a href="#" className="underline">Regulamin</a> oraz
             <a href="#" className="underline">Politykę Prywatności</a>.
           </Label>
         </div>

@@ -6,7 +6,7 @@ export const authTitles: Record<AuthModalView, string> = {
   'forgot-email': 'Przypomnij hasło',
   'forgot-code': 'Wprowadź kod',
   'forgot-reset': 'Ustaw nowe hasło',
-  'forgot-success': 'Hasło zostało zresetowane',
+  'forgot-success': 'Wysłano email z instrukcjami',
 }
 
 export const authDescriptions: Record<AuthModalView, string> = {
@@ -16,5 +16,5 @@ export const authDescriptions: Record<AuthModalView, string> = {
   'forgot-email': 'Wprowadź swój email, aby otrzymać kod do zresetowania hasła',
   'forgot-code': 'Wprowadź kod, który został wysłany na Twój email',
   'forgot-reset': 'Ustaw nowe hasło do swojego konta',
-  'forgot-success': 'Twoje hasło zostało pomyślnie zresetowane',
+  'forgot-success': 'Email został wysłany z instrukcjami resetu hasła',
 }
