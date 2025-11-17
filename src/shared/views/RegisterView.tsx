@@ -102,10 +102,9 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
                 mode="single"
                 selected={birthDate}
                 onSelect={setBirthDate}
-                initialFocus
+                autoFocus
                 captionLayout="dropdown"
-                fromYear={1900}
-                toYear={new Date().getFullYear()}
+                startMonth={new Date(1900,0)}
                 disabled={(date) =>
                   date > new Date() || date < new Date("1900-01-01")
                 }
