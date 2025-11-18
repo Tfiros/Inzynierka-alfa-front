@@ -10,6 +10,17 @@ const apiClient = axios.create({
   headers: { "Content-Type": "application/json" },
 
 });
+apiClient.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem("accessToken");
+  if (token) {
+    if (!config.headers) {
+      config.headers = {} as any;
+    }
+    (config.headers as any).Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,

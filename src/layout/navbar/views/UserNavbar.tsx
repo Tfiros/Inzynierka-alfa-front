@@ -1,13 +1,17 @@
-import { Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import CrossTradeLogo from '@/photos/CrossTradeLogo.png'
-import PointsIcon from '@/photos/PointsIcon.svg'
-import NoifyIcon from '@/photos/NotificationIcon.svg'
-import { NavItem } from '../components/NavItem';
-import { ProfileMenu } from '../components/ProfileMenu';
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import CrossTradeLogo from "@/photos/CrossTradeLogo.png";
+import PointsIcon from "@/photos/PointsIcon.svg";
+import NoifyIcon from "@/photos/NotificationIcon.svg";
+import { NavItem } from "../components/NavItem";
+import { ProfileMenu } from "../components/ProfileMenu";
+import { useAppStore } from "@/store/appStore";
 
 export const UserNavbar = () => {
+  const navbarUser = useAppStore((s) => s.navbarUser);
 
+  const tokens = navbarUser?.tokens ?? 0;
+  const level = navbarUser?.level ?? 1;
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 w-full items-center justify-between px-6">
@@ -30,26 +34,48 @@ export const UserNavbar = () => {
             <NavItem to="/faqs" label="FAQs" />
           </div>
 
-          <div className="flex gap-1">
-            <Button asChild variant="ghost" size="sm" className="rounded-full" title='Points'>
+          <div className="flex gap-1 items-center">
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="rounded-full"
+              title="Punkty"
+            >
               <Link to="/points">
                 <img
                   src={PointsIcon}
                   alt="Points"
                   className="h-6 w-6 object-contain"
                 />
-                <span className="text-sm">125</span>
+                <span className="ml-1 text-sm font-medium">
+                  {tokens.toLocaleString("pl-PL")}
+                </span>
               </Link>
             </Button>
 
-            <Button asChild variant="ghost" size="sm" className="rounded-full" title='Level'>
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="rounded-full px-3"
+              title="Poziom"
+            >
               <Link to="/points">
-                <span className="text-sm">10</span>
-                <span>lvl</span>
+                <span className="text-sm font-semibold">{level}</span>
+                <span className="ml-1 text-xs text-muted-foreground">
+                  Poziom
+                </span>
               </Link>
             </Button>
 
-            <Button asChild variant="ghost" size="sm" className="rounded-full" title = 'Notifications'>
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="rounded-full"
+              title="Powiadomienia"
+            >
               <Link to="/notifications">
                 <img
                   src={NoifyIcon}
@@ -64,7 +90,5 @@ export const UserNavbar = () => {
         </nav>
       </div>
     </header>
-  )
-}
-
-
+  );
+};
