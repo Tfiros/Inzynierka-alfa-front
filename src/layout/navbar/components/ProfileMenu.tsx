@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   DropdownMenu,
@@ -9,40 +9,43 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { UserIcon } from "lucide-react";
+import { User as UserIcon, LogOut, Trophy } from "lucide-react";
 import { useAppStore } from "@/store/appStore";
-import { AuthService } from "@/api/services/AuthService";
 
 export const ProfileMenu = () => {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
-  const setAccessToken = useAppStore((s) => s.setAccessToken);
-  const userLogin = useAppStore((s) => s.userLogin);
-  const navigate = useNavigate();
 
-  const clearAuthClientSide = () => {
-    sessionStorage.removeItem("accessToken");
-    setAccessToken(undefined);
-  };
+  const navbarUser = useAppStore((s) => s.navbarUser);
+  const logout = useAppStore((s) => s.logout);
+
+  const navigate = useNavigate();
+  const displayName = navbarUser?.nickname ?? "Użytkownik";
+  const email = navbarUser?.email ?? "—";
+
+  const initials = useMemo(() => {
+  const parts = displayName.trim().split(/\s+/);
+  const letters = parts.map((p) => p[0]?.toUpperCase()).join("");
+    return letters.slice(0, 2) || "U";
+  }, [displayName]);
 
   const handleLogout = async () => {
     if (busy) return;
     setBusy(true);
     try {
-      await AuthService.logout();
+      await logout();
+      setOpen(false);
+      navigate("/");
     } catch (e) {
       console.warn("Logout error (ignored):", e);
     } finally {
-      clearAuthClientSide();
-      setOpen(false);
       setBusy(false);
-      navigate("/");
     }
   };
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild onClick={() => setOpen(true)}>
+      <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
           size="icon"
@@ -55,31 +58,35 @@ export const ProfileMenu = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        align="end"
-        className="w-56"
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-      >
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col">
-            <span className="text-sm font-medium leading-none">Twoje konto</span>
-            <span className="text-xs text-muted-foreground">
-              {userLogin ?? "—"}
-            </span>
+      <DropdownMenuContent align="end" className="w-64">
+        <DropdownMenuLabel className="font-normal px-3 py-2">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-black text-xs font-semibold text-white">
+              {initials}
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium leading-none">
+                {displayName}
+              </span>
+              <span className="text-xs text-muted-foreground">{email}</span>
+            </div>
           </div>
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
 
         <DropdownMenuItem asChild>
-          <Link to="/profile">Profil</Link>
+          <Link to="/profile" className="flex items-center gap-2">
+            <UserIcon className="h-4 w-4" />
+            <span>Mój profil</span>
+          </Link>
         </DropdownMenuItem>
+
         <DropdownMenuItem asChild>
-          <Link to="/settings">Ustawienia</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/dashboard">Panel</Link>
+          <Link to="/dashboard" className="flex items-center gap-2">
+            <Trophy className="h-4 w-4" />
+            <span>Panel Klienta</span>
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
@@ -90,8 +97,10 @@ export const ProfileMenu = () => {
             void handleLogout();
           }}
           disabled={busy}
+          className="text-red-600 focus:text-red-600"
         >
-          {busy ? "Wylogowywanie…" : "Wyloguj"}
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>{busy ? "Wylogowywanie…" : "Wyloguj się"}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

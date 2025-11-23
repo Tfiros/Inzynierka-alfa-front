@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { ModalViewPropsTypes } from "../ModalTypes";
-import { AuthService}  from "@/api/services/AuthService";
 import { useAppStore } from "@/store/appStore";
 import PasswordInput from "../components/PasswordInput";
 
@@ -13,7 +12,7 @@ const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const setAccessToken = useAppStore((s) => s.setAccessToken);
+  const login = useAppStore((s) => s.login);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,16 +22,8 @@ const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
     setError(null);
 
     try {
-      const result = await AuthService.login({ email, password });
-      const accessToken = result.accessToken;
-
-      if (!accessToken) {
-        setError("Brak access tokena w odpowiedzi serwera.");
-        return;
-      }
-
-      sessionStorage.setItem("accessToken",accessToken);
-      setAccessToken(accessToken);
+      await login(email, password);
+   
     } catch (err: any) {
       console.error("Login error:", err);
       setError(err.message ?? "Wystąpił błąd podczas logowania.");

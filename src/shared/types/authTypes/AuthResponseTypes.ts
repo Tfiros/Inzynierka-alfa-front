@@ -1,4 +1,5 @@
 export type LoginResponseDto = {
+  id: number;
   accessToken: string;
   idToken?: string | null;
   userId?: string | null;

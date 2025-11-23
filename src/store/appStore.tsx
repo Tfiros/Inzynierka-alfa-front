@@ -10,5 +10,10 @@ export const useAppStore = create<AppState>()((set, get, api) => ({
 }));
 
 export const selectCounter = (id: string) => (s: AppState) => s.counters[id] ?? 0;
-export const selectAuth = (s: AppState) => ({ isAuthenticated: s.isAuthenticated, userLogin: s.userLogin });
+export const selectAuth = (s: AppState) => ({
+  isAuthenticated: s.isAuthenticated,
+  userLogin: s.userLogin,
+  userId: s.userId,
+  navbarUser: s.navbarUser,
+});
 export const selectAccessToken = (s: AppState) => s.accessToken;

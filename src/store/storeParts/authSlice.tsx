@@ -1,7 +1,14 @@
 import type { StateCreator } from "zustand";
-import { AuthService}  from "@/api/services/AuthService";
+import { AuthService } from "@/api/services/AuthService";
+import { UserInfoService } from "@/api/services/UserInfoService";
+import type { UserNavbarInfoDto } from "@/shared/types/userTypes/UserInfoTypes";
 
-export type JwtPayload = { login?: string; exp?: number; [k: string]: unknown };
+export type JwtPayload = {
+  login?: string;
+  exp?: number;
+  [k: string]: unknown;
+};
+
 const ACCESS_KEY = "accessToken";
 
 function parseJwt(token: string | null): JwtPayload | null {
@@ -23,8 +30,13 @@ function parseJwt(token: string | null): JwtPayload | null {
 export type AuthSlice = {
   accessToken: string | null;
   userLogin: string | null;
+  userId: number | null;
+  navbarUser: UserNavbarInfoDto | null;
   isAuthenticated: boolean;
+
   setAccessToken: (token: string | undefined) => void;
+  setNavbarUser: (info: UserNavbarInfoDto | null) => void;
+
   login: (email: string, password: string) => Promise<void>;
   refresh: () => Promise<void>;
   logout: () => Promise<void>;
@@ -32,13 +44,19 @@ export type AuthSlice = {
 
 type StoreState = AuthSlice & Record<string, unknown>;
 
+
 export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (set, get, _api) => {
   void _api;
 
+  const initialToken = sessionStorage.getItem(ACCESS_KEY);
+  const initialPayload = parseJwt(initialToken);
+
   return {
-    accessToken: sessionStorage.getItem(ACCESS_KEY),
-    userLogin: parseJwt(sessionStorage.getItem(ACCESS_KEY))?.login ?? null,
-    isAuthenticated: !!sessionStorage.getItem(ACCESS_KEY),
+    accessToken: initialToken,
+    userLogin: initialPayload?.login ?? null,
+    userId: null,
+    navbarUser: null,
+    isAuthenticated: !!initialToken,
 
     setAccessToken: (token) => {
       if (token) {
@@ -51,18 +69,39 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (set
         });
       } else {
         sessionStorage.removeItem(ACCESS_KEY);
-        set({ accessToken: null, userLogin: null, isAuthenticated: false });
+        set({
+          accessToken: null,
+          userLogin: null,
+          userId: null,
+          navbarUser: null,
+          isAuthenticated: false,
+        });
       }
     },
 
+    setNavbarUser: (info) => {
+      set({ navbarUser: info });
+    },
+
     login: async (email, password) => {
-      const res = await AuthService.login( {email, password});
-      get().setAccessToken(res.data?.accessToken);
+      const res = await AuthService.login({ email, password });
+      const id = res.id;
+      const accessToken = res.accessToken;
+      if (!accessToken) {
+        throw new Error("Brak access tokena w odpowiedzi serwera.");
+      }
+
+      get().setAccessToken(accessToken);
+      set({ userId: id });
+
+      const navRes = await UserInfoService.getNavbarInfo(id);
+      set({ navbarUser: navRes });     
     },
 
     refresh: async () => {
       const res = await AuthService.refresh();
-      get().setAccessToken(res.data?.accessToken);
+        get().setAccessToken(res.accessToken);
+        get().setAccessToken(undefined);
     },
 
     logout: async () => {
