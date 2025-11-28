@@ -59,10 +59,12 @@ const Offer = ({ offer }: { offer: OfferType }) => {
                     />
                   </AspectRatio>
                 </div>
-                <div className="mt-2 flex flex-row items-center justify-between gap-2">
-                  <p className="font-medium truncate">{item.name}</p>
-                  <div className="flex items-center gap-2">
-                    <Badge className="w-fit bg-white text-black rounded-full">
+                <div className="mt-2 flex flex-col gap-2">
+                  <p className="font-medium line-clamp-2 text-sm text-left">
+                    {item.name}
+                  </p>
+                  <div className="flex items-center gap-2 text-xs">
+                    <Badge className="w-fit bg-white text-black rounded-full pl-0">
                       {item.game}
                     </Badge>
                     <Badge className=" w-fit bg-gray-100 text-gray-900 rounded-full">
@@ -94,10 +96,12 @@ const Offer = ({ offer }: { offer: OfferType }) => {
                     />
                   </AspectRatio>
                 </div>
-                <div className="mt-2 flex flex-row items-center justify-between gap-2">
-                  <p className="font-medium truncate">{item.name}</p>
-                  <div className="flex items-center gap-2">
-                    <Badge className="w-fit bg-white text-black rounded-full">
+                <div className="mt-2 flex flex-col gap-2">
+                  <p className="font-medium line-clamp-2 text-sm text-left">
+                    {item.name}
+                  </p>
+                  <div className="flex items-center gap-2 text-xs">
+                    <Badge className="w-fit bg-white text-black rounded-full pl-0">
                       {item.game}
                     </Badge>
                     <Badge className=" w-fit bg-gray-100 text-gray-900 rounded-full">
