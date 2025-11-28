@@ -17,7 +17,7 @@ const FilterBar = () => {
         <Search className="absolute ml-3 mt-3 h-4 w-4 text-muted-foreground" />
         <Input placeholder="Szukaj przedmioty..." className=" pl-9 bg-muted" />
       </div>
-      <div className="md:col-span-2 flex flex-row gap-2 justify-between">
+      <div className="md:col-span-2 flex flex-col md:flex-row md:justify-between gap-2">
         <Select>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Kategoria" />
