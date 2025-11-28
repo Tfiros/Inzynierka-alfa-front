@@ -9,7 +9,7 @@ const OffersGrid = ({ offers }: { offers: OfferType[] }) => {
     )
   }
   return (
-    <div className="grid xl:grid-cols-2 sm gap-6">
+    <div className="grid xl:grid-cols-2 gap-6">
       {offers.map((offer) => (
         <Offer key={offer.id} offer={offer} />
       ))}
