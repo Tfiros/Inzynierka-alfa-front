@@ -9,7 +9,7 @@ export const MainLayout = () => {
   return (
     <div className="flex min-h-screen flex-col">
       {isLogged ? <UserNavbar /> : <GuestNavbar />}
-      <main className="flex-1 mx-auto w-full max-w-6xl px-4 pt-6 pb-12">
+      <main className="flex-1 mx-auto w-full px-4 pt-6 pb-12">
         <Outlet />
       </main>
       <Footer />
