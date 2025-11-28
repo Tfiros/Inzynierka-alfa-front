@@ -8,10 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { AspectRatio } from '@radix-ui/react-aspect-ratio'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Heart, CalendarDays, Plus } from 'lucide-react'
-import { Avatar } from '@/components/ui/avatar'
-import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 const MAX_VISIBLE_ITEMS = 2
 const Offer = ({ offer }: { offer: OfferType }) => {
   const visibleHave = offer.itemsHave.slice(0, MAX_VISIBLE_ITEMS)
@@ -32,7 +31,7 @@ const Offer = ({ offer }: { offer: OfferType }) => {
                 <CalendarDays className="w-5 h-5" />
                 <span className="pl-2">{offer.date}</span>
               </div>
-              <Button variant="outline" className="cursor-pointer group">
+              <Button variant="outline" className="cursor-pointer group" type='button'>
                 <Heart className="group-hover:text-red-500 group-hover:fill-red-500 transition" />
               </Button>
             </div>
@@ -55,6 +54,7 @@ const Offer = ({ offer }: { offer: OfferType }) => {
                   >
                     <img
                       src={item.imageUrl}
+                      alt={item.name}
                       className="w-full h-full object-cover cursor-pointer"
                     />
                   </AspectRatio>
@@ -92,6 +92,7 @@ const Offer = ({ offer }: { offer: OfferType }) => {
                   >
                     <img
                       src={item.imageUrl}
+                      alt={item.name}
                       className="w-full h-full object-cover cursor-pointer"
                     />
                   </AspectRatio>
@@ -127,8 +128,8 @@ const Offer = ({ offer }: { offer: OfferType }) => {
       <CardFooter className="mt-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full">
         <div className="flex flex-row  items-center">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={offer.user.avatarUrl ?? "https://github.com/shadcn.png"} alt={offer.user.username} />
+            <AvatarFallback>{offer.user.username.slice(0,2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-start pl-4">
             <span className="font-medium text-foreground">
