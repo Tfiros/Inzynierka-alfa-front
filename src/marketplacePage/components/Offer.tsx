@@ -1,7 +1,13 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type { OfferType } from '../offer'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { AspectRatio } from '@radix-ui/react-aspect-ratio'
 import { Heart, CalendarDays, Plus } from 'lucide-react'
 import { Avatar } from '@/components/ui/avatar'
@@ -13,11 +19,11 @@ const Offer = ({ offer }: { offer: OfferType }) => {
   const remainingHave = offer.itemsHave.length - visibleHave.length
   const remainingWant = offer.itemsWant.length - visibleWant.length
   return (
-    <Card className="h-full">
+    <Card className="h-full flex flex-col">
       <CardHeader>
         <CardTitle className="w-full">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h1 className="text-base font-semibold lg:text-lg text-left line-clamp-2">
+            <h1 className="text-base font-semibold lg:text-lg text-left line-clamp-2 min-h-[3.5rem]">
               {offer.title}
             </h1>
 
@@ -34,8 +40,8 @@ const Offer = ({ offer }: { offer: OfferType }) => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent>
-        <div className="grid md:grid-cols-2 gap-3">
+      <CardContent className="flex flex-1 flex-col gap-6">
+        <div className="grid md:grid-cols-2 gap-3 min-h-[260px]">
           <div className="flex flex-col w-full gap-2">
             <Badge className="w-fit bg-gray-100 text-gray-900 rounded-full">
               Mam
@@ -104,47 +110,43 @@ const Offer = ({ offer }: { offer: OfferType }) => {
             )}
           </div>
         </div>
-        <div className="flex items-start pt-8 flex-col gap-6">
-          <p className="text-gray-500 text-left line-clamp-3">
-            {offer.description}
-          </p>
 
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full">
-            <div className="flex flex-row  items-center">
-              <Avatar>
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col items-start pl-4">
-                <span className="font-medium text-foreground">
-                  {offer.user.username}
-                </span>
-                <span className="">
-                  {offer.user.rating}/5 ★ • {offer.user.tradesCount} wymian
-                </span>
-              </div>
-            </div>
-            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:justify-end">
-              <Button
-                type="button"
-                className="text-xs cursor-pointer w-full sm:w-auto"
-              >
-                Wymień
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="text-xs cursor-pointer w-full sm:w-auto"
-              >
-                <Plus /> Złóż kontrofertę
-              </Button>
-            </div>
+        <p className="text-gray-500 text-left line-clamp-3 min-h-[4.5rem]">
+          {offer.description}
+        </p>
+      </CardContent>
+
+      <CardFooter className="mt-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full">
+        <div className="flex flex-row  items-center">
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col items-start pl-4">
+            <span className="font-medium text-foreground">
+              {offer.user.username}
+            </span>
+            <span className="">
+              {offer.user.rating}/5 ★ • {offer.user.tradesCount} wymian
+            </span>
           </div>
         </div>
-      </CardContent>
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:justify-end">
+          <Button
+            type="button"
+            className="text-xs cursor-pointer w-full sm:w-auto"
+          >
+            Wymień
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="text-xs cursor-pointer w-full sm:w-auto"
+          >
+            <Plus /> Złóż kontrofertę
+          </Button>
+        </div>
+      </CardFooter>
     </Card>
   )
 }
