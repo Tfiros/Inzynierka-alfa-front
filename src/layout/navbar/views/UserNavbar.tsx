@@ -11,9 +11,7 @@ export const UserNavbar = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 w-full items-center justify-between px-6">
-        <div className="w-20" />
-
-        <div className="flex gap-2 -ml-200">
+        <div className="flex gap-2">
           <Link to="/" className="inline-flex items-center gap-2">
             <img
               src={CrossTradeLogo}
