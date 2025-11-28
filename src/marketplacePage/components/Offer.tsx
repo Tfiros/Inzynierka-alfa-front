@@ -47,7 +47,7 @@ const Offer = ({ offer }: { offer: OfferType }) => {
                   className="flex items-center justify-center"
                 >
                   <img
-                    src="offer.svg?url"
+                    src={item.imageUrl}
                     className="w-full h-full object-cover"
                   />
                 </AspectRatio>
@@ -85,13 +85,13 @@ const Offer = ({ offer }: { offer: OfferType }) => {
                   />
                 </AspectRatio>
                 <div className="mt-2 flex flex-row items-center justify-between gap-2">
-                  <p className="font-medium truncate">AK-47 Redline</p>
+                  <p className="font-medium truncate">{item.name}</p>
                   <div className="flex items-center gap-2">
                     <Badge className="w-fit bg-white text-black rounded-full">
-                      {offer.itemsWant[0].game}
+                      {item.game}
                     </Badge>
                     <Badge className=" w-fit bg-gray-100 text-gray-900 rounded-full">
-                      {offer.itemsWant[0].rarity}
+                      {item.rarity}
                     </Badge>
                   </div>
                 </div>
@@ -137,7 +137,7 @@ const Offer = ({ offer }: { offer: OfferType }) => {
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
               >
-                <Plus /> Zloz kontroferte
+                <Plus /> Złóż kontrofertę
               </Button>
             </div>
           </div>
