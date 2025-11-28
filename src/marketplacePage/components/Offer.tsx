@@ -17,7 +17,7 @@ const Offer = ({ offer }: { offer: OfferType }) => {
       <CardHeader>
         <CardTitle className="w-full">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h1 className="text-base font-semibold lg:text-lg text-left">
+            <h1 className="text-base font-semibold lg:text-lg text-left line-clamp-2">
               {offer.title}
             </h1>
 
@@ -80,7 +80,7 @@ const Offer = ({ offer }: { offer: OfferType }) => {
                   className="flex items-center justify-center"
                 >
                   <img
-                    src="offer.svg?url"
+                    src={item.imageUrl}
                     className="w-full h-full object-cover"
                   />
                 </AspectRatio>
@@ -105,7 +105,9 @@ const Offer = ({ offer }: { offer: OfferType }) => {
           </div>
         </div>
         <div className="flex items-start pt-8 flex-col gap-6">
-          <p className="text-gray-500 text-left">{offer.description}</p>
+          <p className="text-gray-500 text-left line-clamp-3">
+            {offer.description}
+          </p>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full">
             <div className="flex flex-row  items-center">
