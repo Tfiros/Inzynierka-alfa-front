@@ -6,13 +6,18 @@ import { AspectRatio } from '@radix-ui/react-aspect-ratio'
 import { Heart, CalendarDays, Plus } from 'lucide-react'
 import { Avatar } from '@/components/ui/avatar'
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+const MAX_VISIBLE_ITEMS = 2
 const Offer = ({ offer }: { offer: OfferType }) => {
+  const visibleHave = offer.itemsHave.slice(0, MAX_VISIBLE_ITEMS)
+  const visibleWant = offer.itemsWant.slice(0, MAX_VISIBLE_ITEMS)
+  const remainingHave = offer.itemsHave.length - visibleHave.length
+  const remainingWant = offer.itemsWant.length - visibleWant.length
   return (
     <Card className="h-full">
       <CardHeader>
         <CardTitle className="w-full">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h1 className="text-base font-semibold lg:text-lg">
+            <h1 className="text-base font-semibold lg:text-lg text-left">
               {offer.title}
             </h1>
 
@@ -35,44 +40,68 @@ const Offer = ({ offer }: { offer: OfferType }) => {
             <Badge className="w-fit bg-gray-100 text-gray-900 rounded-full">
               Mam
             </Badge>
-            <AspectRatio
-              ratio={16 / 9}
-              className="flex items-center justify-center"
-            >
-              <img src="offer.svg?url" className="w-full h-full object-cover" />
-            </AspectRatio>
-            <div className="mt-2 flex flex-row items-center justify-between gap-2">
-              <p className="font-medium truncate">AK-47 Redline</p>
-              <div className="flex items-center gap-2">
-                <Badge className="w-fit bg-white text-black rounded-full">
-                  {offer.itemsHave[0].game}
-                </Badge>
-                <Badge className=" w-fit bg-gray-100 text-gray-900 rounded-full">
-                  {offer.itemsHave[0].rarity}
-                </Badge>
+            {visibleHave.map((item) => (
+              <div key={item.id} className="flex flex-col gap-2">
+                <AspectRatio
+                  ratio={16 / 9}
+                  className="flex items-center justify-center"
+                >
+                  <img
+                    src="offer.svg?url"
+                    className="w-full h-full object-cover"
+                  />
+                </AspectRatio>
+                <div className="mt-2 flex flex-row items-center justify-between gap-2">
+                  <p className="font-medium truncate">{item.name}</p>
+                  <div className="flex items-center gap-2">
+                    <Badge className="w-fit bg-white text-black rounded-full">
+                      {item.game}
+                    </Badge>
+                    <Badge className=" w-fit bg-gray-100 text-gray-900 rounded-full">
+                      {item.rarity}
+                    </Badge>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
+            {remainingHave > 0 && (
+              <p className="text-sm text-muted-foreground">
+                i {remainingHave} dodatkowych przedmiotów
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col w-full gap-2 border-t pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4 border-gray-300">
             <Badge className="mb-2 w-fit rounded-full">Chcę</Badge>
-            <AspectRatio
-              ratio={16 / 9}
-              className="flex items-center justify-center"
-            >
-              <img src="offer.svg?url" className="w-full h-full object-cover" />
-            </AspectRatio>
-            <div className="mt-2 flex flex-row items-center justify-between gap-2">
-              <p className="font-medium truncate">AK-47 Redline</p>
-              <div className="flex items-center gap-2">
-                <Badge className="w-fit bg-white text-black rounded-full">
-                  {offer.itemsWant[0].game}
-                </Badge>
-                <Badge className=" w-fit bg-gray-100 text-gray-900 rounded-full">
-                  {offer.itemsWant[0].rarity}
-                </Badge>
+            {visibleWant.map((item) => (
+              <div key={item.id} className="flex flex-col gap-2">
+                <AspectRatio
+                  ratio={16 / 9}
+                  className="flex items-center justify-center"
+                >
+                  <img
+                    src="offer.svg?url"
+                    className="w-full h-full object-cover"
+                  />
+                </AspectRatio>
+                <div className="mt-2 flex flex-row items-center justify-between gap-2">
+                  <p className="font-medium truncate">AK-47 Redline</p>
+                  <div className="flex items-center gap-2">
+                    <Badge className="w-fit bg-white text-black rounded-full">
+                      {offer.itemsWant[0].game}
+                    </Badge>
+                    <Badge className=" w-fit bg-gray-100 text-gray-900 rounded-full">
+                      {offer.itemsWant[0].rarity}
+                    </Badge>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
+            {remainingWant > 0 && (
+              <p className="text-sm text-muted-foreground">
+                i {remainingWant} dodatkowych przedmiotów
+              </p>
+            )}
           </div>
         </div>
         <div className="flex items-start pt-8 flex-col gap-6">
