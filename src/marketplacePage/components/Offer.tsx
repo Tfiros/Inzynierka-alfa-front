@@ -48,15 +48,17 @@ const Offer = ({ offer }: { offer: OfferType }) => {
             </Badge>
             {visibleHave.map((item) => (
               <div key={item.id} className="flex flex-col gap-2">
-                <AspectRatio
-                  ratio={16 / 9}
-                  className="flex items-center justify-center"
-                >
-                  <img
-                    src={item.imageUrl}
-                    className="w-full h-full object-cover"
-                  />
-                </AspectRatio>
+                <div className="w-full max-w-[260px] mx-auto">
+                  <AspectRatio
+                    ratio={16 / 9}
+                    className="flex items-center justify-center"
+                  >
+                    <img
+                      src={item.imageUrl}
+                      className="w-full h-full object-cover cursor-pointer"
+                    />
+                  </AspectRatio>
+                </div>
                 <div className="mt-2 flex flex-row items-center justify-between gap-2">
                   <p className="font-medium truncate">{item.name}</p>
                   <div className="flex items-center gap-2">
@@ -81,15 +83,17 @@ const Offer = ({ offer }: { offer: OfferType }) => {
             <Badge className="mb-2 w-fit rounded-full">Chcę</Badge>
             {visibleWant.map((item) => (
               <div key={item.id} className="flex flex-col gap-2">
-                <AspectRatio
-                  ratio={16 / 9}
-                  className="flex items-center justify-center"
-                >
-                  <img
-                    src={item.imageUrl}
-                    className="w-full h-full object-cover"
-                  />
-                </AspectRatio>
+                <div className="w-full max-w-[260px] mx-auto">
+                  <AspectRatio
+                    ratio={16 / 9}
+                    className="flex items-center justify-center"
+                  >
+                    <img
+                      src={item.imageUrl}
+                      className="w-full h-full object-cover cursor-pointer"
+                    />
+                  </AspectRatio>
+                </div>
                 <div className="mt-2 flex flex-row items-center justify-between gap-2">
                   <p className="font-medium truncate">{item.name}</p>
                   <div className="flex items-center gap-2">
