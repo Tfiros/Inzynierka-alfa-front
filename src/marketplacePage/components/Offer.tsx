@@ -82,7 +82,7 @@ const Offer = ({ offer }: { offer: OfferType }) => {
           </div>
 
           <div className="flex flex-col w-full gap-2 border-t pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4 border-gray-300">
-            <Badge className="mb-2 w-fit rounded-full">Chcę</Badge>
+            <Badge className="w-fit rounded-full">Chcę</Badge>
             {visibleWant.map((item) => (
               <div key={item.id} className="flex flex-col gap-2">
                 <div className="w-full max-w-[260px] mx-auto">
