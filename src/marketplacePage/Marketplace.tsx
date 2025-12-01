@@ -1,5 +1,5 @@
-import FilterBar from './components/FilterBar'
 import OffersGrid from './components/OffersGrid'
+import FilterBarContainer from './components/FilterBarContainer'
 
 const Marketplace = () => {
   const oferty = 15
@@ -18,7 +18,7 @@ const Marketplace = () => {
           <p>{oferty} znalezionych ofert</p>
         </div>
       </header>
-      <FilterBar />
+      <FilterBarContainer />
       <OffersGrid offers={[]} />
     </div>
   )
