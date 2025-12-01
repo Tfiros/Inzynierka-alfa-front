@@ -52,7 +52,7 @@ const FilterBar = ({
   return (
     <section className="grid md:grid-cols-5 gap-6 items-center grid-cols-1 border-b pb-4">
       <div className="md:col-span-3 items-center relative">
-        <Search className="absolute ml-3 mt-3 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute ml-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Szukaj przedmioty..."
           className=" pl-9 bg-muted"
