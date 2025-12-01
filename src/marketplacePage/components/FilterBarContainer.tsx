@@ -1,11 +1,11 @@
-import React from 'react'
+import { useState } from 'react'
 import FilterBar from './FilterBar'
 
 const FilterBarContainer = () => {
-  const [search, setSearch] = React.useState('')
-  const [game, setGame] = React.useState('all')
-  const [rarity, setRarity] = React.useState('common')
-  const [sortBy, setSortBy] = React.useState('newest')
+  const [search, setSearch] = useState('')
+  const [game, setGame] = useState('all')
+  const [rarity, setRarity] = useState('common')
+  const [sortBy, setSortBy] = useState('newest')
   return (
     <FilterBar search={search} game={game} rarity={rarity} sortBy={sortBy} onSearchChange={setSearch} onGameChange={setGame} onRarityChange={setRarity} onSortByChange={setSortBy} />
   )
