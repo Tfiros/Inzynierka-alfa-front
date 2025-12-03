@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { Heart, CalendarDays, Plus } from 'lucide-react'
+import { Heart, CalendarDays, Plus, Info } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import OfferItemCard from './OfferItemCard'
 const MAX_VISIBLE_ITEMS = 2
@@ -90,6 +90,9 @@ const Offer = ({ offer }: { offer: OfferType }) => {
           </div>
         </div>
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:justify-end">
+          <Button type="button" variant="outline" className="text-xs cursor-pointer w-full sm:w-auto">
+            <Info /> Szczegóły
+          </Button>
           <Button
             type="button"
             className="text-xs cursor-pointer w-full sm:w-auto"
