@@ -11,6 +11,7 @@ import {
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Heart, CalendarDays, Plus } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import OfferItemCard from './OfferItemCard'
 const MAX_VISIBLE_ITEMS = 2
 const Offer = ({ offer }: { offer: OfferType }) => {
   const visibleHave = offer.itemsHave.slice(0, MAX_VISIBLE_ITEMS)
@@ -46,33 +47,7 @@ const Offer = ({ offer }: { offer: OfferType }) => {
               Mam
             </Badge>
             {visibleHave.map((item) => (
-              <div key={item.id} className="flex flex-col gap-2">
-                <div className="w-full max-w-[260px] mx-auto">
-                  <AspectRatio
-                    ratio={16 / 9}
-                    className="flex items-center justify-center"
-                  >
-                    <img
-                      src={item.imageUrl}
-                      alt={item.name}
-                      className="w-full h-full object-cover cursor-pointer"
-                    />
-                  </AspectRatio>
-                </div>
-                <div className="mt-2 flex flex-col gap-2">
-                  <p className="font-medium line-clamp-2 text-sm text-left">
-                    {item.name}
-                  </p>
-                  <div className="flex items-center gap-2 text-xs">
-                    <Badge className="w-fit bg-white text-black rounded-full pl-0">
-                      {item.game}
-                    </Badge>
-                    <Badge className=" w-fit bg-gray-100 text-gray-900 rounded-full">
-                      {item.rarity}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
+                <OfferItemCard key={item.id} item={item} />
             ))}
             {remainingHave > 0 && (
               <p className="text-sm text-muted-foreground">
@@ -84,33 +59,7 @@ const Offer = ({ offer }: { offer: OfferType }) => {
           <div className="flex flex-col w-full gap-2 border-t pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4 border-gray-300">
             <Badge className="w-fit rounded-full">Chcę</Badge>
             {visibleWant.map((item) => (
-              <div key={item.id} className="flex flex-col gap-2">
-                <div className="w-full max-w-[260px] mx-auto">
-                  <AspectRatio
-                    ratio={16 / 9}
-                    className="flex items-center justify-center"
-                  >
-                    <img
-                      src={item.imageUrl}
-                      alt={item.name}
-                      className="w-full h-full object-cover cursor-pointer"
-                    />
-                  </AspectRatio>
-                </div>
-                <div className="mt-2 flex flex-col gap-2">
-                  <p className="font-medium line-clamp-2 text-sm text-left">
-                    {item.name}
-                  </p>
-                  <div className="flex items-center gap-2 text-xs">
-                    <Badge className="w-fit bg-white text-black rounded-full pl-0">
-                      {item.game}
-                    </Badge>
-                    <Badge className=" w-fit bg-gray-100 text-gray-900 rounded-full">
-                      {item.rarity}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
+                <OfferItemCard key={item.id} item={item} />
             ))}
             {remainingWant > 0 && (
               <p className="text-sm text-muted-foreground">
