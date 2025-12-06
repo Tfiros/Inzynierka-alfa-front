@@ -9,8 +9,6 @@ export type JwtPayload = {
   [k: string]: unknown;
 };
 
-const ACCESS_KEY = "accessToken";
-
 function parseJwt(token: string | null): JwtPayload | null {
   if (!token) return null;
   try {
@@ -44,23 +42,22 @@ export type AuthSlice = {
 
 type StoreState = AuthSlice & Record<string, unknown>;
 
-
-export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (set, get, _api) => {
+export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
+  set,
+  get,
+  _api
+) => {
   void _api;
 
-  const initialToken = sessionStorage.getItem(ACCESS_KEY);
-  const initialPayload = parseJwt(initialToken);
-
   return {
-    accessToken: initialToken,
-    userLogin: initialPayload?.login ?? null,
+    accessToken: null,
+    userLogin: null,
     userId: null,
     navbarUser: null,
-    isAuthenticated: !!initialToken,
+    isAuthenticated: false,
 
     setAccessToken: (token) => {
       if (token) {
-        sessionStorage.setItem(ACCESS_KEY, token);
         const payload = parseJwt(token);
         set({
           accessToken: token,
@@ -68,7 +65,6 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (set
           isAuthenticated: true,
         });
       } else {
-        sessionStorage.removeItem(ACCESS_KEY);
         set({
           accessToken: null,
           userLogin: null,
@@ -80,28 +76,38 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (set
     },
 
     setNavbarUser: (info) => {
-      set({ navbarUser: info });
+      set({
+        navbarUser: info,
+        userId: info?.id ?? null,
+      });
     },
 
     login: async (email, password) => {
       const res = await AuthService.login({ email, password });
-      const id = res.id;
-      const accessToken = res.accessToken;
-      if (!accessToken) {
-        throw new Error("Brak access tokena w odpowiedzi serwera.");
+      console.log(res);
+
+      if (res.status !== 200 || !res.data) {
+        throw new Error(res.message || "Nieznany błąd podczas logowania.");
       }
+
+      const id = res.data.id;
+      const accessToken = res.data.accessToken;
 
       get().setAccessToken(accessToken);
       set({ userId: id });
 
       const navRes = await UserInfoService.getNavbarInfo(id);
-      set({ navbarUser: navRes });     
+      if (navRes.isSuccess && navRes.data) {
+        set({ navbarUser: navRes.data });
+      }
     },
 
     refresh: async () => {
       const res = await AuthService.refresh();
-        get().setAccessToken(res.accessToken);
-        get().setAccessToken(undefined);
+      if (res.status !== 200 || !res.data?.accessToken) {
+        throw new Error(res.message || "Nie udało się odświeżyć tokena.");
+      }
+      get().setAccessToken(res.data.accessToken);
     },
 
     logout: async () => {

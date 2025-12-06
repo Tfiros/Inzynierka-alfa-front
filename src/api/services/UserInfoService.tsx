@@ -1,5 +1,5 @@
-import { get } from "@/api/ApiClient";
-import type { UserNavbarInfoDto, UserProfileInfoDto } from "@/shared/types/userTypes/UserInfoTypes";
+import { get, put } from "@/api/ApiClient";
+import type { UserNavbarInfoDto, UserProfileInfoDto, UserProfileInfoUpdateDto } from "@/shared/types/userTypes/UserInfoTypes";
 
 export class UserInfoService {
   // GET /userInfo/{id:int}
@@ -9,4 +9,8 @@ export class UserInfoService {
   // GET /profileInfo/{id:int}
   public static readonly getProfileInfo = async (userId: number) =>
     get<UserProfileInfoDto>(`/profileInfo/${userId}`);
+
+  // PUT /profileInfo
+  public static readonly updateProfileInfo = async () =>
+    put<UserProfileInfoUpdateDto>(`/profileInfo`);
 }

@@ -1,4 +1,5 @@
-import axios, { HttpStatusCode, type AxiosResponse } from "axios";
+import axios, { HttpStatusCode} from "axios";
+import { useAppStore } from "@/store/appStore";
 import type {RawBodyResponse, BodyDetailsResponseDto}  from "@/shared/types/authTypes/AuthErrorTypes";
 import type { ApiResult } from "./ApiResult";
 type ErrorBody = { message?: string; [k: string]: unknown };
@@ -11,7 +12,7 @@ const apiClient = axios.create({
 
 });
 apiClient.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem("accessToken");
+  const token = useAppStore.getState().accessToken;
   if (token) {
     if (!config.headers) {
       config.headers = {} as any;
@@ -23,23 +24,41 @@ apiClient.interceptors.request.use((config) => {
 
 
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  (error: unknown) => {
+  (response) => response,
+  async (error) => {
     if (axios.isAxiosError<ErrorBody>(error)) {
       const status =
         (error.response?.status as HttpStatusCode) ??
         HttpStatusCode.InternalServerError;
-      const data = error?.response?.data as Partial<RawBodyResponse> | undefined;
-      if (data?.message && data?.details) {
-      return Promise.reject({ status, ...data });
+      const data = error.response?.data as any;
+
+      if (
+        data &&
+        typeof data === "object" &&
+        "isSuccess" in data &&
+        "status" in data
+      ) {
+        return Promise.reject(data as ApiResult<unknown>);
+      }
+
+      const raw = data as Partial<RawBodyResponse> | undefined;
+      if (raw?.message && raw?.details) {
+        return Promise.reject({ status, ...raw });
+      }
+
+      const msg = error?.message ?? "Request failed";
+      return Promise.reject({
+        status,
+        message: msg,
+        details: { text: msg } as BodyDetailsResponseDto,
+      });
     }
-    const msg = error?.message ?? "Request failed";
-    return Promise.reject({ status, message: msg, details: { text: msg } as BodyDetailsResponseDto });
-    }
+
     const message =
       error instanceof Error ? error.message : "Unknown error";
 
     return Promise.reject<ApiResult<never>>({
+      isSuccess: false,
       status: HttpStatusCode.InternalServerError,
       message,
     });

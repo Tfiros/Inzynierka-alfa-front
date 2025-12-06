@@ -9,12 +9,8 @@ export async function get<T>(
   params?: QueryParams,
   config?: AxiosRequestConfig
 ): Promise<ApiResult<T>> {
-  try {
     const res = await api.get<ApiResult<T>>(url, { params, ...(config) });
     return res.data;
-  } catch (e) {
-    return e as ApiResult<T>;
-  }
 }
 
 export async function post<T>(
@@ -22,12 +18,8 @@ export async function post<T>(
   body?: unknown,
   config?: AxiosRequestConfig
 ): Promise<ApiResult<T>> {
-  try {
     const res = await api.post<ApiResult<T>>(url, body, config);
     return res.data;
-  } catch (e) {
-    return e as ApiResult<T>;
-  }
 }
 
 export async function put<T>(
@@ -35,22 +27,14 @@ export async function put<T>(
   body?: unknown,
   config?: AxiosRequestConfig
 ): Promise<ApiResult<T>> {
-  try {
     const res = await api.put<ApiResult<T>>(url, body, config);
     return res.data;
-  } catch (e) {
-    return e as ApiResult<T>;
-  }
 }
 
 export async function del<T>(
   url: string,
   config?: AxiosRequestConfig
 ): Promise<ApiResult<T>> {
-  try {
     const res = await api.delete<ApiResult<T>>(url, config);
     return res.data;
-  } catch (e) {
-    return e as ApiResult<T>;
-  }
 }
