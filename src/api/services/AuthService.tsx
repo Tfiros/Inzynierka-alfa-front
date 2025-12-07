@@ -8,10 +8,10 @@ import type {
 } from "@/shared/types/authTypes/AuthResponseTypes";
 
 export class AuthService {
-  private static readonly base = "/Login";
+  private static readonly base = "/Auth";
   
   public static readonly login = async (data: LoginRequestDto) => 
-      post<LoginResponseDto>(`${this.base}`, data);
+      post<LoginResponseDto>(`${this.base}/login`, data);
 
   public static readonly register = async (data: RegisterRequestDto) =>
       post<RegisterResponseDto>(`${this.base}/register`, data);
