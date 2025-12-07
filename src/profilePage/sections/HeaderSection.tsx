@@ -1,28 +1,25 @@
-import React, { useMemo } from 'react'
 import { ProfileHeader } from '../component/ProfilHeader'
+import type { UserProfileInfoDto } from '@/shared/types/userTypes/UserInfoTypes'
 
-const MOCK_USER = {
-  handle: 'GoodUncle',
-  name: 'Alek Radoliński',
-  bio: 'Doświadczony gracz z 8-letnim doświadczeniem w tradingu. Specjalizuję się w skinach CS2 i rzadkich itemach z MMO.',
-  avatar: '',
-  verified: true,
-  joinedYear: 2021,
+type HeaderSectionProps = {
+  profile: UserProfileInfoDto
+  canEdit: boolean
 }
 
-export const HeaderSection: React.FC = () => {
-  const profile = useMemo(() => MOCK_USER, [])
+export const HeaderSection: React.FC<HeaderSectionProps> = ({ profile, canEdit} : HeaderSectionProps) => {
+  const joinedYear = new Date(profile.registrationDate).getFullYear()
 
   return (
     <section>
       <div className="max-w-6xl mx-auto">
         <ProfileHeader
-          handle={profile.handle}
-          name={profile.name}
-          bio={profile.bio}
-          avatar={profile.avatar}
-          joinedYear={profile.joinedYear}
+          handle={`@${profile.nickname}`}
+          name={profile.nickname}
+          bio={profile.description ?? 'Ten użytkownik nie dodał jeszcze opisu.'}
+          avatar={undefined}
+          joinedYear={joinedYear}
           editPath="/profileEdit"
+          canEdit={canEdit}
         />
       </div>
     </section>

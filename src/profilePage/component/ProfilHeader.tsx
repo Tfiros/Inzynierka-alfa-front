@@ -19,6 +19,7 @@ type ProfileHeaderProps = {
   bio: string
   avatar?: string
   joinedYear: number
+  canEdit: boolean
   editPath?: string
 }
 
@@ -29,7 +30,8 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   avatar,
   joinedYear,
   editPath = '/profileEdit',
-}) => {
+  canEdit = false,
+} : ProfileHeaderProps) => {
   return (
     <div className="flex items-start gap-4">
       <Avatar className="h-16 w-16 md:h-20 md:w-20">
@@ -50,14 +52,16 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         </div>
       </div>
 
-      <div className="shrink-0">
-        <Button variant="outline" className="h-9" asChild>
-          <Link to={editPath}>
-            <Edit className="h-4 w-4 mr-2" />
-            Edytuj profil
-          </Link>
-        </Button>
-      </div>
+      {canEdit && (
+        <div className="shrink-0">
+          <Button variant="outline" className="h-9" asChild>
+            <Link to={editPath}>
+              <Edit className="h-4 w-4 mr-2" />
+              Edytuj profil
+            </Link>
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
