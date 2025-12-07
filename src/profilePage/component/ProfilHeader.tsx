@@ -31,7 +31,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   joinedYear,
   editPath = '/profileEdit',
   canEdit = false,
-}) => {
+} : ProfileHeaderProps) => {
   return (
     <div className="flex items-start gap-4">
       <Avatar className="h-16 w-16 md:h-20 md:w-20">

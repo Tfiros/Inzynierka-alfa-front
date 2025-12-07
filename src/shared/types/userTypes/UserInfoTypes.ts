@@ -9,8 +9,6 @@ export type UserNavbarInfoDto = {
 
 export type UserProfileInfoDto = {
   id: number;
-  email: string;
-  dateOfBirth: string;
   experience: number;
   level: number;
   registrationDate: string;

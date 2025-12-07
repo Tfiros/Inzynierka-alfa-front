@@ -17,6 +17,7 @@ export const ProfileMenu = () => {
   const [busy, setBusy] = useState(false);
 
   const navbarUser = useAppStore((s) => s.navbarUser);
+  const userId = useAppStore((s) => s.userId);
   const logout = useAppStore((s) => s.logout);
 
   const navigate = useNavigate();
@@ -75,12 +76,18 @@ export const ProfileMenu = () => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem asChild>
-          <Link to="/profile" className="flex items-center gap-2">
-            <UserIcon className="h-4 w-4" />
-            <span>Mój profil</span>
-          </Link>
-        </DropdownMenuItem>
+        {userId != null && (
+            <DropdownMenuItem asChild>
+              <Link
+                to={`/profile/${userId}`}
+                className="flex items-center gap-2"
+              >
+                <UserIcon className="h-4 w-4" />
+                <span>Mój profil</span>
+              </Link>
+            </DropdownMenuItem>
+          )}
+
 
         <DropdownMenuItem asChild>
           <Link to="/dashboard" className="flex items-center gap-2">

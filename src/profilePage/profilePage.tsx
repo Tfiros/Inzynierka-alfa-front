@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { HeaderSection } from './sections/HeaderSection'
-import { get } from '@/api/ApiClient'
+import { UserInfoService } from '@/api/services/UserInfoService'
 import type { ApiResult } from '@/api/ApiResult'
 import type { UserProfileInfoDto } from '@/shared/types/userTypes/UserInfoTypes'
 import { useAppStore } from '@/store/appStore'
 import { StatBoxSection } from './sections/StatBoxSection'
 import { TabSection } from './sections/TabSection'
 
-export const UserProfilePage: React.FC = () => {
+export const UserProfilePage = () => {
     const { id } = useParams<{id: string}>()
     const profileId = id ? Number(id) : NaN
     const navigate = useNavigate()
@@ -35,9 +35,7 @@ export const UserProfilePage: React.FC = () => {
         setLoading(true)
         setError(null)
 
-        const res: ApiResult<UserProfileInfoDto> = await get<UserProfileInfoDto>(
-          `/profileInfo/${profileId}`
-        )
+        const res: ApiResult<UserProfileInfoDto> = await UserInfoService.getProfileInfo(profileId)
 
         if (!res.isSuccess || !res.data) {
           setError(res.message ?? 'Nie udało się załadować profilu.')
