@@ -1,6 +1,10 @@
 import type { OfferType } from '../offer'
 import Offer from './Offer'
-const OffersGrid = ({ offers }: { offers: OfferType[] }) => {
+type OfferGridProps = {
+  offers: OfferType[]
+  onShowDetails: (offer: OfferType) => void
+}
+const OffersGrid = ({ offers, onShowDetails }: OfferGridProps) => {
   if (!offers || offers.length === 0) {
     return (
       <div className="flex items-center justify-center rounded-lg border text-sm text-muted-foreground h-32">
@@ -11,7 +15,7 @@ const OffersGrid = ({ offers }: { offers: OfferType[] }) => {
   return (
     <div className="grid xl:grid-cols-2 gap-6">
       {offers.map((offer) => (
-        <Offer key={offer.id} offer={offer} />
+        <Offer key={offer.id} offer={offer} onShowDetails={onShowDetails} />
       ))}
     </div>
   )

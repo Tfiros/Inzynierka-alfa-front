@@ -1,8 +1,23 @@
 import OffersGrid from './components/OffersGrid'
 import FilterBarContainer from './components/FilterBarContainer'
+import OfferDetails from './components/OfferDetails'
+import { useState } from 'react'
+import type { OfferType } from './offer'
 
 const Marketplace = () => {
   const oferty = 15
+  const [selectedOffer, setSelectedOffer] = useState<OfferType | null>(null)
+  const [detailsOpen, setDetailsOpen] = useState(false)
+  const handleShowDetails = (offer: OfferType) => {
+    setSelectedOffer(offer)
+    setDetailsOpen(true)
+  }
+  const handleOpenDialogChange = (open: boolean) => {
+    setDetailsOpen(open)
+    if (!open) {
+      setSelectedOffer(null)
+    }
+  }
   return (
     <div className="mx-auto flex flex-col gap-6  py-6 lg:py-10">
       <header className="flex flex-col gap-3 pb-2 md:flex-row md:items-center md:justify-between">
@@ -19,7 +34,14 @@ const Marketplace = () => {
         </div>
       </header>
       <FilterBarContainer />
-      <OffersGrid offers={[]} />
+      <OffersGrid offers={[]} onShowDetails={handleShowDetails} />
+      {selectedOffer && (
+        <OfferDetails
+          offer={selectedOffer}
+          open={detailsOpen}
+          onOpenChange={handleOpenDialogChange}
+        />
+      )}
     </div>
   )
 }

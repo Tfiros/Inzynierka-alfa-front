@@ -13,7 +13,13 @@ import { Heart, CalendarDays, Plus, Info } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import OfferItemCard from './OfferItemCard'
 const MAX_VISIBLE_ITEMS = 2
-const Offer = ({ offer }: { offer: OfferType }) => {
+
+type OfferProps = {
+  offer: OfferType
+  onShowDetails: (offer: OfferType) => void
+}
+
+const Offer = ({ offer, onShowDetails }: OfferProps) => {
   const visibleHave = offer.itemsHave.slice(0, MAX_VISIBLE_ITEMS)
   const visibleWant = offer.itemsWant.slice(0, MAX_VISIBLE_ITEMS)
   const remainingHave = offer.itemsHave.length - visibleHave.length
@@ -32,7 +38,11 @@ const Offer = ({ offer }: { offer: OfferType }) => {
                 <CalendarDays className="w-5 h-5" />
                 <span className="pl-2">{offer.date}</span>
               </div>
-              <Button variant="outline" className="cursor-pointer group" type='button'>
+              <Button
+                variant="outline"
+                className="cursor-pointer group"
+                type="button"
+              >
                 <Heart className="group-hover:text-red-500 group-hover:fill-red-500 transition" />
               </Button>
             </div>
@@ -47,7 +57,9 @@ const Offer = ({ offer }: { offer: OfferType }) => {
               Mam
             </Badge>
             {visibleHave.map((item) => (
-                <OfferItemCard key={item.id} item={item} />
+              <div key={item.id} className="w-full max-w-[260px]">
+                <OfferItemCard item={item} />
+              </div>
             ))}
             {remainingHave > 0 && (
               <p className="text-sm text-muted-foreground">
@@ -59,7 +71,9 @@ const Offer = ({ offer }: { offer: OfferType }) => {
           <div className="flex flex-col w-full gap-2 border-t pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4 border-gray-300">
             <Badge className="w-fit rounded-full">Chcę</Badge>
             {visibleWant.map((item) => (
-                <OfferItemCard key={item.id} item={item} />
+              <div key={item.id} className="w-full max-w-[260px]">
+                <OfferItemCard item={item} />
+              </div>
             ))}
             {remainingWant > 0 && (
               <p className="text-sm text-muted-foreground">
@@ -77,8 +91,13 @@ const Offer = ({ offer }: { offer: OfferType }) => {
       <CardFooter className="mt-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full">
         <div className="flex flex-row  items-center">
           <Avatar>
-            <AvatarImage src={offer.user.avatarUrl ?? "https://github.com/shadcn.png"} alt={offer.user.username} />
-            <AvatarFallback>{offer.user.username.slice(0,2).toUpperCase()}</AvatarFallback>
+            <AvatarImage
+              src={offer.user.avatarUrl ?? 'https://github.com/shadcn.png'}
+              alt={offer.user.username}
+            />
+            <AvatarFallback>
+              {offer.user.username.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-start pl-4">
             <span className="font-medium text-foreground">
@@ -90,7 +109,12 @@ const Offer = ({ offer }: { offer: OfferType }) => {
           </div>
         </div>
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:justify-end">
-          <Button type="button" variant="outline" className="text-xs cursor-pointer w-full sm:w-auto">
+          <Button
+            type="button"
+            variant="outline"
+            className="text-xs cursor-pointer w-full sm:w-auto"
+            onClick={() => onShowDetails(offer)}
+          >
             <Info /> Szczegóły
           </Button>
           <Button
