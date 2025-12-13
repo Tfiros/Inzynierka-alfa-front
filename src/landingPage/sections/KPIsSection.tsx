@@ -1,4 +1,4 @@
-import { Kpi } from "../components/Kpi";
+import { Kpi } from "../components/Kpi"
 export const KPIsSection = () => {
   return (
     <section className="container mx-auto px-4">
@@ -11,5 +11,5 @@ export const KPIsSection = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}

@@ -1,12 +1,10 @@
-import { Card, CardContent } from "@/components/ui/card";
-
+import { Card, CardContent } from "@/components/ui/card"
 
 export type TileProps = {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-};
-
+  title: string
+  description: string
+  icon: React.ReactNode
+}
 
 const Tile = ({ title, description, icon }: TileProps) => {
   return (
@@ -21,7 +19,7 @@ const Tile = ({ title, description, icon }: TileProps) => {
         <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 export default Tile

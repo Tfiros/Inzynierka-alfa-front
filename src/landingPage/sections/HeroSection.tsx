@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import LPPhoto from "@/photos/LandingPageGamesPhoto.jpg";
+import { Button } from "@/components/ui/button"
+import LPPhoto from "@/photos/LandingPageGamesPhoto.jpg"
 
 export const HeroSection = () => {
   return (
@@ -15,7 +15,9 @@ export const HeroSection = () => {
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button size="lg" className="cursor-pointer">Zacznij teraz za darmo</Button>
+            <Button size="lg" className="cursor-pointer">
+              Zacznij teraz za darmo
+            </Button>
             <Button size="lg" variant="outline" className="cursor-pointer">
               Zobacz jak działa
             </Button>
@@ -31,5 +33,5 @@ export const HeroSection = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}

@@ -1,17 +1,23 @@
-import { Link } from "react-router-dom";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import type { ReactNode } from "react";
+import { Link } from "react-router-dom"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import type { ReactNode } from "react"
 
 export interface ActionCardProps {
-  icon: ReactNode;
-  title: string;
-  description: string;
-  ctaLabel: string;
-  to: string;
-  className?: string;
-  iconBg?: string;
-  buttonClass?: string;
+  icon: ReactNode
+  title: string
+  description: string
+  ctaLabel: string
+  to: string
+  className?: string
+  iconBg?: string
+  buttonClass?: string
 }
 
 export const ActionCard: React.FC<ActionCardProps> = ({
@@ -44,5 +50,5 @@ export const ActionCard: React.FC<ActionCardProps> = ({
         </Button>
       </CardContent>
     </Card>
-  );
-};
+  )
+}

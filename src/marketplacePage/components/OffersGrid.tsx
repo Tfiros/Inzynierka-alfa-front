@@ -1,5 +1,5 @@
-import type { OfferType } from '../offer'
-import Offer from './Offer'
+import type { OfferType } from "../offer"
+import Offer from "./Offer"
 type OfferGridProps = {
   offers: OfferType[]
   onShowDetails: (offer: OfferType) => void

@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Handshake, Star, Gift } from "lucide-react";
-import { Link } from "react-router-dom";
-import Tile from "../components/Tile";
+import { Button } from "@/components/ui/button"
+import { Handshake, Star, Gift } from "lucide-react"
+import { Link } from "react-router-dom"
+import Tile from "../components/Tile"
 
 export const CurrencySection = () => {
   return (
@@ -39,5 +39,5 @@ export const CurrencySection = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}

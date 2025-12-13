@@ -1,8 +1,8 @@
-import { HomeDashboardPublic } from "./PublicHomeDashboard";
-import { HomeDashboardPrivate } from "./PrivateHomeDashBoard";
+import { HomeDashboardPublic } from "./PublicHomeDashboard"
+import { HomeDashboardPrivate } from "./PrivateHomeDashBoard"
 
 export const MainDashboard = () => {
-  const isAuthenticated = false;
+  const isAuthenticated = false
 
-  return isAuthenticated ? <HomeDashboardPrivate /> : <HomeDashboardPublic />;
-};
+  return isAuthenticated ? <HomeDashboardPrivate /> : <HomeDashboardPublic />
+}

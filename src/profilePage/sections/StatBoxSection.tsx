@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react'
-import { Layers, Trophy, Star, Percent } from 'lucide-react'
-import { StatBox } from '../component/StatBox'
+import React, { useMemo } from "react"
+import { Layers, Trophy, Star, Percent } from "lucide-react"
+import { StatBox } from "../component/StatBox"
 
 const MOCK_STATS = {
   activeOffers: 2,

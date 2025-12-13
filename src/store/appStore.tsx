@@ -1,9 +1,9 @@
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { createUiSlice, type UiSlice } from "./storeParts/uiSlice";
-import { createAuthSlice, type AuthSlice } from "./storeParts/authSlice";
+import { create } from "zustand"
+import { persist, createJSONStorage } from "zustand/middleware"
+import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
+import { createAuthSlice, type AuthSlice } from "./storeParts/authSlice"
 
-export type AppState = UiSlice & AuthSlice;
+export type AppState = UiSlice & AuthSlice
 
 export const useAppStore = create<AppState>()(
   persist(
@@ -23,13 +23,14 @@ export const useAppStore = create<AppState>()(
       }),
     }
   )
-);
+)
 
-export const selectCounter = (id: string) => (s: AppState) => s.counters[id] ?? 0;
+export const selectCounter = (id: string) => (s: AppState) =>
+  s.counters[id] ?? 0
 export const selectAuth = (s: AppState) => ({
   isAuthenticated: s.isAuthenticated,
   userLogin: s.userLogin,
   userId: s.userId,
   navbarUser: s.navbarUser,
-});
-export const selectAccessToken = (s: AppState) => s.accessToken;
+})
+export const selectAccessToken = (s: AppState) => s.accessToken

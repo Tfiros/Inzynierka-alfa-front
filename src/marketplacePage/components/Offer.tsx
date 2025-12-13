@@ -1,17 +1,17 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import type { OfferType } from '../offer'
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import type { OfferType } from "../offer"
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { Heart, CalendarDays, Plus, Info } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import OfferItemCard from './OfferItemCard'
+} from "@/components/ui/card"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { Heart, CalendarDays, Plus, Info } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import OfferItemCard from "./OfferItemCard"
 const MAX_VISIBLE_ITEMS = 2
 
 type OfferProps = {
@@ -92,7 +92,7 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
         <div className="flex flex-row  items-center">
           <Avatar>
             <AvatarImage
-              src={offer.user.avatarUrl ?? 'https://github.com/shadcn.png'}
+              src={offer.user.avatarUrl ?? "https://github.com/shadcn.png"}
               alt={offer.user.username}
             />
             <AvatarFallback>

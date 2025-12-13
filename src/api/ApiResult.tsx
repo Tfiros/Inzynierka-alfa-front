@@ -1,8 +1,8 @@
-import {HttpStatusCode} from "axios";
+import { HttpStatusCode } from "axios"
 
 export interface ApiResult<T = unknown> {
-    isSuccess: boolean;
-    status: HttpStatusCode;
-    message?: string;
-    data?: T;
+  isSuccess: boolean
+  status: HttpStatusCode
+  message?: string
+  data?: T
 }

@@ -1,9 +1,9 @@
-import { Outlet } from 'react-router-dom'
-import { useAppStore } from '@/store/appStore'
+import { Outlet } from "react-router-dom"
+import { useAppStore } from "@/store/appStore"
 
-import { UserNavbar } from './navbar/views/UserNavbar'
-import { Footer } from './Footer'
-import GuestNavbar from './navbar/views/GuestNavbar'
+import { UserNavbar } from "./navbar/views/UserNavbar"
+import { Footer } from "./Footer"
+import GuestNavbar from "./navbar/views/GuestNavbar"
 export const MainLayout = () => {
   const isLogged = useAppStore((s) => s.isAuthenticated)
   return (

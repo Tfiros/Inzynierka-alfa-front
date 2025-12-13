@@ -1,75 +1,90 @@
-import PasswordInput from "@/shared/components/PasswordInput";
-import { useState } from "react";
+import PasswordInput from "@/shared/components/PasswordInput"
+import { useState } from "react"
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import type { ModalViewPropsTypes } from "../ModalTypes";
-import { AuthService} from "@/api/services/AuthService";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { CalendarIcon } from "lucide-react"
+import { format } from "date-fns"
+import { cn } from "@/lib/utils"
+import type { ModalViewPropsTypes } from "../ModalTypes"
+import { AuthService } from "@/api/services/AuthService"
 
 const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
-  const [checked, setChecked] = useState(false);
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [birthDate, setBirthDate] = useState<Date>();
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [okMsg, setOkMsg] = useState<string | null>(null);
+  const [checked, setChecked] = useState(false)
+  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirm, setConfirm] = useState("")
+  const [birthDate, setBirthDate] = useState<Date>()
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [okMsg, setOkMsg] = useState<string | null>(null)
 
   const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (busy) return;
+    e.preventDefault()
+    if (busy) return
 
-    setError(null);
-    setOkMsg(null);
+    setError(null)
+    setOkMsg(null)
 
-    if (!email.trim()) return setError("Podaj email.");
-    if (!password) return setError("Podaj hasło.");
-    if (!validatePassword(password)) return setError("Hasło musi mieć co najmniej 8 znaków i zawierać przynajmniej trzy z następujących: małą literę, dużą literę, cyfrę, znak specjalny.");
-    if (!checked) return setError("Musisz zaakceptować regulamin i politykę prywatności.");
+    if (!email.trim()) return setError("Podaj email.")
+    if (!password) return setError("Podaj hasło.")
+    if (!validatePassword(password))
+      return setError(
+        "Hasło musi mieć co najmniej 8 znaków i zawierać przynajmniej trzy z następujących: małą literę, dużą literę, cyfrę, znak specjalny."
+      )
+    if (!checked)
+      return setError("Musisz zaakceptować regulamin i politykę prywatności.")
 
-    setBusy(true);
+    setBusy(true)
     try {
-      const res = await AuthService.register({ email, password, username , birthDate});
+      const res = await AuthService.register({
+        email,
+        password,
+        username,
+        birthDate,
+      })
 
-      setOkMsg(res?.message ?? "Konto zostało utworzone.");
-      setTimeout(() => onSwitch("login"), 800);
+      setOkMsg(res?.message ?? "Konto zostało utworzone.")
+      setTimeout(() => onSwitch("login"), 800)
     } catch (err: any) {
       const msg =
         err?.message ??
         err?.details?.error_description ??
         err?.details?.error ??
-        "Rejestracja nie powiodła się.";
-      setError(msg);
+        "Rejestracja nie powiodła się."
+      setError(msg)
     } finally {
-      setBusy(false);
+      setBusy(false)
     }
-  };
-  const validatePassword = (password: string): boolean => {
-  if (password.length < 8) return false;
-  if (password !== confirm) return false;
-
-  const hasLower = /[a-z]/.test(password);
-  const hasUpper = /[A-Z]/.test(password);
-  const hasDigit = /[0-9]/.test(password);
-  const hasSpecial = /[^A-Za-z0-9]/.test(password);
-
-  const typesCount = [hasLower, hasUpper, hasDigit, hasSpecial].filter(Boolean).length;
-
-  if (typesCount < 3) {
-    return false;
   }
+  const validatePassword = (password: string): boolean => {
+    if (password.length < 8) return false
+    if (password !== confirm) return false
 
-  return true;
-};
+    const hasLower = /[a-z]/.test(password)
+    const hasUpper = /[A-Z]/.test(password)
+    const hasDigit = /[0-9]/.test(password)
+    const hasSpecial = /[^A-Za-z0-9]/.test(password)
+
+    const typesCount = [hasLower, hasUpper, hasDigit, hasSpecial].filter(
+      Boolean
+    ).length
+
+    if (typesCount < 3) {
+      return false
+    }
+
+    return true
+  }
 
   return (
     <>
@@ -110,7 +125,7 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
                 onSelect={setBirthDate}
                 autoFocus
                 captionLayout="dropdown"
-                startMonth={new Date(1900,0)}
+                startMonth={new Date(1900, 0)}
                 disabled={(date) =>
                   date > new Date() || date < new Date("1900-01-01")
                 }
@@ -135,7 +150,9 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
             id="password"
             name="password"
             value={password}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.currentTarget.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setPassword(e.currentTarget.value)
+            }
             autoComplete="new-password"
             disabled={busy}
           />
@@ -147,7 +164,9 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
             id="confirmPassword"
             name="confirmPassword"
             value={confirm}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirm(e.currentTarget.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setConfirm(e.currentTarget.value)
+            }
             autoComplete="new-password"
             disabled={busy}
           />
@@ -162,13 +181,27 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
           />
           <Label htmlFor="terms" className="text-sm">
             Akceptuję{" "}
-            <a href="#" className="underline">Regulamin</a> oraz
-            <a href="#" className="underline">Politykę Prywatności</a>.
+            <a href="#" className="underline">
+              Regulamin
+            </a>{" "}
+            oraz
+            <a href="#" className="underline">
+              Politykę Prywatności
+            </a>
+            .
           </Label>
         </div>
 
-        {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
-        {okMsg && <p className="text-sm text-green-700" role="status">{okMsg}</p>}
+        {error && (
+          <p className="text-sm text-red-600" role="alert">
+            {error}
+          </p>
+        )}
+        {okMsg && (
+          <p className="text-sm text-green-700" role="status">
+            {okMsg}
+          </p>
+        )}
 
         <Button type="submit" className="w-full cursor-pointer" disabled={busy}>
           {busy ? "Rejestrowanie…" : "Zarejestruj się"}
@@ -186,7 +219,7 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
         </button>
       </p>
     </>
-  );
-};
+  )
+}
 
-export default RegisterView;
+export default RegisterView

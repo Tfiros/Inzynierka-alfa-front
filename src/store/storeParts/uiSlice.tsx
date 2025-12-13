@@ -1,16 +1,21 @@
-import type { StateCreator } from "zustand";
+import type { StateCreator } from "zustand"
 
 export type UiSlice = {
-  counters: Record<string, number>;
-  inc: (id: string, by?: number) => void;
-  reset: (id: string) => void;
-  notify: (msg: string) => string;
-};
+  counters: Record<string, number>
+  inc: (id: string, by?: number) => void
+  reset: (id: string) => void
+  notify: (msg: string) => string
+}
 
-type StoreState = UiSlice & Record<string, unknown>;
+type StoreState = UiSlice & Record<string, unknown>
 
-export const createUiSlice: StateCreator<StoreState, [], [], UiSlice> = (set, _get, _api) => {
-  void _get; void _api;
+export const createUiSlice: StateCreator<StoreState, [], [], UiSlice> = (
+  set,
+  _get,
+  _api
+) => {
+  void _get
+  void _api
 
   return {
     counters: {},
@@ -22,14 +27,14 @@ export const createUiSlice: StateCreator<StoreState, [], [], UiSlice> = (set, _g
 
     reset: (id) =>
       set((s) => {
-        const next = { ...s.counters };
-        delete next[id];
-        return { counters: next };
+        const next = { ...s.counters }
+        delete next[id]
+        return { counters: next }
       }),
 
     notify: (msg) => {
-      console.log("Notification:", msg);
-      return msg;
+      console.log("Notification:", msg)
+      return msg
     },
-  };
-};
+  }
+}

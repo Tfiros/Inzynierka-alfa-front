@@ -1,4 +1,4 @@
-import { Input } from '@/components/ui/input'
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
@@ -7,8 +7,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Search } from 'lucide-react'
+} from "@/components/ui/select"
+import { Search } from "lucide-react"
 type FilterBarProps = {
   search: string
   game: string
@@ -31,23 +31,23 @@ const FilterBar = ({
   onSortByChange,
 }: FilterBarProps) => {
   const GAME_OPTIONS = [
-    { value: 'all', label: 'Wszystkie gry' },
-    { value: 'csgo', label: 'CS:GO' },
-    { value: 'valorant', label: 'Valorant' },
-    { value: 'dota2', label: 'Dota 2' },
+    { value: "all", label: "Wszystkie gry" },
+    { value: "csgo", label: "CS:GO" },
+    { value: "valorant", label: "Valorant" },
+    { value: "dota2", label: "Dota 2" },
   ]
   const RARITY_OPTIONS = [
-    { value: 'common', label: 'Common' },
-    { value: 'uncommon', label: 'Uncommon' },
-    { value: 'rare', label: 'Rare' },
-    { value: 'epic', label: 'Epic' },
-    { value: 'legendary', label: 'Legendary' },
+    { value: "common", label: "Common" },
+    { value: "uncommon", label: "Uncommon" },
+    { value: "rare", label: "Rare" },
+    { value: "epic", label: "Epic" },
+    { value: "legendary", label: "Legendary" },
   ]
   const SORT_OPTIONS = [
-    { value: 'newest', label: 'Najnowsze' },
-    { value: 'oldest', label: 'Najstarsze' },
-    { value: 'cheapest', label: 'Najtańsze' },
-    { value: 'most_expensive', label: 'Najdroższe' },
+    { value: "newest", label: "Najnowsze" },
+    { value: "oldest", label: "Najstarsze" },
+    { value: "cheapest", label: "Najtańsze" },
+    { value: "most_expensive", label: "Najdroższe" },
   ]
   return (
     <section className="grid md:grid-cols-5 gap-6 items-center grid-cols-1 border-b pb-4">

@@ -1,6 +1,6 @@
-import { Box, RefreshCw, User as UserIcon } from "lucide-react";
-import PointsIcon from "@/photos/PointsIcon.svg";
-import { ActionCard } from "../ActionCard";
+import { Box, RefreshCw, User as UserIcon } from "lucide-react"
+import PointsIcon from "@/photos/PointsIcon.svg"
+import { ActionCard } from "../ActionCard"
 
 export const HomeDashboardPrivate = () => {
   return (
@@ -46,5 +46,5 @@ export const HomeDashboardPrivate = () => {
         />
       </div>
     </div>
-  );
-};
+  )
+}

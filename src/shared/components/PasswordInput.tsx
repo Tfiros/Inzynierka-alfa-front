@@ -1,17 +1,17 @@
-import * as React from "react";
-import { Input } from "@/components/ui/input";
-import { Eye, EyeOff } from "lucide-react";
+import * as React from "react"
+import { Input } from "@/components/ui/input"
+import { Eye, EyeOff } from "lucide-react"
 
 type PasswordInputProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   "type"
 > & {
-  errorText?: string;
-};
+  errorText?: string
+}
 
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
   ({ className, errorText, ...props }, ref) => {
-    const [show, setShow] = React.useState(false);
+    const [show, setShow] = React.useState(false)
 
     return (
       <div className="relative w-full">
@@ -31,13 +31,11 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
         >
           {show ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>
-        {errorText && (
-          <p className="mt-1 text-xs text-red-600">{errorText}</p>
-        )}
+        {errorText && <p className="mt-1 text-xs text-red-600">{errorText}</p>}
       </div>
-    );
+    )
   }
-);
+)
 
-PasswordInput.displayName = "PasswordInput";
-export default PasswordInput;
+PasswordInput.displayName = "PasswordInput"
+export default PasswordInput

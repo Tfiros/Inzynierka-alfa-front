@@ -1,14 +1,14 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import './App.css'
-import { useAuthBootstrap } from '@/shared/AuthBootstrap'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import "./App.css"
+import { useAuthBootstrap } from "@/shared/AuthBootstrap"
 const Splash = () => <div className="p-6">Ładowanie…</div>
-import { MainDashboard } from '@/homeDashboard/views/MainDashboard'
-import { MainLayout } from '@/layout/MainLayout'
-import { LandingPage } from './landingPage/LandingPage'
-import { FAQs } from './FAQs/faqsSite'
-import { UserProfilePage } from '@/profilePage/profilePage'
-import { StatutePage } from '@/statutePage/statutePage'
-import Marketplace from './marketplacePage/Marketplace'
+import { MainDashboard } from "@/homeDashboard/views/MainDashboard"
+import { MainLayout } from "@/layout/MainLayout"
+import { LandingPage } from "./landingPage/LandingPage"
+import { FAQs } from "./FAQs/faqsSite"
+import { UserProfilePage } from "@/profilePage/profilePage"
+import { StatutePage } from "@/statutePage/statutePage"
+import Marketplace from "./marketplacePage/Marketplace"
 
 function App() {
   const ready = useAuthBootstrap()
