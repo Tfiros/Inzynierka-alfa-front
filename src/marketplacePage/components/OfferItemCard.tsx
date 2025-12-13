@@ -1,7 +1,7 @@
-import React from 'react'
-import type { ItemType } from '../offer'
-import { AspectRatio } from '@radix-ui/react-aspect-ratio'
-import { Badge } from '@/components/ui/badge'
+import React from "react"
+import type { ItemType } from "../offer"
+import { AspectRatio } from "@radix-ui/react-aspect-ratio"
+import { Badge } from "@/components/ui/badge"
 
 const OfferItemCard = ({ item }: { item: ItemType }) => {
   return (

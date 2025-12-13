@@ -1,17 +1,20 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Star } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card"
+import { Star } from "lucide-react"
 
 export type TestimonialProps = {
-  quote: string;
-  name: string;
-  role: string;
-};
+  quote: string
+  name: string
+  role: string
+}
 
 export const Testimonial = ({ quote, name, role }: TestimonialProps) => {
   return (
     <Card>
       <CardContent className="p-6">
-        <div className="flex items-center justify-center gap-1 text-yellow-500" aria-hidden="true">
+        <div
+          className="flex items-center justify-center gap-1 text-yellow-500"
+          aria-hidden="true"
+        >
           <Star className="h-4 w-4 fill-current" />
           <Star className="h-4 w-4 fill-current" />
           <Star className="h-4 w-4 fill-current" />
@@ -25,5 +28,5 @@ export const Testimonial = ({ quote, name, role }: TestimonialProps) => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}

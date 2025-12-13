@@ -9,9 +9,9 @@ export type ModalViewPropsTypes = {
 }
 
 export type AuthModalView =
-  | 'login'
-  | 'register'
-  | 'forgot-email'
-  | 'forgot-code'
-  | 'forgot-reset'
-  | 'forgot-success'
+  | "login"
+  | "register"
+  | "forgot-email"
+  | "forgot-code"
+  | "forgot-reset"
+  | "forgot-success"

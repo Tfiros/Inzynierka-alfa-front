@@ -1,4 +1,4 @@
-import { Testimonial } from "../components/Testimonial";
+import { Testimonial } from "../components/Testimonial"
 
 export const TestimonialsSection = () => {
   return (
@@ -28,5 +28,5 @@ export const TestimonialsSection = () => {
         />
       </div>
     </section>
-  );
-};
+  )
+}

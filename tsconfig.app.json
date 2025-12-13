@@ -22,11 +22,11 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-     /* shadcn */
-  "baseUrl": ".",
-  "paths": {
-    "@/*": ["./src/*"]
+    /* shadcn */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  },
-    "include": ["src"]
+  "include": ["src"]
 }

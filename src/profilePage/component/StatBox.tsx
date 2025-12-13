@@ -1,8 +1,8 @@
-import React from 'react'
-import { Card, CardContent } from '@/components/ui/card'
+import React from "react"
+import { Card, CardContent } from "@/components/ui/card"
 
 const cx = (...c: (string | false | null | undefined)[]) =>
-  c.filter(Boolean).join(' ')
+  c.filter(Boolean).join(" ")
 
 type StatBoxProps = {
   icon: React.ReactNode
@@ -18,7 +18,7 @@ export const StatBox: React.FC<StatBoxProps> = ({
   highlighted,
 }) => {
   return (
-    <Card className={cx('flex-1', highlighted && 'ring-2 ring-primary')}>
+    <Card className={cx("flex-1", highlighted && "ring-2 ring-primary")}>
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div className="text-2xl font-semibold leading-none">{value}</div>

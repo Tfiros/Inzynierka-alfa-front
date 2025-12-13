@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useMemo } from "react"
+import { useNavigate, Link } from "react-router-dom"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,42 +7,42 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { User as UserIcon, LogOut, Trophy } from "lucide-react";
-import { useAppStore } from "@/store/appStore";
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
+import { User as UserIcon, LogOut, Trophy } from "lucide-react"
+import { useAppStore } from "@/store/appStore"
 
 export const ProfileMenu = () => {
-  const [open, setOpen] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [busy, setBusy] = useState(false)
 
-  const navbarUser = useAppStore((s) => s.navbarUser);
-  const userId = useAppStore((s) => s.userId);
-  const logout = useAppStore((s) => s.logout);
+  const navbarUser = useAppStore((s) => s.navbarUser)
+  const userId = useAppStore((s) => s.userId)
+  const logout = useAppStore((s) => s.logout)
 
-  const navigate = useNavigate();
-  const displayName = navbarUser?.nickname ?? "Użytkownik";
-  const email = navbarUser?.email ?? "—";
+  const navigate = useNavigate()
+  const displayName = navbarUser?.nickname ?? "Użytkownik"
+  const email = navbarUser?.email ?? "—"
 
   const initials = useMemo(() => {
-  const parts = displayName.trim().split(/\s+/);
-  const letters = parts.map((p) => p[0]?.toUpperCase()).join("");
-    return letters.slice(0, 2) || "U";
-  }, [displayName]);
+    const parts = displayName.trim().split(/\s+/)
+    const letters = parts.map((p) => p[0]?.toUpperCase()).join("")
+    return letters.slice(0, 2) || "U"
+  }, [displayName])
 
   const handleLogout = async () => {
-    if (busy) return;
-    setBusy(true);
+    if (busy) return
+    setBusy(true)
     try {
-      await logout();
-      setOpen(false);
-      navigate("/");
+      await logout()
+      setOpen(false)
+      navigate("/")
     } catch (e) {
-      console.warn("Logout error (ignored):", e);
+      console.warn("Logout error (ignored):", e)
     } finally {
-      setBusy(false);
+      setBusy(false)
     }
-  };
+  }
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -77,17 +77,13 @@ export const ProfileMenu = () => {
         <DropdownMenuSeparator />
 
         {userId != null && (
-            <DropdownMenuItem asChild>
-              <Link
-                to={`/profile/${userId}`}
-                className="flex items-center gap-2"
-              >
-                <UserIcon className="h-4 w-4" />
-                <span>Mój profil</span>
-              </Link>
-            </DropdownMenuItem>
-          )}
-
+          <DropdownMenuItem asChild>
+            <Link to={`/profile/${userId}`} className="flex items-center gap-2">
+              <UserIcon className="h-4 w-4" />
+              <span>Mój profil</span>
+            </Link>
+          </DropdownMenuItem>
+        )}
 
         <DropdownMenuItem asChild>
           <Link to="/dashboard" className="flex items-center gap-2">
@@ -100,8 +96,8 @@ export const ProfileMenu = () => {
 
         <DropdownMenuItem
           onSelect={(e) => {
-            e.preventDefault();
-            void handleLogout();
+            e.preventDefault()
+            void handleLogout()
           }}
           disabled={busy}
           className="text-red-600 focus:text-red-600"
@@ -111,5 +107,5 @@ export const ProfileMenu = () => {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-};
+  )
+}

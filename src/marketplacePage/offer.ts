@@ -1,6 +1,6 @@
-export type OfferGame = 'CS:GO' | 'Valorant' | 'League of Legends' | 'Dota 2'
+export type OfferGame = "CS:GO" | "Valorant" | "League of Legends" | "Dota 2"
 
-export type OfferRarity = 'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary'
+export type OfferRarity = "Common" | "Uncommon" | "Rare" | "Epic" | "Legendary"
 
 export interface OfferType {
   id: number

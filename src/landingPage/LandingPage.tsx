@@ -1,9 +1,9 @@
-import { HeroSection } from './sections/HeroSection'
-import { KPIsSection } from './sections/KPIsSection'
-import { HowItWorksSection } from './sections/HowItWorksSection'
-import { CurrencySection } from './sections/CurrencySection'
-import { TestimonialsSection } from './sections/TestimonialSection'
-import { CTASection } from './sections/CTASection'
+import { HeroSection } from "./sections/HeroSection"
+import { KPIsSection } from "./sections/KPIsSection"
+import { HowItWorksSection } from "./sections/HowItWorksSection"
+import { CurrencySection } from "./sections/CurrencySection"
+import { TestimonialsSection } from "./sections/TestimonialSection"
+import { CTASection } from "./sections/CTASection"
 
 export const LandingPage = () => {
   return (

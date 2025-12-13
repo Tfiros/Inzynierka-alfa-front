@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Facebook, Instagram, Twitter } from 'lucide-react'
-import CrossTradeLogo from '@/photos/CrossTradeLogo.png'
+import { Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Facebook, Instagram, Twitter } from "lucide-react"
+import CrossTradeLogo from "@/photos/CrossTradeLogo.png"
 
 export const Footer = () => {
   const year = new Date().getFullYear()

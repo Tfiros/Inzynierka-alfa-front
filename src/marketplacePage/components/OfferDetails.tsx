@@ -1,15 +1,15 @@
-import { Badge } from '@/components/ui/badge'
-import type { OfferType } from '../offer'
+import { Badge } from "@/components/ui/badge"
+import type { OfferType } from "../offer"
 import {
   DialogHeader,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
-} from '@/components/ui/dialog'
-import OfferItemCard from './OfferItemCard'
-import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
+} from "@/components/ui/dialog"
+import OfferItemCard from "./OfferItemCard"
+import { Button } from "@/components/ui/button"
+import { Plus } from "lucide-react"
 
 type OfferDetailsProps = {
   offer: OfferType

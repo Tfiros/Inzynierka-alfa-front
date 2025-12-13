@@ -1,8 +1,8 @@
-import React from 'react'
-import { CalendarDays, Edit } from 'lucide-react'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
+import React from "react"
+import { CalendarDays, Edit } from "lucide-react"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
 
 const initials = (name?: string) =>
   (
@@ -10,7 +10,7 @@ const initials = (name?: string) =>
       ?.split(/\s+/)
       .map((p) => p[0])
       .slice(0, 2)
-      .join('') || '?'
+      .join("") || "?"
   ).toUpperCase()
 
 type ProfileHeaderProps = {
@@ -29,9 +29,9 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   bio,
   avatar,
   joinedYear,
-  editPath = '/profileEdit',
+  editPath = "/profileEdit",
   canEdit = false,
-} : ProfileHeaderProps) => {
+}: ProfileHeaderProps) => {
   return (
     <div className="flex items-start gap-4">
       <Avatar className="h-16 w-16 md:h-20 md:w-20">

@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
-import { HeaderSection } from './sections/HeaderSection'
-import { ContentSection } from './sections/ContentSection'
+import { useEffect } from "react"
+import { HeaderSection } from "./sections/HeaderSection"
+import { ContentSection } from "./sections/ContentSection"
 
 export function StatutePage() {
   useEffect(() => window.scrollTo(0, 0), [])

@@ -1,4 +1,4 @@
-const updatedAt = '2025-10-22'
+const updatedAt = "2025-10-22"
 
 export function HeaderSection() {
   return (

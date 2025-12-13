@@ -1,6 +1,6 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Section } from '../component/Section'
-import { Definitions } from '../component/Definitions'
+import { Card, CardContent } from "@/components/ui/card"
+import { Section } from "../component/Section"
+import { Definitions } from "../component/Definitions"
 
 export const ContentSection: React.FC = () => {
   return (
@@ -9,13 +9,13 @@ export const ContentSection: React.FC = () => {
         <Section title="§1. Postanowienia ogólne">
           <ol className="list-decimal pl-5 space-y-2">
             <li>
-              Regulamin określa zasady korzystania z platformy{' '}
+              Regulamin określa zasady korzystania z platformy{" "}
               <strong>CrossTrade</strong> – aplikacji webowej umożliwiającej
               wymianę cyfrowych przedmiotów pomiędzy użytkownikami gier
               komputerowych.
             </li>
             <li>
-              Właścicielem i administratorem serwisu jest{' '}
+              Właścicielem i administratorem serwisu jest{" "}
               <em>Aleksander Radoliński, Piotr Wójcik, Igor Tarasiuk</em> .
             </li>
             <li>
@@ -34,25 +34,25 @@ export const ContentSection: React.FC = () => {
         <Section title="§2. Definicje">
           <Definitions
             items={[
-              ['Serwis', 'platforma internetowa CrossTrade'],
-              ['Użytkownik', 'osoba fizyczna posiadająca Konto w Serwisie'],
+              ["Serwis", "platforma internetowa CrossTrade"],
+              ["Użytkownik", "osoba fizyczna posiadająca Konto w Serwisie"],
               [
-                'Konto',
-                'profil Użytkownika umożliwiający korzystanie z funkcji Serwisu',
+                "Konto",
+                "profil Użytkownika umożliwiający korzystanie z funkcji Serwisu",
               ],
               [
-                'Przedmiot',
-                'cyfrowy przedmiot oferowany do wymiany (np. skin, karta, konto)',
+                "Przedmiot",
+                "cyfrowy przedmiot oferowany do wymiany (np. skin, karta, konto)",
               ],
               [
-                'Oferta wymiany',
-                'publiczna propozycja zamiany przedmiotów pomiędzy Użytkownikami',
+                "Oferta wymiany",
+                "publiczna propozycja zamiany przedmiotów pomiędzy Użytkownikami",
               ],
               [
-                'Pośrednik',
-                'zatwierdzony przez Administratora mechanizm lub osoba wspierająca bezpieczną wymianę',
+                "Pośrednik",
+                "zatwierdzony przez Administratora mechanizm lub osoba wspierająca bezpieczną wymianę",
               ],
-              ['RODO', 'Rozporządzenie (UE) 2016/679'],
+              ["RODO", "Rozporządzenie (UE) 2016/679"],
             ]}
           />
         </Section>
@@ -146,7 +146,7 @@ export const ContentSection: React.FC = () => {
         <Section title="§7. Reklamacje">
           <ol className="list-decimal pl-5 space-y-2">
             <li>
-              Reklamacje można zgłaszać na adres:{' '}
+              Reklamacje można zgłaszać na adres:{" "}
               <em>reklamacje@crosstrade.pl</em>.
             </li>
             <li>
