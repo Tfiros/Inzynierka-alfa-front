@@ -3,10 +3,29 @@ import { AuthService } from "@/api/services/AuthService"
 import { UserInfoService } from "@/api/services/UserInfoService"
 import type { UserNavbarInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
 
+const ROLES_CLAIM = "https://inzynierka.com/roles" as const
+
 export type JwtPayload = {
   login?: string
   exp?: number
   [k: string]: unknown
+}
+function extractRoles(payload: JwtPayload | null): string[] {
+  if (!payload) return []
+
+  const raw = payload[ROLES_CLAIM]
+
+  if (Array.isArray(raw)) {
+    return raw.filter(
+      (x): x is string => typeof x === "string" && x.trim().length > 0
+    )
+  }
+
+  if (typeof raw === "string" && raw.trim()) {
+    return [raw.trim()]
+  }
+
+  return []
 }
 
 function parseJwt(token: string | null): JwtPayload | null {
@@ -31,6 +50,7 @@ export type AuthSlice = {
   userId: number | null
   navbarUser: UserNavbarInfoDto | null
   isAuthenticated: boolean
+  roles: string[]
 
   setAccessToken: (token: string | undefined) => void
   setNavbarUser: (info: UserNavbarInfoDto | null) => void
@@ -55,14 +75,18 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     userId: null,
     navbarUser: null,
     isAuthenticated: false,
+    roles: [],
 
     setAccessToken: (token) => {
       if (token) {
         const payload = parseJwt(token)
+        const roles = extractRoles(payload)
+
         set({
           accessToken: token,
           userLogin: payload?.login ?? null,
           isAuthenticated: true,
+          roles,
         })
       } else {
         set({
@@ -71,6 +95,7 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
           userId: null,
           navbarUser: null,
           isAuthenticated: false,
+          roles: [],
         })
       }
     },

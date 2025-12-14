@@ -9,7 +9,9 @@ import { useAppStore } from "@/store/appStore"
 
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
+  const roles = useAppStore((s) => s.roles)
 
+  const isAdmin = roles.some((r) => r.toLowerCase() === "admin")
   const tokens = navbarUser?.tokens ?? 0
   const level = navbarUser?.level ?? 1
   return (
@@ -28,6 +30,7 @@ export const UserNavbar = () => {
 
         <nav className="flex items-center gap-4 text-sm">
           <div className="flex gap-6">
+            {isAdmin && <NavItem to="/userManagement" label="Użytkownicy" />}
             <NavItem to="/oferty" label="Oferty" />
             <NavItem to="/faqs" label="FAQs" />
           </div>
