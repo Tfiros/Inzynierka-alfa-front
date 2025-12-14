@@ -2,15 +2,17 @@ import { useCallback, useEffect, useState } from "react"
 import { UserManagementService } from "@/api/services/UserManagementService"
 import {
   UserListOrderBy,
+  type UserListItemDto,
   type UserListPagedResponse,
 } from "@/shared/types/userTypes/UserManagementTypes"
-
+import { DeleteUserDialog } from "./components/DeleteUserDialog"
 import { HeaderSection } from "./sections/HeaderSection"
 import { StatsSection } from "./sections/StatsSection"
 import { ToolbarSection } from "./sections/ToolbarSection"
 import { TableSection } from "./sections/TableSection"
 import { PaginationSection } from "./sections/PaginationSection"
-
+import { EditUserDialog } from "./components/EditUserDialog"
+import { AddUserModal } from "./components/AddUserDialog"
 export const UserManagementPage = () => {
   const pageSize = 10
 
@@ -25,6 +27,11 @@ export const UserManagementPage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [data, setData] = useState<UserListPagedResponse | null>(null)
+  const [addOpen, setAddOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [editUser, setEditUser] = useState<UserListItemDto | null>(null)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteUser, setDeleteUser] = useState<UserListItemDto | null>(null)
 
   useEffect(() => {
     const t = window.setTimeout(() => setSearchDebounced(search), 300)
@@ -81,6 +88,7 @@ export const UserManagementPage = () => {
     setPage(1)
     setRole(next)
   }
+
   const handleOrderByChange = (next: UserListOrderBy) => {
     setPage(1)
     setOrderBy(next)
@@ -89,10 +97,19 @@ export const UserManagementPage = () => {
   const handlePrevPage = () => setPage((p) => Math.max(1, p - 1))
   const handleNextPage = () => setPage((p) => Math.min(totalPages, p + 1))
 
+  const openEdit = (u: UserListItemDto) => {
+    setEditUser(u)
+    setEditOpen(true)
+  }
+  const openDelete = (u: UserListItemDto) => {
+    setDeleteUser(u)
+    setDeleteOpen(true)
+  }
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto w-full max-w-7xl px-6 py-8">
-        <HeaderSection />
+        <HeaderSection loading={loading} onAddUser={() => setAddOpen(true)} />
+
         <StatsSection loading={loading} data={data} />
 
         <ToolbarSection
@@ -107,7 +124,13 @@ export const UserManagementPage = () => {
           totalCount={totalCount}
         />
 
-        <TableSection loading={loading} error={error} items={items} />
+        <TableSection
+          loading={loading}
+          error={error}
+          items={items}
+          onEdit={openEdit}
+          onDelete={openDelete}
+        />
 
         <PaginationSection
           loading={loading}
@@ -120,8 +143,24 @@ export const UserManagementPage = () => {
           onNext={handleNextPage}
         />
       </div>
+
+      <EditUserDialog
+        open={editOpen}
+        user={editUser}
+        onOpenChange={setEditOpen}
+        onSaved={() => void fetchUsers()}
+      />
+      <DeleteUserDialog
+        open={deleteOpen}
+        user={deleteUser}
+        onOpenChange={setDeleteOpen}
+        onDeleted={() => void fetchUsers()}
+      />
+      <AddUserModal
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        onCreated={() => void fetchUsers()}
+      />
     </div>
   )
 }
-
-export default UserManagementPage

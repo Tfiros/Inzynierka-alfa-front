@@ -33,19 +33,16 @@ type Props = {
   loading: boolean
   error: string | null
   items: UserListItemDto[]
-  // (sort dopniemy później)
-  onSortNickname?: () => void
-  onSortEmail?: () => void
-  onSortRegisteredAt?: () => void
+  onEdit: (u: UserListItemDto) => void
+  onDelete: (u: UserListItemDto) => void
 }
 
 export const TableSection = ({
   loading,
   error,
   items,
-  onSortNickname,
-  onSortEmail,
-  onSortRegisteredAt,
+  onEdit,
+  onDelete,
 }: Props) => {
   return (
     <Card className="mt-6 shadow-sm">
@@ -59,7 +56,6 @@ export const TableSection = ({
                     <Button
                       variant="ghost"
                       className="h-auto p-0 font-semibold hover:bg-transparent"
-                      onClick={onSortNickname}
                     >
                       Użytkownik
                     </Button>
@@ -72,7 +68,6 @@ export const TableSection = ({
                     <Button
                       variant="ghost"
                       className="h-auto p-0 font-semibold hover:bg-transparent"
-                      onClick={onSortEmail}
                     >
                       Email
                     </Button>
@@ -89,7 +84,6 @@ export const TableSection = ({
                     <Button
                       variant="ghost"
                       className="h-auto p-0 font-semibold hover:bg-transparent"
-                      onClick={onSortRegisteredAt}
                     >
                       Data rejestracji
                     </Button>
@@ -170,11 +164,8 @@ export const TableSection = ({
 
                     <TableCell className="text-right">
                       <UserActionsMenu
-                        onEdit={() => console.log("edit", u.auth0UserId)}
-                        onChangeRoles={() =>
-                          console.log("roles", u.auth0UserId)
-                        }
-                        onDelete={() => console.log("delete", u.auth0UserId)}
+                        onEdit={() => onEdit(u)}
+                        onDelete={() => onDelete(u)}
                       />
                     </TableCell>
                   </TableRow>

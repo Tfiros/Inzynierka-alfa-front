@@ -34,3 +34,15 @@ export type UserListPagedResponse = {
   registeredLastMonthCount: number
   middlemenCount: number
 }
+
+export type UpdateUserRequestDto = {
+  authZeroUserId: string
+  email?: string | null
+  newPassword?: string | null
+  roles?: string[] | null
+  nickname?: string | null
+}
+
+export type DeleteUserRequestDto = {
+  authZeroUserId: string
+}

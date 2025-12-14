@@ -10,11 +10,10 @@ import {
 
 type Props = {
   onEdit: () => void
-  onChangeRoles: () => void
   onDelete: () => void
 }
 
-export const UserActionsMenu = ({ onEdit, onChangeRoles, onDelete }: Props) => {
+export const UserActionsMenu = ({ onEdit, onDelete }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -25,7 +24,6 @@ export const UserActionsMenu = ({ onEdit, onChangeRoles, onDelete }: Props) => {
 
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={onEdit}>Edytuj</DropdownMenuItem>
-        <DropdownMenuItem onClick={onChangeRoles}>Zmień role</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="text-destructive focus:text-destructive"

@@ -17,7 +17,7 @@ import {
 import { Search, Filter, ArrowUpDown } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
-import type { UserListOrderBy } from "@/shared/types/userTypes/UserManagementTypes"
+import { UserListOrderBy } from "@/shared/types/userTypes/UserManagementTypes"
 
 type Props = {
   search: string
@@ -31,34 +31,27 @@ type Props = {
 
   orderBy: UserListOrderBy
   onOrderByChange: (orderBy: UserListOrderBy) => void
+  onAddUser: () => void
 }
 
-const ROLE_OPTIONS = ["Admin", "Middleman"]
+const ROLE_OPTIONS = [
+  "Admin",
+  "Moderator",
+  "Editor",
+  "User",
+  "Viewer",
+  "Middleman",
+]
 
 const rolePillClass = (role: string) => {
   const r = role.toLowerCase()
   if (r === "admin") return "bg-blue-600 text-white"
+  if (r === "moderator") return "bg-emerald-600 text-white"
+  if (r === "editor") return "bg-violet-600 text-white"
   if (r === "middleman") return "bg-amber-600 text-white"
+  if (r === "viewer") return "bg-slate-600 text-white"
+  if (r === "user") return "bg-zinc-700 text-white"
   return "bg-zinc-700 text-white"
-}
-
-const orderByLabel = (v: UserListOrderBy) => {
-  switch (v) {
-    case 1:
-      return "Nazwa (A-Z)"
-    case 2:
-      return "Nazwa (Z-A)"
-    case 3:
-      return "Email (A-Z)"
-    case 4:
-      return "Email (Z-A)"
-    case 5:
-      return "Data rejestracji (najstarsze)"
-    case 6:
-      return "Data rejestracji (najnowsze)"
-    default:
-      return "Sortowanie"
-  }
 }
 
 export const ToolbarSection = ({
@@ -97,35 +90,44 @@ export const ToolbarSection = ({
             <DropdownMenuContent align="start" className="w-64">
               <DropdownMenuLabel>Sortuj według</DropdownMenuLabel>
               <DropdownMenuSeparator />
-
               <DropdownMenuRadioGroup
                 value={String(orderBy)}
                 onValueChange={(v) =>
                   onOrderByChange(Number(v) as UserListOrderBy)
                 }
               >
-                <DropdownMenuRadioItem value="1">
+                <DropdownMenuRadioItem
+                  value={String(UserListOrderBy.NicknameAsc)}
+                >
                   Nazwa (A-Z)
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="2">
+                <DropdownMenuRadioItem
+                  value={String(UserListOrderBy.NicknameDesc)}
+                >
                   Nazwa (Z-A)
                 </DropdownMenuRadioItem>
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuRadioItem value="3">
+                <DropdownMenuRadioItem value={String(UserListOrderBy.EmailAsc)}>
                   Email (A-Z)
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="4">
+                <DropdownMenuRadioItem
+                  value={String(UserListOrderBy.EmailDesc)}
+                >
                   Email (Z-A)
                 </DropdownMenuRadioItem>
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuRadioItem value="5">
+                <DropdownMenuRadioItem
+                  value={String(UserListOrderBy.RegisteredAtAsc)}
+                >
                   Data rejestracji (najstarsze)
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="6">
+                <DropdownMenuRadioItem
+                  value={String(UserListOrderBy.RegisteredAtDesc)}
+                >
                   Data rejestracji (najnowsze)
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
@@ -194,19 +196,6 @@ export const ToolbarSection = ({
             ? "Ładowanie..."
             : `Pokazano ${shownTo} z ${totalCount} użytkowników`}
         </div>
-      </div>
-
-      <div className="text-xs text-muted-foreground">
-        Sortowanie:{" "}
-        <span className="font-medium text-foreground">
-          {orderByLabel(orderBy)}
-        </span>
-        {role ? (
-          <>
-            {" · "}Rola:{" "}
-            <span className="font-medium text-foreground">{role}</span>
-          </>
-        ) : null}
       </div>
     </div>
   )

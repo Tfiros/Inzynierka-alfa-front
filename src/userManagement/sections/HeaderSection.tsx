@@ -1,7 +1,12 @@
 import { Button } from "@/components/ui/button"
 import { Settings, UserPlus } from "lucide-react"
 
-export const HeaderSection = () => {
+type Props = {
+  onAddUser: () => void
+  loading: boolean
+}
+
+export const HeaderSection = ({ onAddUser, loading }: Props) => {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
@@ -18,7 +23,7 @@ export const HeaderSection = () => {
           <Settings className="h-4 w-4" />
         </Button>
 
-        <Button className="gap-2">
+        <Button onClick={onAddUser} disabled={loading}>
           <UserPlus className="h-4 w-4" />
           Dodaj użytkownika
         </Button>

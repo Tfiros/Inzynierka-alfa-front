@@ -1,9 +1,12 @@
-import { get } from "@/api/ApiClient"
+import { get, patch } from "@/api/ApiClient"
 import type { ApiResult } from "@/api/ApiResult"
 import type {
   UserListPagedResponse,
   UserListQuery,
+  UpdateUserRequestDto,
+  DeleteUserRequestDto,
 } from "@/shared/types/userTypes/UserManagementTypes"
+import api from "@/api/Api"
 
 function buildUserListQs(q: UserListQuery) {
   const p = new URLSearchParams()
@@ -29,4 +32,27 @@ export class UserManagementService {
     get<UserListPagedResponse>(
       `${this.base}${buildUserListQs(query)}`
     ) as Promise<ApiResult<UserListPagedResponse>>
+
+  public static readonly updateUser = async (body: UpdateUserRequestDto) =>
+    patch<string>(`${this.base}`, body)
+
+  public static readonly deleteUser = async (
+    body: DeleteUserRequestDto
+  ): Promise<ApiResult<string>> => {
+    const res = await api.delete(this.base, {
+      data: body,
+      headers: { "Content-Type": "application/json" },
+      validateStatus: () => true,
+    })
+
+    if (res.status === 204) {
+      return {
+        isSuccess: true,
+        status: 204,
+        data: null as any,
+        message: "User deleted successfully",
+      }
+    }
+    return res.data as ApiResult<string>
+  }
 }
