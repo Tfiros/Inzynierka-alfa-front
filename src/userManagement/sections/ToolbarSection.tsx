@@ -31,26 +31,14 @@ type Props = {
 
   orderBy: UserListOrderBy
   onOrderByChange: (orderBy: UserListOrderBy) => void
-  onAddUser: () => void
 }
 
-const ROLE_OPTIONS = [
-  "Admin",
-  "Moderator",
-  "Editor",
-  "User",
-  "Viewer",
-  "Middleman",
-]
+const ROLE_OPTIONS = ["Admin", "Middleman"]
 
 const rolePillClass = (role: string) => {
   const r = role.toLowerCase()
   if (r === "admin") return "bg-blue-600 text-white"
-  if (r === "moderator") return "bg-emerald-600 text-white"
-  if (r === "editor") return "bg-violet-600 text-white"
   if (r === "middleman") return "bg-amber-600 text-white"
-  if (r === "viewer") return "bg-slate-600 text-white"
-  if (r === "user") return "bg-zinc-700 text-white"
   return "bg-zinc-700 text-white"
 }
 

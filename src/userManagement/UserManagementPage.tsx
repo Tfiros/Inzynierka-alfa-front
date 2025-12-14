@@ -74,6 +74,16 @@ export const UserManagementPage = () => {
       setLoading(false)
     }
   }, [page, pageSize, searchDebounced, role, orderBy])
+  const delay = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+  const refetchUsersWithRetry = useCallback(async () => {
+    const waits = [900]
+
+    for (const w of waits) {
+      if (w) await delay(w)
+      await fetchUsers()
+    }
+  }, [fetchUsers])
 
   useEffect(() => {
     void fetchUsers()
@@ -148,18 +158,18 @@ export const UserManagementPage = () => {
         open={editOpen}
         user={editUser}
         onOpenChange={setEditOpen}
-        onSaved={() => void fetchUsers()}
+        onSaved={() => void refetchUsersWithRetry()}
       />
       <DeleteUserDialog
         open={deleteOpen}
         user={deleteUser}
         onOpenChange={setDeleteOpen}
-        onDeleted={() => void fetchUsers()}
+        onDeleted={() => void refetchUsersWithRetry()}
       />
       <AddUserModal
         open={addOpen}
         onOpenChange={setAddOpen}
-        onCreated={() => void fetchUsers()}
+        onCreated={() => void refetchUsersWithRetry()}
       />
     </div>
   )
