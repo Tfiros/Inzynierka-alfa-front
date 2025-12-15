@@ -9,6 +9,8 @@ import { FAQs } from "./FAQs/faqsSite"
 import { UserProfilePage } from "@/profilePage/profilePage"
 import { StatutePage } from "@/statutePage/statutePage"
 import Marketplace from "./marketplacePage/Marketplace"
+import { AdminRoute } from "./routes/AdminRoutes"
+import UserManagementPage from "./userManagement/UserManagementPage"
 
 function App() {
   const ready = useAuthBootstrap()
@@ -26,6 +28,9 @@ function App() {
           <Route path="profile/:id" element={<UserProfilePage />} />
           <Route path="statute" element={<StatutePage />} />
           <Route path="marketplace" element={<Marketplace />} />
+          <Route element={<AdminRoute />}>
+            <Route path="userManagement" element={<UserManagementPage />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

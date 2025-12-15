@@ -20,6 +20,7 @@ export const useAppStore = create<AppState>()(
         userId: state.userId,
         navbarUser: state.navbarUser,
         isAuthenticated: state.isAuthenticated,
+        roles: state.roles,
       }),
     }
   )
@@ -33,4 +34,6 @@ export const selectAuth = (s: AppState) => ({
   userId: s.userId,
   navbarUser: s.navbarUser,
 })
+export const selectHasRole = (role: string) => (s: AppState) =>
+  s.roles.includes(role)
 export const selectAccessToken = (s: AppState) => s.accessToken
