@@ -22,12 +22,7 @@ type Props = {
   onDeleted: () => void
 }
 
-export const DeleteUserDialog = ({
-  open,
-  user,
-  onOpenChange,
-  onDeleted,
-}: Props) => {
+const DeleteUserDialog = ({ open, user, onOpenChange, onDeleted }: Props) => {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -89,3 +84,4 @@ export const DeleteUserDialog = ({
     </AlertDialog>
   )
 }
+export default DeleteUserDialog

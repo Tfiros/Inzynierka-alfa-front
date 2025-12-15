@@ -31,7 +31,7 @@ function fromDateInputValue(value: string): Date {
   return new Date(y, (m ?? 1) - 1, d ?? 1)
 }
 
-export function AddUserModal({ open, onOpenChange, onCreated }: Props) {
+const AddUserModal = ({ open, onOpenChange, onCreated }: Props) => {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -170,3 +170,4 @@ export function AddUserModal({ open, onOpenChange, onCreated }: Props) {
     </Dialog>
   )
 }
+export default AddUserModal

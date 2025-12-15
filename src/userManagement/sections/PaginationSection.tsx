@@ -13,7 +13,7 @@ type Props = {
   onNext: () => void
 }
 
-export const PaginationSection = ({
+const PaginationSection = ({
   loading,
   page,
   totalPages,
@@ -61,3 +61,4 @@ export const PaginationSection = ({
     </Card>
   )
 }
+export default PaginationSection

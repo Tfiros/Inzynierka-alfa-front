@@ -1,14 +1,14 @@
 import { Skeleton } from "@/components/ui/skeleton"
 import { Users, Calendar, Shield } from "lucide-react"
 import type { UserListPagedResponse } from "@/shared/types/userTypes/UserManagementTypes"
-import { StatCard } from "../components/StatCard"
+import StatCard from "../components/StatCard"
 
 type Props = {
   loading: boolean
   data: UserListPagedResponse | null
 }
 
-export const StatsSection = ({ loading, data }: Props) => {
+const StatsSection = ({ loading, data }: Props) => {
   const totalCount = data?.totalCount ?? 0
   const registeredLastMonthCount = data?.registeredLastMonthCount ?? 0
   const middlemenCount = data?.middlemenCount ?? 0
@@ -38,3 +38,4 @@ export const StatsSection = ({ loading, data }: Props) => {
     </div>
   )
 }
+export default StatsSection

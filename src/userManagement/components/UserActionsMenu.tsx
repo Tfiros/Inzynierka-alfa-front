@@ -13,7 +13,7 @@ type Props = {
   onDelete: () => void
 }
 
-export const UserActionsMenu = ({ onEdit, onDelete }: Props) => {
+const UserActionsMenu = ({ onEdit, onDelete }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -35,3 +35,4 @@ export const UserActionsMenu = ({ onEdit, onDelete }: Props) => {
     </DropdownMenu>
   )
 }
+export default UserActionsMenu

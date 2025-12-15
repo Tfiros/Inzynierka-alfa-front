@@ -8,7 +8,7 @@ type Props = {
   icon: ReactNode
 }
 
-export const StatCard = ({ title, value, subtitle, icon }: Props) => {
+const StatCard = ({ title, value, subtitle, icon }: Props) => {
   return (
     <Card className="shadow-sm">
       <CardContent className="p-6">
@@ -29,3 +29,4 @@ export const StatCard = ({ title, value, subtitle, icon }: Props) => {
     </Card>
   )
 }
+export default StatCard

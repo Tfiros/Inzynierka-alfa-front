@@ -42,7 +42,7 @@ const rolePillClass = (role: string) => {
   return "bg-zinc-700 text-white"
 }
 
-export const ToolbarSection = ({
+const ToolbarSection = ({
   search,
   onSearchChange,
   loading,
@@ -188,3 +188,4 @@ export const ToolbarSection = ({
     </div>
   )
 }
+export default ToolbarSection

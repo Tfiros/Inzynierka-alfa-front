@@ -5,15 +5,15 @@ import {
   type UserListItemDto,
   type UserListPagedResponse,
 } from "@/shared/types/userTypes/UserManagementTypes"
-import { DeleteUserDialog } from "./components/DeleteUserDialog"
-import { HeaderSection } from "./sections/HeaderSection"
-import { StatsSection } from "./sections/StatsSection"
-import { ToolbarSection } from "./sections/ToolbarSection"
-import { TableSection } from "./sections/TableSection"
-import { PaginationSection } from "./sections/PaginationSection"
-import { EditUserDialog } from "./components/EditUserDialog"
-import { AddUserModal } from "./components/AddUserDialog"
-export const UserManagementPage = () => {
+import DeleteUserDialog from "./components/DeleteUserDialog"
+import HeaderSection from "./sections/HeaderSection"
+import StatsSection from "./sections/StatsSection"
+import ToolbarSection from "./sections/ToolbarSection"
+import TableSection from "./sections/TableSection"
+import PaginationSection from "./sections/PaginationSection"
+import EditUserDialog from "./components/EditUserDialog"
+import AddUserModal from "./components/AddUserDialog"
+const UserManagementPage = () => {
   const pageSize = 10
 
   const [page, setPage] = useState(1)

@@ -26,12 +26,7 @@ type Props = {
   onSaved: () => void
 }
 
-export const EditUserDialog = ({
-  open,
-  user,
-  onOpenChange,
-  onSaved,
-}: Props) => {
+const EditUserDialog = ({ open, user, onOpenChange, onSaved }: Props) => {
   const [nickname, setNickname] = useState("")
   const [email, setEmail] = useState("")
   const [newPassword, setNewPassword] = useState("")
@@ -181,3 +176,4 @@ export const EditUserDialog = ({
     </Dialog>
   )
 }
+export default EditUserDialog

@@ -29,7 +29,7 @@ function App() {
           <Route path="statute" element={<StatutePage />} />
           <Route path="marketplace" element={<Marketplace />} />
           <Route element={<AdminRoute />}>
-            <Route path="/userManagement" element={<UserManagementPage />} />
+            <Route path="userManagement" element={<UserManagementPage />} />
           </Route>
         </Route>
       </Routes>
