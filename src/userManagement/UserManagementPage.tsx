@@ -174,3 +174,4 @@ export const UserManagementPage = () => {
     </div>
   )
 }
+export default UserManagementPage
