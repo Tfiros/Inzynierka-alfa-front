@@ -8,7 +8,7 @@ import type { AuthModalView } from "@/shared/ModalTypes"
 
 export default function GuestNavbar() {
   const [open, setOpen] = useState(false)
-  const [initialView, setInitialView] = useState<AuthModalView>("login")
+  const [view, setView] = useState<AuthModalView>("login")
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -30,7 +30,7 @@ export default function GuestNavbar() {
                 <Button
                   className="flex-1"
                   onClick={() => {
-                    setInitialView("login")
+                    setView("login")
                     setOpen(true)
                   }}
                 >
@@ -39,7 +39,7 @@ export default function GuestNavbar() {
                 <Button
                   className="flex-1"
                   onClick={() => {
-                    setInitialView("register")
+                    setView("register")
                     setOpen(true)
                   }}
                   variant="secondary"
@@ -51,7 +51,12 @@ export default function GuestNavbar() {
           </nav>
         </div>
       </header>
-      <AuthModal open={open} onOpenChange={setOpen} initialView={initialView} />
+      <AuthModal
+        open={open}
+        onOpenChange={setOpen}
+        view={view}
+        onViewChange={setView}
+      />
     </>
   )
 }
