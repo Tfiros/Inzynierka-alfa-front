@@ -8,6 +8,9 @@ import { LandingPage } from './landingPage/LandingPage'
 import { FAQs } from './FAQs/faqsSite'
 import { UserProfilePage } from '@/profilePage/profilePage'
 import { StatutePage } from '@/statutePage/statutePage'
+import { PointShop } from './pointShop/pointShop'
+import { NotFoundPage } from './NotFoundPage/NotFoundPage'
+import { BlankLayout } from './layout/BlankLayout'
 
 function App() {
   const ready = useAuthBootstrap()
@@ -24,6 +27,10 @@ function App() {
           <Route path="points" element={<div>Points</div>} />
           <Route path="profile/:id" element={<UserProfilePage />} />
           <Route path="statute" element={<StatutePage />} />
+          <Route path="shop" element={<PointShop />} />
+        </Route>
+        <Route element={<BlankLayout />}>
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
