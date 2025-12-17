@@ -11,7 +11,7 @@ import { StatutePage } from "@/statutePage/statutePage"
 import Marketplace from "./marketplacePage/Marketplace"
 import { AdminRoute } from "./routes/AdminRoutes"
 import UserManagementPage from "./userManagement/UserManagementPage"
-
+import MiddlemanPanelPage from "./middlemanPanel/MiddlemanPanelPage"
 function App() {
   const ready = useAuthBootstrap()
 
@@ -30,6 +30,9 @@ function App() {
           <Route path="marketplace" element={<Marketplace />} />
           <Route element={<AdminRoute />}>
             <Route path="userManagement" element={<UserManagementPage />} />
+          </Route>
+          <Route element={<MiddlemanPanelPage />}>
+            <Route path="middlemanPanel" element={<MiddlemanPanelPage />} />
           </Route>
         </Route>
       </Routes>
