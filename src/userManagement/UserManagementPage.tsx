@@ -40,7 +40,7 @@ const UserManagementPage = () => {
 
   const totalCount = data?.totalCount ?? 0
   const totalPages = data?.totalPages ?? 1
-  const items = data?.items ?? []
+  const items = data?.elements ?? []
 
   const shownFrom = totalCount === 0 ? 0 : (page - 1) * pageSize + 1
   const shownTo = Math.min(page * pageSize, totalCount)

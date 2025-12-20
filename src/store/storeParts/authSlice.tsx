@@ -109,7 +109,6 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
 
     login: async (email, password) => {
       const res = await AuthService.login({ email, password })
-      console.log(res)
 
       if (res.status !== 200 || !res.data) {
         throw new Error(res.message || "Nieznany błąd podczas logowania.")
