@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { GamesService } from "@/api/services/GamesService"
-import { ItemsService } from "@/api/services/ItemsService"
+import { ItemRaritiesService } from "@/api/services/ItemRaritiesService"
 import useDebouncedValue from "../useDebouncedValue"
 import SearchInput from "../components/SearchInput"
 import Paginator from "../components/Paginator"
 import EntityCard from "../components/EntityCard"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
-import EditItemDialog from "../components/EditItemDialog"
 import {
   Select,
   SelectContent,
@@ -16,17 +15,15 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
-import type { ItemDto } from "@/shared/types/itemManagementTypes/EntityDtos"
+import AddItemRarityDialog from "../components/AddDialogs/AddItemRarityDialog"
+import EditItemRarityDialog from "../components/EditDialogs/EditItemRarityDialog"
 
-const ItemsSection = () => {
+type RarityDto = { id: number; name: string }
+
+const ItemRaritiesTab = () => {
+  const pageSize = 10
+
   const [games, setGames] = useState<DropdownOption[]>([])
   const [gameId, setGameId] = useState<number | null>(null)
 
@@ -38,38 +35,39 @@ const ItemsSection = () => {
   const q = useDebouncedValue(search, 300)
 
   const [page, setPage] = useState(1)
-  const pageSize = 10
 
   const [data, setData] = useState<{
-    items: ItemDto[]
+    items: RarityDto[]
     totalCount: number
     totalPages: number
   } | null>(null)
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const [addOpen, setAddOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
-  const [selected, setSelected] = useState<ItemDto | null>(null)
+  const [selected, setSelected] = useState<RarityDto | null>(null)
 
-  const [addOpen, setAddOpen] = useState(false)
-  const [addName, setAddName] = useState("")
-  const [addSaving, setAddSaving] = useState(false)
+  const loadSeq = useRef(0)
+
+  const extractDropdownItems = (res: any): DropdownOption[] => {
+    const d = res?.data
+    if (!d) return []
+    return ((d?.items ?? d?.elements ?? d) as DropdownOption[]) ?? []
+  }
 
   const loadGamesDropdown = async () => {
     try {
       const res = await GamesService.dropdown(gameQ || "")
-
       if (!res?.isSuccess) {
         setGames([])
         setGameId(null)
         return
       }
 
-      const list: DropdownOption[] = ((res?.data as any)?.items ??
-        (res?.data as any)?.elements ??
-        []) as DropdownOption[]
-
+      const list = extractDropdownItems(res)
       setGames(list)
 
       if (list.length === 0) {
@@ -86,30 +84,59 @@ const ItemsSection = () => {
     }
   }
 
-  const load = async () => {
-    if (!gameId) return
+  const loadWith = async (args: {
+    page: number
+    gameId: number
+    q?: string
+  }) => {
+    const mySeq = ++loadSeq.current
+
     setLoading(true)
     setError(null)
 
-    const res = await ItemsService.getPaged({
-      page,
+    const res = await ItemRaritiesService.getPaged({
+      page: args.page,
       pageSize,
-      gameId,
-      searchText: q || undefined,
+      gameId: args.gameId,
+      searchText: args.q || undefined,
     })
+
+    if (mySeq !== loadSeq.current)
+      return { ok: false as const, ignored: true as const }
+
     setLoading(false)
 
     if (!res.isSuccess || !res.data) {
-      setError(res.message ?? "Nie udało się pobrać itemków.")
+      setError(res.message ?? "Nie udało się pobrać rzadkości.")
       setData({ items: [], totalCount: 0, totalPages: 1 })
-      return
+      return { ok: false as const, ignored: false as const }
     }
 
     setData({
       items: (res.data as any).items ?? (res.data as any).elements ?? [],
-      totalCount: res.data.totalCount,
-      totalPages: res.data.totalPages,
+      totalCount: res.data.totalCount ?? 0,
+      totalPages: res.data.totalPages ?? 1,
     })
+
+    return { ok: true as const, ignored: false as const }
+  }
+
+  const load = async () => {
+    if (!gameId) return
+    await loadWith({ page, gameId, q: q || undefined })
+  }
+
+  const reloadAfterMutation = async () => {
+    if (!gameId) return
+
+    const first = await loadWith({ page, gameId, q: q || undefined })
+    if (first.ok || first.ignored) return
+
+    if (page > 1) {
+      const newPage = page - 1
+      setPage(newPage)
+      await loadWith({ page: newPage, gameId, q: q || undefined })
+    }
   }
 
   useEffect(() => {
@@ -125,65 +152,65 @@ const ItemsSection = () => {
     void load()
   }, [page, q, gameId])
 
+  const selectedGameName = useMemo(
+    () => (gameId ? (games.find((x) => x.id === gameId)?.name ?? "") : ""),
+    [gameId, games]
+  )
+
   const totalCount = data?.totalCount ?? 0
   const totalPages = data?.totalPages ?? 1
   const items = data?.items ?? []
 
-  const onEdit = (i: ItemDto) => {
-    setSelected(i)
+  const onEdit = (r: RarityDto) => {
+    setSelected(r)
     setEditOpen(true)
   }
-  const onDelete = (i: ItemDto) => {
-    setSelected(i)
+
+  const onDelete = (r: RarityDto) => {
+    setSelected(r)
     setDeleteOpen(true)
   }
 
-  const saveEdit = async (payload: { name?: string; gameId?: number }) => {
-    if (!selected) return
-    const res = await ItemsService.update(selected.id, payload)
+  const saveAdd = async (payload: { name: string }) => {
+    if (!gameId) return
+    setError(null)
+
+    const res = await ItemRaritiesService.create({
+      gameId,
+      rarityName: payload.name,
+    })
+
     if (!res.isSuccess) {
-      setError(res.message ?? "Nie udało się zapisać.")
+      setError(res.message ?? "Nie udało się dodać rzadkości.")
       return
     }
+
+    setAddOpen(false)
+    await reloadAfterMutation()
+  }
+
+  const saveEdit = async (payload: { name: string }) => {
+    if (!selected) return
+    setError(null)
+
+    const res = await ItemRaritiesService.update(selected.id, {
+      rarityName: payload.name,
+    })
+
     setEditOpen(false)
-    await load()
+    setSelected(null)
+    await reloadAfterMutation()
   }
 
   const confirmDelete = async () => {
     if (!selected) return
-
-    setError(null)
-    try {
-      await ItemsService.softDelete(selected.id)
-
-      setDeleteOpen(false)
-      setSelected(null)
-      await load()
-    } catch (e: any) {
-      setError(e?.message ?? "Nie udało się usunąć.")
-    }
-  }
-
-  const createItem = async () => {
-    const name = addName.trim()
-    if (!name || !gameId) return
-
-    setAddSaving(true)
     setError(null)
 
-    try {
-      const res = await ItemsService.create({ name, gameId })
-      if (!res.isSuccess) {
-        setError(res.message ?? "Nie udało się dodać itemka.")
-        return
-      }
+    const res = await ItemRaritiesService.softDelete(selected.id)
 
-      setAddOpen(false)
-      setAddName("")
-      await load()
-    } finally {
-      setAddSaving(false)
-    }
+    setDeleteOpen(false)
+    setSelected(null)
+    await reloadAfterMutation()
   }
 
   return (
@@ -221,40 +248,43 @@ const ItemsSection = () => {
         </SelectContent>
       </Select>
 
-      <div className="flex items-center justify-end">
-        <Button
-          onClick={() => {
-            setAddName("")
-            setAddOpen(true)
-          }}
-          disabled={!gameId}
-        >
-          Dodaj itemek
+      <div className="flex items-center justify-between gap-3">
+        <div className="text-sm opacity-70">
+          {gameId ? `Gra: ${selectedGameName}` : "Wybierz grę"}
+        </div>
+
+        <Button onClick={() => setAddOpen(true)} disabled={!gameId}>
+          Dodaj rzadkość
         </Button>
       </div>
 
       <SearchInput
         value={search}
         onChange={setSearch}
-        placeholder="Szukaj itemków..."
+        placeholder="Szukaj rzadkości..."
       />
 
       {error && <div className="text-sm text-red-600">{error}</div>}
       {loading && <div className="text-sm opacity-70">Ładowanie...</div>}
 
-      <div className="space-y-3">
-        {items.map((i) => (
-          <EntityCard
-            key={i.id}
-            title={i.name}
-            subtitle={undefined}
-            metaLeft={`Gra: ${i.gameName}`}
-            id={i.id}
-            onEdit={() => onEdit(i)}
-            onDelete={() => onDelete(i)}
-          />
-        ))}
-      </div>
+      {!gameId ? (
+        <div className="text-sm opacity-70">
+          Wybierz grę, aby zobaczyć rzadkości itemków.
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {items.map((r) => (
+            <EntityCard
+              key={r.id}
+              title={r.name}
+              metaLeft={`Gra: ${selectedGameName}`}
+              id={r.id}
+              onEdit={() => onEdit(r)}
+              onDelete={() => onDelete(r)}
+            />
+          ))}
+        </div>
+      )}
 
       <Paginator
         page={page}
@@ -264,61 +294,32 @@ const ItemsSection = () => {
         onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
       />
 
+      <AddItemRarityDialog
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        onSave={saveAdd}
+      />
+
       {selected && (
         <>
-          <EditItemDialog
+          <EditItemRarityDialog
             open={editOpen}
             onOpenChange={setEditOpen}
             initialName={selected.name}
-            initialGameId={selected.gameId}
-            games={games}
             onSave={saveEdit}
           />
 
           <DeleteEntityDialog
             open={deleteOpen}
             onOpenChange={setDeleteOpen}
-            title="Usunąć itemek?"
-            description="Ta operacja ustawi IsDeleted=true. Item zniknie z list, ale historia zostaje."
+            title="Usunąć rzadkość?"
+            description="Ta operacja ustawi IsDeleted=true. Rzadkość zniknie z list, ale historia zostaje."
             onConfirm={confirmDelete}
           />
         </>
       )}
-
-      <Dialog open={addOpen} onOpenChange={setAddOpen}>
-        <DialogContent className="rounded-2xl">
-          <DialogHeader>
-            <DialogTitle>Dodaj itemek</DialogTitle>
-          </DialogHeader>
-
-          <div className="space-y-2">
-            <div className="text-sm opacity-70">Nazwa</div>
-            <Input
-              value={addName}
-              onChange={(e) => setAddName(e.target.value)}
-              placeholder="np. Legendary Sword"
-            />
-          </div>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setAddOpen(false)}
-              disabled={addSaving}
-            >
-              Anuluj
-            </Button>
-            <Button
-              onClick={createItem}
-              disabled={addSaving || !addName.trim() || !gameId}
-            >
-              Dodaj
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
 
-export default ItemsSection
+export default ItemRaritiesTab

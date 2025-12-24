@@ -1,11 +1,14 @@
 import { useState } from "react"
 import TabsSection from "./sections/TabsSection"
-import { GenresSection } from "./sections/GenresSection"
-import GamesSection from "./sections/GamesSection"
-import ItemsSection from "./sections/ItemsSection"
+import { GenresTab } from "./sections/GenresTab"
+import GamesTab from "./sections/GamesTab"
+import ItemsTab from "./sections/ItemsTab"
+import ItemRaritiesTab from "./sections/ItemRaritiesTab"
 
 const ItemManagementPage = () => {
-  const [tab, setTab] = useState<"genres" | "games" | "items">("genres")
+  const [tab, setTab] = useState<"genres" | "games" | "items" | "itemRarities">(
+    "genres"
+  )
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
@@ -18,9 +21,10 @@ const ItemManagementPage = () => {
 
       <TabsSection value={tab} onChange={(v) => setTab(v as any)} />
 
-      {tab === "genres" && <GenresSection />}
-      {tab === "games" && <GamesSection />}
-      {tab === "items" && <ItemsSection />}
+      {tab === "genres" && <GenresTab />}
+      {tab === "games" && <GamesTab />}
+      {tab === "items" && <ItemsTab />}
+      {tab === "itemRarities" && <ItemRaritiesTab />}
     </div>
   )
 }

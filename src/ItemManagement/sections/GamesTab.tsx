@@ -6,7 +6,7 @@ import SearchInput from "../components/SearchInput"
 import Paginator from "../components/Paginator"
 import EntityCard from "../components/EntityCard"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
-import EditGameDialog from "../components/EditGameDialog"
+import EditGameDialog from "../components/EditDialogs/EditGameDialog"
 import {
   Select,
   SelectContent,
@@ -26,7 +26,7 @@ import {
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import type { GameDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 
-const GamesSection = () => {
+const GamesTab = () => {
   const [genres, setGenres] = useState<DropdownOption[]>([])
   const [genreId, setGenreId] = useState<number | null>(null)
 
@@ -57,6 +57,8 @@ const GamesSection = () => {
   const [addOpen, setAddOpen] = useState(false)
   const [addName, setAddName] = useState("")
   const [addSaving, setAddSaving] = useState(false)
+  const [addRarityInput, setAddRarityInput] = useState("")
+  const [addRarities, setAddRarities] = useState<string[]>([])
 
   const extractDropdownItems = (res: any): DropdownOption[] => {
     const d = res?.data
@@ -175,16 +177,38 @@ const GamesSection = () => {
       setError(e?.message ?? "Nie udało się usunąć.")
     }
   }
+  const addRarity = () => {
+    const value = addRarityInput.trim()
+    if (!value) return
+
+    const exists = addRarities.some(
+      (r) => r.toLowerCase() === value.toLowerCase()
+    )
+    if (exists) return
+
+    setAddRarities((prev) => [...prev, value])
+    setAddRarityInput("")
+  }
+
+  const removeRarity = (value: string) => {
+    setAddRarities((prev) => prev.filter((r) => r !== value))
+  }
 
   const createGame = async () => {
     const name = addName.trim()
     if (!name || !genreId) return
 
+    const itemRaritiesNames = addRarities.map((r) => r.trim()).filter(Boolean)
+
     setAddSaving(true)
     setError(null)
 
     try {
-      const res = await GamesService.create({ name, genreId })
+      const res = await GamesService.create({
+        name,
+        genreId,
+        itemRaritiesNames,
+      })
       if (!res.isSuccess) {
         setError(res.message ?? "Nie udało się dodać gry.")
         return
@@ -192,6 +216,8 @@ const GamesSection = () => {
 
       setAddOpen(false)
       setAddName("")
+      setAddRarityInput("")
+      setAddRarities([])
       await loadGames()
     } finally {
       setAddSaving(false)
@@ -240,6 +266,8 @@ const GamesSection = () => {
         <Button
           onClick={() => {
             setAddName("")
+            setAddRarityInput("")
+            setAddRarities([])
             setAddOpen(true)
           }}
           disabled={!genreId}
@@ -299,7 +327,17 @@ const GamesSection = () => {
         </>
       )}
 
-      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+      <Dialog
+        open={addOpen}
+        onOpenChange={(v) => {
+          setAddOpen(v)
+          if (!v) {
+            setAddName("")
+            setAddRarityInput("")
+            setAddRarities([])
+          }
+        }}
+      >
         <DialogContent className="rounded-2xl">
           <DialogHeader>
             <DialogTitle>Dodaj grę</DialogTitle>
@@ -314,6 +352,58 @@ const GamesSection = () => {
             />
             <div className="text-xs opacity-60">
               Gatunek: {selectedGenreName}
+            </div>
+            <div className="space-y-2">
+              <div className="text-sm opacity-70">Item rarities</div>
+
+              <div className="flex gap-2">
+                <Input
+                  value={addRarityInput}
+                  onChange={(e) => setAddRarityInput(e.target.value)}
+                  placeholder="np. Common / Rare / Epic"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault()
+                      addRarity()
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={addRarity}
+                  disabled={addSaving || !addRarityInput.trim()}
+                >
+                  Dodaj
+                </Button>
+              </div>
+
+              {addRarities.length > 0 && (
+                <div className="space-y-2 rounded-xl border p-3">
+                  <div className="text-xs opacity-60">
+                    Dodane ({addRarities.length})
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {addRarities.map((r) => (
+                      <div
+                        key={r}
+                        className="flex items-center gap-2 rounded-full border px-3 py-1 text-sm"
+                      >
+                        <span>{r}</span>
+                        <button
+                          type="button"
+                          className="opacity-60 hover:opacity-100"
+                          onClick={() => removeRarity(r)}
+                          aria-label={`Usuń rarity ${r}`}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -338,4 +428,4 @@ const GamesSection = () => {
   )
 }
 
-export default GamesSection
+export default GamesTab

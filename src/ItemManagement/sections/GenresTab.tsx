@@ -3,15 +3,15 @@ import { GenresService } from "@/api/services/GenresService"
 import SearchInput from "../components/SearchInput"
 import Paginator from "../components/Paginator"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
-import EditGenreDialog from "../components/EditGenreDialog"
+import EditGenreDialog from "../components/EditDialogs/EditGenreDialog"
 import useDebouncedValue from "../useDebouncedValue"
 import EntityCard from "../components/EntityCard"
 import type { GenreDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 import type { PagedResponse } from "@/shared/types/PagedType"
 import { Button } from "@/components/ui/button"
-import AddGenreDialog from "../components/AddGenreDialog"
+import AddGenreDialog from "../components/AddDialogs/AddGenreDialog"
 
-export const GenresSection = () => {
+export const GenresTab = () => {
   const [search, setSearch] = useState("")
   const q = useDebouncedValue(search, 300)
 
@@ -35,7 +35,7 @@ export const GenresSection = () => {
   const [addOpen, setAddOpen] = useState(false)
 
   const createGenre = async (payload: { name: string }) => {
-    const res = await GenresService.create(payload) // <-- POST
+    const res = await GenresService.create(payload)
     if (!res.isSuccess) {
       setError(res.message ?? "Nie udało się dodać gatunku.")
       return
@@ -197,4 +197,4 @@ export const GenresSection = () => {
     </div>
   )
 }
-export default GenresSection
+export default GenresTab
