@@ -1,0 +1,172 @@
+'use client'
+
+import { Card } from '@/components/ui/card'
+import { Tabs } from '@/components/ui/tabs'
+import { userInfoApi } from '@/api/services/UserEditService'
+import { userSecurityInfoApi } from '@/api/services/UserEditSecurityInfoService'
+import { useAppStore } from '@/store/appStore'
+
+import { ProfileDataSection } from './sections/ProfileDataSection'
+import { ProfileSecurityDataSection } from './sections/ProfileSecurityDataSection'
+import { ProfilePickerSection } from './sections/ProfilePickerSection'
+
+import { mapBackendToProfile, type Profile } from './components/ProfileData'
+import {
+  mapSecurityBackendToFields,
+  mapSecurityToUpdateRequest,
+  type SecurityFields,
+} from './components/ProfileSecurityData'
+import { useEffect, useState } from 'react'
+import { ProfileCardSection } from './sections/ProfileCardSection'
+
+export function ProfileEdit() {
+  const userId = useAppStore((s) => s.userId)
+  const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [security, setSecurity] = useState<SecurityFields | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [savingProfile, setSavingProfile] = useState(false)
+  const [savingSecurity, setSavingSecurity] = useState(false)
+
+  useEffect(() => {
+    let alive = true
+
+    ;(async () => {
+      try {
+        //Start pobierania
+        setLoading(true)
+        setError(null)
+
+        //Równoległe pobieranie danych aby nie tracić czasu na osobne pobieranie, znowu dlatego bo mamy dwie końcówki
+        const [resProfile, resSecurity] = await Promise.all([
+          userInfoApi.getProfileInfo(userId),
+          userSecurityInfoApi.getProfileInfo(userId),
+        ])
+
+        if (!resProfile.isSuccess || !resProfile.data) {
+          throw new Error(resProfile.message ?? 'Nie udało się pobrać profilu')
+        }
+
+        if (!resSecurity.isSuccess || !resSecurity.data) {
+          throw new Error(
+            resSecurity.message ?? 'Nie udało się pobrać danych bezpieczeństwa'
+          )
+        }
+
+        if (!alive) return
+        //Dwa oddzielne settery poniewaz posiadamy rozbicie wyciągania informacji na 2 rózne końcowki
+        setProfile(mapBackendToProfile(resProfile.data))
+        setSecurity(mapSecurityBackendToFields(resSecurity.data))
+      } catch (e) {
+        if (!alive) return
+        //Wywalenie błędu i nie ustawienie profilu
+        setProfile(null)
+        setSecurity(null)
+        setError(e instanceof Error ? e.message : 'Błąd pobierania danych')
+      } finally {
+        if (alive) setLoading(false)
+      }
+    })()
+
+    return () => {
+      alive = false
+    }
+  }, [userId])
+
+  const onSaveProfile = async () => {
+    if (!profile) return
+    try {
+      setSavingProfile(true)
+      setError(null)
+
+      const body = {
+        nickname: profile.username,
+        description: profile.bio,
+      }
+
+      //Klasyczne wysyłanie puta i jeeli się nie powiedzie to throw error
+      const res = await userInfoApi.updateProfile(body, userId)
+      if (!res.isSuccess) {
+        throw new Error(res.message ?? 'Nie udało się zapisać profilu')
+      }
+
+      //Musi tak być poniewa data moe być undefined
+      if (res.data) setProfile(mapBackendToProfile(res.data))
+
+      await refreshNavbar()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Błąd zapisu profilu')
+    } finally {
+      //Kończymy tryb zapisywania
+      setSavingProfile(false)
+    }
+  }
+
+  //Dokładnie to samo co onSaveProfile, ale dla innego body (innej końcówki)
+  const onSaveSecurity = async () => {
+    if (!security) return
+    try {
+      setSavingSecurity(true)
+      setError(null)
+      const body = mapSecurityToUpdateRequest(security)
+
+      const res = await userSecurityInfoApi.updateProfile(body)
+      if (!res.isSuccess) {
+        throw new Error(res.message ?? 'Nie udało się zapisać ustawień')
+      }
+
+      const fresh = await userSecurityInfoApi.getProfileInfo(userId)
+      if (fresh.isSuccess && fresh.data) {
+        setSecurity(mapSecurityBackendToFields(fresh.data))
+      }
+
+      await refreshNavbar()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Błąd zapisu ustawień')
+    } finally {
+      setSavingSecurity(false)
+    }
+  }
+
+  if (loading) return <div className="p-6">Ładowanie…</div>
+  if (!profile) return <div className="p-6">Brak danych profilu</div>
+
+  return (
+    <div className="min-h-[80vh] w-full px-6 py-10">
+      <h1 className="text-3xl md:text-5xl font-semibold text-center mb-10">
+        Edytuj Profil
+      </h1>
+
+      <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-[320px_1fr]">
+        <ProfileCardSection profile={profile}></ProfileCardSection>
+
+        <Card className="p-4 md:p-6">
+          {error && (
+            <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
+
+          <Tabs defaultValue="profile" className="w-full">
+            <ProfilePickerSection />
+
+            <ProfileDataSection
+              profile={profile}
+              setProfile={setProfile}
+              savingProfile={savingProfile}
+              onSaveProfile={onSaveProfile}
+            />
+
+            <ProfileSecurityDataSection
+              security={security}
+              setSecurity={setSecurity}
+              savingSecurity={savingSecurity}
+              onSaveSecurity={onSaveSecurity}
+            />
+          </Tabs>
+        </Card>
+      </div>
+    </div>
+  )
+}

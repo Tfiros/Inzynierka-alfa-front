@@ -6,7 +6,10 @@ type HeaderSectionProps = {
   canEdit: boolean
 }
 
-export const HeaderSection: React.FC<HeaderSectionProps> = ({ profile, canEdit} : HeaderSectionProps) => {
+export const HeaderSection: React.FC<HeaderSectionProps> = ({
+  profile,
+  canEdit,
+}: HeaderSectionProps) => {
   const joinedYear = new Date(profile.registrationDate).getFullYear()
 
   return (
@@ -18,7 +21,7 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({ profile, canEdit} 
           bio={profile.description ?? 'Ten użytkownik nie dodał jeszcze opisu.'}
           avatar={undefined}
           joinedYear={joinedYear}
-          editPath="/profileEdit"
+          editPath={`/profileEdit`}
           canEdit={canEdit}
         />
       </div>

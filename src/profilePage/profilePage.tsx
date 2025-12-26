@@ -9,33 +9,39 @@ import { StatBoxSection } from './sections/StatBoxSection'
 import { TabSection } from './sections/TabSection'
 
 export const UserProfilePage = () => {
-    const { id } = useParams<{id: string}>()
-    const profileId = id ? Number(id) : NaN
-    const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>()
+  const profileId = id ? Number(id) : NaN
+  const navigate = useNavigate()
 
-    const userId = useAppStore((state) => state.userId)
-    const isAuthenticated = useAppStore((state) => state.isAuthenticated)
+  const userId = useAppStore((state) => state.userId)
+  const isAuthenticated = useAppStore((state) => state.isAuthenticated)
 
+  const [profileInfo, setProfileInfo] = useState<UserProfileInfoDto | null>(
+    null
+  )
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
 
-    const [profileInfo, setProfileInfo] = useState<UserProfileInfoDto | null>(null)
-    const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | null>(null)
-    
-     const isOwnProfile = isAuthenticated && !Number.isNaN(profileId) && userId === profileId
+  const isOwnProfile =
+    isAuthenticated && !Number.isNaN(profileId) && userId === profileId
 
-    useEffect(() => {
-      if (!id || Number.isNaN(profileId)) {
-        setError('Nieprawidłowy identyfikator profilu.')
-        setLoading(false)
-        return
-      }
+  useEffect(() => {
+    if (!id || Number.isNaN(profileId)) {
+      setError('Nieprawidłowy identyfikator profilu.')
+      setLoading(false)
+      return
+    }
+    console.log('id: ' + id)
+    console.log('Profile ID: ' + profileId)
+    console.log('UserId: ' + userId)
 
-      const fetchProfileInfo = async () => {
+    const fetchProfileInfo = async () => {
       try {
         setLoading(true)
         setError(null)
 
-        const res: ApiResult<UserProfileInfoDto> = await UserInfoService.getProfileInfo(profileId)
+        const res: ApiResult<UserProfileInfoDto> =
+          await UserInfoService.getProfileInfo(profileId)
 
         if (!res.isSuccess || !res.data) {
           setError(res.message ?? 'Nie udało się załadować profilu.')
@@ -54,7 +60,8 @@ export const UserProfilePage = () => {
 
   if (loading) return <div className="p-4">Ładowanie profilu...</div>
   if (error) return <div className="p-4 text-red-500">{error}</div>
-  if (!profileInfo) return <div className="p-4">Profil nie został znaleziony.</div>
+  if (!profileInfo)
+    return <div className="p-4">Profil nie został znaleziony.</div>
 
   return (
     <div>

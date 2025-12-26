@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
-import { useAuthBootstrap } from '@/shared/AuthBootstrap'
 const Splash = () => <div className="p-6">Ładowanie…</div>
 import { MainDashboard } from '@/homeDashboard/views/MainDashboard'
 import { MainLayout } from '@/layout/MainLayout'
@@ -11,11 +10,9 @@ import { StatutePage } from '@/statutePage/statutePage'
 import { PointShop } from './pointShop/pointShop'
 import { NotFoundPage } from './NotFoundPage/NotFoundPage'
 import { BlankLayout } from './layout/BlankLayout'
+import { ProfileEdit } from './ProfileEdit/ProfileEdit'
 
 function App() {
-  const ready = useAuthBootstrap()
-
-  if (!ready) return <Splash />
   return (
     <BrowserRouter>
       <Routes>
@@ -24,10 +21,10 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="oferty" element={<div>Oferty</div>} />
           <Route path="faqs" element={<FAQs />} />
-          <Route path="points" element={<div>Points</div>} />
           <Route path="profile/:id" element={<UserProfilePage />} />
           <Route path="statute" element={<StatutePage />} />
           <Route path="shop" element={<PointShop />} />
+          <Route path="profileEdit" element={<ProfileEdit />} />
         </Route>
         <Route element={<BlankLayout />}>
           <Route path="*" element={<NotFoundPage />} />

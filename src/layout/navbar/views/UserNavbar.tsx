@@ -1,17 +1,17 @@
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import CrossTradeLogo from "@/photos/CrossTradeLogo.png";
-import PointsIcon from "@/photos/PointsIcon.svg";
-import NoifyIcon from "@/photos/NotificationIcon.svg";
-import { NavItem } from "../components/NavItem";
-import { ProfileMenu } from "../components/ProfileMenu";
-import { useAppStore } from "@/store/appStore";
+import { Link } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import CrossTradeLogo from '@/photos/CrossTradeLogo.png'
+import PointsIcon from '@/photos/PointsIcon.svg'
+import NoifyIcon from '@/photos/NotificationIcon.svg'
+import { NavItem } from '../components/NavItem'
+import { ProfileMenu } from '../components/ProfileMenu'
+import { useAppStore } from '@/store/appStore'
 
 export const UserNavbar = () => {
-  const navbarUser = useAppStore((s) => s.navbarUser);
+  const navbarUser = useAppStore((s) => s.navbarUser)
 
-  const tokens = navbarUser?.tokens ?? 0;
-  const level = navbarUser?.level ?? 1;
+  const tokens = navbarUser?.tokens ?? 0
+  const level = navbarUser?.level ?? 1
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 w-full items-center justify-between px-6">
@@ -42,14 +42,14 @@ export const UserNavbar = () => {
               className="rounded-full"
               title="Punkty"
             >
-              <Link to="/points">
+              <Link to="/shop">
                 <img
                   src={PointsIcon}
-                  alt="Points"
+                  alt="shop"
                   className="h-6 w-6 object-contain"
                 />
                 <span className="ml-1 text-sm font-medium">
-                  {tokens.toLocaleString("pl-PL")}
+                  {tokens.toLocaleString('pl-PL')}
                 </span>
               </Link>
             </Button>
@@ -90,5 +90,5 @@ export const UserNavbar = () => {
         </nav>
       </div>
     </header>
-  );
-};
+  )
+}
