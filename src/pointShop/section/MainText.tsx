@@ -1,6 +1,6 @@
 import { Coins } from 'lucide-react'
 
-export const MainText: any = () => {
+export function MainText() {
   return (
     <>
       <div className="text-center">

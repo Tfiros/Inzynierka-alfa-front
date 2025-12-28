@@ -11,12 +11,12 @@ type Props = {
   onSaveSecurity: () => void
 }
 
-export const ProfileSecurityDataSection: React.FC<Props> = ({
+export const ProfileSecurityDataSection = ({
   security,
   setSecurity,
   savingSecurity,
   onSaveSecurity,
-}) => {
+}: Props) => {
   return (
     <TabsContent value="security" className="space-y-6">
       {!security ? (

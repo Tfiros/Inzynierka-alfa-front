@@ -6,15 +6,13 @@ import { Check, Coins } from 'lucide-react'
 import { AccentRing } from './AccentRing'
 import type { PackageItem } from './PackageItem'
 
-export function PackageCard({
-  item,
-  selected,
-  onSelect,
-}: {
+type CardProps = {
   item: PackageItem
   selected: boolean
   onSelect: () => void
-}) {
+}
+
+export const PackageCard = ({ item, selected, onSelect }: CardProps) => {
   const total = item.coins + (item.bonus ?? 0)
 
   return (
@@ -34,9 +32,20 @@ export function PackageCard({
       )}
 
       <Card
+        onClick={onSelect}
+        role="radio"
+        aria-checked={selected}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            onSelect()
+          }
+        }}
         className={cn(
-          'relative h-full rounded-2xl border bg-white shadow-sm flex flex-col',
-          selected && 'border-primary/50'
+          'relative h-full rounded-2xl border bg-white shadow-sm flex flex-col cursor-pointer transition',
+          'hover:border-primary/40',
+          selected && 'border-primary ring-2 ring-primary/20'
         )}
       >
         <CardContent className="p-6 flex flex-col flex-1">
@@ -44,9 +53,9 @@ export function PackageCard({
             <div className="absolute right-0 top-0">
               <Checkbox
                 checked={selected}
-                onCheckedChange={onSelect}
+                onClick={(e) => e.stopPropagation()}
                 className={cn(
-                  'h-5 w-5 rounded-md border-2 transition-colors',
+                  'h-5 w-5 rounded-md border-2 transition-colors pointer-events-none',
                   selected
                     ? 'border-zinc-900 bg-zinc-900 text-white'
                     : 'border-zinc-300 bg-white'

@@ -31,9 +31,6 @@ export const UserProfilePage = () => {
       setLoading(false)
       return
     }
-    console.log('id: ' + id)
-    console.log('Profile ID: ' + profileId)
-    console.log('UserId: ' + userId)
 
     const fetchProfileInfo = async () => {
       try {

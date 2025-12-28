@@ -1,4 +1,4 @@
-export function NotFoundPage() {
+export const NotFoundPage = () => {
   return (
     <div className="flex flex-col items-center pt-24 pb-12">
       <img

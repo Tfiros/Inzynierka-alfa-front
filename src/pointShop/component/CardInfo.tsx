@@ -1,17 +1,14 @@
 import { Card, CardContent } from '@/components/ui/card'
-import React from 'react'
+import type { ReactNode } from 'react'
 
-export function DarkInfoCard({
-  title,
-  subtitle,
-  icon,
-  items,
-}: {
+type CardInfoProps = {
   title: string
   subtitle?: string
-  icon: React.ReactNode
-  items: { icon: React.ReactNode; text: React.ReactNode }[]
-}) {
+  icon: ReactNode
+  items: { icon: ReactNode; text: ReactNode }[]
+}
+
+export const CardInfo = ({ title, subtitle, icon, items }: CardInfoProps) => {
   return (
     <Card className="w-[300px] rounded-2xl bg-zinc-900 text-zinc-50">
       <CardContent className="p-5">

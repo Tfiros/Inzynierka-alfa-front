@@ -1,24 +1,24 @@
-import React from 'react'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { TabsContent } from '@/components/ui/tabs'
 import type { Profile } from '../components/ProfileData'
+import type { Dispatch } from 'react'
 
 type Props = {
   profile: Profile
-  setProfile: React.Dispatch<React.SetStateAction<Profile | null>>
+  setProfile: Dispatch<React.SetStateAction<Profile | null>>
   savingProfile: boolean
   onSaveProfile: () => void
 }
 
-export const ProfileDataSection: React.FC<Props> = ({
+export const ProfileDataSection = ({
   profile,
   setProfile,
   savingProfile,
   onSaveProfile,
-}) => {
+}: Props) => {
   return (
     <TabsContent value="profile" className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">

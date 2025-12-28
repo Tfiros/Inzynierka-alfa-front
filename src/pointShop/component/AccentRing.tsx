@@ -1,6 +1,10 @@
 import { cn } from '@/lib/utils'
 
-export function AccentRing({ accent }: { accent?: 'blue' | 'green' }) {
+type AccentRingProps = {
+  accent?: 'blue' | 'green'
+}
+
+export const AccentRing = ({ accent }: AccentRingProps) => {
   if (!accent) return null
   return (
     <div

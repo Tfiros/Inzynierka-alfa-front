@@ -1,9 +1,9 @@
 import { Shield, Star, Trophy, Zap } from 'lucide-react'
-import { DarkInfoCard } from '../component/DarkCardInfo'
+import { CardInfo } from '../component/CardInfo'
 
-export const BlackCards: any = () => {
+export function BlackCards() {
   return (
-    <DarkInfoCard
+    <CardInfo
       title="Jak używać CT Coins?"
       icon={<Trophy className="h-5 w-5 text-sky-300" />}
       items={[

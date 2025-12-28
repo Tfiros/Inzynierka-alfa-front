@@ -21,7 +21,7 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({
           bio={profile.description ?? 'Ten użytkownik nie dodał jeszcze opisu.'}
           avatar={undefined}
           joinedYear={joinedYear}
-          editPath={`/profileEdit`}
+          editPath="/profileEdit"
           canEdit={canEdit}
         />
       </div>

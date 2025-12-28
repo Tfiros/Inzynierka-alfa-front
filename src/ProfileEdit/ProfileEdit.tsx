@@ -1,16 +1,11 @@
-'use client'
-
 import { Card } from '@/components/ui/card'
 import { Tabs } from '@/components/ui/tabs'
-import { userInfoApi } from '@/api/services/UserEditService'
-import { userSecurityInfoApi } from '@/api/services/UserEditSecurityInfoService'
 import { useAppStore } from '@/store/appStore'
 
 import { ProfileDataSection } from './sections/ProfileDataSection'
 import { ProfileSecurityDataSection } from './sections/ProfileSecurityDataSection'
 import { ProfilePickerSection } from './sections/ProfilePickerSection'
 
-import { mapBackendToProfile, type Profile } from './components/ProfileData'
 import {
   mapSecurityBackendToFields,
   mapSecurityToUpdateRequest,
@@ -18,6 +13,12 @@ import {
 } from './components/ProfileSecurityData'
 import { useEffect, useState } from 'react'
 import { ProfileCardSection } from './sections/ProfileCardSection'
+import {
+  ProfileInfoService,
+  mapBackendToProfile,
+  type Profile,
+} from '@/api/services/ProfileInfoService'
+import { UserSettingsService } from '@/api/services/UserSettingsService'
 
 export function ProfileEdit() {
   const userId = useAppStore((s) => s.userId)
@@ -32,7 +33,7 @@ export function ProfileEdit() {
   useEffect(() => {
     let alive = true
 
-    ;(async () => {
+    async function fetchProfileData() {
       try {
         //Start pobierania
         setLoading(true)
@@ -40,8 +41,8 @@ export function ProfileEdit() {
 
         //Równoległe pobieranie danych aby nie tracić czasu na osobne pobieranie, znowu dlatego bo mamy dwie końcówki
         const [resProfile, resSecurity] = await Promise.all([
-          userInfoApi.getProfileInfo(userId),
-          userSecurityInfoApi.getProfileInfo(userId),
+          ProfileInfoService.getProfileInfo(userId),
+          UserSettingsService.getProfileInfo(userId),
         ])
 
         if (!resProfile.isSuccess || !resProfile.data) {
@@ -55,11 +56,13 @@ export function ProfileEdit() {
         }
 
         if (!alive) return
+
         //Dwa oddzielne settery poniewaz posiadamy rozbicie wyciągania informacji na 2 rózne końcowki
         setProfile(mapBackendToProfile(resProfile.data))
         setSecurity(mapSecurityBackendToFields(resSecurity.data))
       } catch (e) {
         if (!alive) return
+
         //Wywalenie błędu i nie ustawienie profilu
         setProfile(null)
         setSecurity(null)
@@ -67,7 +70,9 @@ export function ProfileEdit() {
       } finally {
         if (alive) setLoading(false)
       }
-    })()
+    }
+
+    fetchProfileData()
 
     return () => {
       alive = false
@@ -86,7 +91,7 @@ export function ProfileEdit() {
       }
 
       //Klasyczne wysyłanie puta i jeeli się nie powiedzie to throw error
-      const res = await userInfoApi.updateProfile(body, userId)
+      const res = await ProfileInfoService.updateProfile(body, userId)
       if (!res.isSuccess) {
         throw new Error(res.message ?? 'Nie udało się zapisać profilu')
       }
@@ -111,12 +116,12 @@ export function ProfileEdit() {
       setError(null)
       const body = mapSecurityToUpdateRequest(security)
 
-      const res = await userSecurityInfoApi.updateProfile(body)
+      const res = await UserSettingsService.updateProfile(body)
       if (!res.isSuccess) {
         throw new Error(res.message ?? 'Nie udało się zapisać ustawień')
       }
 
-      const fresh = await userSecurityInfoApi.getProfileInfo(userId)
+      const fresh = await UserSettingsService.getProfileInfo(userId)
       if (fresh.isSuccess && fresh.data) {
         setSecurity(mapSecurityBackendToFields(fresh.data))
       }

@@ -1,9 +1,9 @@
 import { Check, Star } from 'lucide-react'
-import { DarkInfoCard } from '../component/DarkCardInfo'
+import { CardInfo } from '../component/CardInfo'
 
-export const WhiteCards: any = () => {
+export function WhiteCards() {
   return (
-    <DarkInfoCard
+    <CardInfo
       title="Korzyści Premium"
       subtitle="Co otrzymujesz z CT Coins"
       icon={<Star className="h-5 w-5 text-amber-400" />}
