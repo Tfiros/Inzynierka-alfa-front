@@ -30,6 +30,9 @@ export const UserNavbar = () => {
 
         <nav className="flex items-center gap-4 text-sm">
           <div className="flex gap-6">
+            {isAdmin && (
+              <NavItem to="/itemManagement" label="Zarządzanie przedmiotami" />
+            )}
             {isAdmin && <NavItem to="/userManagement" label="Użytkownicy" />}
             <NavItem to="marketplace" label="Oferty" />
             <NavItem to="/faqs" label="FAQs" />

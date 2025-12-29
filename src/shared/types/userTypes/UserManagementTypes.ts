@@ -30,7 +30,7 @@ export type UserListPagedResponse = {
   pageSize: number
   totalPages: number
   totalCount: number
-  items: UserListItemDto[]
+  elements: UserListItemDto[]
   registeredLastMonthCount: number
   middlemenCount: number
 }
