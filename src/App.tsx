@@ -12,6 +12,7 @@ import Marketplace from "./marketplacePage/Marketplace"
 import { AdminRoute } from "./routes/AdminRoutes"
 import UserManagementPage from "./userManagement/UserManagementPage"
 import ItemManagementPage from "./ItemManagement/ItemManagementPage"
+import MiddlemanPanelPage from "./middlemanPanel/MiddlemanPanelPage"
 
 function App() {
   const ready = useAuthBootstrap()
@@ -32,6 +33,9 @@ function App() {
           <Route element={<AdminRoute />}>
             <Route path="userManagement" element={<UserManagementPage />} />
             <Route path="itemManagement" element={<ItemManagementPage />} />
+          </Route>
+          <Route element={<MiddlemanPanelPage />}>
+            <Route path="middlemanPanel" element={<MiddlemanPanelPage />} />
           </Route>
         </Route>
       </Routes>
