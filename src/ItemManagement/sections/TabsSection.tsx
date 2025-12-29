@@ -10,7 +10,7 @@ const TabsSection = (props: {
         <TabsTrigger value="genres">Gatunki</TabsTrigger>
         <TabsTrigger value="games">Gry</TabsTrigger>
         <TabsTrigger value="items">Itemki</TabsTrigger>
-        <TabsTrigger value="itemRarities">Rzadkości Itemków</TabsTrigger>
+        <TabsTrigger value="itemRarities">Rzadkości Itemów</TabsTrigger>
       </TabsList>
     </Tabs>
   )
