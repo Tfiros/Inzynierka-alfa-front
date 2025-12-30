@@ -1,3 +1,5 @@
+import { UserInfoService } from '@/api/services/UserInfoService'
+import type { UserNavbarInfoDto } from '@/shared/types/userTypes/UserInfoTypes'
 import type { StateCreator } from "zustand"
 
 export type UiSlice = {
@@ -5,16 +7,20 @@ export type UiSlice = {
   inc: (id: string, by?: number) => void
   reset: (id: string) => void
   notify: (msg: string) => string
+
+  refreshNavbarUserFromAuth: () => Promise<void>
 }
 
-type StoreState = UiSlice & Record<string, unknown>
+type StoreState = UiSlice & {
+  userId?: number | null
+  setNavbarUser?: (info: UserNavbarInfoDto | null) => void
+} & Record<string, unknown>
 
 export const createUiSlice: StateCreator<StoreState, [], [], UiSlice> = (
   set,
-  _get,
+  get,
   _api
 ) => {
-  void _get
   void _api
 
   return {
@@ -33,8 +39,21 @@ export const createUiSlice: StateCreator<StoreState, [], [], UiSlice> = (
       }),
 
     notify: (msg) => {
-      console.log("Notification:", msg)
+      console.log('Notification:', msg)
       return msg
+    },
+
+    refreshNavbarUserFromAuth: async () => {
+      const userId = get().userId ?? null
+      if (!userId) {
+        get().setNavbarUser?.(null)
+        return
+      }
+
+      const navRes = await UserInfoService.getNavbarInfo(userId)
+      if (navRes.isSuccess && navRes.data) {
+        get().setNavbarUser?.(navRes.data)
+      }
     },
   }
 }

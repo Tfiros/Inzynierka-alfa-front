@@ -27,7 +27,7 @@ export const UserProfilePage = () => {
 
   useEffect(() => {
     if (!id || Number.isNaN(profileId)) {
-      setError("Nieprawidłowy identyfikator profilu.")
+      setError('Nieprawidłowy identyfikator profilu.')
       setLoading(false)
       return
     }

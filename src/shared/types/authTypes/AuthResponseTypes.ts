@@ -7,6 +7,7 @@ export type LoginResponseDto = {
 }
 
 export type RefreshResponseDto = {
+  id: number
   accessToken: string
   idToken?: string | null
   userId?: string | null

@@ -10,9 +10,13 @@ export const useAppStore = create<AppState>()(
     (set, get, api) => ({
       ...createUiSlice(set, get, api),
       ...createAuthSlice(set, get, api),
+      hardReset: async () => {
+        get().setAccessToken(undefined)
+        await useAppStore.persist.clearStorage()
+      },
     }),
     {
-      name: "itemtrade-app",
+      name: 'itemtrade-app',
       storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({
         accessToken: state.accessToken,
