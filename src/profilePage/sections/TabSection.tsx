@@ -1,12 +1,12 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
-import React, { useMemo } from 'react'
-import { CalendarDays, SquarePen, History, Edit, Images } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
+import React, { useMemo } from "react"
+import { CalendarDays, SquarePen, History, Edit, Images } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
 const cx = (...c: (string | false | null | undefined)[]) =>
-  c.filter(Boolean).join(' ')
+  c.filter(Boolean).join(" ")
 
 const Tag = ({ label }: { label: string }) => (
   <Badge variant="outline" className="text-xs font-normal">
@@ -25,53 +25,53 @@ type Offer = {
   interested: number
   date: string
   endDate: string
-  status: 'Aktywna' | 'Wymieniona'
+  status: "Aktywna" | "Wymieniona"
 }
 
 const MOCK_OFFERS: Offer[] = [
   {
-    id: '1',
-    titleLeft: 'AK-47 Redline',
-    titleRight: 'Holographic Charizard + inne karty',
-    haveLabel: 'Mam',
-    wantLabel: 'Chcę',
-    systemTags: ['CS2', 'Classified', 'Pokémon TCG', 'Holographic'],
+    id: "1",
+    titleLeft: "AK-47 Redline",
+    titleRight: "Holographic Charizard + inne karty",
+    haveLabel: "Mam",
+    wantLabel: "Chcę",
+    systemTags: ["CS2", "Classified", "Pokémon TCG", "Holographic"],
     views: 24,
     interested: 3,
-    date: '2024-01-15',
-    endDate: '',
-    status: 'Aktywna',
+    date: "2024-01-15",
+    endDate: "",
+    status: "Aktywna",
   },
   {
-    id: '2',
-    titleLeft: 'Konto Fortnite (500+ skinów)',
-    titleRight: 'Zestaw skinów CS2',
-    haveLabel: 'Mam',
-    wantLabel: 'Chcę',
-    systemTags: ['Fortnite', 'Legendary', 'CS2', 'Mixed'],
+    id: "2",
+    titleLeft: "Konto Fortnite (500+ skinów)",
+    titleRight: "Zestaw skinów CS2",
+    haveLabel: "Mam",
+    wantLabel: "Chcę",
+    systemTags: ["Fortnite", "Legendary", "CS2", "Mixed"],
     views: 156,
     interested: 8,
-    date: '2024-01-12',
-    endDate: '',
-    status: 'Aktywna',
+    date: "2024-01-12",
+    endDate: "",
+    status: "Aktywna",
   },
   {
-    id: '3',
-    titleLeft: 'Black Lotus',
-    titleRight: 'Armia Space Marines',
-    haveLabel: 'Mam',
-    wantLabel: 'Chcę',
+    id: "3",
+    titleLeft: "Black Lotus",
+    titleRight: "Armia Space Marines",
+    haveLabel: "Mam",
+    wantLabel: "Chcę",
     systemTags: [
-      'Magic: The Gathering',
-      'Mythic Rare',
-      'Warhammer 40k',
-      'Premium',
+      "Magic: The Gathering",
+      "Mythic Rare",
+      "Warhammer 40k",
+      "Premium",
     ],
     views: 89,
     interested: 12,
-    date: '2024-01-10',
-    endDate: '2024-01-20',
-    status: 'Wymieniona',
+    date: "2024-01-10",
+    endDate: "2024-01-20",
+    status: "Wymieniona",
   },
 ]
 
@@ -81,7 +81,7 @@ function OfferCard({
   offer: Offer
   onMarkExchanged?: (id: string) => void
 }) {
-  const isExchanged = offer.status === 'Wymieniona'
+  const isExchanged = offer.status === "Wymieniona"
 
   return (
     <Card className="overflow-hidden">
@@ -154,15 +154,15 @@ function OfferCard({
   )
 }
 
-function StatusPill({ status }: { status: Offer['status'] }) {
-  const map: Record<Offer['status'], string> = {
-    Aktywna: 'bg-emerald-100 text-emerald-700',
-    Wymieniona: 'bg-slate-900 text-white',
+function StatusPill({ status }: { status: Offer["status"] }) {
+  const map: Record<Offer["status"], string> = {
+    Aktywna: "bg-emerald-100 text-emerald-700",
+    Wymieniona: "bg-slate-900 text-white",
   }
   return (
     <span
       className={cx(
-        'px-2 py-0.5 rounded-full text-xs font-medium',
+        "px-2 py-0.5 rounded-full text-xs font-medium",
         map[status]
       )}
     >
@@ -185,11 +185,11 @@ export const TabSection = () => {
   const [offers, setOffers] = React.useState<Offer[]>(MOCK_OFFERS)
 
   const activeOffers = React.useMemo(
-    () => offers.filter((o) => o.status === 'Aktywna'),
+    () => offers.filter((o) => o.status === "Aktywna"),
     [offers]
   )
   const exchangedOffers = React.useMemo(
-    () => offers.filter((o) => o.status === 'Wymieniona'),
+    () => offers.filter((o) => o.status === "Wymieniona"),
     [offers]
   )
   const markAsExchanged = (id: string) =>
@@ -198,7 +198,7 @@ export const TabSection = () => {
         o.id === id
           ? {
               ...o,
-              status: 'Wymieniona',
+              status: "Wymieniona",
               endDate: new Date().toISOString().slice(0, 10),
             }
           : o

@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import { useState } from "react"
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import type { ModalViewPropsTypes } from '../ModalTypes'
-import { AuthService } from '@/api/services/AuthService'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import type { ModalViewPropsTypes } from "../ModalTypes"
+import { AuthService } from "@/api/services/AuthService"
 
 const RecoveryEmailView = ({ onSwitch }: ModalViewPropsTypes) => {
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState("")
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [okMsg, setOkMsg] = useState<string | null>(null)
@@ -20,7 +20,7 @@ const RecoveryEmailView = ({ onSwitch }: ModalViewPropsTypes) => {
     setOkMsg(null)
 
     if (!email.trim()) {
-      setError('Podaj adres email.')
+      setError("Podaj adres email.")
       return
     }
 
@@ -28,14 +28,17 @@ const RecoveryEmailView = ({ onSwitch }: ModalViewPropsTypes) => {
       setBusy(true)
       const res = await AuthService.forgotPassword({ email })
 
-      setOkMsg(res?.message ?? 'Jeśli podany email istnieje w systemie, wysłaliśmy instrukcje resetu hasła.')
-      setTimeout(() => onSwitch('forgot-success'), 800)
+      setOkMsg(
+        res?.message ??
+          "Jeśli podany email istnieje w systemie, wysłaliśmy instrukcje resetu hasła."
+      )
+      setTimeout(() => onSwitch("forgot-success"), 800)
     } catch (err: any) {
       const msg =
         err?.message ??
         err?.details?.error_description ??
         err?.details?.error ??
-        'Nie udało się wysłać maila resetującego hasło.'
+        "Nie udało się wysłać maila resetującego hasło."
       setError(msg)
     } finally {
       setBusy(false)
@@ -69,12 +72,8 @@ const RecoveryEmailView = ({ onSwitch }: ModalViewPropsTypes) => {
           </p>
         )}
 
-        <Button
-          type="submit"
-          className="w-full cursor-pointer"
-          disabled={busy}
-        >
-          {busy ? 'Wysyłanie…' : 'Odzyskaj hasło'}
+        <Button type="submit" className="w-full cursor-pointer" disabled={busy}>
+          {busy ? "Wysyłanie…" : "Odzyskaj hasło"}
         </Button>
       </form>
     </>

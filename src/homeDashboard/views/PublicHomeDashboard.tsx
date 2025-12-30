@@ -1,6 +1,6 @@
-import { Box, RefreshCw } from "lucide-react";
-import PointsIcon from "@/photos/PointsIcon.svg";
-import { ActionCard } from "../ActionCard";
+import { Box, RefreshCw } from "lucide-react"
+import PointsIcon from "@/photos/PointsIcon.svg"
+import { ActionCard } from "../ActionCard"
 
 export const HomeDashboardPublic = () => {
   return (
@@ -24,7 +24,6 @@ export const HomeDashboardPublic = () => {
           ctaLabel="Zobacz przedmiot"
           to="/exchange"
         />
-        
       </div>
 
       <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-1">
@@ -40,5 +39,5 @@ export const HomeDashboardPublic = () => {
         />
       </div>
     </>
-  );
-};
+  )
+}

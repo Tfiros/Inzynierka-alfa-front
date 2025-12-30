@@ -1,36 +1,35 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import type { ModalViewPropsTypes } from "../ModalTypes";
-import { useAppStore } from "@/store/appStore";
-import PasswordInput from "../components/PasswordInput";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import type { ModalViewPropsTypes } from "../ModalTypes"
+import { useAppStore } from "@/store/appStore"
+import PasswordInput from "../components/PasswordInput"
 
 const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const login = useAppStore((s) => s.login);
+  const login = useAppStore((s) => s.login)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (busy) return;
+    e.preventDefault()
+    if (busy) return
 
-    setBusy(true);
-    setError(null);
+    setBusy(true)
+    setError(null)
 
     try {
-      await login(email, password);
-   
+      await login(email, password)
     } catch (err: any) {
-      console.error("Login error:", err);
-      setError(err.message ?? "Wystąpił błąd podczas logowania.");
+      console.error("Login error:", err)
+      setError(err.message ?? "Wystąpił błąd podczas logowania.")
     } finally {
-      setBusy(false);
+      setBusy(false)
     }
-  };
+  }
 
   return (
     <>
@@ -94,7 +93,7 @@ const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
         </button>
       </p>
     </>
-  );
-};
+  )
+}
 
-export default LoginView;
+export default LoginView

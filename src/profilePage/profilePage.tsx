@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { HeaderSection } from './sections/HeaderSection'
-import { UserInfoService } from '@/api/services/UserInfoService'
-import type { ApiResult } from '@/api/ApiResult'
-import type { UserProfileInfoDto } from '@/shared/types/userTypes/UserInfoTypes'
-import { useAppStore } from '@/store/appStore'
-import { StatBoxSection } from './sections/StatBoxSection'
-import { TabSection } from './sections/TabSection'
+import React, { useEffect, useState } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { HeaderSection } from "./sections/HeaderSection"
+import { UserInfoService } from "@/api/services/UserInfoService"
+import type { ApiResult } from "@/api/ApiResult"
+import type { UserProfileInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
+import { useAppStore } from "@/store/appStore"
+import { StatBoxSection } from "./sections/StatBoxSection"
+import { TabSection } from "./sections/TabSection"
 
 export const UserProfilePage = () => {
   const { id } = useParams<{ id: string }>()
@@ -41,13 +41,13 @@ export const UserProfilePage = () => {
           await UserInfoService.getProfileInfo(profileId)
 
         if (!res.isSuccess || !res.data) {
-          setError(res.message ?? 'Nie udało się załadować profilu.')
+          setError(res.message ?? "Nie udało się załadować profilu.")
           return
         }
 
         setProfileInfo(res.data)
       } catch (e) {
-        setError('Wystąpił błąd podczas ładowania profilu.')
+        setError("Wystąpił błąd podczas ładowania profilu.")
       } finally {
         setLoading(false)
       }

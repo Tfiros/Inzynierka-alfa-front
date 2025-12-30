@@ -1,12 +1,9 @@
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
-import { createUiSlice, type UiSlice } from './storeParts/uiSlice'
-import { createAuthSlice, type AuthSlice } from './storeParts/authSlice'
+import { create } from "zustand"
+import { persist, createJSONStorage } from "zustand/middleware"
+import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
+import { createAuthSlice, type AuthSlice } from "./storeParts/authSlice"
 
-export type AppState = UiSlice &
-  AuthSlice & {
-    hardReset: () => Promise<void>
-  } & Record<string, unknown>
+export type AppState = UiSlice & AuthSlice
 
 export const useAppStore = create<AppState>()(
   persist(
@@ -27,6 +24,7 @@ export const useAppStore = create<AppState>()(
         userId: state.userId,
         navbarUser: state.navbarUser,
         isAuthenticated: state.isAuthenticated,
+        roles: state.roles,
       }),
     }
   )
@@ -40,7 +38,6 @@ export const selectAuth = (s: AppState) => ({
   userId: s.userId,
   navbarUser: s.navbarUser,
 })
+export const selectHasRole = (role: string) => (s: AppState) =>
+  s.roles.includes(role)
 export const selectAccessToken = (s: AppState) => s.accessToken
-
-export const selectRefreshNavbarUserFromAuth = (s: AppState) =>
-  s.refreshNavbarUserFromAuth

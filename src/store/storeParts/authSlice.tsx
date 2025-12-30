@@ -59,6 +59,7 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     userId: null,
     navbarUser: null,
     isAuthenticated: false,
+    roles: [],
 
     setAccessToken: (token) => {
       if (token) {

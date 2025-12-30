@@ -1,6 +1,6 @@
-import type { StateCreator } from 'zustand'
 import { UserInfoService } from '@/api/services/UserInfoService'
 import type { UserNavbarInfoDto } from '@/shared/types/userTypes/UserInfoTypes'
+import type { StateCreator } from "zustand"
 
 export type UiSlice = {
   counters: Record<string, number>

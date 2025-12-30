@@ -1,7 +1,8 @@
 export type AuthModalPropsTypes = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  initialView?: AuthModalView
+  view: AuthModalView
+  onViewChange: (view: AuthModalView) => void
 }
 
 export type ModalViewPropsTypes = {
@@ -9,9 +10,9 @@ export type ModalViewPropsTypes = {
 }
 
 export type AuthModalView =
-  | 'login'
-  | 'register'
-  | 'forgot-email'
-  | 'forgot-code'
-  | 'forgot-reset'
-  | 'forgot-success'
+  | "login"
+  | "register"
+  | "forgot-email"
+  | "forgot-code"
+  | "forgot-reset"
+  | "forgot-success"

@@ -9,15 +9,15 @@ import { useAppStore } from '@/store/appStore'
 
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
+  const roles = useAppStore((s) => s.roles)
 
+  const isAdmin = roles.some((r) => r.toLowerCase() === "admin")
   const tokens = navbarUser?.tokens ?? 0
   const level = navbarUser?.level ?? 1
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 w-full items-center justify-between px-6">
-        <div className="w-20" />
-
-        <div className="flex gap-2 -ml-200">
+        <div className="flex gap-2">
           <Link to="/" className="inline-flex items-center gap-2">
             <img
               src={CrossTradeLogo}
@@ -30,7 +30,11 @@ export const UserNavbar = () => {
 
         <nav className="flex items-center gap-4 text-sm">
           <div className="flex gap-6">
-            <NavItem to="/oferty" label="Oferty" />
+            {isAdmin && (
+              <NavItem to="/itemManagement" label="Zarządzanie przedmiotami" />
+            )}
+            {isAdmin && <NavItem to="/userManagement" label="Użytkownicy" />}
+            <NavItem to="marketplace" label="Oferty" />
             <NavItem to="/faqs" label="FAQs" />
           </div>
 

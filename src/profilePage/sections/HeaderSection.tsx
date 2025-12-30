@@ -1,5 +1,5 @@
-import { ProfileHeader } from '../component/ProfilHeader'
-import type { UserProfileInfoDto } from '@/shared/types/userTypes/UserInfoTypes'
+import { ProfileHeader } from "../component/ProfilHeader"
+import type { UserProfileInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
 
 type HeaderSectionProps = {
   profile: UserProfileInfoDto
@@ -18,7 +18,7 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({
         <ProfileHeader
           handle={`@${profile.nickname}`}
           name={profile.nickname}
-          bio={profile.description ?? 'Ten użytkownik nie dodał jeszcze opisu.'}
+          bio={profile.description ?? "Ten użytkownik nie dodał jeszcze opisu."}
           avatar={undefined}
           joinedYear={joinedYear}
           editPath="/profileEdit"
