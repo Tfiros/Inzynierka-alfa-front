@@ -1,5 +1,5 @@
+import type { Profile } from '@/api/services/ProfileInfoService'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import type { Profile } from '../components/ProfileData'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@radix-ui/react-dropdown-menu'
 import { Button } from 'react-day-picker'
@@ -17,7 +17,7 @@ export const initials = (name?: string) =>
       .join('') || '?'
   ).toUpperCase()
 
-export function ProfileCardSection({ profile }: Props) {
+export const ProfileCardSection = ({ profile }: Props) => {
   return (
     <Card className="p-4 md:p-6">
       <div className="flex flex-col items-center gap-4">

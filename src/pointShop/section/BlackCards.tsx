@@ -1,7 +1,7 @@
 import { Shield, Star, Trophy, Zap } from 'lucide-react'
 import { CardInfo } from '../component/CardInfo'
 
-export function BlackCards() {
+export const BlackCards = () => {
   return (
     <CardInfo
       title="Jak używać CT Coins?"

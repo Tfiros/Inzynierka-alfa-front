@@ -20,7 +20,7 @@ import {
 } from '@/api/services/ProfileInfoService'
 import { UserSettingsService } from '@/api/services/UserSettingsService'
 
-export function ProfileEdit() {
+export const ProfileEdit = () => {
   const userId = useAppStore((s) => s.userId)
   const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
   const [profile, setProfile] = useState<Profile | null>(null)

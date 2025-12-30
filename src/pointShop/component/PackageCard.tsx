@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { Check, Coins } from 'lucide-react'
 import { AccentRing } from './AccentRing'
-import type { PackageItem } from './PackageItem'
+import type { PackageItem } from '../../shared/types/pointPackagesTypes/PackageItem'
 
 type CardProps = {
   item: PackageItem

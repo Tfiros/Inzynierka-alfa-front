@@ -8,9 +8,7 @@ export class UserSettingsService {
   private static readonly base = '/UserSettings'
 
   static getProfileInfo(id: number | null) {
-    return get<UserSecurityProfileInfoResponse>(
-      `${this.base}/profileInfo/${id}`
-    )
+    return get<UserSecurityProfileInfoResponse>(`${this.base}/get-data/${id}`)
   }
 
   static updateProfile(body: UpdateProfileSecurityRequest) {

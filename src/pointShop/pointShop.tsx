@@ -1,6 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { PackageCard } from './component/PackageCard'
-import { PACKAGES, type PackageKey } from './component/PackageItem'
+import {
+  PACKAGES,
+  type PackageKey,
+} from '../shared/types/pointPackagesTypes/PackageItem'
 import { MainText } from './section/MainText'
 import { WhiteCards } from './section/WhiteCards'
 import { BlackCards } from './section/BlackCards'

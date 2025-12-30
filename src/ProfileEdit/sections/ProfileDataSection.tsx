@@ -3,8 +3,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { TabsContent } from '@/components/ui/tabs'
-import type { Profile } from '../components/ProfileData'
 import type { Dispatch } from 'react'
+import type { Profile } from '@/api/services/ProfileInfoService'
 
 type Props = {
   profile: Profile
