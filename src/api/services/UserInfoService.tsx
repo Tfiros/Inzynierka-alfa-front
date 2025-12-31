@@ -16,6 +16,6 @@ export class UserInfoService {
     get<UserProfileInfoDto>(`${this.base}/profileInfo/${userId}`)
 
   // PUT /profileInfo
-  public static readonly updateProfileInfo = async () =>
-    put<UserProfileInfoUpdateDto>(`${this.base}/profileInfo`)
+  public static readonly updateProfileInfo = async (userId: number) =>
+    put<UserProfileInfoUpdateDto>(`${this.base}/profileInfo/${userId}`)
 }

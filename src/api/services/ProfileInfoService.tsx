@@ -1,9 +1,8 @@
-import { get, put } from '@/api/ApiClient'
-
+import { get, put } from "@/api/ApiClient"
 import type {
-  UserProfileInfoResponse,
   UpdateProfileRequest,
-} from '../ApiUserEdit'
+  UserProfileInfoResponse,
+} from "@/shared/types/ApiUserEdit"
 
 export type Profile = {
   username: string
@@ -15,14 +14,14 @@ export type Profile = {
 }
 
 export class ProfileInfoService {
-  private static readonly base = '/UserInfo'
+  private static readonly base = "/UserInfo"
 
   static getProfileInfo(id: number | null) {
     return get<UserProfileInfoResponse>(`${this.base}/profileInfo/${id}`)
   }
 
   static updateProfile(body: UpdateProfileRequest, id: number | null) {
-    return put<UserProfileInfoResponse>(`${this.base}/profile/${id}`, body)
+    return put<UserProfileInfoResponse>(`${this.base}/profileInfo/${id}`, body)
   }
 }
 

@@ -1,6 +1,5 @@
 export type LoginResponseDto = {
   id: number
-  accessToken: string
   idToken?: string | null
   userId?: string | null
   expiresIn?: number
@@ -8,7 +7,6 @@ export type LoginResponseDto = {
 
 export type RefreshResponseDto = {
   id: number
-  accessToken: string
   idToken?: string | null
   userId?: string | null
   expiresIn?: number
@@ -25,4 +23,10 @@ export type ForgotPasswordResponseDto = {
 
 export type LogoutResponseDto = {
   message?: string
+}
+export type AuthMeResponseDto = {
+  isAuthenticated: boolean
+  userId: number | null
+  login: string | null
+  roles: string[]
 }

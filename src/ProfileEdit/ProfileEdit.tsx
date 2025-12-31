@@ -1,24 +1,24 @@
-import { Card } from '@/components/ui/card'
-import { Tabs } from '@/components/ui/tabs'
-import { useAppStore } from '@/store/appStore'
+import { Card } from "@/components/ui/card"
+import { Tabs } from "@/components/ui/tabs"
+import { useAppStore } from "@/store/appStore"
 
-import { ProfileDataSection } from './sections/ProfileDataSection'
-import { ProfileSecurityDataSection } from './sections/ProfileSecurityDataSection'
-import { ProfilePickerSection } from './sections/ProfilePickerSection'
+import { ProfileDataSection } from "./sections/ProfileDataSection"
+import { ProfileSecurityDataSection } from "./sections/ProfileSecurityDataSection"
+import { ProfilePickerSection } from "./sections/ProfilePickerSection"
 
 import {
   mapSecurityBackendToFields,
   mapSecurityToUpdateRequest,
   type SecurityFields,
-} from './components/ProfileSecurityData'
-import { useEffect, useState } from 'react'
-import { ProfileCardSection } from './sections/ProfileCardSection'
+} from "./components/ProfileSecurityData"
+import { useEffect, useState } from "react"
+import { ProfileCardSection } from "./sections/ProfileCardSection"
 import {
   ProfileInfoService,
   mapBackendToProfile,
   type Profile,
-} from '@/api/services/ProfileInfoService'
-import { UserSettingsService } from '@/api/services/UserSettingsService'
+} from "@/api/services/ProfileInfoService"
+import { UserSettingsService } from "@/api/services/UserSettingsService"
 
 export const ProfileEdit = () => {
   const userId = useAppStore((s) => s.userId)
@@ -35,38 +35,34 @@ export const ProfileEdit = () => {
 
     async function fetchProfileData() {
       try {
-        //Start pobierania
         setLoading(true)
         setError(null)
 
-        //Równoległe pobieranie danych aby nie tracić czasu na osobne pobieranie, znowu dlatego bo mamy dwie końcówki
         const [resProfile, resSecurity] = await Promise.all([
           ProfileInfoService.getProfileInfo(userId),
           UserSettingsService.getProfileInfo(userId),
         ])
 
         if (!resProfile.isSuccess || !resProfile.data) {
-          throw new Error(resProfile.message ?? 'Nie udało się pobrać profilu')
+          throw new Error(resProfile.message ?? "Nie udało się pobrać profilu")
         }
 
         if (!resSecurity.isSuccess || !resSecurity.data) {
           throw new Error(
-            resSecurity.message ?? 'Nie udało się pobrać danych bezpieczeństwa'
+            resSecurity.message ?? "Nie udało się pobrać danych bezpieczeństwa"
           )
         }
 
         if (!alive) return
 
-        //Dwa oddzielne settery poniewaz posiadamy rozbicie wyciągania informacji na 2 rózne końcowki
         setProfile(mapBackendToProfile(resProfile.data))
         setSecurity(mapSecurityBackendToFields(resSecurity.data))
       } catch (e) {
         if (!alive) return
 
-        //Wywalenie błędu i nie ustawienie profilu
         setProfile(null)
         setSecurity(null)
-        setError(e instanceof Error ? e.message : 'Błąd pobierania danych')
+        setError(e instanceof Error ? e.message : "Błąd pobierania danych")
       } finally {
         if (alive) setLoading(false)
       }
@@ -90,25 +86,21 @@ export const ProfileEdit = () => {
         description: profile.bio,
       }
 
-      //Klasyczne wysyłanie puta i jeeli się nie powiedzie to throw error
       const res = await ProfileInfoService.updateProfile(body, userId)
       if (!res.isSuccess) {
-        throw new Error(res.message ?? 'Nie udało się zapisać profilu')
+        throw new Error(res.message ?? "Nie udało się zapisać profilu")
       }
 
-      //Musi tak być poniewa data moe być undefined
       if (res.data) setProfile(mapBackendToProfile(res.data))
 
       await refreshNavbar()
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Błąd zapisu profilu')
+      setError(e instanceof Error ? e.message : "Błąd zapisu profilu")
     } finally {
-      //Kończymy tryb zapisywania
       setSavingProfile(false)
     }
   }
 
-  //Dokładnie to samo co onSaveProfile, ale dla innego body (innej końcówki)
   const onSaveSecurity = async () => {
     if (!security) return
     try {
@@ -118,7 +110,7 @@ export const ProfileEdit = () => {
 
       const res = await UserSettingsService.updateProfile(body)
       if (!res.isSuccess) {
-        throw new Error(res.message ?? 'Nie udało się zapisać ustawień')
+        throw new Error(res.message ?? "Nie udało się zapisać ustawień")
       }
 
       const fresh = await UserSettingsService.getProfileInfo(userId)
@@ -128,7 +120,7 @@ export const ProfileEdit = () => {
 
       await refreshNavbar()
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Błąd zapisu ustawień')
+      setError(e instanceof Error ? e.message : "Błąd zapisu ustawień")
     } finally {
       setSavingSecurity(false)
     }

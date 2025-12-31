@@ -1,83 +1,81 @@
-import type { StateCreator } from 'zustand'
-import { AuthService } from '@/api/services/AuthService'
-import { UserInfoService } from '@/api/services/UserInfoService'
-import type { UserNavbarInfoDto } from '@/shared/types/userTypes/UserInfoTypes'
+import type { StateCreator } from "zustand"
+import { AuthService } from "@/api/services/AuthService"
+import { UserInfoService } from "@/api/services/UserInfoService"
+import type { UserNavbarInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
 
-export type JwtPayload = {
-  login?: string
-  exp?: number
-  [k: string]: unknown
-}
-
-function parseJwt(token: string | null): JwtPayload | null {
-  if (!token) return null
-  try {
-    const b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
-    const json = decodeURIComponent(
-      atob(b64)
-        .split('')
-        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
-    )
-    return JSON.parse(json)
-  } catch {
-    return null
-  }
+export type AuthMeDto = {
+  isAuthenticated: boolean
+  login: string | null
+  roles: string[]
+  userId: number | null
 }
 
 export type AuthSlice = {
-  accessToken: string | null
   userLogin: string | null
   userId: number | null
   navbarUser: UserNavbarInfoDto | null
   isAuthenticated: boolean
+  roles: string[]
 
-  setAccessToken: (token: string | undefined) => void
+  csrfReady: boolean
+  initSecurity: () => Promise<void>
   setNavbarUser: (info: UserNavbarInfoDto | null) => void
+  syncSession: () => Promise<void>
 
   login: (email: string, password: string) => Promise<void>
   refresh: () => Promise<void>
   logout: () => Promise<void>
 }
 
-type HasHardReset = {
-  hardReset: () => Promise<void>
-}
-
+type HasHardReset = { hardReset: () => Promise<void> }
 type StoreState = AuthSlice & HasHardReset & Record<string, unknown>
 
 export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
   set,
-  get,
-  _api
+  get
 ) => {
-  void _api
+  const clearAuthState = () => {
+    set({
+      userLogin: null,
+      isAuthenticated: false,
+      roles: [],
+      userId: null,
+      navbarUser: null,
+    })
+  }
+
+  const loadNavbarInfoIfPossible = async (userId: number | null) => {
+    if (!userId) {
+      set({ navbarUser: null })
+      return
+    }
+
+    const navRes = await UserInfoService.getNavbarInfo(userId)
+    if (navRes.isSuccess && navRes.data) set({ navbarUser: navRes.data })
+    else set({ navbarUser: null })
+  }
+
+  const initSecurityOnce = async () => {
+    if (get().csrfReady) return
+    set({ csrfReady: true })
+
+    try {
+      await AuthService.csrf()
+    } catch {
+      set({ csrfReady: false })
+    }
+  }
 
   return {
-    accessToken: null,
     userLogin: null,
     userId: null,
     navbarUser: null,
     isAuthenticated: false,
     roles: [],
+    csrfReady: false,
 
-    setAccessToken: (token) => {
-      if (token) {
-        const payload = parseJwt(token)
-        set({
-          accessToken: token,
-          userLogin: payload?.login ?? null,
-          isAuthenticated: true,
-        })
-      } else {
-        set({
-          accessToken: null,
-          userLogin: null,
-          userId: null,
-          navbarUser: null,
-          isAuthenticated: false,
-        })
-      }
+    initSecurity: async () => {
+      await initSecurityOnce()
     },
 
     setNavbarUser: (info) => {
@@ -87,41 +85,53 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
       })
     },
 
+    syncSession: async () => {
+      let meRes: any
+      try {
+        meRes = await AuthService.me<AuthMeDto>()
+      } catch {
+        clearAuthState()
+        return
+      }
+
+      if (!meRes?.isSuccess || !meRes.data || !meRes.data.isAuthenticated) {
+        clearAuthState()
+        return
+      }
+
+      const backendUserId = meRes.data.userId ?? null
+      const finalUserId = backendUserId ?? get().userId ?? null
+
+      set({
+        isAuthenticated: true,
+        userLogin: meRes.data.login ?? null,
+        roles: Array.isArray(meRes.data.roles) ? meRes.data.roles : [],
+        userId: finalUserId,
+      })
+
+      await loadNavbarInfoIfPossible(finalUserId)
+    },
+
     login: async (email, password) => {
       const res = await AuthService.login({ email, password })
 
-      if (res.status !== 200 || !res.data) {
-        throw new Error(res.message || 'Nieznany błąd podczas logowania.')
+      if (!res.isSuccess || !res.data) {
+        throw new Error(res.message || "Nieznany błąd podczas logowania.")
       }
 
-      const id = res.data.id
-      const accessToken = res.data.accessToken
+      set({ userId: (res.data as any).id ?? null })
 
-      get().setAccessToken(accessToken)
-      set({ userId: id })
-
-      const navRes = await UserInfoService.getNavbarInfo(id)
-      if (navRes.isSuccess && navRes.data) {
-        set({ navbarUser: navRes.data })
-      }
+      await get().syncSession()
     },
 
     refresh: async () => {
       const res = await AuthService.refresh()
-      const id = res.data.id
-
-      if (res.status !== 200 || !res.data?.accessToken) {
-        throw new Error(res.message || 'Nie udało się odświeżyć tokena.')
-      }
-      set({ userId: id })
-
-      const navRes = await UserInfoService.getNavbarInfo(id)
-      if (navRes.isSuccess && navRes.data) {
-        set({ navbarUser: navRes.data })
+      if (!res.isSuccess || !res.data) {
+        throw new Error(res.message || "Nie udało się odświeżyć sesji.")
       }
 
-      console.log(res.data.accessToken)
-      get().setAccessToken(res.data.accessToken)
+      set({ userId: (res.data as any).id ?? null })
+      await get().syncSession()
     },
 
     logout: async () => {
