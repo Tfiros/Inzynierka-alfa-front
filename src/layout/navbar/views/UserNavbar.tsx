@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import CrossTradeLogo from '@/photos/CrossTradeLogo.png'
-import PointsIcon from '@/photos/PointsIcon.svg'
-import NoifyIcon from '@/photos/NotificationIcon.svg'
-import { NavItem } from '../components/NavItem'
-import { ProfileMenu } from '../components/ProfileMenu'
-import { useAppStore } from '@/store/appStore'
+import { Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import CrossTradeLogo from "@/photos/CrossTradeLogo.png"
+import PointsIcon from "@/photos/PointsIcon.svg"
+import NoifyIcon from "@/photos/NotificationIcon.svg"
+import { NavItem } from "../components/NavItem"
+import { ProfileMenu } from "../components/ProfileMenu"
+import { useAppStore } from "@/store/appStore"
 
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
@@ -36,6 +36,7 @@ export const UserNavbar = () => {
             {isAdmin && <NavItem to="/userManagement" label="Użytkownicy" />}
             <NavItem to="marketplace" label="Oferty" />
             <NavItem to="/faqs" label="FAQs" />
+            <NavItem to="/statute" label="Regulamin" />
           </div>
 
           <div className="flex gap-1 items-center">
@@ -53,7 +54,7 @@ export const UserNavbar = () => {
                   className="h-6 w-6 object-contain"
                 />
                 <span className="ml-1 text-sm font-medium">
-                  {tokens.toLocaleString('pl-PL')}
+                  {tokens.toLocaleString("pl-PL")}
                 </span>
               </Link>
             </Button>
