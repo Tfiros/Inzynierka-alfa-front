@@ -9,8 +9,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     https: {
-      key: fs.readFileSync("./certs/localhost-key.pem"),
-      cert: fs.readFileSync("./certs/localhost.pem"),
+      key: fs.readFileSync("./certs/localhost+2-key.pem"),
+      cert: fs.readFileSync("./certs/localhost+2.pem"),
     },
     port: 5173,
     proxy: {

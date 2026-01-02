@@ -152,3 +152,7 @@ dist-ssr
 *.sw?
 node_modules
 pnpm-debug.log*
+
+#HTTPS certificates
+certs/localhost+2-key.pem
+certs/localhost+2.pem

@@ -22,8 +22,6 @@ function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
 
   useEffect(() => {
-    // ✅ tylko CSRF bootstrap (GET /api/Auth/csrf)
-    // bez syncSession/me na starcie
     initSecurity().catch(() => {})
   }, [initSecurity])
 
