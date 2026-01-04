@@ -24,11 +24,7 @@ export const CTASection = () => {
               asChild
               variant="secondary"
               className="cursor-pointer"
-            >
-              <Link to="/" aria-label="Porozmawiaj z nami">
-                Porozmawiaj z nami
-              </Link>
-            </Button>
+            ></Button>
           </div>
         </div>
       </div>

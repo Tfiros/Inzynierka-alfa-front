@@ -1,7 +1,17 @@
 import { Button } from "@/components/ui/button"
 import LPPhoto from "@/photos/LandingPageGamesPhoto.jpg"
+import AuthModal from "@/shared/AuthModal"
+import type { AuthModalView } from "@/shared/ModalTypes"
+import { useAppStore } from "@/store/appStore"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 export const HeroSection = () => {
+  const navigate = useNavigate()
+  const isAuthenticated = useAppStore((s) => s.isAuthenticated)
+
+  const [open, setOpen] = useState(false)
+  const [view, setView] = useState<AuthModalView>("login")
   return (
     <section className="container mx-auto px-4 pt-16 pb-12 lg:pt-24 lg:pb-20">
       <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
@@ -15,10 +25,24 @@ export const HeroSection = () => {
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button size="lg" className="cursor-pointer">
-              Zacznij teraz za darmo
-            </Button>
-            <Button size="lg" variant="outline" className="cursor-pointer">
+            {!isAuthenticated && (
+              <Button
+                className="cursor-pointer"
+                onClick={() => {
+                  setView("register")
+                  setOpen(true)
+                }}
+              >
+                Zacznij teraz za darmo
+              </Button>
+            )}
+
+            <Button
+              size="lg"
+              variant="outline"
+              className="cursor-pointer"
+              onClick={() => navigate("/faqs")}
+            >
               Zobacz jak działa
             </Button>
           </div>
@@ -32,6 +56,12 @@ export const HeroSection = () => {
           />
         </div>
       </div>
+      <AuthModal
+        open={open}
+        onOpenChange={setOpen}
+        view={view}
+        onViewChange={setView}
+      />
     </section>
   )
 }

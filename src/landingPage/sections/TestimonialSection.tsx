@@ -10,20 +10,20 @@ export const TestimonialsSection = () => {
         Przeczytaj opinie osób, które już korzystają z CrossTrade
       </p>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-3">
+      <div className="mt-8 grid gap-4 md:grid-cols-3 text-center">
         <Testimonial
-          quote="Niesamowita platforma! Wymieniłem skin z CS:GO na fajny nóż w Rust. Szybko, bezpiecznie i bardzo intuicyjnie."
-          name="Maciej Gaming"
-          role="Pro Gamer"
+          quote="Szybko, bezpiecznie i bardzo intuicyjnie. Właśnie czegoś takiego szukałem"
+          name="GoodUncle"
+          role="Gracz"
         />
         <Testimonial
-          quote="CrossTrade to rewolucja w świecie gamingu tradingu. Mam dostęp do itemków z różnych gier w jednym miejscu!"
-          name="Anna Streamer"
-          role="Streamerka"
+          quote="CrossTrade to rewolucja w świecie tradingu dobrami wirtualnymi. Mam dostęp do przedmiotów z różnych gier w jednym miejscu!"
+          name="Erson"
+          role="Streamer"
         />
         <Testimonial
-          quote="Jako kolekcjoner itemków gaming, CrossTrade pozwala mi znaleźć rzadkie przedmioty, których nigdzie indziej nie ma."
-          name="Tomasz Collector"
+          quote="CrossTrade pozwala mi znaleźć rzadkie przedmioty, których nigdzie indziej nie ma."
+          name="Tfiros"
           role="Kolekcjoner"
         />
       </div>
