@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom"
-//import { User as UserIcon } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import CrossTradeLogo from "@/photos/CrossTradeLogo.png"
 import { useState } from "react"
 import AuthModal from "@/shared/AuthModal"
 import type { AuthModalView } from "@/shared/ModalTypes"
+import { NavItem } from "../components/NavItem"
 
 export default function GuestNavbar() {
   const [open, setOpen] = useState(false)
@@ -25,6 +25,11 @@ export default function GuestNavbar() {
           </div>
 
           <nav className="flex items-center gap-4 text-sm">
+            <div className="flex gap-6">
+              <NavItem to="marketplace" label="Oferty" />
+              <NavItem to="/faqs" label="FAQs" />
+              <NavItem to="/statute" label="Regulamin" />
+            </div>
             <div className="flex gap-1">
               <div className="flex gap-4 w-full max-w-sm">
                 <Button
