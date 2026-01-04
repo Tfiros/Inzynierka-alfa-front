@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import { HeaderSection } from "./sections/HeaderSection"
 import { UserInfoService } from "@/api/services/UserInfoService"
 import type { ApiResult } from "@/api/ApiResult"
@@ -11,7 +11,6 @@ import { TabSection } from "./sections/TabSection"
 export const UserProfilePage = () => {
   const { id } = useParams<{ id: string }>()
   const profileId = id ? Number(id) : NaN
-  const navigate = useNavigate()
 
   const userId = useAppStore((state) => state.userId)
   const isAuthenticated = useAppStore((state) => state.isAuthenticated)
@@ -27,7 +26,7 @@ export const UserProfilePage = () => {
 
   useEffect(() => {
     if (!id || Number.isNaN(profileId)) {
-      setError('Nieprawidłowy identyfikator profilu.')
+      setError("Nieprawidłowy identyfikator profilu.")
       setLoading(false)
       return
     }

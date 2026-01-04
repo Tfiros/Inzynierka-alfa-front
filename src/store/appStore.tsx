@@ -3,23 +3,30 @@ import { persist, createJSONStorage } from "zustand/middleware"
 import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
 import { createAuthSlice, type AuthSlice } from "./storeParts/authSlice"
 
-export type AppState = UiSlice & AuthSlice
+export type AppState = UiSlice & AuthSlice & { hardReset: () => Promise<void> }
 
 export const useAppStore = create<AppState>()(
   persist(
     (set, get, api) => ({
       ...createUiSlice(set, get, api),
       ...createAuthSlice(set, get, api),
+
       hardReset: async () => {
-        get().setAccessToken(undefined)
+        set({
+          userLogin: null,
+          userId: null,
+          navbarUser: null,
+          isAuthenticated: false,
+          roles: [],
+        })
+
         await useAppStore.persist.clearStorage()
       },
     }),
     {
-      name: 'itemtrade-app',
+      name: "itemtrade-app",
       storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({
-        accessToken: state.accessToken,
         userLogin: state.userLogin,
         userId: state.userId,
         navbarUser: state.navbarUser,
@@ -37,7 +44,8 @@ export const selectAuth = (s: AppState) => ({
   userLogin: s.userLogin,
   userId: s.userId,
   navbarUser: s.navbarUser,
+  roles: s.roles,
 })
+
 export const selectHasRole = (role: string) => (s: AppState) =>
-  s.roles.includes(role)
-export const selectAccessToken = (s: AppState) => s.accessToken
+  s.roles.some((r) => r.toLowerCase() === role.toLowerCase())

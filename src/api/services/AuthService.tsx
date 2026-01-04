@@ -1,4 +1,4 @@
-import { post } from "@/api/ApiClient"
+import { post, get, clearCsrfToken } from "@/api/ApiClient"
 import type {
   LoginRequestDto,
   RegisterRequestDto,
@@ -10,6 +10,7 @@ import type {
   ForgotPasswordResponseDto,
   RefreshResponseDto,
   LogoutResponseDto,
+  AuthMeResponseDto,
 } from "@/shared/types/authTypes/AuthResponseTypes"
 
 export class AuthService {
@@ -28,6 +29,15 @@ export class AuthService {
   public static readonly refresh = async () =>
     post<RefreshResponseDto>(`${this.base}/refresh`)
 
-  public static readonly logout = async () =>
-    post<LogoutResponseDto>(`${this.base}/logout`)
+  public static readonly logout = async () => {
+    const res = await post<LogoutResponseDto>(`${this.base}/logout`)
+    clearCsrfToken()
+    await this.csrf().catch(() => {})
+    return res
+  }
+
+  public static readonly me = async <T = AuthMeResponseDto,>() =>
+    get<T>(`${this.base}/me`)
+
+  public static readonly csrf = async () => get<void>(`${this.base}/csrf`)
 }

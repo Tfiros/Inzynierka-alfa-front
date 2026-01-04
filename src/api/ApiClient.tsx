@@ -1,9 +1,9 @@
 import type { AxiosRequestConfig } from "axios"
-import api from "./Api"
+import api, { clearCsrfToken } from "./Api"
 import type { ApiResult } from "./ApiResult"
 
 type QueryParams = Record<string, string | number | boolean | null | undefined>
-
+export { clearCsrfToken }
 export async function get<T>(
   url: string,
   params?: QueryParams,
