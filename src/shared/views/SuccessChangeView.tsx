@@ -1,4 +1,4 @@
-import { Button } from "@/componentsShared/button"
+import { Button } from "@/shared/components/button"
 import type { ModalViewPropsTypes } from "../ModalTypes"
 
 const SuccessChangeView = ({ onSwitch }: ModalViewPropsTypes) => {

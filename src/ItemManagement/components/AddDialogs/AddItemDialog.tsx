@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
-import { Button } from "@/componentsShared/button"
+import { Button } from "@/shared/components/button"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+} from "@/shared/components/dialog"
+import { Input } from "@/shared/components/input"
 import {
   Select,
   SelectContent,

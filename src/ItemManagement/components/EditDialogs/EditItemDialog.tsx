@@ -5,9 +5,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Button } from "@/componentsShared/button"
-import { Input } from "@/components/ui/input"
+} from "@/shared/components/dialog"
+import { Button } from "@/shared/components/button"
+import { Input } from "@/shared/components/input"
 
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import { ItemRaritiesService } from "@/api/services/ItemRaritiesService"
@@ -17,7 +17,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/shared/components/select"
 
 type EditItemPayload = {
   name: string

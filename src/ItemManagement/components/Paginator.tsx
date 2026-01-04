@@ -1,4 +1,4 @@
-import { Button } from "@/componentsShared/button"
+import { Button } from "@/shared/components/button"
 
 const Paginator = (props: {
   page: number

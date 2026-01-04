@@ -8,7 +8,7 @@ import useDebouncedValue from "../useDebouncedValue"
 import EntityCard from "../components/EntityCard"
 import type { GenreDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 import type { PagedResponse } from "@/shared/types/PagedType"
-import { Button } from "@/componentsShared/button"
+import { Button } from "@/shared/components/button"
 import AddGenreDialog from "../components/AddDialogs/AddGenreDialog"
 
 export const GenresTab = () => {

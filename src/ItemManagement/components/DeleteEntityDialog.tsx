@@ -1,11 +1,11 @@
-import { Button } from "@/componentsShared/button"
+import { Button } from "@/shared/components/button"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/shared/components/dialog"
 
 export const DeleteEntityDialog = (props: {
   open: boolean

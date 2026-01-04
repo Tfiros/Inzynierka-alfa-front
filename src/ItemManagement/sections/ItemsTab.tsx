@@ -9,15 +9,15 @@ import EntityCard from "../components/EntityCard"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
 import EditItemDialog from "../components/EditDialogs/EditItemDialog"
 
-import { Input } from "@/components/ui/input"
-import { Button } from "@/componentsShared/button"
+import { Input } from "@/shared/components/input"
+import { Button } from "@/shared/components/button"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/shared/components/dialog"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import type { ItemDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 import {
@@ -26,7 +26,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/shared/components/select"
 
 const ItemsTab = () => {
   const [games, setGames] = useState<DropdownOption[]>([])
