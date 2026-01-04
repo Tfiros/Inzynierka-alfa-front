@@ -7,6 +7,50 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
+## HTTPS Certificates Setup
+
+This project uses HTTPS in development mode. To generate the required certificates, use [mkcert](https://github.com/FiloSottile/mkcert).
+
+### Installing mkcert
+
+#### macOS
+```bash
+brew install mkcert
+```
+
+#### Windows (using Chocolatey)
+```bash
+choco install mkcert
+```
+
+#### Linux
+```bash
+# Ubuntu/Debian
+sudo apt install mkcert
+
+# Arch Linux
+sudo pacman -S mkcert
+
+# Or using Go
+go install filippo.io/mkcert@latest
+```
+
+### Generating Certificates
+
+Run the following commands from the project root directory:
+
+1. Install the local CA:
+   ```bash
+   mkcert -install
+   ```
+
+2. Generate certificates for localhost:
+   ```bash
+   mkcert -key-file certs/localhost+2-key.pem -cert-file certs/localhost+2.pem localhost
+   ```
+
+The certificates will be placed in the `certs/` directory as expected by the Vite configuration.
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
