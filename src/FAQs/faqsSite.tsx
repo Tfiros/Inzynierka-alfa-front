@@ -3,7 +3,7 @@ import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "@/components/ui/accordion"
+} from "@radix-ui/react-accordion"
 
 export const FAQs = () => {
   return (

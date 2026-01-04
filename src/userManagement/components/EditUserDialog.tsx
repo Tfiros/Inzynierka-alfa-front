@@ -7,15 +7,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
 import { Checkbox } from "@/components/ui/checkbox"
 import type {
   UpdateUserRequestDto,
   UserListItemDto,
 } from "@/shared/types/userTypes/UserManagementTypes"
 import { UserManagementService } from "@/api/services/UserManagementService"
+import { Label } from "@/components/ui/label"
 
 const ALL_ROLES = ["Admin", "Middleman"]
 

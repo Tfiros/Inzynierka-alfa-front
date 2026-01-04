@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card"
-import { Tabs } from "@/components/ui/tabs"
 import { useAppStore } from "@/store/appStore"
 
 import { ProfileDataSection } from "./sections/ProfileDataSection"
@@ -19,6 +18,7 @@ import {
   type Profile,
 } from "@/api/services/ProfileInfoService"
 import { UserSettingsService } from "@/api/services/UserSettingsService"
+import { Tabs } from "@/components/ui/tabs"
 
 export const ProfileEdit = () => {
   const userId = useAppStore((s) => s.userId)

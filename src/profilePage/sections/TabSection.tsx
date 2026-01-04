@@ -1,9 +1,9 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import React, { useMemo } from "react"
 import { CalendarDays, SquarePen, History, Edit, Images } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const cx = (...c: (string | false | null | undefined)[]) =>
   c.filter(Boolean).join(" ")

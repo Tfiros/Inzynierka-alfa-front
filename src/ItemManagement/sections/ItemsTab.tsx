@@ -8,15 +8,9 @@ import Paginator from "../components/Paginator"
 import EntityCard from "../components/EntityCard"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
 import EditItemDialog from "../components/EditDialogs/EditItemDialog"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import {
   Dialog,
   DialogContent,
@@ -26,6 +20,13 @@ import {
 } from "@/components/ui/dialog"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import type { ItemDto } from "@/shared/types/itemManagementTypes/EntityDtos"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const ItemsTab = () => {
   const [games, setGames] = useState<DropdownOption[]>([])

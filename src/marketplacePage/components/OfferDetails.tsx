@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import OfferItemCard from "./OfferItemCard"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import { Plus } from "lucide-react"
 
 type OfferDetailsProps = {

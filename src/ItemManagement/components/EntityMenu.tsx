@@ -4,7 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import { MoreVertical, Pencil, Trash2 } from "lucide-react"
 
 const EntityMenu = (props: { onEdit: () => void; onDelete: () => void }) => {

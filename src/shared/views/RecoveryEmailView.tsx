@@ -1,10 +1,10 @@
 import { useState } from "react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import type { ModalViewPropsTypes } from "../ModalTypes"
 import { AuthService } from "@/api/services/AuthService"
+import { Label } from "@/components/ui/label"
 
 const RecoveryEmailView = ({ onSwitch }: ModalViewPropsTypes) => {
   const [email, setEmail] = useState("")

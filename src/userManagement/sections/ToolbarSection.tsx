@@ -1,10 +1,6 @@
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Button } from "@/componentsShared/button"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +14,11 @@ import { Search, Filter, ArrowUpDown } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { UserListOrderBy } from "@/shared/types/userTypes/UserManagementTypes"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 type Props = {
   search: string

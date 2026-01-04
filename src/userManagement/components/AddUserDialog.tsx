@@ -6,12 +6,11 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-
 import { AuthService } from "@/api/services/AuthService"
 import type { RegisterRequestDto } from "@/shared/types/authTypes/AuthRequestTypes"
+import { Label } from "@radix-ui/react-label"
 
 type Props = {
   open: boolean

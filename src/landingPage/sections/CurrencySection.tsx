@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import { Handshake, Star, Gift } from "lucide-react"
 import Tile from "../components/Tile"
 import { useNavigate } from "react-router-dom"

@@ -2,10 +2,10 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { Mail, MessageSquare, User } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/componentsShared/button"
 import CrossTradeLogo from "@/photos/CrossTradeLogo.png"
+import { Label } from "@radix-ui/react-label"
+import { Textarea } from "@/components/ui/textarea"
 
 type ContactFormData = {
   name: string

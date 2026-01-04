@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import { Link } from "react-router-dom"
 
 export const CTASection = () => {

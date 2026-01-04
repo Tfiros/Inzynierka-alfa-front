@@ -6,6 +6,12 @@ import SearchInput from "../components/SearchInput"
 import Paginator from "../components/Paginator"
 import EntityCard from "../components/EntityCard"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
+
+import { Input } from "@/components/ui/input"
+import { Button } from "@/componentsShared/button"
+import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
+import AddItemRarityDialog from "../components/AddDialogs/AddItemRarityDialog"
+import EditItemRarityDialog from "../components/EditDialogs/EditItemRarityDialog"
 import {
   Select,
   SelectContent,
@@ -13,11 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
-import AddItemRarityDialog from "../components/AddDialogs/AddItemRarityDialog"
-import EditItemRarityDialog from "../components/EditDialogs/EditItemRarityDialog"
 
 type RarityDto = { id: number; name: string }
 

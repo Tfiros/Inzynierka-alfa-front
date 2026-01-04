@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import { Calendar, List, Pencil } from "lucide-react"
 
 type Props = {

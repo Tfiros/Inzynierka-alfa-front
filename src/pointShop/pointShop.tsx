@@ -1,16 +1,16 @@
-import { Button } from '@/components/ui/button'
-import { PackageCard } from './component/PackageCard'
+import { Button } from "@/componentsShared/button"
+import { PackageCard } from "./component/PackageCard"
 import {
   PACKAGES,
   type PackageKey,
-} from '../shared/types/pointPackagesTypes/PackageItem'
-import { MainText } from './section/MainText'
-import { WhiteCards } from './section/WhiteCards'
-import { BlackCards } from './section/BlackCards'
-import { useState } from 'react'
+} from "../shared/types/pointPackagesTypes/PackageItem"
+import { MainText } from "./section/MainText"
+import { WhiteCards } from "./section/WhiteCards"
+import { BlackCards } from "./section/BlackCards"
+import { useState } from "react"
 
 export function PointShop() {
-  const [selected, setSelected] = useState<PackageKey>('popular')
+  const [selected, setSelected] = useState<PackageKey>("popular")
 
   return (
     <div className="min-h-screen bg-white flex justify-center">

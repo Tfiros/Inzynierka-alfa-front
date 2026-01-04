@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import LPPhoto from "@/photos/LandingPageGamesPhoto.jpg"
 import AuthModal from "@/shared/AuthModal"
 import type { AuthModalView } from "@/shared/ModalTypes"

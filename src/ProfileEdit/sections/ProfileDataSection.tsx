@@ -1,10 +1,10 @@
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
-import { TabsContent } from '@/components/ui/tabs'
-import type { Dispatch } from 'react'
-import type { Profile } from '@/api/services/ProfileInfoService'
+import { Input } from "@/components/ui/input"
+import { Button } from "@/componentsShared/button"
+import type { Dispatch } from "react"
+import type { Profile } from "@/api/services/ProfileInfoService"
+import { TabsContent } from "@/components/ui/tabs"
+import { Label } from "@radix-ui/react-label"
+import { Textarea } from "@/components/ui/textarea"
 
 type Props = {
   profile: Profile
@@ -50,7 +50,7 @@ export const ProfileDataSection = ({
           disabled={savingProfile}
           className="min-w-28"
         >
-          {savingProfile ? 'Zapisywanie...' : 'Zapisz zmiany'}
+          {savingProfile ? "Zapisywanie..." : "Zapisz zmiany"}
         </Button>
       </div>
     </TabsContent>

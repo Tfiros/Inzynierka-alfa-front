@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/componentsShared/button"
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/componentsShared/select"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import { ItemRaritiesService } from "@/api/services/ItemRaritiesService"
 

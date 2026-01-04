@@ -1,3 +1,9 @@
+import { useState } from "react"
+import type {
+  UserListItemDto,
+  DeleteUserRequestDto,
+} from "@/shared/types/userTypes/UserManagementTypes"
+import { UserManagementService } from "@/api/services/UserManagementService"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,12 +14,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { useState } from "react"
-import type {
-  UserListItemDto,
-  DeleteUserRequestDto,
-} from "@/shared/types/userTypes/UserManagementTypes"
-import { UserManagementService } from "@/api/services/UserManagementService"
 
 type Props = {
   open: boolean

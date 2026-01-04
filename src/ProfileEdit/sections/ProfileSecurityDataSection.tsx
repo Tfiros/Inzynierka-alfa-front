@@ -1,8 +1,8 @@
-import { Input } from '@/components/ui/input'
-import { TabsContent } from '@/components/ui/tabs'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
-import type { SecurityFields } from '../components/ProfileSecurityData'
+import { Input } from "@/components/ui/input"
+import { Button } from "@/componentsShared/button"
+import type { SecurityFields } from "../components/ProfileSecurityData"
+import { TabsContent } from "@/components/ui/tabs"
+import { Label } from "@/components/ui/label"
 
 type Props = {
   security: SecurityFields | null
@@ -54,7 +54,7 @@ export const ProfileSecurityDataSection = ({
               onClick={onSaveSecurity}
               disabled={savingSecurity}
             >
-              {savingSecurity ? 'Zapisywanie...' : 'Zapisz ustawienia'}
+              {savingSecurity ? "Zapisywanie..." : "Zapisz ustawienia"}
             </Button>
           </div>
         </>
