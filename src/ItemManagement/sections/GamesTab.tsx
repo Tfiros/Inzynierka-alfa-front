@@ -1,6 +1,4 @@
 import { useEffect, useMemo, useState } from "react"
-import { GenresService } from "@/api/services/GenresService"
-import { GamesService } from "@/api/services/GamesService"
 import useDebouncedValue from "../useDebouncedValue"
 import SearchInput from "../components/SearchInput"
 import Paginator from "../components/Paginator"
@@ -26,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/select"
+import { GenresService } from "@/shared/api/services/GenresService"
+import { GamesService } from "@/shared/api/services/GamesService"
 
 const GamesTab = () => {
   const [genres, setGenres] = useState<DropdownOption[]>([])

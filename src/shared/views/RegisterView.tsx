@@ -7,15 +7,15 @@ import { Checkbox } from "@/shared/components/checkbox"
 import { Calendar } from "@/shared/components/calendar"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
-import { cn } from "@/lib/utils"
-import type { ModalViewPropsTypes } from "../ModalTypes"
-import { AuthService } from "@/api/services/AuthService"
+import { cn } from "@/shared/lib/utils"
+import type { ModalViewPropsTypes } from "../utilities/Auth/ModalTypes"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/shared/components/popover"
 import { Label } from "../components/label"
+import { AuthService } from "../api/services/AuthService"
 
 const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
   const [checked, setChecked] = useState(false)

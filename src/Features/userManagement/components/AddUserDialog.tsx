@@ -8,9 +8,9 @@ import {
 } from "@/shared/components/dialog"
 import { Button } from "@/shared/components/button"
 import { Input } from "@/shared/components/input"
-import { AuthService } from "@/api/services/AuthService"
 import type { RegisterRequestDto } from "@/shared/types/authTypes/AuthRequestTypes"
 import { Label } from "@radix-ui/react-label"
+import { AuthService } from "@/shared/api/services/AuthService"
 
 type Props = {
   open: boolean

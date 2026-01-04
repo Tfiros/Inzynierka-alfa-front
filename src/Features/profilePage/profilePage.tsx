@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { HeaderSection } from "./sections/HeaderSection"
-import { UserInfoService } from "@/api/services/UserInfoService"
-import type { ApiResult } from "@/api/ApiResult"
 import type { UserProfileInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
-import { useAppStore } from "@/store/appStore"
 import { StatBoxSection } from "./sections/StatBoxSection"
 import { TabSection } from "./sections/TabSection"
+import { useAppStore } from "@/shared/store/appStore"
+import { UserInfoService } from "@/shared/api/services/UserInfoService"
+import type { ApiResult } from "@/shared/api/ApiResult"
 
 export const UserProfilePage = () => {
   const { id } = useParams<{ id: string }>()

@@ -1,10 +1,10 @@
 import { Card, CardContent } from "@/shared/components/card"
 import { Checkbox } from "@/shared/components/checkbox"
 import { Badge } from "@/shared/components/badge"
-import { cn } from "@/lib/utils"
+import { cn } from "@/shared/lib/utils"
 import { Check, Coins } from "lucide-react"
 import { AccentRing } from "./AccentRing"
-import type { PackageItem } from "../../shared/types/pointPackagesTypes/PackageItem"
+import type { PackageItem } from "@/shared/types/pointPackagesTypes/PackageItem"
 
 type CardProps = {
   item: PackageItem

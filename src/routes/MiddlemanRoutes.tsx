@@ -1,5 +1,5 @@
+import { useAppStore } from "@/shared/store/appStore"
 import { Navigate, Outlet } from "react-router-dom"
-import { useAppStore } from "@/store/appStore"
 
 export const MiddlemanRoute = () => {
   const roles = useAppStore((s) => s.roles)

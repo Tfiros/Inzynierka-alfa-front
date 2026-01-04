@@ -1,5 +1,5 @@
 import { Box, RefreshCw } from "lucide-react"
-import PointsIcon from "@/photos/PointsIcon.svg"
+import PointsIcon from "@/shared/photos/PointsIcon.svg"
 import { ActionCard } from "../ActionCard"
 
 export const HomeDashboardPublic = () => {

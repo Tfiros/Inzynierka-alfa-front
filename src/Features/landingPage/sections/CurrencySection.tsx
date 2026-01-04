@@ -3,9 +3,9 @@ import { Handshake, Star, Gift } from "lucide-react"
 import Tile from "../components/Tile"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
-import AuthModal from "@/shared/AuthModal"
-import type { AuthModalView } from "@/shared/ModalTypes"
-import { useAppStore } from "@/store/appStore"
+import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
+import AuthModal from "@/shared/utilities/Auth/AuthModal"
+import { useAppStore } from "@/shared/store/appStore"
 
 export const CurrencySection = () => {
   const navigate = useNavigate()

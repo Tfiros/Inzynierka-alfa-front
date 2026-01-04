@@ -3,7 +3,7 @@ import { toast } from "sonner"
 import { Mail, MessageSquare, User } from "lucide-react"
 import { Input } from "@/shared/components/input"
 import { Button } from "@/shared/components/button"
-import CrossTradeLogo from "@/photos/CrossTradeLogo.png"
+import CrossTradeLogo from "@/shared/photos/CrossTradeLogo.png"
 import { Label } from "@radix-ui/react-label"
 import { Textarea } from "@/shared/components/textarea"
 

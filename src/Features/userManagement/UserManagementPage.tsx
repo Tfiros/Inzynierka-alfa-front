@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react"
-import { UserManagementService } from "@/api/services/UserManagementService"
 import {
   UserListOrderBy,
   type UserListItemDto,
@@ -13,6 +12,7 @@ import TableSection from "./sections/TableSection"
 import PaginationSection from "./sections/PaginationSection"
 import EditUserDialog from "./components/EditUserDialog"
 import AddUserModal from "./components/AddUserDialog"
+import { UserManagementService } from "@/shared/api/services/UserManagementService"
 const UserManagementPage = () => {
   const pageSize = 10
 

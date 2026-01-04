@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { GenresService } from "@/api/services/GenresService"
 import SearchInput from "../components/SearchInput"
 import Paginator from "../components/Paginator"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
@@ -10,6 +9,7 @@ import type { GenreDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 import type { PagedResponse } from "@/shared/types/PagedType"
 import { Button } from "@/shared/components/button"
 import AddGenreDialog from "../components/AddDialogs/AddGenreDialog"
+import { GenresService } from "@/shared/api/services/GenresService"
 
 export const GenresTab = () => {
   const [search, setSearch] = useState("")

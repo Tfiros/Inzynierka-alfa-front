@@ -12,7 +12,7 @@ import {
 } from "@/shared/components/dropdown-menu"
 import { Search, Filter, ArrowUpDown } from "lucide-react"
 import { useState } from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/shared/lib/utils"
 import { UserListOrderBy } from "@/shared/types/userTypes/UserManagementTypes"
 import {
   Popover,

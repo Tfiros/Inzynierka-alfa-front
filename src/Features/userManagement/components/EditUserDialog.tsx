@@ -15,8 +15,8 @@ import type {
   UpdateUserRequestDto,
   UserListItemDto,
 } from "@/shared/types/userTypes/UserManagementTypes"
-import { UserManagementService } from "@/api/services/UserManagementService"
 import { Label } from "@/shared/components/label"
+import { UserManagementService } from "@/shared/api/services/UserManagementService"
 
 const ALL_ROLES = ["Admin", "Middleman"]
 

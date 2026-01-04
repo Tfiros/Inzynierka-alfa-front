@@ -10,7 +10,6 @@ import { Button } from "@/shared/components/button"
 import { Input } from "@/shared/components/input"
 
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
-import { ItemRaritiesService } from "@/api/services/ItemRaritiesService"
 import {
   Select,
   SelectContent,
@@ -18,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/select"
+import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
 
 type EditItemPayload = {
   name: string

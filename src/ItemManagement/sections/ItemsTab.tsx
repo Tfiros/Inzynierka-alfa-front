@@ -1,7 +1,4 @@
 import { useEffect, useMemo, useState } from "react"
-import { GamesService } from "@/api/services/GamesService"
-import { ItemsService } from "@/api/services/ItemsService"
-import { ItemRaritiesService } from "@/api/services/ItemRaritiesService"
 import useDebouncedValue from "../useDebouncedValue"
 import SearchInput from "../components/SearchInput"
 import Paginator from "../components/Paginator"
@@ -27,6 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/select"
+import { GamesService } from "@/shared/api/services/GamesService"
+import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
+import { ItemsService } from "@/shared/api/services/ItemsService"
 
 const ItemsTab = () => {
   const [games, setGames] = useState<DropdownOption[]>([])

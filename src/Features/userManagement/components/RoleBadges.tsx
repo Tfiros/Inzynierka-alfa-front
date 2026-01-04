@@ -1,5 +1,5 @@
 import { Badge } from "@/shared/components/badge"
-import { cn } from "@/lib/utils"
+import { cn } from "@/shared/lib/utils"
 
 const roleClasses = (role: string) => {
   const r = role.toLowerCase()
