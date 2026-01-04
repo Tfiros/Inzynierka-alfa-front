@@ -29,6 +29,7 @@ export default function GuestNavbar() {
               <NavItem to="marketplace" label="Oferty" />
               <NavItem to="/faqs" label="FAQs" />
               <NavItem to="/statute" label="Regulamin" />
+              <NavItem to="/contact" label="Kontakt" />
             </div>
             <div className="flex gap-1">
               <div className="flex gap-4 w-full max-w-sm">

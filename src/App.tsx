@@ -17,6 +17,7 @@ import MiddlemanPanelPage from "./middlemanPanel/MiddlemanPanelPage"
 import { NotFoundPage } from "./NotFoundPage/NotFoundPage"
 import { MiddlemanRoute } from "./routes/MiddlemanRoutes"
 import { useAppStore } from "@/store/appStore"
+import { ContactPage } from "./contactPage/contactPage"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
@@ -38,6 +39,7 @@ function App() {
           <Route path="shop" element={<PointShop />} />
           <Route path="profileEdit" element={<ProfileEdit />} />
           <Route path="marketplace" element={<Marketplace />} />
+          <Route path="contact" element={<ContactPage />} />
 
           <Route element={<AdminRoute />}>
             <Route path="userManagement" element={<UserManagementPage />} />
