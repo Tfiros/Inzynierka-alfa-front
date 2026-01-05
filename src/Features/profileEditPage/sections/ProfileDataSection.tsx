@@ -13,7 +13,7 @@ type Props = {
   onSaveProfile: () => void
 }
 
-export const ProfileDataSection = ({
+const ProfileDataSection = ({
   profile,
   setProfile,
   savingProfile,
@@ -56,3 +56,5 @@ export const ProfileDataSection = ({
     </TabsContent>
   )
 }
+
+export default ProfileDataSection

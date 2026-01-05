@@ -22,7 +22,7 @@ type ProfileHeaderProps = {
   editPath?: string
 }
 
-export const ProfileHeader = ({
+const ProfileHeader = ({
   handle,
   name,
   bio,
@@ -64,3 +64,5 @@ export const ProfileHeader = ({
     </div>
   )
 }
+
+export default ProfileHeader

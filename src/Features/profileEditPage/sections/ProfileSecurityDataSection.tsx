@@ -11,7 +11,7 @@ type Props = {
   onSaveSecurity: () => void
 }
 
-export const ProfileSecurityDataSection = ({
+const ProfileSecurityDataSection = ({
   security,
   setSecurity,
   savingSecurity,
@@ -62,3 +62,5 @@ export const ProfileSecurityDataSection = ({
     </TabsContent>
   )
 }
+
+export default ProfileSecurityDataSection

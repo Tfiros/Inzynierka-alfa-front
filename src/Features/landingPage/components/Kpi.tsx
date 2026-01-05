@@ -4,7 +4,7 @@ export type KpiProps = {
   hideBorderOnSmall?: boolean
 }
 
-export const Kpi = ({ value, label, hideBorderOnSmall }: KpiProps) => {
+const Kpi = ({ value, label, hideBorderOnSmall }: KpiProps) => {
   return (
     <div
       className={`flex flex-col items-center justify-center gap-1 px-4 py-6 ${hideBorderOnSmall ? "" : "border-0 md:border-0"}`}
@@ -14,3 +14,5 @@ export const Kpi = ({ value, label, hideBorderOnSmall }: KpiProps) => {
     </div>
   )
 }
+
+export default Kpi

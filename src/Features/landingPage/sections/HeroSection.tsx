@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 import AuthModal from "@/shared/utilities/Auth/AuthModal"
 import { useAppStore } from "@/shared/store/AppStore"
 
-export const HeroSection = () => {
+const HeroSection = () => {
   const navigate = useNavigate()
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
 
@@ -65,3 +65,5 @@ export const HeroSection = () => {
     </section>
   )
 }
+
+export default HeroSection

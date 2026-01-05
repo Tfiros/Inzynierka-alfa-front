@@ -17,7 +17,7 @@ export const initials = (name?: string) =>
       .join("") || "?"
   ).toUpperCase()
 
-export const ProfileCardSection = ({ profile }: Props) => {
+const ProfileCardSection = ({ profile }: Props) => {
   return (
     <Card className="p-4 md:p-6">
       <div className="flex flex-col items-center gap-4">
@@ -50,3 +50,5 @@ export const ProfileCardSection = ({ profile }: Props) => {
     </Card>
   )
 }
+
+export default ProfileCardSection

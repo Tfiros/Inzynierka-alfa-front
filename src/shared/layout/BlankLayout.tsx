@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom"
 import { Footer } from "./Footer"
 
-export const BlankLayout = () => {
+const BlankLayout = () => {
   return (
     <div>
       <main className="flex-1 mx-auto w-full max-w-6xl px-4 pt-6 pb-12">
@@ -11,3 +11,5 @@ export const BlankLayout = () => {
     </div>
   )
 }
+
+export default BlankLayout

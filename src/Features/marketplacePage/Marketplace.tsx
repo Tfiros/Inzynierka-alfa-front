@@ -4,7 +4,7 @@ import OfferDetails from "./components/OfferDetails"
 import { useState } from "react"
 import type { OfferType } from "./Offer"
 
-const Marketplace = () => {
+const MarketplacePage = () => {
   const oferty = 15
   const [selectedOffer, setSelectedOffer] = useState<OfferType | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
@@ -46,4 +46,4 @@ const Marketplace = () => {
   )
 }
 
-export default Marketplace
+export default MarketplacePage

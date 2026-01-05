@@ -1,6 +1,6 @@
-import { Testimonial } from "../components/Testimonial"
+import Testimonial from "../components/Testimonial"
 
-export const TestimonialsSection = () => {
+const TestimonialsSection = () => {
   return (
     <section className="container mx-auto px-4 py-12">
       <h2 className="text-center text-2xl sm:text-3xl font-bold">
@@ -30,3 +30,5 @@ export const TestimonialsSection = () => {
     </section>
   )
 }
+
+export default TestimonialsSection

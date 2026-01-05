@@ -1,7 +1,7 @@
 import { Handshake, Search, DownloadCloud } from "lucide-react"
 import Tile from "../components/Tile"
 
-export const HowItWorksSection = () => {
+const HowItWorksSection = () => {
   return (
     <section className="container mx-auto px-4 py-16 lg:py-20">
       <h2 className="text-center text-3xl font-bold">Jak to działa?</h2>
@@ -29,3 +29,5 @@ export const HowItWorksSection = () => {
     </section>
   )
 }
+
+export default HowItWorksSection

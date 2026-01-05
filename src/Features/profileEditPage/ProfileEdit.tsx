@@ -1,14 +1,10 @@
 import { Card } from "@/shared/components/card"
-import { ProfileDataSection } from "./sections/ProfileDataSection"
-import { ProfileSecurityDataSection } from "./sections/ProfileSecurityDataSection"
-import { ProfilePickerSection } from "./sections/ProfilePickerSection"
 import {
   mapSecurityBackendToFields,
   mapSecurityToUpdateRequest,
   type SecurityFields,
 } from "./components/ProfileSecurityData"
 import { useEffect, useState } from "react"
-import { ProfileCardSection } from "./sections/ProfileCardSection"
 import { Tabs } from "@/shared/components/tabs"
 import { useAppStore } from "@/shared/store/AppStore"
 import {
@@ -17,8 +13,12 @@ import {
   type Profile,
 } from "@/shared/api/services/ProfileInfoService"
 import { UserSettingsService } from "@/shared/api/services/UserSettingsService"
+import ProfileCardSection from "./sections/ProfileCardSection"
+import ProfileDataSection from "./sections/ProfileDataSection"
+import ProfilePickerSection from "./sections/ProfilePickerSection"
+import ProfileSecurityDataSection from "./sections/ProfileSecurityDataSection"
 
-export const ProfileEdit = () => {
+const ProfileEdit = () => {
   const userId = useAppStore((s) => s.userId)
   const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -165,3 +165,5 @@ export const ProfileEdit = () => {
     </div>
   )
 }
+
+export default ProfileEdit

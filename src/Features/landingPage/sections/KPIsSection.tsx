@@ -1,5 +1,6 @@
-import { Kpi } from "../components/Kpi"
-export const KPIsSection = () => {
+import Kpi from "../components/Kpi"
+
+const KPIsSection = () => {
   return (
     <section className="container mx-auto px-4">
       <div className="mt-12 rounded-xl border bg-card text-card-foreground">
@@ -13,3 +14,5 @@ export const KPIsSection = () => {
     </section>
   )
 }
+
+export default KPIsSection

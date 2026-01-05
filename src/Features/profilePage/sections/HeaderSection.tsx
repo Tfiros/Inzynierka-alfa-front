@@ -1,12 +1,12 @@
-import { ProfileHeader } from "../component/ProfilHeader"
 import type { UserProfileInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
+import ProfileHeader from "../component/ProfilHeader"
 
 type HeaderSectionProps = {
   profile: UserProfileInfoDto
   canEdit: boolean
 }
 
-export const HeaderSection = ({ profile, canEdit }: HeaderSectionProps) => {
+const HeaderSection = ({ profile, canEdit }: HeaderSectionProps) => {
   const joinedYear = new Date(profile.registrationDate).getFullYear()
 
   return (
@@ -25,3 +25,5 @@ export const HeaderSection = ({ profile, canEdit }: HeaderSectionProps) => {
     </section>
   )
 }
+
+export default HeaderSection

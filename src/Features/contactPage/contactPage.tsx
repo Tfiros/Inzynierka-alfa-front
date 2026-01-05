@@ -16,7 +16,7 @@ type ContactFormData = {
 
 async function sendMessage(_data: ContactFormData): Promise<void> {}
 
-export const ContactPage = () => {
+const ContactPage = () => {
   const {
     register,
     handleSubmit,
@@ -192,3 +192,5 @@ export const ContactPage = () => {
     </section>
   )
 }
+
+export default ContactPage

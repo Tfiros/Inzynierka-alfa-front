@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { HeaderSection } from "./sections/HeaderSection"
 import type { UserProfileInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
-import { StatBoxSection } from "./sections/StatBoxSection"
-import { TabSection } from "./sections/TabSection"
 import { useAppStore } from "@/shared/store/AppStore"
 import { UserInfoService } from "@/shared/api/services/UserInfoService"
 import type { ApiResult } from "@/shared/api/ApiResult"
+import HeaderSection from "./sections/HeaderSection"
+import StatBoxSection from "./sections/StatBoxSection"
+import TabSection from "./sections/TabSection"
 
-export const UserProfilePage = () => {
+const ProfilePage = () => {
   const { id } = useParams<{ id: string }>()
   const profileId = id ? Number(id) : NaN
 
@@ -67,3 +67,5 @@ export const UserProfilePage = () => {
     </div>
   )
 }
+
+export default ProfilePage

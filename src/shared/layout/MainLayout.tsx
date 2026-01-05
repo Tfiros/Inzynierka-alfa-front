@@ -5,7 +5,7 @@ import { Footer } from "./Footer"
 import GuestNavbar from "./navbar/views/GuestNavbar"
 import { useAppStore } from "../store/AppStore"
 
-export const MainLayout = () => {
+const MainLayout = () => {
   const isLogged = useAppStore((s) => s.isAuthenticated)
   const syncSession = useAppStore((s) => s.syncSession)
 
@@ -23,3 +23,5 @@ export const MainLayout = () => {
     </div>
   )
 }
+
+export default MainLayout

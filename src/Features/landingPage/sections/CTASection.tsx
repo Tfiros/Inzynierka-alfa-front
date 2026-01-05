@@ -1,7 +1,7 @@
 import { Button } from "@/shared/components/button"
 import { Link } from "react-router-dom"
 
-export const CTASection = () => {
+const CTASection = () => {
   return (
     <section className="border-t bg-foreground text-background">
       <div className="container mx-auto px-4 py-10">
@@ -35,3 +35,5 @@ export const CTASection = () => {
     </section>
   )
 }
+
+export default CTASection

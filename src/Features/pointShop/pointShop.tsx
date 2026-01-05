@@ -1,15 +1,15 @@
 import { Button } from "@/shared/components/button"
-import { MainText } from "./section/MainText"
-import { WhiteCards } from "./section/WhiteCards"
-import { BlackCards } from "./section/BlackCards"
 import { useState } from "react"
 import {
   type PackageKey,
   PACKAGES,
 } from "@/shared/types/pointPackagesTypes/PackageItem"
 import PackageCard from "./component/PackageCard"
+import BlackCards from "./section/BlackCards"
+import MainText from "./section/MainText"
+import WhiteCards from "./section/WhiteCards"
 
-export function PointShop() {
+const PointShop = () => {
   const [selected, setSelected] = useState<PackageKey>("popular")
 
   return (
@@ -47,3 +47,5 @@ export function PointShop() {
     </div>
   )
 }
+
+export default PointShop

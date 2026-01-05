@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/card"
-import { AspectRatio } from "@/shared/components/aspect-ratio"
 import { Heart, CalendarDays, Plus, Info } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 import OfferItemCard from "./OfferItemCard"

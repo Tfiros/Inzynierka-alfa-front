@@ -5,7 +5,7 @@ type SectionProps = {
   children: React.ReactNode
 }
 
-export const Section = ({ title, children }: SectionProps) => {
+const Section = ({ title, children }: SectionProps) => {
   return (
     <section className="scroll-mt-24">
       <h2 className="mb-3 text-xl font-bold tracking-tight">{title}</h2>
@@ -16,3 +16,5 @@ export const Section = ({ title, children }: SectionProps) => {
     </section>
   )
 }
+
+export default Section

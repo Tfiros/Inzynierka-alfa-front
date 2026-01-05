@@ -1,8 +1,8 @@
 import { Card, CardContent } from "@/shared/components/card"
-import { Section } from "../component/Section"
 import Definitions from "../component/Definitions"
+import Section from "../component/Section"
 
-export const ContentSection = () => {
+const ContentSection = () => {
   return (
     <Card>
       <CardContent className="p-6 md:p-10 leading-7">
@@ -208,3 +208,5 @@ export const ContentSection = () => {
     </Card>
   )
 }
+
+export default ContentSection

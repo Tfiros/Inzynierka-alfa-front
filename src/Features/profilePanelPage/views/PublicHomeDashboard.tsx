@@ -1,8 +1,8 @@
 import { Box, RefreshCw } from "lucide-react"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
-import { ActionCard } from "../components/ActionCard"
+import ActionCard from "../components/ActionCard"
 
-export const HomeDashboardPublic = () => {
+const PublicHomeDashboard = () => {
   return (
     <>
       <div className="mx-auto mb-10 max-w-5xl text-center text-4xl font-extrabold leading-tight tracking-tight sm:text-4xl [text-wrap:balance]">
@@ -41,3 +41,5 @@ export const HomeDashboardPublic = () => {
     </>
   )
 }
+
+export default PublicHomeDashboard

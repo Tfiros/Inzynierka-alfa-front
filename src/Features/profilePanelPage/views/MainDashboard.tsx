@@ -1,8 +1,10 @@
-import { HomeDashboardPublic } from "./PublicHomeDashboard"
-import { HomeDashboardPrivate } from "./PrivateHomeDashBoard"
+import PrivateHomeDashboard from "./PrivateHomeDashBoard"
+import PublicHomeDashboard from "./PublicHomeDashboard"
 
-export const MainDashboard = () => {
+const MainDashboard = () => {
   const isAuthenticated = false
 
-  return isAuthenticated ? <HomeDashboardPrivate /> : <HomeDashboardPublic />
+  return isAuthenticated ? <PrivateHomeDashboard /> : <PublicHomeDashboard />
 }
+
+export default MainDashboard

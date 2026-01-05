@@ -10,7 +10,7 @@ type StatBoxProps = {
   highlighted?: boolean
 }
 
-export const StatBox = ({ icon, value, label, highlighted }: StatBoxProps) => {
+const StatBox = ({ icon, value, label, highlighted }: StatBoxProps) => {
   return (
     <Card className={cx("flex-1", highlighted && "ring-2 ring-primary")}>
       <CardContent className="p-4">
@@ -23,3 +23,5 @@ export const StatBox = ({ icon, value, label, highlighted }: StatBoxProps) => {
     </Card>
   )
 }
+
+export default StatBox

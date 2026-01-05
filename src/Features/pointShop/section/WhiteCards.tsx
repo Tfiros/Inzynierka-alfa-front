@@ -1,7 +1,7 @@
 import { Check, Star } from "lucide-react"
 import CardInfo from "../component/CardInfo"
 
-export const WhiteCards = () => {
+const WhiteCards = () => {
   return (
     <CardInfo
       title="Korzyści Premium"
@@ -28,3 +28,5 @@ export const WhiteCards = () => {
     />
   )
 }
+
+export default WhiteCards

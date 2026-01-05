@@ -20,7 +20,7 @@ export interface ActionCardProps {
   buttonClass?: string
 }
 
-export const ActionCard = ({
+const ActionCard = ({
   icon,
   title,
   description,
@@ -52,3 +52,5 @@ export const ActionCard = ({
     </Card>
   )
 }
+
+export default ActionCard

@@ -7,7 +7,7 @@ import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
 import AuthModal from "@/shared/utilities/Auth/AuthModal"
 import { useAppStore } from "@/shared/store/AppStore"
 
-export const CurrencySection = () => {
+const CurrencySection = () => {
   const navigate = useNavigate()
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
 
@@ -70,3 +70,5 @@ export const CurrencySection = () => {
     </>
   )
 }
+
+export default CurrencySection

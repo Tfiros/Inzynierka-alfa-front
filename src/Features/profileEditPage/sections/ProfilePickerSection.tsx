@@ -1,6 +1,6 @@
 import { TabsList, TabsTrigger } from "@radix-ui/react-tabs"
 
-export const ProfilePickerSection = () => {
+const ProfilePickerSection = () => {
   return (
     <TabsList className="mb-6 grid w-full grid-cols-2">
       <TabsTrigger value="profile">Dane profilu</TabsTrigger>
@@ -8,3 +8,5 @@ export const ProfilePickerSection = () => {
     </TabsList>
   )
 }
+
+export default ProfilePickerSection

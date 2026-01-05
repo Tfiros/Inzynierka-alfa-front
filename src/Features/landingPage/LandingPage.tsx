@@ -1,11 +1,11 @@
-import { HeroSection } from "./sections/HeroSection"
-import { KPIsSection } from "./sections/KPIsSection"
-import { HowItWorksSection } from "./sections/HowItWorksSection"
-import { CurrencySection } from "./sections/CurrencySection"
-import { TestimonialsSection } from "./sections/TestimonialSection"
-import { CTASection } from "./sections/CTASection"
+import CTASection from "./sections/CTASection"
+import CurrencySection from "./sections/CurrencySection"
+import HeroSection from "./sections/HeroSection"
+import HowItWorksSection from "./sections/HowItWorksSection"
+import KPIsSection from "./sections/KPIsSection"
+import TestimonialsSection from "./sections/TestimonialSection"
 
-export const LandingPage = () => {
+const LandingPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <HeroSection />
@@ -17,3 +17,5 @@ export const LandingPage = () => {
     </div>
   )
 }
+
+export default LandingPage

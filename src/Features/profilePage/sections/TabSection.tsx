@@ -191,7 +191,7 @@ const GhostThumb = () => (
   </div>
 )
 
-export const TabSection = () => {
+const TabSection = () => {
   const [offers, setOffers] = useState<Offer[]>(MOCK_OFFERS)
 
   const activeOffers = useMemo(
@@ -265,3 +265,5 @@ export const TabSection = () => {
     </section>
   )
 }
+
+export default TabSection

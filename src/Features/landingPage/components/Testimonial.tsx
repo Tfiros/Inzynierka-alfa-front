@@ -7,7 +7,7 @@ export type TestimonialProps = {
   role: string
 }
 
-export const Testimonial = ({ quote, name, role }: TestimonialProps) => {
+const Testimonial = ({ quote, name, role }: TestimonialProps) => {
   return (
     <Card>
       <CardContent className="p-6">
@@ -30,3 +30,5 @@ export const Testimonial = ({ quote, name, role }: TestimonialProps) => {
     </Card>
   )
 }
+
+export default Testimonial

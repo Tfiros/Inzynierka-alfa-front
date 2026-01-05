@@ -1,6 +1,6 @@
 const updatedAt = "2025-10-22"
 
-export const HeaderSection = () => {
+const HeaderSection = () => {
   return (
     <section>
       <header className="mb-10 text-center">
@@ -14,3 +14,5 @@ export const HeaderSection = () => {
     </section>
   )
 }
+
+export default HeaderSection

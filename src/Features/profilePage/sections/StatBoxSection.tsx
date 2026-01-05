@@ -1,6 +1,6 @@
-import React, { useMemo } from "react"
+import { useMemo } from "react"
 import { Layers, Trophy, Star, Percent } from "lucide-react"
-import { StatBox } from "../component/StatBox"
+import StatBox from "../component/StatBox"
 
 const MOCK_STATS = {
   activeOffers: 2,
@@ -9,7 +9,7 @@ const MOCK_STATS = {
   successRatePct: 95,
 }
 
-export const StatBoxSection = () => {
+const StatBoxSection = () => {
   const stats = useMemo(() => MOCK_STATS, [])
 
   return (
@@ -43,3 +43,5 @@ export const StatBoxSection = () => {
     </section>
   )
 }
+
+export default StatBoxSection
