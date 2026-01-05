@@ -1,4 +1,4 @@
-import { Button } from "@/shared/components/Button"
+import { Button } from "@/shared/components/button"
 import { MoreHorizontal } from "lucide-react"
 import {
   DropdownMenu,
@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/shared/components/Dropdown-Menu"
+} from "@/shared/components/dropdown-menu"
 
 type Props = {
   onEdit: () => void

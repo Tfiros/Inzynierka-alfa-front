@@ -6,16 +6,16 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/components/Dialog"
-import { Button } from "@/shared/components/Button"
-import { Input } from "@/shared/components/Input"
+} from "@/shared/components/dialog"
+import { Button } from "@/shared/components/button"
+import { Input } from "@/shared/components/input"
 
-import { Checkbox } from "@/shared/components/Checkbox"
+import { Checkbox } from "@/shared/components/checkbox"
 import type {
   UpdateUserRequestDto,
   UserListItemDto,
 } from "@/shared/types/userTypes/UserManagementTypes"
-import { Label } from "@/shared/components/Label"
+import { Label } from "@/shared/components/label"
 import { UserManagementService } from "@/shared/api/services/UserManagementService"
 
 const ALL_ROLES = ["Admin", "Middleman"]

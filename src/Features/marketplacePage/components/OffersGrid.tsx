@@ -1,4 +1,4 @@
-import type { OfferType } from "../offer"
+import type { OfferType } from "../Offer"
 import Offer from "./Offer"
 type OfferGridProps = {
   offers: OfferType[]

@@ -3,17 +3,17 @@ import {
   CardHeader,
   CardContent,
   CardFooter,
-} from "@/shared/components/Card"
+} from "@/shared/components/card"
 import React, { useMemo } from "react"
 import { CalendarDays, SquarePen, History, Edit, Images } from "lucide-react"
-import { Button } from "@/shared/components/Button"
-import { Badge } from "@/shared/components/Badge"
+import { Button } from "@/shared/components/button"
+import { Badge } from "@/shared/components/badge"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/shared/components/Tabs"
+} from "@/shared/components/tabs"
 
 const cx = (...c: (string | false | null | undefined)[]) =>
   c.filter(Boolean).join(" ")

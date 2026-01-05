@@ -1,12 +1,11 @@
 import { Separator } from "@radix-ui/react-separator"
-import React from "react"
 
 type SectionProps = {
   title: string
   children: React.ReactNode
 }
 
-export const Section: React.FC<SectionProps> = ({ title, children }) => {
+export const Section = ({ title, children }: SectionProps) => {
   return (
     <section className="scroll-mt-24">
       <h2 className="mb-3 text-xl font-bold tracking-tight">{title}</h2>

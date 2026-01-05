@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/shared/components/Card"
+import { Card, CardContent } from "@/shared/components/card"
 import EntityMenu from "./EntityMenu"
 const EntityCard = (props: {
   title: string

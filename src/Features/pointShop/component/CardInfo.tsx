@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/shared/components/Card"
+import { Card, CardContent } from "@/shared/components/card"
 import type { ReactNode } from "react"
 
 type CardInfoProps = {

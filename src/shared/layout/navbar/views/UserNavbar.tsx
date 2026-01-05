@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Button } from "@/shared/components/Button"
+import { Button } from "@/shared/components/button"
 import CrossTradeLogo from "@/shared/photos/CrossTradeLogo.png"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
 import NoifyIcon from "@/shared/photos/NotificationIcon.svg"

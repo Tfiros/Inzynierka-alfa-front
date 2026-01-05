@@ -1,14 +1,14 @@
-import { Badge } from "@/shared/components/Badge"
-import type { OfferType } from "../offer"
+import { Badge } from "@/shared/components/badge"
+import type { OfferType } from "../Offer"
 import {
   DialogHeader,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
-} from "@/shared/components/Dialog"
+} from "@/shared/components/dialog"
 import OfferItemCard from "./OfferItemCard"
-import { Button } from "@/shared/components/Button"
+import { Button } from "@/shared/components/button"
 import { Plus } from "lucide-react"
 
 type OfferDetailsProps = {

@@ -1,16 +1,16 @@
-import { Badge } from "@/shared/components/Badge"
-import { Button } from "@/shared/components/Button"
-import type { OfferType } from "../offer"
+import { Badge } from "@/shared/components/badge"
+import { Button } from "@/shared/components/button"
+import type { OfferType } from "../Offer"
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/shared/components/Card"
-import { AspectRatio } from "@/shared/components/Aspect-Ratio"
+} from "@/shared/components/card"
+import { AspectRatio } from "@/shared/components/aspect-ratio"
 import { Heart, CalendarDays, Plus, Info } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/Avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 import OfferItemCard from "./OfferItemCard"
 const MAX_VISIBLE_ITEMS = 2
 

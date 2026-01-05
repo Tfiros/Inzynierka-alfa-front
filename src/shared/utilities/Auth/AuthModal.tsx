@@ -3,7 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-} from "@/shared/components/Dialog"
+} from "@/shared/components/dialog"
 import type { AuthModalPropsTypes } from "./ModalTypes"
 import { authDescriptions, authTitles } from "./AuthConstants"
 import LoginModalView from "../../views/LoginView"

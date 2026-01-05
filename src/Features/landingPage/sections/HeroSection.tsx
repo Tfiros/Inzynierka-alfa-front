@@ -1,4 +1,4 @@
-import { Button } from "@/shared/components/Button"
+import { Button } from "@/shared/components/button"
 import LPPhoto from "@/shared/photos/LandingPageGamesPhoto.jpg"
 import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
 import { useState } from "react"

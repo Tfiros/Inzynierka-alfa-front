@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { HeaderSection } from "./sections/HeaderSection"
 import { ContentSection } from "./sections/ContentSection"
 
-export function StatutePage() {
+export const StatutePage = () => {
   useEffect(() => window.scrollTo(0, 0), [])
 
   return (

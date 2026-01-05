@@ -1,5 +1,5 @@
-import { Input } from "@/shared/components/Input"
-import { Button } from "@/shared/components/Button"
+import { Input } from "@/shared/components/input"
+import { Button } from "@/shared/components/button"
 
 import {
   DropdownMenu,
@@ -9,7 +9,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/shared/components/Dropdown-Menu"
+} from "@/shared/components/dropdown-menu"
 import { Search, Filter, ArrowUpDown } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/shared/lib/Utils"
@@ -18,7 +18,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/shared/components/Popover"
+} from "@/shared/components/popover"
 
 type Props = {
   search: string

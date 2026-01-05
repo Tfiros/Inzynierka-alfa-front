@@ -1,10 +1,8 @@
-import React from "react"
-
 type DefinitionsProps = {
   items: [string, string][]
 }
 
-export const Definitions: React.FC<DefinitionsProps> = ({ items }) => {
+export const Definitions = ({ items }: DefinitionsProps) => {
   return (
     <dl className="space-y-3">
       {items.map(([term, def]) => (

@@ -1,7 +1,7 @@
 import { Users, Calendar, Shield } from "lucide-react"
 import type { UserListPagedResponse } from "@/shared/types/userTypes/UserManagementTypes"
 import StatCard from "../components/StatCard"
-import { Skeleton } from "@/shared/components/Skeleton"
+import { Skeleton } from "@/shared/components/skeleton"
 
 type Props = {
   loading: boolean

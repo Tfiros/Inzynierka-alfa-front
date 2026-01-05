@@ -1,7 +1,7 @@
 import type { MiddlemanStatsDto } from "@/shared/types/middlemanTypes/MiddlemanTypes"
 import StatCard from "../components/StatCard"
 import { CheckCircle2, Layers, UserCheck, Sparkles } from "lucide-react"
-import { Skeleton } from "@/shared/components/Skeleton"
+import { Skeleton } from "@/shared/components/skeleton"
 
 type Props = {
   loading: boolean

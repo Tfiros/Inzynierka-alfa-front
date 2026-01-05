@@ -6,15 +6,15 @@ import EntityCard from "../components/EntityCard"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
 import EditItemDialog from "../components/EditDialogs/EditItemDialog"
 
-import { Input } from "@/shared/components/Input"
-import { Button } from "@/shared/components/Button"
+import { Input } from "@/shared/components/input"
+import { Button } from "@/shared/components/button"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/components/Dialog"
+} from "@/shared/components/dialog"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import type { ItemDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 import {
@@ -23,7 +23,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/components/Select"
+} from "@/shared/components/select"
 import { GamesService } from "@/shared/api/services/GamesService"
 import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
 import { ItemsService } from "@/shared/api/services/ItemsService"

@@ -2,7 +2,7 @@ import OffersGrid from "./components/OffersGrid"
 import FilterBarContainer from "./components/FilterBarContainer"
 import OfferDetails from "./components/OfferDetails"
 import { useState } from "react"
-import type { OfferType } from "./offer"
+import type { OfferType } from "./Offer"
 
 const Marketplace = () => {
   const oferty = 15

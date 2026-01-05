@@ -1,5 +1,5 @@
-import { Button } from "@/shared/components/Button"
-import { Card, CardContent } from "@/shared/components/Card"
+import { Button } from "@/shared/components/button"
+import { Card, CardContent } from "@/shared/components/card"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 type Props = {

@@ -3,7 +3,7 @@ import type {
   MiddlemanTab,
 } from "@/shared/types/middlemanTypes/MiddlemanTypes"
 import JobCard from "../components/JobCard"
-import { Skeleton } from "@/shared/components/Skeleton"
+import { Skeleton } from "@/shared/components/skeleton"
 
 type Props = {
   tab: MiddlemanTab

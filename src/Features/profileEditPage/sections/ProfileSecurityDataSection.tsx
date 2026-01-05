@@ -1,8 +1,8 @@
-import { Input } from "@/shared/components/Input"
-import { Button } from "@/shared/components/Button"
+import { Input } from "@/shared/components/input"
+import { Button } from "@/shared/components/button"
 import type { SecurityFields } from "../components/ProfileSecurityData"
-import { TabsContent } from "@/shared/components/Tabs"
-import { Label } from "@/shared/components/Label"
+import { TabsContent } from "@/shared/components/tabs"
+import { Label } from "@/shared/components/label"
 
 type Props = {
   security: SecurityFields | null

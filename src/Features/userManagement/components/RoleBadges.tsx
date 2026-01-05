@@ -1,4 +1,4 @@
-import { Badge } from "@/shared/components/Badge"
+import { Badge } from "@/shared/components/badge"
 import { cn } from "@/shared/lib/Utils"
 
 const roleClasses = (role: string) => {

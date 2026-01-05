@@ -5,8 +5,8 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from "@/shared/components/Card"
-import { Button } from "@/shared/components/Button"
+} from "@/shared/components/card"
+import { Button } from "@/shared/components/button"
 import type { ReactNode } from "react"
 
 export interface ActionCardProps {

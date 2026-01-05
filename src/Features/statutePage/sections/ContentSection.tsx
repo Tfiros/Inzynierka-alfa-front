@@ -1,8 +1,8 @@
-import { Card, CardContent } from "@/shared/components/Card"
+import { Card, CardContent } from "@/shared/components/card"
 import { Section } from "../component/Section"
 import { Definitions } from "../component/Definitions"
 
-export const ContentSection: React.FC = () => {
+export const ContentSection = () => {
   return (
     <Card>
       <CardContent className="p-6 md:p-10 leading-7">

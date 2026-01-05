@@ -5,8 +5,8 @@ import Paginator from "../components/Paginator"
 import EntityCard from "../components/EntityCard"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
 
-import { Input } from "@/shared/components/Input"
-import { Button } from "@/shared/components/Button"
+import { Input } from "@/shared/components/input"
+import { Button } from "@/shared/components/button"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import AddItemRarityDialog from "../components/AddDialogs/AddItemRarityDialog"
 import EditItemRarityDialog from "../components/EditDialogs/EditItemRarityDialog"
@@ -16,7 +16,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/components/Select"
+} from "@/shared/components/select"
 import { GamesService } from "@/shared/api/services/GamesService"
 import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
 

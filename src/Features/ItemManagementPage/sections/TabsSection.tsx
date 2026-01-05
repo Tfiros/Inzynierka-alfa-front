@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger } from "@/shared/components/Tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/shared/components/tabs"
 
 const TabsSection = (props: {
   value: string

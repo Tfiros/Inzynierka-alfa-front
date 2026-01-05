@@ -1,11 +1,11 @@
-import { Card, CardContent } from "@/shared/components/Card"
-import { Button } from "@/shared/components/Button"
+import { Card, CardContent } from "@/shared/components/card"
+import { Button } from "@/shared/components/button"
 import { ArrowUpDown, Table } from "lucide-react"
 import type { UserListItemDto } from "@/shared/types/userTypes/UserManagementTypes"
 import RoleBadges from "../components/RoleBadges"
 import UserActionsMenu from "../components/UserActionsMenu"
 
-import { Skeleton } from "@/shared/components/Skeleton"
+import { Skeleton } from "@/shared/components/skeleton"
 import {
   TableBody,
   TableCell,

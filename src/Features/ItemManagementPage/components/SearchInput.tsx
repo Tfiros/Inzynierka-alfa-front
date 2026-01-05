@@ -1,4 +1,4 @@
-import { Input } from "@/shared/components/Input"
+import { Input } from "@/shared/components/input"
 import { Search } from "lucide-react"
 
 const SearchInput = (props: {

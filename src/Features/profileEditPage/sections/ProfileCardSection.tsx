@@ -1,6 +1,6 @@
 import type { Profile } from "@/api/services/ProfileInfoService"
-import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/Avatar"
-import { Card } from "@/shared/components/Card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
+import { Card } from "@/shared/components/card"
 import { Separator } from "@radix-ui/react-dropdown-menu"
 import { Button } from "react-day-picker"
 

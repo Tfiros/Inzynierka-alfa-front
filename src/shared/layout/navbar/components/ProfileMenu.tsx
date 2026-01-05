@@ -7,8 +7,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/shared/components/Dropdown-Menu"
-import { Button } from "@/shared/components/Button"
+} from "@/shared/components/dropdown-menu"
+import { Button } from "@/shared/components/button"
 import { User as UserIcon, LogOut, Trophy } from "lucide-react"
 import { useAppStore } from "@/shared/store/AppStore"
 

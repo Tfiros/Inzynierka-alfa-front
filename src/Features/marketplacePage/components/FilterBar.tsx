@@ -1,4 +1,4 @@
-import { Input } from "@/shared/components/Input"
+import { Input } from "@/shared/components/input"
 import {
   Select,
   SelectContent,
@@ -7,7 +7,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/shared/components/Select"
+} from "@/shared/components/select"
 
 import { Search } from "lucide-react"
 type FilterBarProps = {

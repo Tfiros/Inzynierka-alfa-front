@@ -2,7 +2,7 @@ import type {
   MiddlemanJobDto,
   MiddlemanTab,
 } from "@/shared/types/middlemanTypes/MiddlemanTypes"
-import { Card, CardContent } from "@/shared/components/Card"
+import { Card, CardContent } from "@/shared/components/card"
 import { ArrowLeftRight } from "lucide-react"
 import PartyBlock from "./PartyBlock"
 import JobStatusPill from "./JobStatusPill"

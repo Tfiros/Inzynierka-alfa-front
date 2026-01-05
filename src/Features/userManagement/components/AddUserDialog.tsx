@@ -5,9 +5,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/shared/components/Dialog"
-import { Button } from "@/shared/components/Button"
-import { Input } from "@/shared/components/Input"
+} from "@/shared/components/dialog"
+import { Button } from "@/shared/components/button"
+import { Input } from "@/shared/components/input"
 import type { RegisterRequestDto } from "@/shared/types/authTypes/AuthRequestTypes"
 import { Label } from "@radix-ui/react-label"
 import { AuthService } from "@/shared/api/services/AuthService"
