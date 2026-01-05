@@ -1,4 +1,4 @@
-import { useAppStore } from "@/shared/store/appStore"
+import { useAppStore } from "@/shared/store/AppStore"
 import { Navigate, Outlet } from "react-router-dom"
 
 export const AdminRoute = () => {

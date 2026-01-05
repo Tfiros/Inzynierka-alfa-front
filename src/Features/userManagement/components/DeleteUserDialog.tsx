@@ -1,5 +1,6 @@
 import { useState } from "react"
 import type { UserListItemDto } from "@/shared/types/userTypes/UserManagementTypes"
+import { UserManagementService } from "@/shared/api/services/UserManagementService"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,7 +11,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/alert-dialog"
-import { UserManagementService } from "@/shared/api/services/UserManagementService"
 
 type Props = {
   open: boolean

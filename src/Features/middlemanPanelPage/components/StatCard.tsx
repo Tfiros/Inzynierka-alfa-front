@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { Card, CardContent } from "@/shared/components/card"
+import { Card, CardContent } from "@/shared/components/Card"
 
 type Props = {
   title: string

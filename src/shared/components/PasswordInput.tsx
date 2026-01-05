@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Input } from "@/shared/components/input"
+import { Input } from "@/shared/components/Input"
 import { Eye, EyeOff } from "lucide-react"
 
 type PasswordInputProps = Omit<

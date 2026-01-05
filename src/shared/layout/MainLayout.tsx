@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { UserNavbar } from "./navbar/views/UserNavbar"
 import { Footer } from "./Footer"
 import GuestNavbar from "./navbar/views/GuestNavbar"
-import { useAppStore } from "../store/appStore"
+import { useAppStore } from "../store/AppStore"
 
 export const MainLayout = () => {
   const isLogged = useAppStore((s) => s.isAuthenticated)

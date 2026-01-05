@@ -1,17 +1,18 @@
-import { Card, CardContent } from "@/shared/components/card"
-import { Button } from "@/shared/components/button"
+import { Card, CardContent } from "@/shared/components/Card"
+import { Button } from "@/shared/components/Button"
 import { ArrowUpDown, Table } from "lucide-react"
 import type { UserListItemDto } from "@/shared/types/userTypes/UserManagementTypes"
 import RoleBadges from "../components/RoleBadges"
 import UserActionsMenu from "../components/UserActionsMenu"
+
+import { Skeleton } from "@/shared/components/Skeleton"
 import {
-  TableHeader,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "../components/table"
-import { Skeleton } from "@/shared/components/skeleton"
 
 const formatDate = (dateOnly: string | null | undefined) => {
   if (!dateOnly) return "—"

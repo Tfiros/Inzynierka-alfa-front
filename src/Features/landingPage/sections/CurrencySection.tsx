@@ -1,11 +1,11 @@
-import { Button } from "@/shared/components/button"
+import { Button } from "@/shared/components/Button"
 import { Handshake, Star, Gift } from "lucide-react"
 import Tile from "../components/Tile"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
 import AuthModal from "@/shared/utilities/Auth/AuthModal"
-import { useAppStore } from "@/shared/store/appStore"
+import { useAppStore } from "@/shared/store/AppStore"
 
 export const CurrencySection = () => {
   const navigate = useNavigate()

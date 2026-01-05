@@ -1,4 +1,4 @@
-import { Card } from "@/shared/components/card"
+import { Card } from "@/shared/components/Card"
 import { ProfileDataSection } from "./sections/ProfileDataSection"
 import { ProfileSecurityDataSection } from "./sections/ProfileSecurityDataSection"
 import { ProfilePickerSection } from "./sections/ProfilePickerSection"
@@ -9,8 +9,8 @@ import {
 } from "./components/ProfileSecurityData"
 import { useEffect, useState } from "react"
 import { ProfileCardSection } from "./sections/ProfileCardSection"
-import { Tabs } from "@/shared/components/tabs"
-import { useAppStore } from "@/shared/store/appStore"
+import { Tabs } from "@/shared/components/Tabs"
+import { useAppStore } from "@/shared/store/AppStore"
 import {
   ProfileInfoService,
   mapBackendToProfile,

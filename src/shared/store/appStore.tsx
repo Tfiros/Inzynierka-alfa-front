@@ -1,7 +1,7 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
 import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
-import { createAuthSlice, type AuthSlice } from "./storeParts/authSlice"
+import { type AuthSlice, createAuthSlice } from "./storeParts/authSlice"
 
 export type AppState = UiSlice & AuthSlice & { hardReset: () => Promise<void> }
 

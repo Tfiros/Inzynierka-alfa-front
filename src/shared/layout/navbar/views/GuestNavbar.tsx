@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Button } from "@/shared/components/button"
+import { Button } from "@/shared/components/Button"
 import CrossTradeLogo from "@/shared/photos/CrossTradeLogo.png"
 import { useState } from "react"
 import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"

@@ -1,10 +1,10 @@
-import { Button } from "@/shared/components/button"
+import { Button } from "@/shared/components/Button"
 import LPPhoto from "@/shared/photos/LandingPageGamesPhoto.jpg"
 import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import AuthModal from "@/shared/utilities/Auth/AuthModal"
-import { useAppStore } from "@/shared/store/appStore"
+import { useAppStore } from "@/shared/store/AppStore"
 
 export const HeroSection = () => {
   const navigate = useNavigate()

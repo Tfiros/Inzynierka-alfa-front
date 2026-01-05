@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
-import { Button } from "@/shared/components/button"
+import { Button } from "@/shared/components/Button"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/components/dialog"
-import { Input } from "@/shared/components/input"
+} from "@/shared/components/Dialog"
+import { Input } from "@/shared/components/Input"
 
 const EditItemRarityDialog = (props: {
   open: boolean

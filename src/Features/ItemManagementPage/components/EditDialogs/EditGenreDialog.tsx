@@ -5,9 +5,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/components/dialog"
-import { Button } from "@/shared/components/button"
-import { Input } from "@/shared/components/input"
+} from "@/shared/components/Dialog"
+import { Button } from "@/shared/components/Button"
+import { Input } from "@/shared/components/Input"
 const EditGenreDialog = (props: {
   open: boolean
   onOpenChange: (v: boolean) => void

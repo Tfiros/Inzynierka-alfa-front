@@ -4,7 +4,7 @@ import { HeaderSection } from "./sections/HeaderSection"
 import type { UserProfileInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
 import { StatBoxSection } from "./sections/StatBoxSection"
 import { TabSection } from "./sections/TabSection"
-import { useAppStore } from "@/shared/store/appStore"
+import { useAppStore } from "@/shared/store/AppStore"
 import { UserInfoService } from "@/shared/api/services/UserInfoService"
 import type { ApiResult } from "@/shared/api/ApiResult"
 

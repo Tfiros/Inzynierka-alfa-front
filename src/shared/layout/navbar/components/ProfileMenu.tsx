@@ -7,10 +7,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/shared/components/dropdown-menu"
-import { Button } from "@/shared/components/button"
+} from "@/shared/components/Dropdown-Menu"
+import { Button } from "@/shared/components/Button"
 import { User as UserIcon, LogOut, Trophy } from "lucide-react"
-import { useAppStore } from "@/shared/store/appStore"
+import { useAppStore } from "@/shared/store/AppStore"
 
 export const ProfileMenu = () => {
   const [open, setOpen] = useState(false)

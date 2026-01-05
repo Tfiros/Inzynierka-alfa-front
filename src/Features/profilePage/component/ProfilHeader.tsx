@@ -1,7 +1,7 @@
 import React from "react"
 import { CalendarDays, Edit } from "lucide-react"
-import { Avatar, AvatarImage, AvatarFallback } from "@/shared/components/avatar"
-import { Button } from "@/shared/components/button"
+import { Avatar, AvatarImage, AvatarFallback } from "@/shared/components/Avatar"
+import { Button } from "@/shared/components/Button"
 import { Link } from "react-router-dom"
 
 const initials = (name?: string) =>

@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom"
-import { Button } from "@/shared/components/button"
+import { Button } from "@/shared/components/Button"
 import CrossTradeLogo from "@/shared/photos/CrossTradeLogo.png"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
 import NoifyIcon from "@/shared/photos/NotificationIcon.svg"
 import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
-import { useAppStore } from "@/shared/store/appStore"
+import { useAppStore } from "@/shared/store/AppStore"
 
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)

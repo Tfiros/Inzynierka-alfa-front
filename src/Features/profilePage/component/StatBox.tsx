@@ -1,5 +1,5 @@
 import React from "react"
-import { Card, CardContent } from "@/shared/components/card"
+import { Card, CardContent } from "@/shared/components/Card"
 
 const cx = (...c: (string | false | null | undefined)[]) =>
   c.filter(Boolean).join(" ")

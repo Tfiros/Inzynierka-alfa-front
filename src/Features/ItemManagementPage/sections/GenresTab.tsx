@@ -7,7 +7,7 @@ import useDebouncedValue from "../useDebouncedValue"
 import EntityCard from "../components/EntityCard"
 import type { GenreDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 import type { PagedResponse } from "@/shared/types/PagedType"
-import { Button } from "@/shared/components/button"
+import { Button } from "@/shared/components/Button"
 import AddGenreDialog from "../components/AddDialogs/AddGenreDialog"
 import { GenresService } from "@/shared/api/services/GenresService"
 

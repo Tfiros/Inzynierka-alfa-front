@@ -1,5 +1,5 @@
 import type { MiddlemanJobStatus } from "@/shared/types/middlemanTypes/MiddlemanTypes"
-import { cn } from "@/shared/lib/utils"
+import { cn } from "@/shared/lib/Utils"
 
 type Props = { status: MiddlemanJobStatus }
 

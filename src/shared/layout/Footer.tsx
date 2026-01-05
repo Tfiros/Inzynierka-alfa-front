@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Button } from "@/shared/components/button"
+import { Button } from "@/shared/components/Button"
 import { Facebook, Instagram, Twitter } from "lucide-react"
 import CrossTradeLogo from "@/shared/photos/CrossTradeLogo.png"
 
