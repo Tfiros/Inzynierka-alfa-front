@@ -1,10 +1,10 @@
 import { Input } from "@/shared/components/input"
 import { Button } from "@/shared/components/button"
 import type { Dispatch } from "react"
-import type { Profile } from "@/api/services/ProfileInfoService"
-import { Label } from "@radix-ui/react-label"
 import { Textarea } from "@/shared/components/textarea"
 import { TabsContent } from "@/shared/components/tabs"
+import type { Profile } from "@/shared/api/services/ProfileInfoService"
+import { Label } from "@/shared/components/label"
 
 type Props = {
   profile: Profile

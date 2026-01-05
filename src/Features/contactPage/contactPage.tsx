@@ -4,8 +4,8 @@ import { Mail, MessageSquare, User } from "lucide-react"
 import { Input } from "@/shared/components/input"
 import { Button } from "@/shared/components/button"
 import CrossTradeLogo from "@/shared/photos/CrossTradeLogo.png"
-import { Label } from "@radix-ui/react-label"
 import { Textarea } from "@/shared/components/textarea"
+import { Label } from "@/shared/components/label"
 
 type ContactFormData = {
   name: string
@@ -14,10 +14,6 @@ type ContactFormData = {
   message: string
 }
 
-//Backend do napisania i podpięcia, napisanie działania. Jak skończę segregować pliki itd
-//zajmę się napisaniem backendu do tego narazie robię po prostu front plus prosta walidacja informacji
-//toast jest do powiadomień jezeli zostanie poprawnie wyslany formularz
-//potem zostanie do doprecyzowane i odpowiednio podzielone. Narazie jest to frontendowy placeholder
 async function sendMessage(_data: ContactFormData): Promise<void> {}
 
 export const ContactPage = () => {
