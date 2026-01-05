@@ -1,7 +1,7 @@
+import { useAppStore } from "@/shared/store/AppStore"
 import { Navigate, Outlet } from "react-router-dom"
-import { useAppStore } from "@/store/appStore"
 
-export const MiddlemanRoute = () => {
+const MiddlemanRoute = () => {
   const roles = useAppStore((s) => s.roles)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
 
@@ -12,3 +12,5 @@ export const MiddlemanRoute = () => {
 
   return <Outlet />
 }
+
+export default MiddlemanRoute

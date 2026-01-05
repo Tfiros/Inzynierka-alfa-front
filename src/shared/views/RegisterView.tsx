@@ -1,21 +1,21 @@
 import PasswordInput from "@/shared/components/PasswordInput"
 import { useState } from "react"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
+import { Button } from "@/shared/components/button"
+import { Input } from "@/shared/components/input"
+import { Checkbox } from "@/shared/components/checkbox"
+import { Calendar } from "@/shared/components/calendar"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
-import { cn } from "@/lib/utils"
-import type { ModalViewPropsTypes } from "../ModalTypes"
-import { AuthService } from "@/api/services/AuthService"
+import { cn } from "@/shared/lib/Utils"
+import type { ModalViewPropsTypes } from "../utilities/Auth/ModalTypes"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/components/popover"
+import { Label } from "../components/label"
+import { AuthService } from "../api/services/AuthService"
 
 const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
   const [checked, setChecked] = useState(false)
