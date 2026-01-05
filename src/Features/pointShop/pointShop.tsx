@@ -1,6 +1,4 @@
 import { Button } from "@/shared/components/button"
-import { PackageCard } from "./component/PackageCard"
-
 import { MainText } from "./section/MainText"
 import { WhiteCards } from "./section/WhiteCards"
 import { BlackCards } from "./section/BlackCards"
@@ -9,6 +7,7 @@ import {
   type PackageKey,
   PACKAGES,
 } from "@/shared/types/pointPackagesTypes/PackageItem"
+import PackageCard from "./component/PackageCard"
 
 export function PointShop() {
   const [selected, setSelected] = useState<PackageKey>("popular")

@@ -11,8 +11,9 @@ import ToolbarSection from "./sections/ToolbarSection"
 import TableSection from "./sections/TableSection"
 import PaginationSection from "./sections/PaginationSection"
 import EditUserDialog from "./components/EditUserDialog"
-import AddUserModal from "./components/AddUserDialog"
+import AddUserDialog from "./components/AddUserDialog"
 import { UserManagementService } from "@/shared/api/services/UserManagementService"
+
 const UserManagementPage = () => {
   const pageSize = 10
 
@@ -166,7 +167,7 @@ const UserManagementPage = () => {
         onOpenChange={setDeleteOpen}
         onDeleted={() => void refetchUsersWithRetry()}
       />
-      <AddUserModal
+      <AddUserDialog
         open={addOpen}
         onOpenChange={setAddOpen}
         onCreated={() => void refetchUsersWithRetry()}

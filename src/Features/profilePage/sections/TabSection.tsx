@@ -4,7 +4,6 @@ import {
   CardContent,
   CardFooter,
 } from "@/shared/components/card"
-import React, { useMemo } from "react"
 import { CalendarDays, SquarePen, History, Edit, Images } from "lucide-react"
 import { Button } from "@/shared/components/button"
 import { Badge } from "@/shared/components/badge"
@@ -14,6 +13,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components/tabs"
+import { useMemo, useState } from "react"
 
 const cx = (...c: (string | false | null | undefined)[]) =>
   c.filter(Boolean).join(" ")
@@ -192,13 +192,13 @@ const GhostThumb = () => (
 )
 
 export const TabSection = () => {
-  const [offers, setOffers] = React.useState<Offer[]>(MOCK_OFFERS)
+  const [offers, setOffers] = useState<Offer[]>(MOCK_OFFERS)
 
-  const activeOffers = React.useMemo(
+  const activeOffers = useMemo(
     () => offers.filter((o) => o.status === "Aktywna"),
     [offers]
   )
-  const exchangedOffers = React.useMemo(
+  const exchangedOffers = useMemo(
     () => offers.filter((o) => o.status === "Wymieniona"),
     [offers]
   )

@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/shared/components/card"
 import { Section } from "../component/Section"
-import { Definitions } from "../component/Definitions"
+import Definitions from "../component/Definitions"
 
 export const ContentSection = () => {
   return (

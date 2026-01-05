@@ -1,4 +1,4 @@
-import { Separator } from "@radix-ui/react-separator"
+import { Separator } from "@/shared/components/separator"
 
 type SectionProps = {
   title: string

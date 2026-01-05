@@ -4,7 +4,7 @@ type AccentRingProps = {
   accent?: "blue" | "green"
 }
 
-export const AccentRing = ({ accent }: AccentRingProps) => {
+const AccentRing = ({ accent }: AccentRingProps) => {
   if (!accent) return null
   return (
     <div
@@ -15,3 +15,5 @@ export const AccentRing = ({ accent }: AccentRingProps) => {
     />
   )
 }
+
+export default AccentRing

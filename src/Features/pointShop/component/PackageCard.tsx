@@ -3,8 +3,8 @@ import { Checkbox } from "@/shared/components/checkbox"
 import { Badge } from "@/shared/components/badge"
 import { cn } from "@/shared/lib/Utils"
 import { Check, Coins } from "lucide-react"
-import { AccentRing } from "./AccentRing"
 import type { PackageItem } from "@/shared/types/pointPackagesTypes/PackageItem"
+import AccentRing from "./AccentRing"
 
 type CardProps = {
   item: PackageItem
@@ -12,7 +12,7 @@ type CardProps = {
   onSelect: () => void
 }
 
-export const PackageCard = ({ item, selected, onSelect }: CardProps) => {
+const PackageCard = ({ item, selected, onSelect }: CardProps) => {
   const total = item.coins + (item.bonus ?? 0)
 
   return (
@@ -94,3 +94,5 @@ export const PackageCard = ({ item, selected, onSelect }: CardProps) => {
     </div>
   )
 }
+
+export default PackageCard

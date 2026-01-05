@@ -8,15 +8,15 @@ import {
   DialogTitle,
 } from "@/shared/components/dialog"
 import { Input } from "@/shared/components/input"
+import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
+import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/componentsShared/select"
-import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
-import { ItemRaritiesService } from "@/api/services/ItemRaritiesService"
+} from "@/shared/components/select"
 
 type AddItemPayload = {
   name: string

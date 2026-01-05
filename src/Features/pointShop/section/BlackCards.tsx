@@ -1,5 +1,5 @@
 import { Shield, Star, Trophy, Zap } from "lucide-react"
-import { CardInfo } from "../component/CardInfo"
+import CardInfo from "../component/CardInfo"
 
 export const BlackCards = () => {
   return (

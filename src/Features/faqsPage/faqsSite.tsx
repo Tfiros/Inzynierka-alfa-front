@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "../../shared/components/accordion"
 
-export const FAQs = () => {
+export const FaqsSite = () => {
   return (
     <div className="bg-background text-foreground">
       <section className="container mx-auto px-4 py-12">

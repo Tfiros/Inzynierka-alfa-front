@@ -2,7 +2,7 @@ type DefinitionsProps = {
   items: [string, string][]
 }
 
-export const Definitions = ({ items }: DefinitionsProps) => {
+const Definitions = ({ items }: DefinitionsProps) => {
   return (
     <dl className="space-y-3">
       {items.map(([term, def]) => (
@@ -17,3 +17,5 @@ export const Definitions = ({ items }: DefinitionsProps) => {
     </dl>
   )
 }
+
+export default Definitions

@@ -6,10 +6,7 @@ type HeaderSectionProps = {
   canEdit: boolean
 }
 
-export const HeaderSection: React.FC<HeaderSectionProps> = ({
-  profile,
-  canEdit,
-}: HeaderSectionProps) => {
+export const HeaderSection = ({ profile, canEdit }: HeaderSectionProps) => {
   const joinedYear = new Date(profile.registrationDate).getFullYear()
 
   return (

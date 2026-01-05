@@ -1,4 +1,3 @@
-import React from "react"
 import { Card, CardContent } from "@/shared/components/card"
 
 const cx = (...c: (string | false | null | undefined)[]) =>
@@ -11,12 +10,7 @@ type StatBoxProps = {
   highlighted?: boolean
 }
 
-export const StatBox: React.FC<StatBoxProps> = ({
-  icon,
-  value,
-  label,
-  highlighted,
-}) => {
+export const StatBox = ({ icon, value, label, highlighted }: StatBoxProps) => {
   return (
     <Card className={cx("flex-1", highlighted && "ring-2 ring-primary")}>
       <CardContent className="p-4">

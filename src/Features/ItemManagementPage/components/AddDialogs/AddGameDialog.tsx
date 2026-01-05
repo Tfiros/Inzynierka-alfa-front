@@ -8,14 +8,14 @@ import {
   DialogTitle,
 } from "@/shared/components/dialog"
 import { Input } from "@/shared/components/input"
+import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/componentsShared/select"
-import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
+} from "@/shared/components/select"
 
 type AddGamePayload = {
   name: string

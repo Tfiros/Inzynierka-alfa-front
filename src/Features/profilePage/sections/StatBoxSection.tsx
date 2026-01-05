@@ -9,7 +9,7 @@ const MOCK_STATS = {
   successRatePct: 95,
 }
 
-export const StatBoxSection: React.FC = () => {
+export const StatBoxSection = () => {
   const stats = useMemo(() => MOCK_STATS, [])
 
   return (

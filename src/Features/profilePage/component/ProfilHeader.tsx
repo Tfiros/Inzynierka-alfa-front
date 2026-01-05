@@ -1,4 +1,3 @@
-import React from "react"
 import { CalendarDays, Edit } from "lucide-react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/shared/components/avatar"
 import { Button } from "@/shared/components/button"
@@ -23,7 +22,7 @@ type ProfileHeaderProps = {
   editPath?: string
 }
 
-export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
+export const ProfileHeader = ({
   handle,
   name,
   bio,

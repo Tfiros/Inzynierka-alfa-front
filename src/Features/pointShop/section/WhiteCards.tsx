@@ -1,5 +1,5 @@
 import { Check, Star } from "lucide-react"
-import { CardInfo } from "../component/CardInfo"
+import CardInfo from "../component/CardInfo"
 
 export const WhiteCards = () => {
   return (

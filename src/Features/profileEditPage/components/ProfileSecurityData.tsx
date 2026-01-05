@@ -1,7 +1,7 @@
 import type {
   UpdateProfileSecurityRequest,
   UserSecurityProfileInfoResponse,
-} from "@/api/UserSecurityInfo"
+} from "@/shared/api/UserSecurityInfo"
 
 export type SecurityFields = {
   email: string

@@ -13,7 +13,7 @@ import { NotFoundPage } from "./features/notFoundPage/NotFoundPage"
 import { MiddlemanRoute } from "./routes/MiddlemanRoutes"
 import { useAppStore } from "./shared/store/AppStore"
 import { MainDashboard } from "./features/profilePanelPage/views/MainDashboard"
-import { FAQs } from "./features/faqsPage/faqsSite"
+import { FaqsSite } from "./features/faqsPage/faqsSite"
 import { PointShop } from "./features/pointShop/pointShop"
 import { UserProfilePage } from "./features/profilePage/profilePage"
 import { StatutePage } from "./features/statutePage/statutePage"
@@ -33,7 +33,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/dashboard" element={<MainDashboard />} />
           <Route path="oferty" element={<div>Oferty</div>} />
-          <Route path="faqs" element={<FAQs />} />
+          <Route path="faqs" element={<FaqsSite />} />
           <Route path="profile/:id" element={<UserProfilePage />} />
           <Route path="statute" element={<StatutePage />} />
           <Route path="shop" element={<PointShop />} />

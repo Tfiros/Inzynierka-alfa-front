@@ -20,7 +20,7 @@ export interface ActionCardProps {
   buttonClass?: string
 }
 
-export const ActionCard: React.FC<ActionCardProps> = ({
+export const ActionCard = ({
   icon,
   title,
   description,
@@ -29,7 +29,7 @@ export const ActionCard: React.FC<ActionCardProps> = ({
   className = "",
   iconBg = "bg-muted",
   buttonClass = "bg-black text-white hover:bg-black/90",
-}) => {
+}: ActionCardProps) => {
   return (
     <Card
       className={`rounded-xl border-muted-foreground/20 shadow-sm transition-shadow hover:shadow-md ${className}`}

@@ -8,7 +8,7 @@ type CardInfoProps = {
   items: { icon: ReactNode; text: ReactNode }[]
 }
 
-export const CardInfo = ({ title, subtitle, icon, items }: CardInfoProps) => {
+const CardInfo = ({ title, subtitle, icon, items }: CardInfoProps) => {
   return (
     <Card className="w-[300px] rounded-2xl bg-zinc-900 text-zinc-50">
       <CardContent className="p-5">
@@ -32,3 +32,5 @@ export const CardInfo = ({ title, subtitle, icon, items }: CardInfoProps) => {
     </Card>
   )
 }
+
+export default CardInfo

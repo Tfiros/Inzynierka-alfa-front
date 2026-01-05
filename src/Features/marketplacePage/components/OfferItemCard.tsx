@@ -1,4 +1,3 @@
-import React from "react"
 import type { ItemType } from "../Offer"
 import { AspectRatio } from "@radix-ui/react-aspect-ratio"
 import { Badge } from "@/shared/components/badge"

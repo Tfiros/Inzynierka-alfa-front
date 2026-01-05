@@ -1,4 +1,4 @@
-import type { Profile } from "@/api/services/ProfileInfoService"
+import type { Profile } from "@/shared/api/services/ProfileInfoService"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 import { Card } from "@/shared/components/card"
 import { Separator } from "@radix-ui/react-dropdown-menu"

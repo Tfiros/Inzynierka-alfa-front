@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/table"
+} from "../components/Table"
 
 const formatDate = (dateOnly: string | null | undefined) => {
   if (!dateOnly) return "—"
