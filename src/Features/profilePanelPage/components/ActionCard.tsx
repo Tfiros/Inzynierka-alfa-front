@@ -32,7 +32,7 @@ export const ActionCard: React.FC<ActionCardProps> = ({
 }) => {
   return (
     <Card
-      className={`rounded-2xl border-muted-foreground/20 shadow-sm transition-shadow hover:shadow-md ${className}`}
+      className={`rounded-xl border-muted-foreground/20 shadow-sm transition-shadow hover:shadow-md ${className}`}
     >
       <CardHeader className="flex flex-col items-center space-y-2 text-center">
         <div

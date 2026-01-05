@@ -1,15 +1,15 @@
-import { Box, RefreshCw } from "lucide-react"
+import { Box, RefreshCw, User as UserIcon } from "lucide-react"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
-import { ActionCard } from "../ActionCard"
+import { ActionCard } from "../components/ActionCard"
 
-export const HomeDashboardPublic = () => {
+export const HomeDashboardPrivate = () => {
   return (
-    <>
-      <div className="mx-auto mb-10 max-w-5xl text-center text-4xl font-extrabold leading-tight tracking-tight sm:text-4xl [text-wrap:balance]">
+    <div className="flex flex-col items-center justify-center">
+      <h1 className="mx-auto mb-10 max-w-5xl text-center text-4xl font-extrabold leading-tight tracking-tight sm:text-4xl [text-wrap:balance]">
         Czysta wymiana – twoje <br /> przedmioty, twój zysk
-      </div>
+      </h1>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-3">
         <ActionCard
           icon={<Box className="h-6 w-6" aria-hidden />}
           title="Dodaj przedmioty"
@@ -22,7 +22,14 @@ export const HomeDashboardPublic = () => {
           title="Wymieniaj się"
           description="Znajdź idealne przedmioty do wymiany"
           ctaLabel="Zobacz przedmiot"
-          to="/exchange"
+          to="/marketplace"
+        />
+        <ActionCard
+          icon={<UserIcon className="h-6 w-6" aria-hidden />}
+          title="Twój profil"
+          description="Zarządzaj swoimi przedmiotami i transakcjami"
+          ctaLabel="Zobacz profil"
+          to="/profile"
         />
       </div>
 
@@ -34,10 +41,10 @@ export const HomeDashboardPublic = () => {
           title="CT Coins – Waluta Premium"
           description="Kup CT Coins aby promować oferty, uzyskać dostęp premium i więcej"
           ctaLabel="Kup CT Coins"
-          to="/points"
+          to="/shop"
           buttonClass="bg-transparent text-white border border-white/30 hover:bg-white/10"
         />
       </div>
-    </>
+    </div>
   )
 }
