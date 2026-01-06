@@ -2,15 +2,20 @@ import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
 import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
 import { type AuthSlice, createAuthSlice } from "./storeParts/authSlice"
-
-export type AppState = UiSlice & AuthSlice & { hardReset: () => Promise<void> }
+import {
+  type NotificationsSlice,
+  createNotificationsSlice,
+} from "./storeParts/NotificationSlice"
+export type AppState = UiSlice &
+  AuthSlice &
+  NotificationsSlice & { hardReset: () => Promise<void> }
 
 export const useAppStore = create<AppState>()(
   persist(
     (set, get, api) => ({
       ...createUiSlice(set, get, api),
       ...createAuthSlice(set, get, api),
-
+      ...createNotificationsSlice(set),
       hardReset: async () => {
         set({
           userLogin: null,

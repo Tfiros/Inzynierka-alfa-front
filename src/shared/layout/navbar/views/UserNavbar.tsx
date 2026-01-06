@@ -10,7 +10,7 @@ import { useAppStore } from "@/shared/store/AppStore"
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
   const roles = useAppStore((s) => s.roles)
-
+  const unread = useAppStore((s) => s.unreadNotificationsCount)
   const isAdmin = roles.some((r) => r.toLowerCase() === "admin")
   const tokens = navbarUser?.tokens ?? 0
   const level = navbarUser?.level ?? 1
@@ -79,15 +79,21 @@ export const UserNavbar = () => {
               asChild
               variant="ghost"
               size="sm"
-              className="rounded-full"
+              className="rounded-full relative"
               title="Powiadomienia"
             >
-              <Link to="/notifications">
+              <Link to="/notifications" className="relative">
                 <img
                   src={NoifyIcon}
                   alt="NotificationIcon"
                   className="h-6 w-6 object-contain"
                 />
+
+                {unread > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-destructive-foreground text-[11px] leading-[18px] text-center">
+                    {unread > 99 ? "99+" : unread}
+                  </span>
+                )}
               </Link>
             </Button>
 

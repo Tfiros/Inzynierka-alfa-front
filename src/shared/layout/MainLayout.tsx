@@ -4,14 +4,34 @@ import { UserNavbar } from "./navbar/views/UserNavbar"
 import { Footer } from "./Footer"
 import GuestNavbar from "./navbar/views/GuestNavbar"
 import { useAppStore } from "../store/AppStore"
-
+import { NotificationsHubClient } from "../api/NotificationsHubClient"
 const MainLayout = () => {
   const isLogged = useAppStore((s) => s.isAuthenticated)
+  const sessionChecked = useAppStore((s) => s.sessionChecked)
   const syncSession = useAppStore((s) => s.syncSession)
 
+  // 1) Po F5 najpierw ustal sesję (me)
   useEffect(() => {
     void syncSession()
   }, [syncSession])
+
+  // 2) Hub odpalaj dopiero jak wiemy, czy user jest zalogowany
+  useEffect(() => {
+    if (!sessionChecked) return
+
+    if (!isLogged) {
+      void NotificationsHubClient.stop()
+      return
+    }
+
+    void NotificationsHubClient.start().catch((e) => {
+      console.log("[SignalR] start failed", e)
+    })
+
+    return () => {
+      void NotificationsHubClient.stop()
+    }
+  }, [sessionChecked, isLogged])
 
   return (
     <div className="flex min-h-screen flex-col">
