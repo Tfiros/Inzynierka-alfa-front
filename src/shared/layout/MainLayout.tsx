@@ -10,12 +10,10 @@ const MainLayout = () => {
   const sessionChecked = useAppStore((s) => s.sessionChecked)
   const syncSession = useAppStore((s) => s.syncSession)
 
-  // 1) Po F5 najpierw ustal sesję (me)
   useEffect(() => {
     void syncSession()
   }, [syncSession])
 
-  // 2) Hub odpalaj dopiero jak wiemy, czy user jest zalogowany
   useEffect(() => {
     if (!sessionChecked) return
 

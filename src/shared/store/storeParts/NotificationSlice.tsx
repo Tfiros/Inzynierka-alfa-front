@@ -1,7 +1,7 @@
 import { type NotificationDto } from "../../api/NotificationsHubClient"
 export type NotificationsSlice = {
   unreadNotificationsCount: number
-  notifications: NotificationDto[] // na przyszłość (teraz może się przydać do debug)
+  notifications: NotificationDto[]
   pushNotification: (n: NotificationDto) => void
   resetUnreadNotifications: () => void
   setUnreadNotificationsCount: (count: number) => void

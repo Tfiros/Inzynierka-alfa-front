@@ -16,18 +16,15 @@ export class NotificationsHubClient {
   private static stopRequested = false
 
   public static start(): Promise<void> {
-    // jeśli już jesteśmy połączeni -> ok
     if (this.connection?.state === signalR.HubConnectionState.Connected) {
       return Promise.resolve()
     }
 
-    // jeśli start już trwa -> podepnij się
     if (this.starting) return this.starting
 
     this.stopRequested = false
 
     this.starting = (async () => {
-      // jeżeli został "trup" po wcześniejszym starcie
       if (this.connection) {
         try {
           await this.connection.stop()
@@ -38,7 +35,6 @@ export class NotificationsHubClient {
       const conn = new signalR.HubConnectionBuilder()
         .withUrl("/api/hubs/notifications", {
           withCredentials: true,
-          // zostawiam WebSockets (bo już debugowałeś), ale możesz to wyrzucić
           transport: HttpTransportType.WebSockets,
         })
         .withAutomaticReconnect()
@@ -60,7 +56,6 @@ export class NotificationsHubClient {
         console.log("[SignalR] started", conn.connectionId)
       } catch (e) {
         console.log("[SignalR] start failed", e)
-        // mega ważne po F5: wyczyść, żeby kolejne start() mogły spróbować ponownie
         this.connection = null
         throw e
       } finally {
@@ -76,7 +71,6 @@ export class NotificationsHubClient {
   }
 
   public static async stop(): Promise<void> {
-    // stop wywołany w trakcie startu -> odłóż do końca
     if (this.starting) {
       this.stopRequested = true
       try {
