@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useRef } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import {
   DropdownMenu,
@@ -9,8 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/dropdown-menu"
 import { Button } from "@/shared/components/button"
-import { User as UserIcon, LogOut, Trophy } from "lucide-react"
+import { User as UserIcon, LogOut, Trophy, Settings, Moon } from "lucide-react"
 import { useAppStore } from "@/shared/store/AppStore"
+import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
 
 export const ProfileMenu = () => {
   const [open, setOpen] = useState(false)
@@ -90,6 +91,29 @@ export const ProfileMenu = () => {
             <Trophy className="h-4 w-4" />
             <span>Panel Klienta</span>
           </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
+          <Link to="/settings" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            <span>Ustawienia</span>
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onSelect={(e) => {
+            e.preventDefault()
+          }}
+          className="p-0"
+        >
+          <div className="flex items-center justify-between w-full px-2 py-1.5">
+            <div className="flex items-center gap-2">
+              <Moon className="h-4 w-4" />
+              <span>Ciemny motyw</span>
+            </div>
+
+            <DarkModeSwitch />
+          </div>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />

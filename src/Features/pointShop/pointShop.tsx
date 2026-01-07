@@ -13,7 +13,7 @@ const PointShop = () => {
   const [selected, setSelected] = useState<PackageKey>("popular")
 
   return (
-    <div className="min-h-screen bg-white flex justify-center">
+    <div className="min-h-screen bg-background text-foreground flex justify-center">
       <div className="w-full max-w-7xl px-6 py-12">
         <MainText />
 
