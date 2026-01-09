@@ -4,7 +4,7 @@ import { UserNavbar } from "./navbar/views/UserNavbar"
 import { Footer } from "./Footer"
 import GuestNavbar from "./navbar/views/GuestNavbar"
 import { useAppStore } from "../store/AppStore"
-
+import { useNotificationsHub } from "./hooks/UseNotificationsHub"
 const MainLayout = () => {
   const isLogged = useAppStore((s) => s.isAuthenticated)
   const syncSession = useAppStore((s) => s.syncSession)
@@ -12,6 +12,8 @@ const MainLayout = () => {
   useEffect(() => {
     void syncSession()
   }, [syncSession])
+
+  useNotificationsHub()
 
   return (
     <div className="flex min-h-screen flex-col">

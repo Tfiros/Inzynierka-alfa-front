@@ -17,6 +17,8 @@ export type AuthSlice = {
   isAuthenticated: boolean
   roles: string[]
 
+  sessionChecked: boolean
+
   csrfReady: boolean
   initSecurity: () => Promise<void>
   setNavbarUser: (info: UserNavbarInfoDto | null) => void
@@ -74,6 +76,8 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     roles: [],
     csrfReady: false,
 
+    sessionChecked: false,
+
     initSecurity: async () => {
       await initSecurityOnce()
     },
@@ -86,30 +90,31 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     },
 
     syncSession: async () => {
-      let meRes: any
       try {
-        meRes = await AuthService.me<AuthMeDto>()
-      } catch {
+        const meRes = await AuthService.me<AuthMeDto>()
+
+        if (!meRes?.isSuccess || !meRes.data || !meRes.data.isAuthenticated) {
+          clearAuthState()
+          return
+        }
+
+        const backendUserId = meRes.data.userId ?? null
+        const finalUserId = backendUserId ?? get().userId ?? null
+
+        set({
+          isAuthenticated: true,
+          userLogin: meRes.data.login ?? null,
+          roles: Array.isArray(meRes.data.roles) ? meRes.data.roles : [],
+          userId: finalUserId,
+        })
+
+        await loadNavbarInfoIfPossible(finalUserId)
+      } catch (e) {
+        console.error("[syncSession] failed", e)
         clearAuthState()
-        return
+      } finally {
+        set({ sessionChecked: true })
       }
-
-      if (!meRes?.isSuccess || !meRes.data || !meRes.data.isAuthenticated) {
-        clearAuthState()
-        return
-      }
-
-      const backendUserId = meRes.data.userId ?? null
-      const finalUserId = backendUserId ?? get().userId ?? null
-
-      set({
-        isAuthenticated: true,
-        userLogin: meRes.data.login ?? null,
-        roles: Array.isArray(meRes.data.roles) ? meRes.data.roles : [],
-        userId: finalUserId,
-      })
-
-      await loadNavbarInfoIfPossible(finalUserId)
     },
 
     login: async (email, password) => {
@@ -119,7 +124,7 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
         throw new Error(res.message || "Nieznany błąd podczas logowania.")
       }
 
-      set({ userId: (res.data as any).id ?? null })
+      set({ userId: (res.data as any).id ?? null, sessionChecked: false })
 
       await get().syncSession()
     },
@@ -130,7 +135,7 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
         throw new Error(res.message || "Nie udało się odświeżyć sesji.")
       }
 
-      set({ userId: (res.data as any).id ?? null })
+      set({ userId: (res.data as any).id ?? null, sessionChecked: false })
       await get().syncSession()
     },
 
