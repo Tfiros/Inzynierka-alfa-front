@@ -46,16 +46,11 @@ export class NotificationsHubClient {
         useAppStore.getState().pushNotification(n)
       })
 
-      conn.onclose((e) => console.log("[SignalR] closed", e))
-      conn.onreconnected((id) => console.log("[SignalR] reconnected", id))
-
       this.connection = conn
 
       try {
         await conn.start()
-        console.log("[SignalR] started", conn.connectionId)
       } catch (e) {
-        console.log("[SignalR] start failed", e)
         this.connection = null
         throw e
       } finally {
@@ -87,7 +82,7 @@ export class NotificationsHubClient {
     try {
       await c.stop()
     } catch (e) {
-      console.log("[SignalR] stop error", e)
+      console.error("Error stopping NotificationsHubClient", e)
     }
   }
 }
