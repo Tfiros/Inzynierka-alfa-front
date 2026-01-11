@@ -43,17 +43,19 @@ const rolePillClass = (role: string) => {
   return "bg-zinc-700 text-white"
 }
 
-const ToolbarSection = ({
-  search,
-  onSearchChange,
-  loading,
-  shownTo,
-  totalCount,
-  role,
-  onRoleChange,
-  orderBy,
-  onOrderByChange,
-}: Props) => {
+const ToolbarSection = (props: Props) => {
+  const {
+    search,
+    onSearchChange,
+    loading,
+    shownTo,
+    totalCount,
+    role,
+    onRoleChange,
+    orderBy,
+    onOrderByChange,
+  } = props
+
   const [roleOpen, setRoleOpen] = useState(false)
 
   const handlePickRole = (r: string | null) => {
@@ -189,4 +191,5 @@ const ToolbarSection = ({
     </div>
   )
 }
+
 export default ToolbarSection

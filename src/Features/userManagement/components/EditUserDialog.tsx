@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -9,14 +9,14 @@ import {
 } from "@/shared/components/dialog"
 import { Button } from "@/shared/components/button"
 import { Input } from "@/shared/components/input"
-
 import { Checkbox } from "@/shared/components/checkbox"
 import type {
   UpdateUserRequestDto,
   UserListItemDto,
 } from "@/shared/types/userTypes/UserManagementTypes"
 import { Label } from "@/shared/components/label"
-import { UserManagementService } from "@/shared/api/services/UserManagementService"
+
+import useUpdateUser from "../hooks/actions/UseUpdateUser"
 
 const ALL_ROLES = ["Admin", "Middleman"]
 
@@ -27,22 +27,38 @@ type Props = {
   onSaved: () => void
 }
 
-const EditUserDialog = ({ open, user, onOpenChange, onSaved }: Props) => {
+const norm = (v: string) => v.trim()
+const normLower = (v: string) => v.trim().toLowerCase()
+
+const EditUserDialog = (props: Props) => {
+  const { open, user, onOpenChange, onSaved } = props
+
+  const { submitting, error, reset, updateUser } = useUpdateUser()
+
   const [nickname, setNickname] = useState("")
   const [email, setEmail] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [roles, setRoles] = useState<string[]>([])
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [localError, setLocalError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!open || !user) return
+
+    reset()
+    setLocalError(null)
+
     setNickname(user.name ?? "")
     setEmail(user.email ?? "")
     setNewPassword("")
     setRoles(user.roles ?? [])
-    setError(null)
-  }, [open, user])
+  }, [open, user, reset])
+
+  useEffect(() => {
+    if (!open) {
+      reset()
+      setLocalError(null)
+    }
+  }, [open, reset])
 
   const toggleRole = (r: string, checked: boolean) => {
     setRoles((prev) => {
@@ -54,36 +70,54 @@ const EditUserDialog = ({ open, user, onOpenChange, onSaved }: Props) => {
     })
   }
 
-  const handleSave = async () => {
-    if (!user) return
+  const body = useMemo<UpdateUserRequestDto | null>(() => {
+    if (!user) return null
 
-    setSubmitting(true)
-    setError(null)
+    const nextNick = norm(nickname)
+    const nextEmail = norm(email)
+    const nextPwd = norm(newPassword)
 
-    const body: UpdateUserRequestDto = {
+    const originalEmail = norm(user.email ?? "")
+    const originalNick = norm(user.name ?? "")
+
+    const emailChanged =
+      nextEmail.length > 0 && normLower(nextEmail) !== normLower(originalEmail)
+
+    const nickChanged = nextNick.length > 0 && nextNick !== originalNick
+
+    return {
       authZeroUserId: user.auth0UserId,
-      nickname: nickname.trim() ? nickname.trim() : null,
-      email: email.trim() ? email.trim() : null,
-      newPassword: newPassword.trim() ? newPassword.trim() : null,
+      nickname: nickChanged ? nextNick : null,
+      email: emailChanged ? nextEmail : null,
+      newPassword: nextPwd ? nextPwd : null,
       roles: roles,
     }
+  }, [user, nickname, email, newPassword, roles])
 
-    try {
-      const res = await UserManagementService.updateUser(body)
+  const handleSave = async () => {
+    if (!user || !body) return
 
-      if (!res.isSuccess) {
-        setError(res.message ?? "Nie udało się zaktualizować użytkownika.")
-        return
-      }
+    setLocalError(null)
 
-      onOpenChange(false)
-      onSaved()
-    } catch (e: any) {
-      setError(e?.message ?? "Nie udało się zaktualizować użytkownika.")
-    } finally {
-      setSubmitting(false)
+    const hasSomething =
+      Boolean(body.nickname) ||
+      Boolean(body.email) ||
+      Boolean(body.newPassword) ||
+      Array.isArray(body.roles)
+
+    if (!hasSomething) {
+      setLocalError("Brak zmian do zapisania.")
+      return
     }
+
+    const res = await updateUser(body)
+    if (!res.isSuccess) return
+
+    onOpenChange(false)
+    onSaved()
   }
+
+  const displayError = localError ?? error
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -113,6 +147,9 @@ const EditUserDialog = ({ open, user, onOpenChange, onSaved }: Props) => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="email@domain.com"
           />
+          <p className="text-xs text-muted-foreground">
+            Email poleci do API tylko jeśli go faktycznie zmienisz.
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -159,7 +196,9 @@ const EditUserDialog = ({ open, user, onOpenChange, onSaved }: Props) => {
           </p>
         </div>
 
-        {error && <div className="text-sm text-destructive">{error}</div>}
+        {displayError && (
+          <div className="text-sm text-destructive">{displayError}</div>
+        )}
 
         <DialogFooter>
           <Button
@@ -169,7 +208,7 @@ const EditUserDialog = ({ open, user, onOpenChange, onSaved }: Props) => {
           >
             Anuluj
           </Button>
-          <Button onClick={handleSave} disabled={submitting}>
+          <Button onClick={handleSave} disabled={submitting || !user}>
             {submitting ? "Zapisywanie..." : "Zapisz zmiany"}
           </Button>
         </DialogFooter>
@@ -177,4 +216,5 @@ const EditUserDialog = ({ open, user, onOpenChange, onSaved }: Props) => {
     </Dialog>
   )
 }
+
 export default EditUserDialog

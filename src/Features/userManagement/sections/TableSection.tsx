@@ -13,7 +13,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../../shared/components/table"
+} from "@/shared/components/table"
 
 const formatDate = (dateOnly: string | null | undefined) => {
   if (!dateOnly) return "—"
@@ -38,7 +38,9 @@ type Props = {
   onDelete: (u: UserListItemDto) => void
 }
 
-const TableSection = ({ loading, error, items, onEdit, onDelete }: Props) => {
+const TableSection = (props: Props) => {
+  const { loading, error, items, onEdit, onDelete } = props
+
   return (
     <Card className="mt-6 shadow-sm">
       <CardContent className="p-0">
@@ -172,4 +174,5 @@ const TableSection = ({ loading, error, items, onEdit, onDelete }: Props) => {
     </Card>
   )
 }
+
 export default TableSection

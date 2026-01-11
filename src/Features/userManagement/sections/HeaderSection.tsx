@@ -6,7 +6,9 @@ type Props = {
   loading: boolean
 }
 
-const HeaderSection = ({ onAddUser, loading }: Props) => {
+const HeaderSection = (props: Props) => {
+  const { onAddUser, loading } = props
+
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
@@ -31,4 +33,5 @@ const HeaderSection = ({ onAddUser, loading }: Props) => {
     </div>
   )
 }
+
 export default HeaderSection
