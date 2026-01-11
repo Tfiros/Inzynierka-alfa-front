@@ -1,6 +1,5 @@
 import { Badge } from "@/shared/components/badge"
 import { Button } from "@/shared/components/button"
-import type { OfferType } from "../Offer"
 import {
   Card,
   CardContent,
@@ -11,31 +10,33 @@ import {
 import { Heart, CalendarDays, Plus, Info } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 import OfferItemCard from "./OfferItemCard"
-const MAX_VISIBLE_ITEMS = 2
-
+import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 type OfferProps = {
-  offer: OfferType
-  onShowDetails: (offer: OfferType) => void
+  offer: offerListingDtoResponse
+  onShowDetails: (offerId: number) => void
 }
 
 const Offer = ({ offer, onShowDetails }: OfferProps) => {
-  const visibleHave = offer.itemsHave.slice(0, MAX_VISIBLE_ITEMS)
-  const visibleWant = offer.itemsWant.slice(0, MAX_VISIBLE_ITEMS)
-  const remainingHave = offer.itemsHave.length - visibleHave.length
-  const remainingWant = offer.itemsWant.length - visibleWant.length
+  const offeredCount = offer.offeredItemsCount
+  const wantedCount = offer.wantedItemsCount
+  const remainingOffered = offer.offeredItemsCount - offeredCount
+  const remainingWanted = offer.wantedItemsCount - wantedCount
+  const successRate = new Intl.NumberFormat("pl-PL", {
+    style: "percent",
+  }).format(offer.offerUserDto.successRate)
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
         <CardTitle className="w-full">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h1 className="text-base font-semibold lg:text-lg text-left line-clamp-2 min-h-[3.5rem]">
-              {offer.title}
+              {offer.offerCoreDto.title}
             </h1>
 
             <div className="flex flex-row items-center gap-3">
               <div className="flex flex-row items-center text-xs text-muted-foreground">
                 <CalendarDays className="w-5 h-5" />
-                <span className="pl-2">{offer.date}</span>
+                <span className="pl-2">{offer.offerCoreDto.expDate}</span>
               </div>
               <Button
                 variant="outline"
@@ -55,35 +56,35 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
             <Badge className="w-fit bg-gray-100 text-gray-900 rounded-full">
               Mam
             </Badge>
-            {visibleHave.map((item) => (
-              <div key={item.id} className="w-full max-w-[260px]">
+            {offer.offeredItems.map((item) => (
+              <div key={item.itemId} className="w-full max-w-[260px]">
                 <OfferItemCard item={item} />
               </div>
             ))}
-            {remainingHave > 0 && (
+            {remainingOffered > 0 && (
               <p className="text-sm text-muted-foreground">
-                i {remainingHave} dodatkowych przedmiotów
+                i {remainingOffered} dodatkowych przedmiotów
               </p>
             )}
           </div>
 
           <div className="flex flex-col w-full gap-2 border-t pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4 border-gray-300">
             <Badge className="w-fit rounded-full">Chcę</Badge>
-            {visibleWant.map((item) => (
-              <div key={item.id} className="w-full max-w-[260px]">
+            {offer.wantedItems.map((item) => (
+              <div key={item.itemId} className="w-full max-w-[260px]">
                 <OfferItemCard item={item} />
               </div>
             ))}
-            {remainingWant > 0 && (
+            {remainingWanted > 0 && (
               <p className="text-sm text-muted-foreground">
-                i {remainingWant} dodatkowych przedmiotów
+                i {remainingWanted} dodatkowych przedmiotów
               </p>
             )}
           </div>
         </div>
 
         <p className="text-gray-500 text-left line-clamp-3 min-h-[4.5rem]">
-          {offer.description}
+          {offer.offerCoreDto.description}
         </p>
       </CardContent>
 
@@ -91,20 +92,24 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
         <div className="flex flex-row  items-center">
           <Avatar>
             <AvatarImage
-              src={offer.user.avatarUrl ?? "https://github.com/shadcn.png"}
-              alt={offer.user.username}
+              src={
+                offer.offerUserDto.imageUrl ?? "https://github.com/shadcn.png"
+              }
+              alt={offer.offerUserDto.nickname}
             />
             <AvatarFallback>
-              {offer.user.username.slice(0, 2).toUpperCase()}
+              {offer.offerUserDto.nickname.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-start pl-4">
             <span className="font-medium text-foreground">
-              {offer.user.username}
+              {offer.offerUserDto.nickname}
             </span>
             <span className="">
-              {offer.user.rating}/5 ★ • {offer.user.tradesCount} wymian
+              {offer.offerUserDto.rating}/5 ★ •{" "}
+              {offer.offerUserDto.successTradesCount} wymian • {successRate} SR
             </span>
+            <span className=""></span>
           </div>
         </div>
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:justify-end">
@@ -112,7 +117,7 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
             type="button"
             variant="outline"
             className="text-xs cursor-pointer w-full sm:w-auto"
-            onClick={() => onShowDetails(offer)}
+            onClick={() => onShowDetails(offer.offerCoreDto.offerId)}
           >
             <Info /> Szczegóły
           </Button>

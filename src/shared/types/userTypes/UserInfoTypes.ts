@@ -14,6 +14,9 @@ export type UserProfileInfoDto = {
   registrationDate: string
   nickname: string
   description: string
+  SuccessTradesCount: number
+  Rating: number
+  SuccessRate: number
 }
 
 export type UserProfileInfoUpdateDto = {

@@ -2,14 +2,32 @@ import OffersGrid from "./components/OffersGrid"
 import FilterBarContainer from "./components/FilterBarContainer"
 import OfferDetails from "./components/OfferDetails"
 import { useState } from "react"
-import type { OfferType } from "./Offer"
+import { useOffersListing } from "./hooks/useOfferListing"
+import { useOfferDetails } from "./hooks/useOfferDetails"
 
 const MarketplacePage = () => {
-  const oferty = 15
-  const [selectedOffer, setSelectedOffer] = useState<OfferType | null>(null)
+  const {
+    offers,
+    totalCount,
+    loading,
+    error,
+    searchText,
+    setSearchText,
+    orderBy,
+    setOrderBy,
+  } = useOffersListing()
+
+  const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
-  const handleShowDetails = (offer: OfferType) => {
-    setSelectedOffer(offer)
+
+  const {
+    offerDetails: detailsOffer,
+    loading: detailsLoading,
+    error: detailsError,
+  } = useOfferDetails(selectedOfferId, detailsOpen)
+
+  const handleShowDetails = (offerId: number) => {
+    setSelectedOffer(offerId)
     setDetailsOpen(true)
   }
   const handleOpenDialogChange = (open: boolean) => {
@@ -30,14 +48,18 @@ const MarketplacePage = () => {
           </p>
         </div>
         <div className="text-sm text-muted-foreground md:text-right md:self-end">
-          <p>{oferty} znalezionych ofert</p>
+          <p>{totalCount} znalezionych ofert</p>
         </div>
       </header>
       <FilterBarContainer />
-      <OffersGrid offers={[]} onShowDetails={handleShowDetails} />
-      {selectedOffer && (
+      {error && <p className="text-red-500">Błąd: {error}</p>}
+      {loading && (
+        <p className="text-sm text-muted-foreground">Ładowanie ofert...</p>
+      )}
+      <OffersGrid offers={offers} onShowDetails={handleShowDetails} />
+      {detailsOffer && (
         <OfferDetails
-          offer={selectedOffer}
+          offer={detailsOffer}
           open={detailsOpen}
           onOpenChange={handleOpenDialogChange}
         />

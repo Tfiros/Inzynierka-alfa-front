@@ -1,17 +1,38 @@
-import type { OfferItemDTO, OfferListingItemType } from "./OfferListingTypes"
+import type {
+  offerCoreDto,
+  offerItemDto,
+  offerListingItemDto,
+  offerOrderBy,
+  offerUserDto,
+} from "./OfferTypes"
 
-export type OfferDraftRequest = {
+//Request Types
+export type offerListingQueryRequest = {
+  page: number
+  pageSize: number
+  gameId?: number
+  genreId?: number
+  searchText?: string
+  orderBy: offerOrderBy
+}
+export type offerDraftRequest = {
   expDate: string
-  offeredItems: OfferItemDTO[]
-  wantedItems: OfferItemDTO[]
+  offeredItems: offerItemDto[]
+  wantedItems: offerItemDto[]
 }
 
-export type OfferRespone = {
-  id: number
-  expDate: string
-  creationDate: string
-  tokenCost: number
-  offerStatusId: number
-  offeredItems: OfferListingItemType[]
-  wantedItems: OfferListingItemType[]
+//Response Types
+export type offerListingDtoResponse = {
+  offerCoreDto: offerCoreDto
+  offerUserDto: offerUserDto
+  offeredItems: offerListingItemDto[]
+  wantedItems: offerListingItemDto[]
+  offeredItemsCount: number
+  wantedItemsCount: number
+}
+export type offerDetailsDtoResponse = {
+  offerCoreDto: offerCoreDto
+  offerUserDto: offerUserDto
+  offeredItems: offerListingItemDto[]
+  wantedItems: offerListingItemDto[]
 }
