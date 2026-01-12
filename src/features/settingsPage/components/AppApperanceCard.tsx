@@ -31,7 +31,9 @@ const AppApperanceCard = () => {
               Włącz ciemny motyw interfejsu
             </p>
           </div>
-          <DarkModeSwitch />
+          <div className="[&_*]:cursor-pointer">
+            <DarkModeSwitch />
+          </div>
         </div>
       </CardContent>
     </Card>

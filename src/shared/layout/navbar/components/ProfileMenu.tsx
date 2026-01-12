@@ -9,19 +9,17 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/dropdown-menu"
 import { Button } from "@/shared/components/button"
-import { User as UserIcon, LogOut, Trophy, Settings, Moon } from "lucide-react"
+import { User as UserIcon, Trophy, Settings, Moon } from "lucide-react"
 import { useAppStore } from "@/shared/store/AppStore"
 import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
+import LogoutButton from "@/shared/components/logoutButton"
 
 export const ProfileMenu = () => {
   const [open, setOpen] = useState(false)
-  const [busy, setBusy] = useState(false)
+  const [busy] = useState(false)
 
   const navbarUser = useAppStore((s) => s.navbarUser)
   const userId = useAppStore((s) => s.userId)
-  const logout = useAppStore((s) => s.logout)
-
-  const navigate = useNavigate()
   const displayName = navbarUser?.nickname ?? "Użytkownik"
   const email = navbarUser?.email ?? "—"
 
@@ -30,20 +28,6 @@ export const ProfileMenu = () => {
     const letters = parts.map((p) => p[0]?.toUpperCase()).join("")
     return letters.slice(0, 2) || "U"
   }, [displayName])
-
-  const handleLogout = async () => {
-    if (busy) return
-    setBusy(true)
-    try {
-      await logout()
-      setOpen(false)
-      navigate("/")
-    } catch (e) {
-      console.warn("Logout error (ignored):", e)
-    } finally {
-      setBusy(false)
-    }
-  }
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -118,16 +102,8 @@ export const ProfileMenu = () => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem
-          onSelect={(e) => {
-            e.preventDefault()
-            void handleLogout()
-          }}
-          disabled={busy}
-          className="text-red-600 focus:text-red-600"
-        >
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>{busy ? "Wylogowywanie…" : "Wyloguj się"}</span>
+        <DropdownMenuItem>
+          <LogoutButton />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

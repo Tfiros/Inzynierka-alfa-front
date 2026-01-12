@@ -6,7 +6,8 @@ import {
   CardDescription,
   CardContent,
 } from "@/shared/components/card"
-import { Trash2, LogOut } from "lucide-react"
+import LogoutButton from "@/shared/components/logoutButton"
+import { Trash2 } from "lucide-react"
 
 const AccountCard = () => {
   return (
@@ -19,12 +20,14 @@ const AccountCard = () => {
         <CardDescription>Akcje związane z kontem użytkownika</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        <Button variant="outline" className="w-full justify-start">
-          <LogOut className="w-4 h-4 mr-2" />
-          Wyloguj się
-        </Button>
+        <div className="pl-3 cursor-pointer [&_*]:cursor-pointer">
+          <LogoutButton className="w-full justify-start" />
+        </div>
 
-        <Button variant="destructive" className="w-full justify-start">
+        <Button
+          variant="destructive"
+          className="w-full justify-start cursor-pointer"
+        >
           <Trash2 className="w-4 h-4 mr-2" />
           Usuń konto
         </Button>
