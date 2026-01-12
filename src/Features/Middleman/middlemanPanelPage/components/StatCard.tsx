@@ -20,4 +20,5 @@ const StatCard = ({ title, value, icon }: Props) => {
     </Card>
   )
 }
+
 export default StatCard

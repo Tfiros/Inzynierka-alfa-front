@@ -1,31 +1,24 @@
-import type {
-  MiddlemanJobDto,
-  MiddlemanTab,
-} from "@/shared/types/middlemanTypes/MiddlemanTypes"
-import JobCard from "../components/JobCard"
+import type { TradeListItem } from "@/shared/types/tradeTypes/MiddlemanTypes"
+import type { MiddlemanTab } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import { Skeleton } from "@/shared/components/skeleton"
+import TradeCard from "../components/TradeCard"
 
 type Props = {
   tab: MiddlemanTab
   loading: boolean
   error: string | null
-  items: MiddlemanJobDto[]
-
-  onAssign: (jobId: string) => void
-  onDetails: (jobId: string) => void
-  onChangeDate: (jobId: string) => void
-  onChangeStatus: (jobId: string) => void
+  items: TradeListItem[]
+  onAssign: (tradeId: number) => void
+  onDetails: (tradeId: number) => void
 }
 
-const JobsListSection = ({
+const TradesListSection = ({
   tab,
   loading,
   error,
   items,
   onAssign,
   onDetails,
-  onChangeDate,
-  onChangeStatus,
 }: Props) => {
   if (loading) {
     return (
@@ -52,25 +45,24 @@ const JobsListSection = ({
   if (!items.length) {
     return (
       <div className="mt-6 rounded-xl border p-6 text-sm text-muted-foreground">
-        Brak ofert do wyświetlenia.
+        Brak wymian do wyświetlenia.
       </div>
     )
   }
 
   return (
     <div className="mt-6 space-y-4">
-      {items.map((job) => (
-        <JobCard
-          key={job.id}
+      {items.map((t) => (
+        <TradeCard
+          key={t.tradeId}
           tab={tab}
-          job={job}
-          onAssign={onAssign}
-          onDetails={onDetails}
-          onChangeDate={onChangeDate}
-          onChangeStatus={onChangeStatus}
+          trade={t}
+          onAssign={() => onAssign(t.tradeId)}
+          onDetails={() => onDetails(t.tradeId)}
         />
       ))}
     </div>
   )
 }
-export default JobsListSection
+
+export default TradesListSection

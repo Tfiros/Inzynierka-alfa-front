@@ -1,11 +1,11 @@
-import type { MiddlemanStatsDto } from "@/shared/types/middlemanTypes/MiddlemanTypes"
+import type { MiddlemanTradesStats } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import StatCard from "../components/StatCard"
 import { CheckCircle2, Layers, UserCheck, Sparkles } from "lucide-react"
 import { Skeleton } from "@/shared/components/skeleton"
 
 type Props = {
   loading: boolean
-  stats: MiddlemanStatsDto | null
+  stats: MiddlemanTradesStats | null
 }
 
 const StatsSection = ({ loading, stats }: Props) => {
@@ -15,17 +15,17 @@ const StatsSection = ({ loading, stats }: Props) => {
     <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <StatCard
         title="Wszystkie"
-        value={val(stats?.total ?? 0)}
+        value={val(stats?.all ?? 0)}
         icon={<Layers className="h-4 w-4" />}
       />
       <StatCard
         title="Zakończone"
-        value={val(stats?.finished ?? 0)}
+        value={val(stats?.completed ?? 0)}
         icon={<CheckCircle2 className="h-4 w-4" />}
       />
       <StatCard
         title="Moje aktywne"
-        value={val(stats?.mineActive ?? 0)}
+        value={val(stats?.myActive ?? 0)}
         icon={<UserCheck className="h-4 w-4" />}
       />
       <StatCard
@@ -36,4 +36,5 @@ const StatsSection = ({ loading, stats }: Props) => {
     </div>
   )
 }
+
 export default StatsSection

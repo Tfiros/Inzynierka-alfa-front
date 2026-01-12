@@ -38,4 +38,5 @@ const SegmentedTabs = <T extends string>({
     </div>
   )
 }
+
 export default SegmentedTabs
