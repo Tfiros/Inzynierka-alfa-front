@@ -13,16 +13,18 @@ type Props = {
   onNext: () => void
 }
 
-const PaginationSection = ({
-  loading,
-  page,
-  totalPages,
-  shownFrom,
-  shownTo,
-  totalCount,
-  onPrev,
-  onNext,
-}: Props) => {
+const PaginationSection = (props: Props) => {
+  const {
+    loading,
+    page,
+    totalPages,
+    shownFrom,
+    shownTo,
+    totalCount,
+    onPrev,
+    onNext,
+  } = props
+
   return (
     <Card className="rounded-t-none border-t-0 shadow-sm">
       <CardContent className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
@@ -61,4 +63,5 @@ const PaginationSection = ({
     </Card>
   )
 }
+
 export default PaginationSection

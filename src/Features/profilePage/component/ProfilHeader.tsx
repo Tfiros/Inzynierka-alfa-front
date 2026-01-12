@@ -38,10 +38,15 @@ const ProfileHeader = ({
         <AvatarFallback>{initials(name)}</AvatarFallback>
       </Avatar>
 
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         <div className="text-sm text-muted-foreground">{handle}</div>
         <h1 className="text-lg md:text-xl font-semibold mt-1">{name}</h1>
-        <p className="mt-1 text-sm text-muted-foreground max-w-3xl leading-relaxed">
+        <p
+          className="
+            mt-1 text-sm text-muted-foreground max-w-3xl leading-relaxed
+            min-w-0 overflow-hidden break-words
+            whitespace-pre-wrap        "
+        >
           {bio}
         </p>
         <div className="mt-2 flex flex-wrap items-center gap-3 text-sm">

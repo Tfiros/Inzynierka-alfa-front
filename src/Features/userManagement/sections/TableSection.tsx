@@ -1,18 +1,19 @@
 import { Card, CardContent } from "@/shared/components/card"
 import { Button } from "@/shared/components/button"
-import { ArrowUpDown, Table } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
 import type { UserListItemDto } from "@/shared/types/userTypes/UserManagementTypes"
-import RoleBadges from "../components/RoleBadges"
 import UserActionsMenu from "../components/UserActionsMenu"
+import RoleBadges from "../components/RoleBadges"
 
 import { Skeleton } from "@/shared/components/skeleton"
 import {
+  Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from "../../../shared/components/table"
+} from "@/shared/components/table"
 
 const formatDate = (dateOnly: string | null | undefined) => {
   if (!dateOnly) return "—"
@@ -37,7 +38,9 @@ type Props = {
   onDelete: (u: UserListItemDto) => void
 }
 
-const TableSection = ({ loading, error, items, onEdit, onDelete }: Props) => {
+const TableSection = (props: Props) => {
+  const { loading, error, items, onEdit, onDelete } = props
+
   return (
     <Card className="mt-6 shadow-sm">
       <CardContent className="p-0">
@@ -171,4 +174,5 @@ const TableSection = ({ loading, error, items, onEdit, onDelete }: Props) => {
     </Card>
   )
 }
+
 export default TableSection
