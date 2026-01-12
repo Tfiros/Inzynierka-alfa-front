@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useRef } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import {
   DropdownMenu,
@@ -9,18 +9,17 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/dropdown-menu"
 import { Button } from "@/shared/components/button"
-import { User as UserIcon, LogOut, Trophy } from "lucide-react"
+import { User as UserIcon, Trophy, Settings, Moon } from "lucide-react"
 import { useAppStore } from "@/shared/store/AppStore"
+import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
+import LogoutButton from "@/shared/components/logoutButton"
 
 export const ProfileMenu = () => {
   const [open, setOpen] = useState(false)
-  const [busy, setBusy] = useState(false)
+  const [busy] = useState(false)
 
   const navbarUser = useAppStore((s) => s.navbarUser)
   const userId = useAppStore((s) => s.userId)
-  const logout = useAppStore((s) => s.logout)
-
-  const navigate = useNavigate()
   const displayName = navbarUser?.nickname ?? "Użytkownik"
   const email = navbarUser?.email ?? "—"
 
@@ -29,20 +28,6 @@ export const ProfileMenu = () => {
     const letters = parts.map((p) => p[0]?.toUpperCase()).join("")
     return letters.slice(0, 2) || "U"
   }, [displayName])
-
-  const handleLogout = async () => {
-    if (busy) return
-    setBusy(true)
-    try {
-      await logout()
-      setOpen(false)
-      navigate("/")
-    } catch (e) {
-      console.warn("Logout error (ignored):", e)
-    } finally {
-      setBusy(false)
-    }
-  }
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -92,18 +77,33 @@ export const ProfileMenu = () => {
           </Link>
         </DropdownMenuItem>
 
-        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link to="/settings" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            <span>Ustawienia</span>
+          </Link>
+        </DropdownMenuItem>
 
         <DropdownMenuItem
           onSelect={(e) => {
             e.preventDefault()
-            void handleLogout()
           }}
-          disabled={busy}
-          className="text-red-600 focus:text-red-600"
+          className="p-0"
         >
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>{busy ? "Wylogowywanie…" : "Wyloguj się"}</span>
+          <div className="flex items-center justify-between w-full px-2 py-1.5">
+            <div className="flex items-center gap-2">
+              <Moon className="h-4 w-4" />
+              <span>Ciemny motyw</span>
+            </div>
+
+            <DarkModeSwitch />
+          </div>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem>
+          <LogoutButton />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

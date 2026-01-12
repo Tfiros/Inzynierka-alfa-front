@@ -43,42 +43,41 @@ const PackageCard = ({ item, selected, onSelect }: CardProps) => {
           }
         }}
         className={cn(
-          "relative h-full rounded-2xl border bg-white shadow-sm flex flex-col cursor-pointer transition",
+          "relative h-full rounded-2xl border bg-card text-card-foreground shadow-sm flex flex-col cursor-pointer transition",
           "hover:border-primary/40",
           selected && "border-primary ring-2 ring-primary/20"
         )}
       >
-        <CardContent className="p-6 flex flex-col flex-1">
+        <CardContent className="flex flex-1 flex-col p-6">
           <div className="relative">
             <div className="absolute right-0 top-0">
               <Checkbox
                 checked={selected}
                 onClick={(e) => e.stopPropagation()}
                 className={cn(
-                  "h-5 w-5 rounded-md border-2 transition-colors pointer-events-none",
+                  "h-5 w-5 rounded-md border-2 transition-colors",
+                  // tokenowo: border-input + bg-background, a dla selected primary
                   selected
-                    ? "border-zinc-900 bg-zinc-900 text-white"
-                    : "border-zinc-300 bg-white"
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-input bg-background"
                 )}
               />
             </div>
 
             <div className="space-y-1">
-              <p className="text-bg text-muted-foreground">{item.title}</p>
-              <p className="text-xl font-semibold text-zinc-900">
-                {item.price}
-              </p>
+              <p className="text-sm text-muted-foreground">{item.title}</p>
+              <p className="text-xl font-semibold">{item.price}</p>
             </div>
           </div>
 
-          <div className="mt-8 text-center flex flex-col items-center justify-center flex-1">
-            <div className="flex justify-center items-center gap-2">
+          <div className="mt-8 flex flex-1 flex-col items-center justify-center text-center">
+            <div className="flex items-center justify-center gap-2">
               <Coins className="h-5 w-5 text-amber-500" />
               <span className="text-4xl font-semibold">{item.coins}</span>
             </div>
 
             {item.bonus && (
-              <div className="mt-3 flex justify-center items-center gap-2 text-sm text-emerald-600">
+              <div className="mt-3 flex items-center justify-center gap-2 text-sm text-emerald-500">
                 <Check className="h-4 w-4" /> +{item.bonus} bonus
               </div>
             )}

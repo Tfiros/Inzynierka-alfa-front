@@ -14,7 +14,7 @@ const MainText = () => {
         </p>
       </div>
       <div className="mt-6 mb-8 text-center">
-        <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
+        <h2 className="text-2xl font-semibold tracking-tight">
           Wybierz pakiet
         </h2>
       </div>

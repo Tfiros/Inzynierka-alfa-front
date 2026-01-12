@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { Button } from "@/shared/components/button"
-import CrossTradeLogo from "@/shared/photos/CrossTradeLogo.png"
+import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.png"
+import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 import { useState } from "react"
 import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
 import { NavItem } from "../components/NavItem"
@@ -16,9 +17,14 @@ export default function GuestNavbar() {
           <div className="flex gap-2">
             <Link to="/" className="inline-flex items-center gap-2">
               <img
-                src={CrossTradeLogo}
+                src={CrossTradeLogo_light}
                 alt="CROSSTRADE"
-                className="h-15 w-15 object-contain"
+                className="h-15 w-15 object-contain dark:hidden"
+              />
+              <img
+                src={CrossTradeLogo_dark}
+                alt="CROSSTRADE"
+                className="h-15 w-15 object-contain dark:block"
               />
               <span className="sr-only">CROSSTRADE</span>
             </Link>
