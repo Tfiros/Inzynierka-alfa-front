@@ -1,15 +1,16 @@
 import type { TradeListItem } from "@/shared/types/tradeTypes/MiddlemanTypes"
-import type { MiddlemanTab } from "@/shared/types/tradeTypes/MiddlemanTypes"
-import { Skeleton } from "@/shared/components/skeleton"
+import type { MiddlemanTab } from "../hooks/UseMiddlemanTradesQuery"
 import TradeCard from "../components/TradeCard"
+import { Skeleton } from "@/shared/components/skeleton"
 
 type Props = {
   tab: MiddlemanTab
   loading: boolean
   error: string | null
   items: TradeListItem[]
+
   onAssign: (tradeId: number) => void
-  onDetails: (tradeId: number) => void
+  onDetails: (trade: TradeListItem) => void
 }
 
 const TradesListSection = ({
@@ -58,7 +59,7 @@ const TradesListSection = ({
           tab={tab}
           trade={t}
           onAssign={() => onAssign(t.tradeId)}
-          onDetails={() => onDetails(t.tradeId)}
+          onDetails={() => onDetails(t)}
         />
       ))}
     </div>

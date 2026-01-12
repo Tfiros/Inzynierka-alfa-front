@@ -4,6 +4,7 @@ import useMiddlemanTradesQuery from "./UseMiddlemanTradesQuery"
 import useMiddlemanStats from "./UseMiddlemanStats"
 import useMiddlemanTradesList from "./UseMiddlemanTradesList"
 import useAssignMiddleman from "./UseAssignMiddleman"
+import useTradeDetailsDialog from "./UseTradeDetailsDialog"
 
 const useMiddlemanPanel = () => {
   const { state, q, actions } = useMiddlemanTradesQuery("available")
@@ -21,15 +22,16 @@ const useMiddlemanPanel = () => {
     page: state.page,
     pageSize: state.pageSize,
     query: effectiveQuery,
-    clearOnLoad: false, // ustaw true jeśli chcesz czyścić listę przy przełączaniu taba
+    clearOnLoad: false,
   })
 
-  // jeżeli po assign chcesz odświeżać też stats — zrób Promise.all([stats.refetchStats(), list.refetchList()])
   const assign = useAssignMiddleman({
     onSuccessRefetch: async () => {
       await Promise.all([stats.refetchStats(), list.refetchList()])
     },
   })
+
+  const details = useTradeDetailsDialog() // <-- DODAJ
 
   const counts = useMemo(() => {
     return {
@@ -46,6 +48,7 @@ const useMiddlemanPanel = () => {
     list,
     assign,
     counts,
+    details, // <-- DODAJ
   }
 }
 

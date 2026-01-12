@@ -58,7 +58,7 @@ export class MiddlemanService {
   public static readonly updateByMiddleman = async (
     tradeId: number,
     req: UpdateTradeByMiddlemanRequest
-  ) => put<string>(`${this.base}/${tradeId}/middleman`, req)
+  ) => put<string>(`${this.base}/update-trade/${tradeId}`, req)
 
   public static readonly getMiddlemanAvailable = async (
     page: number,

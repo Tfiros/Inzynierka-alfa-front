@@ -4,12 +4,12 @@ import TabsSection from "./sections/TabsSection"
 import FiltersSection from "./sections/FiltersSection"
 import TradesListSection from "./sections/TradesListSection"
 import PaginationSection from "./sections/PaginationSection"
+import TradeDetailsDialog from "./components/TradeDetailsDialog"
 import useMiddlemanPanel from "./hooks/UseMiddlemanPanel"
 
 const MiddlemanPanelPage = () => {
-  const { query, stats, list, assign, counts } = useMiddlemanPanel()
+  const { query, stats, list, assign, counts, details } = useMiddlemanPanel()
 
-  // spójny błąd do listy (lista ma priorytet, ale assign też może zwrócić)
   const listError = list.errorList ?? assign.assignError ?? null
 
   return (
@@ -39,9 +39,9 @@ const MiddlemanPanelPage = () => {
           error={listError}
           items={list.items}
           onAssign={assign.assignToMe}
-          onDetails={(tradeId) => console.log("details", tradeId)} // TODO: navigate
-          // jeśli chcesz blokować przycisk podczas assign:
-          // assigning={assign.assigning}
+          onDetails={(trade) => {
+            void details.actions.openFor(trade)
+          }}
         />
 
         <PaginationSection
@@ -51,6 +51,18 @@ const MiddlemanPanelPage = () => {
           onPageChange={query.actions.setPage}
         />
       </div>
+
+      <TradeDetailsDialog
+        open={details.state.open}
+        loading={details.state.loading}
+        error={details.state.error}
+        trade={details.state.trade}
+        details={details.state.details}
+        onOpenChange={(o) => {
+          if (!o) details.actions.close()
+        }}
+        onSaved={details.actions.refresh}
+      />
     </div>
   )
 }

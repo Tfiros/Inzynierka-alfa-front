@@ -1,5 +1,5 @@
 import type { TradeListItem } from "@/shared/types/tradeTypes/MiddlemanTypes"
-import type { MiddlemanTab } from "@/shared/types/tradeTypes/MiddlemanTypes"
+import type { MiddlemanTab } from "../hooks/UseMiddlemanTradesQuery"
 import { Card, CardContent } from "@/shared/components/card"
 import { ArrowLeftRight } from "lucide-react"
 import PartyBlock from "./PartyBlock"

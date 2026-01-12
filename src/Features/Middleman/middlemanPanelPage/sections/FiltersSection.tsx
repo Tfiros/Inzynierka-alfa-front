@@ -1,8 +1,8 @@
 import { Button } from "@/shared/components/button"
 import { Input } from "@/shared/components/input"
 import { RotateCcw, Search } from "lucide-react"
-import type { MiddlemanTab } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import type {
+  MiddlemanTab,
   TradeSearchBy,
   TradeSortBy,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
@@ -18,6 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/select"
+
+import DatePickerInput from "../components/DatePickerInput"
 
 type State = {
   tab: MiddlemanTab
@@ -172,15 +174,17 @@ const FiltersSection = ({ tab, state, actions }: Props) => {
           placeholder="Max token cost"
           inputMode="numeric"
         />
-        <Input
+
+        <DatePickerInput
           value={state.createdFrom}
-          onChange={(e) => actions.setCreatedFrom(e.target.value)}
-          placeholder="createdFrom (ISO)"
+          onChange={actions.setCreatedFrom}
+          placeholder="Created from"
         />
-        <Input
+
+        <DatePickerInput
           value={state.createdTo}
-          onChange={(e) => actions.setCreatedTo(e.target.value)}
-          placeholder="createdTo (ISO)"
+          onChange={actions.setCreatedTo}
+          placeholder="Created to"
         />
       </div>
 
