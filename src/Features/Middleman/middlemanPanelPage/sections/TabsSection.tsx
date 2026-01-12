@@ -1,4 +1,4 @@
-import type { MiddlemanTab } from "@/shared/types/middlemanTypes/MiddlemanTypes"
+import type { MiddlemanTab } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import SegmentedTabs from "../components/SegmentedTabs"
 
 type Props = {
@@ -6,7 +6,7 @@ type Props = {
   onChange: (v: MiddlemanTab) => void
   availableCount: number
   mineCount: number
-  finishedCount: number
+  completedCount: number
 }
 
 const TabsSection = ({
@@ -14,7 +14,7 @@ const TabsSection = ({
   onChange,
   availableCount,
   mineCount,
-  finishedCount,
+  completedCount,
 }: Props) => {
   return (
     <div className="mt-6">
@@ -22,12 +22,13 @@ const TabsSection = ({
         value={value}
         onChange={onChange}
         tabs={[
-          { value: "available", label: `Dostępne oferty (${availableCount})` },
-          { value: "mine", label: `Moje przypisane (${mineCount})` },
-          { value: "finished", label: `Zakończone (${finishedCount})` },
+          { value: "available", label: `Dostępne (${availableCount})` },
+          { value: "mine", label: `W realizacji (${mineCount})` },
+          { value: "completed", label: `Zakończone (${completedCount})` },
         ]}
       />
     </div>
   )
 }
+
 export default TabsSection

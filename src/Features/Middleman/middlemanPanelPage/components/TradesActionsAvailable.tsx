@@ -2,17 +2,17 @@ import { Button } from "@/shared/components/button"
 import { UserPlus } from "lucide-react"
 
 type Props = {
-  feeCoins: number
+  tokenCost: number
   onAssign: () => void
   disabled?: boolean
 }
 
-const JobActionsAvailable = ({ feeCoins, onAssign, disabled }: Props) => {
+const TradeActionsAvailable = ({ tokenCost, onAssign, disabled }: Props) => {
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>Prowizja middlemana:</span>
-        <span className="text-foreground">{feeCoins} CT Coins</span>
+        <span>Koszt tokenów:</span>
+        <span className="text-foreground">{tokenCost}</span>
       </div>
 
       <Button
@@ -26,4 +26,5 @@ const JobActionsAvailable = ({ feeCoins, onAssign, disabled }: Props) => {
     </div>
   )
 }
-export default JobActionsAvailable
+
+export default TradeActionsAvailable
