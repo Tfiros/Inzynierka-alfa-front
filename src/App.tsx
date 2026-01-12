@@ -18,6 +18,7 @@ import MiddlemanRoute from "./routes/MiddlemanRoutes"
 import BlankLayout from "./shared/layout/BlankLayout"
 import MainLayout from "./shared/layout/MainLayout"
 import ProfilePage from "./Features/profilePage/profilePage"
+import SettingsPage from "./Features/settingsPage/SettingsPage"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
@@ -40,6 +41,7 @@ function App() {
           <Route path="profileEdit" element={<ProfileEdit />} />
           <Route path="marketplace" element={<MarketplacePage />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route path="settings" element={<SettingsPage />} />
 
           <Route element={<AdminRoute />}>
             <Route path="userManagement" element={<UserManagementPage />} />

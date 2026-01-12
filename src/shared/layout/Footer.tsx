@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom"
 import { Button } from "@/shared/components/button"
 import { Facebook, Instagram, Twitter } from "lucide-react"
-import CrossTradeLogo from "@/shared/photos/CrossTradeLogo.png"
+import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.png"
+import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 
 export const Footer = () => {
   const year = new Date().getFullYear()
@@ -10,9 +11,14 @@ export const Footer = () => {
       <div className="flex h-24 w-full items-center justify-between px-6">
         <Link to="/" className="inline-flex items-center gap-3">
           <img
-            src={CrossTradeLogo}
+            src={CrossTradeLogo_light}
             alt="CROSSTRADE"
-            className="h-15 w-15 object-contain"
+            className="h-15 w-15 object-contain dark:hidden"
+          />
+          <img
+            src={CrossTradeLogo_dark}
+            alt="CROSSTRADE"
+            className="hidden h-15 w-15 object-contain dark:block"
           />
           <span className="font-semibold tracking-wide">CROSSTRADE</span>
         </Link>
