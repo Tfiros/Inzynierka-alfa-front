@@ -4,8 +4,7 @@ import type {
   TradeSearchBy,
   TradeSortBy,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
-
-export type MiddlemanTab = "available" | "mine" | "completed"
+import type { MiddlemanTab } from "@/shared/types/tradeTypes/MiddlemanTypes"
 
 type State = {
   tab: MiddlemanTab

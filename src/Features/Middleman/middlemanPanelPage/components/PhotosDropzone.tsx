@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useState } from "react"
 import { UploadCloud, X } from "lucide-react"
 import { cn } from "@/shared/lib/Utils"
 import { Button } from "@/shared/components/button"
+import { usePhotosDropzone } from "../hooks/UsePhotosDropzone"
 
 type Props = {
   maxFiles?: number
@@ -9,67 +9,17 @@ type Props = {
 }
 
 const PhotosDropzone = ({ maxFiles = 5, disabled }: Props) => {
-  const [files, setFiles] = useState<File[]>([])
-  const [isOver, setIsOver] = useState(false)
-  const remaining = maxFiles - files.length
-
-  const previews = useMemo(() => {
-    return files.map((f) => ({
-      file: f,
-      url: URL.createObjectURL(f),
-    }))
-  }, [files])
-
-  const addFiles = useCallback(
-    (incoming: FileList | File[]) => {
-      if (disabled) return
-      const arr = Array.from(incoming).filter((f) =>
-        f.type.toLowerCase().startsWith("image/")
-      )
-      if (!arr.length) return
-
-      setFiles((prev) => {
-        const next = [...prev]
-        for (const f of arr) {
-          if (next.length >= maxFiles) break
-          next.push(f)
-        }
-        return next
-      })
-    },
-    [disabled, maxFiles]
-  )
-
-  const onDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
-      setIsOver(false)
-      if (disabled) return
-      if (remaining <= 0) return
-      if (e.dataTransfer?.files) addFiles(e.dataTransfer.files)
-    },
-    [addFiles, disabled, remaining]
-  )
-
-  const removeAt = (idx: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== idx))
-  }
+  const { previews, isOver, remaining, actions, handlers } = usePhotosDropzone({
+    maxFiles,
+    disabled,
+  })
 
   return (
     <div className="space-y-3">
       <div
-        onDragOver={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          if (!disabled) setIsOver(true)
-        }}
-        onDragLeave={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          setIsOver(false)
-        }}
-        onDrop={onDrop}
+        onDragOver={handlers.onDragOver}
+        onDragLeave={handlers.onDragLeave}
+        onDrop={handlers.onDrop}
         className={cn(
           "rounded-xl border border-dashed p-4",
           "flex flex-col items-center justify-center gap-2 text-center",
@@ -92,11 +42,7 @@ const PhotosDropzone = ({ maxFiles = 5, disabled }: Props) => {
               accept="image/*"
               multiple
               className="hidden"
-              onChange={(e) => {
-                if (!e.target.files) return
-                addFiles(e.target.files)
-                e.target.value = ""
-              }}
+              onChange={handlers.onInputChange}
             />
             <Button
               type="button"
@@ -109,7 +55,7 @@ const PhotosDropzone = ({ maxFiles = 5, disabled }: Props) => {
         </div>
       </div>
 
-      {files.length ? (
+      {previews.length ? (
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {previews.map((p, idx) => (
             <div
@@ -133,7 +79,7 @@ const PhotosDropzone = ({ maxFiles = 5, disabled }: Props) => {
                 type="button"
                 variant="ghost"
                 size="icon"
-                onClick={() => removeAt(idx)}
+                onClick={() => actions.removeAt(idx)}
               >
                 <X className="h-4 w-4" />
               </Button>

@@ -37,7 +37,7 @@ export const UserNavbar = () => {
             {isAdmin && <NavItem to="/userManagement" label="Użytkownicy" />}
 
             {isMiddleman && (
-              <NavItem to="/middlemanPanel" label="Panel pośrednika" /> // <-- DODAJ
+              <NavItem to="/middlemanPanel" label="Panel pośrednika" />
             )}
 
             <NavItem to="/marketplace" label="Oferty" />

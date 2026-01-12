@@ -6,24 +6,12 @@ import PartyBlock from "./PartyBlock"
 import TradeStatusPill from "./TradeStatusPill"
 import TradeActionsAvailable from "./TradesActionsAvailable"
 import TradeActionsMyTrade from "./TradeActionsMyTrade"
-
+import { formatDateTimePl } from "../utils/dateUtils"
 type Props = {
   tab: MiddlemanTab
   trade: TradeListItem
   onAssign: () => void
   onDetails: () => void
-}
-
-const formatCreated = (iso: string) => {
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return "—"
-  return new Intl.DateTimeFormat("pl-PL", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(d)
 }
 
 const TradeCard = ({ tab, trade, onAssign, onDetails }: Props) => {
@@ -36,7 +24,7 @@ const TradeCard = ({ tab, trade, onAssign, onDetails }: Props) => {
               Trade #{trade.tradeId} • Offer #{trade.offerId}
             </div>
             <div className="text-xs text-muted-foreground">
-              Utworzono: {formatCreated(trade.creationDate)}
+              Utworzono: {formatDateTimePl(trade.creationDate)}
             </div>
           </div>
 

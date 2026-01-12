@@ -12,15 +12,12 @@ import type {
   TradeDetailsResponse,
   TradeListItem,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
-import {
-  CheckCircle2,
-  Edit3,
-  Eye,
-  XCircle,
-  Image as ImageIcon,
-} from "lucide-react"
+import { Edit3, Eye } from "lucide-react"
 import PhotosDropzone from "./PhotosDropzone"
-import { MiddlemanService } from "@/shared/api/services/MiddlemanService"
+import Flag from "./Flag"
+import PhotosList from "./PhotosList"
+import CheckboxRow from "./CheckboxRow"
+import useTradeDetailsSave from "../hooks/UseTradeDetailsSave"
 
 type Props = {
   open: boolean
@@ -34,70 +31,6 @@ type Props = {
 
 type Mode = "view" | "edit"
 
-const Flag = ({ ok, label }: { ok: boolean; label: string }) => (
-  <div className="flex items-center gap-2 text-sm">
-    {ok ? (
-      <CheckCircle2 className="h-4 w-4" />
-    ) : (
-      <XCircle className="h-4 w-4" />
-    )}
-    <span>{label}</span>
-  </div>
-)
-
-const PhotosList = ({ photos }: { photos: string[] }) => {
-  if (!photos.length)
-    return <div className="text-sm text-muted-foreground">Brak zdjęć.</div>
-
-  return (
-    <div className="space-y-2">
-      {photos.map((url, i) => (
-        <a
-          key={`${url}-${i}`}
-          href={url}
-          target="_blank"
-          rel="noreferrer"
-          className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm hover:bg-muted"
-        >
-          <ImageIcon className="h-4 w-4" />
-          <span className="truncate">{url}</span>
-        </a>
-      ))}
-    </div>
-  )
-}
-
-type CheckboxRowProps = {
-  checked: boolean
-  onChange: (v: boolean) => void
-  title: string
-  description: string
-  disabled?: boolean
-}
-
-const CheckboxRow = ({
-  checked,
-  onChange,
-  title,
-  description,
-  disabled,
-}: CheckboxRowProps) => (
-  <label className="flex items-start justify-between gap-4 rounded-lg border p-3">
-    <div>
-      <div className="text-sm font-medium">{title}</div>
-      <div className="mt-0.5 text-xs text-muted-foreground">{description}</div>
-    </div>
-
-    <input
-      type="checkbox"
-      className="mt-1 h-4 w-4 accent-black"
-      checked={checked}
-      disabled={disabled}
-      onChange={(e) => onChange(e.target.checked)}
-    />
-  </label>
-)
-
 const TradeDetailsDialog = ({
   open,
   loading,
@@ -108,8 +41,6 @@ const TradeDetailsDialog = ({
   onSaved,
 }: Props) => {
   const [mode, setMode] = useState<Mode>("view")
-  const [saving, setSaving] = useState(false)
-  const [saveError, setSaveError] = useState<string | null>(null)
 
   const initial = useMemo(() => {
     return {
@@ -121,38 +52,20 @@ const TradeDetailsDialog = ({
   const [hasBuyersItems, setHasBuyersItems] = useState(false)
   const [hasSellersItems, setHasSellersItems] = useState(false)
 
+  const { save, saving, saveError, setSaveError } = useTradeDetailsSave({
+    tradeId: trade?.tradeId ?? null,
+    hasBuyersItems,
+    hasSellersItems,
+    onSaved,
+    onAfterSave: () => setMode("view"),
+  })
+
   useEffect(() => {
     setMode("view")
     setSaveError(null)
-    setSaving(false)
     setHasBuyersItems(initial.hasBuyersItems)
     setHasSellersItems(initial.hasSellersItems)
-  }, [open, initial.hasBuyersItems, initial.hasSellersItems])
-
-  const doSave = async () => {
-    if (!trade) return
-    setSaving(true)
-    setSaveError(null)
-
-    try {
-      const res = await MiddlemanService.updateByMiddleman(trade.tradeId, {
-        hasBuyerItems: hasBuyersItems,
-        hasSellerItems: hasSellersItems,
-      })
-
-      if (!res.isSuccess) {
-        setSaveError(res.message ?? "Nie udało się zapisać zmian.")
-        return
-      }
-
-      await onSaved()
-      setMode("view")
-    } catch (e: any) {
-      setSaveError(e?.message ?? "Nie udało się zapisać zmian.")
-    } finally {
-      setSaving(false)
-    }
-  }
+  }, [open, initial.hasBuyersItems, initial.hasSellersItems, setSaveError])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -342,7 +255,7 @@ const TradeDetailsDialog = ({
           </Button>
 
           {mode === "edit" ? (
-            <Button onClick={doSave} disabled={!trade || saving}>
+            <Button onClick={save} disabled={!trade || saving}>
               {saving ? "Zapisywanie..." : "Zapisz"}
             </Button>
           ) : null}
