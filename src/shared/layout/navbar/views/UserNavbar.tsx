@@ -12,6 +12,7 @@ export const UserNavbar = () => {
   const roles = useAppStore((s) => s.roles)
   const unread = useAppStore((s) => s.unreadNotificationsCount)
   const isAdmin = roles.some((r) => r.toLowerCase() === "admin")
+  const isMiddleman = roles.some((r) => r.toLowerCase() === "middleman")
   const tokens = navbarUser?.tokens ?? 0
   const level = navbarUser?.level ?? 1
   return (
@@ -34,7 +35,12 @@ export const UserNavbar = () => {
               <NavItem to="/itemManagement" label="Zarządzanie przedmiotami" />
             )}
             {isAdmin && <NavItem to="/userManagement" label="Użytkownicy" />}
-            <NavItem to="marketplace" label="Oferty" />
+
+            {isMiddleman && (
+              <NavItem to="/middlemanPanel" label="Panel pośrednika" /> // <-- DODAJ
+            )}
+
+            <NavItem to="/marketplace" label="Oferty" />
             <NavItem to="/faqs" label="FAQs" />
             <NavItem to="/statute" label="Regulamin" />
             <NavItem to="/contact" label="Kontakt" />
