@@ -15,7 +15,7 @@ import { cn } from "@/shared/lib/Utils"
 type Mode = "from" | "to"
 
 type Props = {
-  value: string // ISO UTC np. 2026-01-11T00:00:00.000Z / 2026-01-11T23:59:59.999Z albo ""
+  value: string
   onChange: (v: string) => void
   placeholder?: string
   disabled?: boolean
@@ -28,18 +28,16 @@ const isYmd = (v: string) => /^(\d{4})-(\d{2})-(\d{2})$/.test(v)
 const parseValueToDate = (v: string): Date | null => {
   if (!v) return null
 
-  // wspieramy stare "YYYY-MM-DD"
   if (isYmd(v)) {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v)
     if (!m) return null
     const y = Number(m[1])
     const mo = Number(m[2]) - 1
     const d = Number(m[3])
-    const dt = new Date(y, mo, d) // lokalnie, tylko do UI
+    const dt = new Date(y, mo, d)
     return Number.isNaN(dt.getTime()) ? null : dt
   }
 
-  // ISO (najlepiej z Z)
   const dt = new Date(v)
   return Number.isNaN(dt.getTime()) ? null : dt
 }
@@ -52,7 +50,6 @@ const ymd = (date: Date) => {
 }
 
 const toUtcIsoRangeEdge = (date: Date, mode: Mode) => {
-  // budujemy string ISO w UTC, niezależnie od lokalnej strefy
   const base = ymd(date)
   return mode === "to" ? `${base}T23:59:59.999Z` : `${base}T00:00:00.000Z`
 }
@@ -69,7 +66,6 @@ const DatePickerInput = ({
 
   const label = React.useMemo(() => {
     if (!selected) return placeholder
-    // pokazujemy wyłącznie dzień, bo to filtr dzienny
     return format(selected, "dd.MM.yyyy", { locale: pl })
   }, [selected, placeholder])
 

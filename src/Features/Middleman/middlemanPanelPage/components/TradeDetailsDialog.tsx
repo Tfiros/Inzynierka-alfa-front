@@ -213,7 +213,6 @@ const TradeDetailsDialog = ({
           </div>
         ) : null}
 
-        {/* PODSTAWOWE INFO STRON (z listy) */}
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="rounded-xl border p-4">
             <div className="text-xs text-muted-foreground">

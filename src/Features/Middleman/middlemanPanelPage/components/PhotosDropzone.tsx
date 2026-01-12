@@ -18,7 +18,6 @@ const PhotosDropzone = ({ maxFiles = 5, disabled }: Props) => {
       file: f,
       url: URL.createObjectURL(f),
     }))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files])
 
   const addFiles = useCallback(

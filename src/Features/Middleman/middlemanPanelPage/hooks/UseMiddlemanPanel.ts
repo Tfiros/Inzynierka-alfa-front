@@ -31,7 +31,7 @@ const useMiddlemanPanel = () => {
     },
   })
 
-  const details = useTradeDetailsDialog() // <-- DODAJ
+  const details = useTradeDetailsDialog()
 
   const counts = useMemo(() => {
     return {
@@ -48,7 +48,7 @@ const useMiddlemanPanel = () => {
     list,
     assign,
     counts,
-    details, // <-- DODAJ
+    details,
   }
 }
 
