@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom"
 import { Button } from "@/shared/components/button"
-import CrossTradeLogo from "@/shared/photos/CrossTradeLogo.png"
+import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.png"
+import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
 import NoifyIcon from "@/shared/photos/NotificationIcon.svg"
+import NoifyIcon_Dark from "@/shared/photos/NotificationIcon_Dark.svg"
 import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
 import { useAppStore } from "@/shared/store/AppStore"
@@ -20,9 +22,14 @@ export const UserNavbar = () => {
         <div className="flex gap-2">
           <Link to="/" className="inline-flex items-center gap-2">
             <img
-              src={CrossTradeLogo}
+              src={CrossTradeLogo_light}
               alt="CROSSTRADE"
-              className="h-15 w-15 object-contain"
+              className="h-15 w-15 object-contain dark:hidden"
+            />
+            <img
+              src={CrossTradeLogo_dark}
+              alt="CROSSTRADE"
+              className="h-15 w-15 object-contain dark:block"
             />
             <span className="sr-only">CROSSTRADE</span>
           </Link>
@@ -86,7 +93,12 @@ export const UserNavbar = () => {
                 <img
                   src={NoifyIcon}
                   alt="NotificationIcon"
-                  className="h-6 w-6 object-contain"
+                  className="h-6 w-6 object-contain block dark:hidden"
+                />
+                <img
+                  src={NoifyIcon_Dark}
+                  alt="NotificationIcon"
+                  className="h-6 w-6 object-contain hidden dark:block"
                 />
 
                 {unread > 0 && (
