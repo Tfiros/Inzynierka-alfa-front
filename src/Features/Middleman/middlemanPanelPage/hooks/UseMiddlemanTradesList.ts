@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { MiddlemanService } from "@/shared/api/services/MiddlemanService"
 import type {
+  MiddlemanTab,
   TradeListItem,
   TradesQuery,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import type { PagedResponse } from "@/shared/types/PagedType"
-import type { MiddlemanTab } from "./UseMiddlemanTradesQuery"
 
 type State = {
   itemsTab: MiddlemanTab
@@ -56,7 +56,9 @@ const useMiddlemanTradesList = ({
         ? MiddlemanService.getMiddlemanAvailable
         : tabAtStart === "mine"
           ? MiddlemanService.getMiddlemanInRealization
-          : MiddlemanService.getMiddlemanCompleted
+          : tabAtStart === "completed"
+            ? MiddlemanService.getMiddlemanCompleted
+            : MiddlemanService.getMyFailedWithItemsToReturn
 
     try {
       const res = await call(page, pageSize, query)

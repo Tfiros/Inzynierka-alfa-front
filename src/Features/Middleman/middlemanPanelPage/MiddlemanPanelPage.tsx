@@ -1,11 +1,11 @@
-import HeaderSection from "./sections/HeaderSection"
-import StatsSection from "./sections/StatsSection"
-import TabsSection from "./sections/TabsSection"
-import FiltersSection from "./sections/FiltersSection"
-import TradesListSection from "./sections/TradesListSection"
-import PaginationSection from "./sections/PaginationSection"
 import TradeDetailsDialog from "./components/TradeDetailsDialog"
 import useMiddlemanPanel from "./hooks/UseMiddlemanPanel"
+import FiltersSection from "./sections/FiltersSection"
+import HeaderSection from "./sections/HeaderSection"
+import PaginationSection from "./sections/PaginationSection"
+import StatsSection from "./sections/StatsSection"
+import TabsSection from "./sections/TabsSection"
+import TradesListSection from "./sections/TradesListSection"
 
 const MiddlemanPanelPage = () => {
   const { query, stats, list, assign, counts, details } = useMiddlemanPanel()
@@ -34,7 +34,7 @@ const MiddlemanPanelPage = () => {
         />
 
         <TradesListSection
-          tab={list.itemsTab}
+          tab={query.state.tab}
           loading={list.loadingList}
           error={listError}
           items={list.items}

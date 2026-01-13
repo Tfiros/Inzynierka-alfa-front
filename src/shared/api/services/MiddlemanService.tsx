@@ -93,6 +93,15 @@ export class MiddlemanService {
     )
   }
 
+  public static getMyFailedWithItemsToReturn = async (
+    page: number,
+    pageSize: number,
+    q?: TradesQuery
+  ) => {
+    const qs = this.buildPagedQueryString(page, pageSize, q)
+    return get(`${this.base}/middleman/failed-with-return${qs}`)
+  }
+
   public static readonly getMiddlemanStats = async () =>
     get<MiddlemanTradesStats>(`${this.base}/middleman/stats`)
 

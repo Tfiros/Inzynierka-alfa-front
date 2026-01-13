@@ -1,4 +1,4 @@
-export type MiddlemanTab = "available" | "mine" | "completed"
+export type MiddlemanTab = "available" | "mine" | "completed" | "failedReturns"
 
 export type AssignMiddlemanRequest = {
   tradeId: number
