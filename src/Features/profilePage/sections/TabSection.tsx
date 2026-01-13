@@ -144,7 +144,6 @@ const TabSection = ({ profileId }: { profileId: number }) => {
         <OfferDetails
           offer={detailsOffer}
           open={detailsOpen}
-          isOwner={false}
           onOpenChange={handleOpenDialogChange}
         />
       )}
