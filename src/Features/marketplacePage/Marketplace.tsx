@@ -4,6 +4,8 @@ import OfferDetails from "./components/OfferDetails"
 import { useState } from "react"
 import { useOffersListing } from "./hooks/useOfferListing"
 import { useOfferDetails } from "./hooks/useOfferDetails"
+import { Plus } from "lucide-react"
+import { Button } from "@/shared/components/button"
 
 const MarketplacePage = () => {
   const {
@@ -47,8 +49,18 @@ const MarketplacePage = () => {
             Przeglądaj oferty wymiany i znajdź najlepsze okazje!
           </p>
         </div>
-        <div className="text-sm text-muted-foreground md:text-right md:self-end">
-          <p>{totalCount} znalezionych ofert</p>
+        <div className="flex items-center gap-3 md:self-end">
+          <div className="text-sm text-muted-foreground md:text-right md:self-end">
+            <p>{totalCount} znalezionych ofert</p>
+          </div>
+          <Button
+            type="button"
+            className="fixed bottom-6 right-6 z-50 rounded-full shadow-lg"
+            size="lg"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Dodaj ofertę
+          </Button>
         </div>
       </header>
       <FilterBarContainer />

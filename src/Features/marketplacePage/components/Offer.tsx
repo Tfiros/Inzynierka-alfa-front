@@ -7,16 +7,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/card"
-import { Heart, CalendarDays, Plus, Info } from "lucide-react"
+import {
+  Heart,
+  CalendarDays,
+  Plus,
+  Info,
+  SquarePen,
+  Trash2,
+} from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 import OfferItemCard from "./OfferItemCard"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
+import { useAppStore } from "@/shared/store/AppStore"
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
+  onEdit?: (offerId: number) => void
+  onDelete?: (offerId: number) => void
+  onTrade?: (offerId: number) => void
+  onCounterOffer?: (offerId: number) => void
 }
 
-const Offer = ({ offer, onShowDetails }: OfferProps) => {
+const Offer = ({
+  offer,
+  onShowDetails,
+  onEdit,
+  onDelete,
+  onTrade,
+  onCounterOffer,
+}: OfferProps) => {
   const offeredCount = offer.offeredItemsCount
   const wantedCount = offer.wantedItemsCount
   const remainingOffered = offer.offeredItemsCount - offeredCount
@@ -24,6 +43,9 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
   const successRate = new Intl.NumberFormat("pl-PL", {
     style: "percent",
   }).format(offer.offerUserDto.successRate)
+  const currentUserId = useAppStore((s) => s.userId)
+  const isAuthenticated = useAppStore((s) => s.isAuthenticated)
+  const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
@@ -121,19 +143,49 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
           >
             <Info /> Szczegóły
           </Button>
-          <Button
-            type="button"
-            className="text-xs cursor-pointer w-full sm:w-auto"
-          >
-            Wymień
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="text-xs cursor-pointer w-full sm:w-auto"
-          >
-            <Plus /> Złóż kontrofertę
-          </Button>
+          {isOwner ? (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                className="text-xs cursor-pointer w-full sm:w-auto"
+                onClick={() => onEdit?.(offer.offerCoreDto.offerId)}
+                disabled={!onEdit || !isOwner}
+              >
+                <SquarePen className="mr-1 h-4 w-4" /> Edytuj
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="text-xs cursor-pointer w-full sm:w-auto"
+                onClick={() => onDelete?.(offer.offerCoreDto.offerId)}
+                disabled={!onDelete || !isOwner}
+              >
+                <Trash2 className="mr-1 h-4 w-4" /> Usuń
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                type="button"
+                className="text-xs cursor-pointer w-full sm:w-auto"
+                onClick={() => onTrade?.(offer.offerCoreDto.offerId)}
+                disabled={!onTrade || isOwner}
+              >
+                Wymień
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="text-xs cursor-pointer w-full sm:w-auto"
+                onClick={() => onCounterOffer?.(offer.offerCoreDto.offerId)}
+                disabled={!onCounterOffer || isOwner}
+              >
+                <Plus /> Złóż kontrofertę
+              </Button>
+            </>
+          )}
         </div>
       </CardFooter>
     </Card>

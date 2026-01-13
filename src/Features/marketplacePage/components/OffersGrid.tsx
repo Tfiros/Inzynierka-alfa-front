@@ -6,7 +6,6 @@ type OfferGridProps = {
   onShowDetails: (offerId: number) => void
 }
 const OffersGrid = ({ offers, onShowDetails }: OfferGridProps) => {
-  console.log("OFFERSGRID:", offers)
   if (!offers || offers.length === 0) {
     return (
       <div className="flex items-center justify-center rounded-lg border text-sm text-muted-foreground h-32">
