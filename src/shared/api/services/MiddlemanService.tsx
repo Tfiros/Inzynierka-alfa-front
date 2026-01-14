@@ -22,6 +22,9 @@ export class MiddlemanService {
     params.set(key, String(value))
   }
 
+  public static readonly setTradeAsFailed = async (tradeId: number) =>
+    put<string>(`${this.base}/middleman/${tradeId}/set-failed`)
+
   private static buildPagedQueryString(
     page: number,
     pageSize: number,
@@ -66,9 +69,7 @@ export class MiddlemanService {
     q?: TradesQuery | null
   ) => {
     const qs = this.buildPagedQueryString(page, pageSize, q)
-    return get<PagedResponse<TradeListItem>>(
-      `${this.base}/middleman/available${qs}`
-    )
+    return get<PagedResponse<TradeListItem>>(`${this.base}/created${qs}`)
   }
 
   public static readonly getMiddlemanInRealization = async (
@@ -77,9 +78,7 @@ export class MiddlemanService {
     q?: TradesQuery | null
   ) => {
     const qs = this.buildPagedQueryString(page, pageSize, q)
-    return get<PagedResponse<TradeListItem>>(
-      `${this.base}/middleman/in-realization${qs}`
-    )
+    return get<PagedResponse<TradeListItem>>(`${this.base}/in-realization${qs}`)
   }
 
   public static readonly getMiddlemanCompleted = async (
@@ -88,9 +87,7 @@ export class MiddlemanService {
     q?: TradesQuery | null
   ) => {
     const qs = this.buildPagedQueryString(page, pageSize, q)
-    return get<PagedResponse<TradeListItem>>(
-      `${this.base}/middleman/completed${qs}`
-    )
+    return get<PagedResponse<TradeListItem>>(`${this.base}/completed${qs}`)
   }
 
   public static getMyFailedWithItemsToReturn = async (

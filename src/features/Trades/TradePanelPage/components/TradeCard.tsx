@@ -1,12 +1,15 @@
-import type { TradeListItem } from "@/shared/types/tradeTypes/MiddlemanTypes"
-import type { MiddlemanTab } from "../hooks/UseMiddlemanTradesQuery"
+import type {
+  MiddlemanTab,
+  TradeListItem,
+} from "@/shared/types/tradeTypes/MiddlemanTypes"
 import { Card, CardContent } from "@/shared/components/card"
 import { ArrowLeftRight } from "lucide-react"
+import { formatDateTimePl } from "../utils/dateUtils"
 import PartyBlock from "./PartyBlock"
+import TradeActionsMyTrade from "./TradeActionsMyTrade"
 import TradeStatusPill from "./TradeStatusPill"
 import TradeActionsAvailable from "./TradesActionsAvailable"
-import TradeActionsMyTrade from "./TradeActionsMyTrade"
-import { formatDateTimePl } from "../utils/dateUtils"
+
 type Props = {
   tab: MiddlemanTab
   trade: TradeListItem
