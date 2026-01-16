@@ -3,7 +3,6 @@ import type {
   UpdateUserRequestDto,
   UserListItemDto,
 } from "@/shared/types/userTypes/UserManagementTypes"
-import { de } from "date-fns/locale"
 
 const norm = (v: string) => v.trim()
 const normLower = (v: string) => v.trim().toLowerCase()
