@@ -15,9 +15,19 @@ type Props = {
   trade: TradeListItem
   onAssign: () => void
   onDetails: () => void
+  onCancleTrade: () => void
+  isMiddleman: boolean
 }
 
-const TradeCard = ({ tab, trade, onAssign, onDetails }: Props) => {
+const TradeCard = ({
+  tab,
+  trade,
+  onAssign,
+  onDetails,
+  onCancleTrade,
+  isMiddleman,
+}: Props) => {
+  console.log(isMiddleman)
   return (
     <Card className="shadow-sm">
       <CardContent className="p-6">
@@ -33,7 +43,6 @@ const TradeCard = ({ tab, trade, onAssign, onDetails }: Props) => {
 
           <TradeStatusPill tradeStatusId={trade.tradeStatusId} />
         </div>
-
         <div className="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_60px_1fr] lg:items-center">
           <PartyBlock title="Klient" party={trade.customer} />
 
@@ -43,8 +52,7 @@ const TradeCard = ({ tab, trade, onAssign, onDetails }: Props) => {
 
           <PartyBlock title="Wystawiający" party={trade.postingUser} />
         </div>
-
-        {tab === "available" ? (
+        {tab === "available" && isMiddleman ? (
           <TradeActionsAvailable
             tokenCost={trade.tokenCost}
             onAssign={onAssign}
@@ -53,6 +61,7 @@ const TradeCard = ({ tab, trade, onAssign, onDetails }: Props) => {
           <TradeActionsMyTrade
             tokenCost={trade.tokenCost}
             onDetails={onDetails}
+            onCancleTrade={onCancleTrade}
           />
         )}
       </CardContent>

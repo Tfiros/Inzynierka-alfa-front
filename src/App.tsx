@@ -2,11 +2,10 @@ import { useEffect } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { useAppStore } from "./shared/store/appStore"
 import AdminRoute from "./routes/AdminRoutes"
-import MiddlemanRoute from "./routes/MiddlemanRoutes"
 import BlankLayout from "./shared/layout/BlankLayout"
 import MainLayout from "./shared/layout/MainLayout"
 import ItemManagementPage from "./features/ItemManagementPage/ItemManagementPage"
-import MiddlemanPanelPage from "./features/Trades/TradePanelPage/TradePanelPage"
+import TradePanelPage from "./features/Trades/TradePanelPage/TradePanelPage"
 import ContactPage from "./features/contactPage/ContactPage"
 import FaqsSite from "./features/faqsPage/FaqsSite"
 import LandingPage from "./features/landingPage/LandingPage"
@@ -42,14 +41,11 @@ function App() {
           <Route path="marketplace" element={<MarketplacePage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="tradePanel" element={<TradePanelPage />} />
 
           <Route element={<AdminRoute />}>
             <Route path="userManagement" element={<UserManagementPage />} />
             <Route path="itemManagement" element={<ItemManagementPage />} />
-          </Route>
-
-          <Route element={<MiddlemanRoute />}>
-            <Route path="middlemanPanel" element={<MiddlemanPanelPage />} />
           </Route>
         </Route>
 

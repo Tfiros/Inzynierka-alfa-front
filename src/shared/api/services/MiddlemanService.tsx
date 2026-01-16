@@ -22,9 +22,6 @@ export class MiddlemanService {
     params.set(key, String(value))
   }
 
-  public static readonly setTradeAsFailed = async (tradeId: number) =>
-    put<string>(`${this.base}/middleman/${tradeId}/set-failed`)
-
   private static buildPagedQueryString(
     page: number,
     pageSize: number,
@@ -98,6 +95,9 @@ export class MiddlemanService {
     const qs = this.buildPagedQueryString(page, pageSize, q)
     return get(`${this.base}/middleman/failed-with-return${qs}`)
   }
+
+  public static readonly setTradeAsFaild = async (tradeId: number) =>
+    put<number>(`${this.base}/middleman/${tradeId}/set-as-failed`)
 
   public static readonly getMiddlemanStats = async () =>
     get<MiddlemanTradesStats>(`${this.base}/middleman/stats`)

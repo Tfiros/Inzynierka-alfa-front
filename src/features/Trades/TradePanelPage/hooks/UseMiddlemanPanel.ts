@@ -5,10 +5,14 @@ import useMiddlemanStats from "./UseMiddlemanStats"
 import useMiddlemanTradesList from "./UseMiddlemanTradesList"
 import useAssignMiddleman from "./UseAssignMiddleman"
 import useTradeDetailsDialog from "./UseTradeDetailsDialog"
+import { useAppStore } from "@/shared/store/appStore"
+import useDeleteTrade from "./UseDeleteTrade"
 
 const useMiddlemanPanel = () => {
   const { state, q, actions } = useMiddlemanTradesQuery("available")
   const debouncedSearchText = useDebouncedValue(state.searchText, 350)
+  const roles = useAppStore((s) => s.roles)
+  const isMiddleman = roles.some((r) => r.toLowerCase() === "middleman")
 
   const effectiveQuery = useMemo(() => {
     const st = debouncedSearchText.trim()
@@ -23,6 +27,7 @@ const useMiddlemanPanel = () => {
     pageSize: state.pageSize,
     query: effectiveQuery,
     clearOnLoad: false,
+    isMiddleman: isMiddleman,
   })
 
   const assign = useAssignMiddleman({
@@ -42,6 +47,8 @@ const useMiddlemanPanel = () => {
     }
   }, [stats.stats])
 
+  const cancelation = useDeleteTrade()
+
   return {
     query: { state, actions, effectiveQuery },
     stats,
@@ -49,6 +56,8 @@ const useMiddlemanPanel = () => {
     assign,
     counts,
     details,
+    cancelation,
+    isMiddleman,
   }
 }
 

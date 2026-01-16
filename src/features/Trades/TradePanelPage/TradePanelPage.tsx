@@ -6,9 +6,19 @@ import PaginationSection from "./sections/PaginationSection"
 import StatsSection from "./sections/StatsSection"
 import TabsSection from "./sections/TabsSection"
 import TradesListSection from "./sections/TradesListSection"
+import ConfirmDeleteTradeDialog from "@/shared/components/AlertDialog"
 
-const MiddlemanPanelPage = () => {
-  const { query, stats, list, assign, counts, details } = useMiddlemanPanel()
+const TradePanelPage = () => {
+  const {
+    query,
+    stats,
+    list,
+    assign,
+    counts,
+    details,
+    cancelation,
+    isMiddleman,
+  } = useMiddlemanPanel()
 
   const listError = list.errorList ?? assign.assignError ?? null
 
@@ -42,6 +52,10 @@ const MiddlemanPanelPage = () => {
           onDetails={(trade) => {
             void details.actions.openFor(trade)
           }}
+          onCancleTrade={(trade) => {
+            void cancelation.actions.openFor(trade)
+          }}
+          isMiddleman={isMiddleman}
         />
 
         <PaginationSection
@@ -63,8 +77,16 @@ const MiddlemanPanelPage = () => {
         }}
         onSaved={details.actions.refresh}
       />
+
+      <ConfirmDeleteTradeDialog
+        open={cancelation.open}
+        onOpenChange={cancelation.setOpen}
+        loading={cancelation.loading}
+        onConfirm={cancelation.actions.deleteTrade}
+        onClosedReset={cancelation.actions.reset}
+      />
     </div>
   )
 }
 
-export default MiddlemanPanelPage
+export default TradePanelPage
