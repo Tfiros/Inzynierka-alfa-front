@@ -55,12 +55,10 @@ const usePagedQuery = <T,>({
 
   useEffect(() => {
     setPage(1)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q, ...deps])
 
   useEffect(() => {
     void fetch(page)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, q, enabled, ...deps])
 
   const paginator = useMemo(

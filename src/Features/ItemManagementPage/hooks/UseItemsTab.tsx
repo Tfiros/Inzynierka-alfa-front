@@ -8,7 +8,6 @@ import useDropdownQuery from "./UseDropdownQuery"
 import usePagedQuery from "./UsePagedQuery"
 
 const useItemsTab = () => {
-  // games dropdown
   const [gamesOpen, setGamesOpen] = useState(false)
   const [gameSearch, setGameSearch] = useState("")
   const [gameId, setGameId] = useState<number | null>(null)
@@ -21,7 +20,6 @@ const useItemsTab = () => {
     setSelectedId: setGameId,
   })
 
-  // list
   const [search, setSearch] = useState("")
 
   const list = usePagedQuery<ItemDto>({
@@ -37,18 +35,15 @@ const useItemsTab = () => {
       }),
   })
 
-  // selection + edit/delete modals
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [selected, setSelected] = useState<ItemDto | null>(null)
 
-  // add modal
   const [addOpen, setAddOpen] = useState(false)
   const [addSaving, setAddSaving] = useState(false)
   const [addName, setAddName] = useState("")
   const [addEstimatedTokenValue, setAddEstimatedTokenValue] = useState("")
 
-  // rarities dropdown (for add)
   const [raritiesOpen, setRaritiesOpen] = useState(false)
   const [raritySearch, setRaritySearch] = useState("")
   const [rarityId, setRarityId] = useState<number | null>(null)

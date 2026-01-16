@@ -10,7 +10,6 @@ type RarityDto = { id: number; name: string }
 const useItemRaritiesTab = () => {
   const pageSize = 10
 
-  // games dropdown
   const [gamesOpen, setGamesOpen] = useState(false)
   const [gameSearch, setGameSearch] = useState("")
   const [gameId, setGameId] = useState<number | null>(null)
@@ -23,7 +22,6 @@ const useItemRaritiesTab = () => {
     setSelectedId: setGameId,
   })
 
-  // list
   const [search, setSearch] = useState("")
   const list = usePagedQuery<RarityDto>({
     pageSize,
@@ -39,7 +37,6 @@ const useItemRaritiesTab = () => {
       }),
   })
 
-  // prevent race overwrites (tak jak miałeś)
   const loadSeq = useRef(0)
 
   const fetchWithSeq = async (p: number) => {
@@ -61,7 +58,6 @@ const useItemRaritiesTab = () => {
     }
   }
 
-  // modals
   const [addOpen, setAddOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
