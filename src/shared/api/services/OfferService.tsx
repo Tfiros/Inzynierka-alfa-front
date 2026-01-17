@@ -1,6 +1,7 @@
 import type { PagedResponse } from "@/shared/types/PagedType"
 import { del, get, post, put } from "../ApiClient"
 import type {
+  GameOfferDTO,
   ItemOfferDto,
   offerDetailsDtoResponse,
   offerDraftRequest,
@@ -37,4 +38,7 @@ export class OfferService {
     query: string,
     gameId: number
   ) => get<ItemOfferDto[]>(`${this.base}/items`, { query, gameId })
+
+  public static readonly getGames = async () =>
+    get<GameOfferDTO[]>(`${this.base}/ganes`)
 }

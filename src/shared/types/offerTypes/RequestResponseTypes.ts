@@ -50,3 +50,9 @@ export type ItemOfferDto = {
   gameId: number
   gameName: string
 }
+
+export type GameOfferDTO = {
+  id: number
+  name: string
+  photo_URL: string
+}
