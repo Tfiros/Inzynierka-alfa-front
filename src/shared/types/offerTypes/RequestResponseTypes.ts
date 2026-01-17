@@ -16,7 +16,8 @@ export type offerListingQueryRequest = {
   orderBy: offerOrderBy
 }
 export type offerDraftRequest = {
-  expDate: string
+  durationDays: 7 | 14 | 31
+  isHighlighted: boolean
   offeredItems: offerItemDto[]
   wantedItems: offerItemDto[]
 }
@@ -35,4 +36,17 @@ export type offerDetailsDtoResponse = {
   offerUserDto: offerUserDto
   offeredItems: offerListingItemDto[]
   wantedItems: offerListingItemDto[]
+}
+
+export type offerQuoteResponse = {
+  finalCost: number
+}
+
+export type ItemOfferDto = {
+  id: number
+  name: string
+  photo_URL: string
+  estimatedTokenValue: number
+  gameId: number
+  gameName: string
 }

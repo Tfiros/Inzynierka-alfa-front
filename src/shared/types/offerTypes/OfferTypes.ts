@@ -6,6 +6,7 @@ export type offerCoreDto = {
   creationDate: string
   tokenCost: number
   offerStatusId: number
+  isHighlighted: boolean
 }
 
 export type offerUserDto = {

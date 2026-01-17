@@ -1,10 +1,12 @@
 import type { PagedResponse } from "@/shared/types/PagedType"
 import { del, get, post, put } from "../ApiClient"
 import type {
+  ItemOfferDto,
   offerDetailsDtoResponse,
   offerDraftRequest,
   offerListingDtoResponse,
   offerListingQueryRequest,
+  offerQuoteResponse,
 } from "@/shared/types/offerTypes/RequestResponseTypes"
 
 export class OfferService {
@@ -25,4 +27,14 @@ export class OfferService {
   // DELETE /Offers/{id}
   public static readonly cancel = async (id: number) =>
     del<string>(`${this.base}/${id}`)
+  public static readonly offerQuote = async (req: offerDraftRequest) =>
+    post<offerQuoteResponse>(`${this.base}/quote`, req)
+
+  public static readonly getSuggestedItemByQuery = async (query: string) =>
+    get<ItemOfferDto[]>(`${this.base}/items/suggestions`, { query })
+
+  public static readonly getSuggestedItemByQueryAndGame = async (
+    query: string,
+    gameId: number
+  ) => get<ItemOfferDto[]>(`${this.base}/items`, { query, gameId })
 }
