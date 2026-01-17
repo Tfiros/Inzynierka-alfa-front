@@ -27,7 +27,6 @@ const TradeCard = ({
   onCancleTrade,
   isMiddleman,
 }: Props) => {
-  console.log(isMiddleman)
   return (
     <Card className="shadow-sm">
       <CardContent className="p-6">
@@ -63,6 +62,7 @@ const TradeCard = ({
             tokenCost={trade.tokenCost}
             onDetails={onDetails}
             onCanceleTrade={onCancleTrade}
+            tradeId={trade.tradeId}
           />
         ) : null}
       </CardContent>

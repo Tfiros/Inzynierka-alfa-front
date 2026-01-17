@@ -38,14 +38,17 @@ const useMiddlemanPanel = () => {
 
   const details = useTradeDetailsDialog()
 
-  const counts = useMemo(() => {
-    return {
-      available: stats.stats?.available ?? 0,
-      mine: stats.stats?.myActive ?? 0,
-      completed: stats.stats?.completed ?? 0,
-      all: stats.stats?.all ?? 0,
-    }
-  }, [stats.stats])
+  const counts = {
+    available: stats.stats?.created ?? 0,
+    mine: stats.stats?.myActive ?? 0,
+    completed: stats.stats?.completed ?? 0,
+    all: stats.stats?.all ?? 0,
+  }
+
+  console.log(counts.available)
+  console.log(counts.mine)
+  console.log(counts.completed)
+  console.log(counts.all)
 
   const cancelation = useDeleteTrade()
 

@@ -99,6 +99,9 @@ export class MiddlemanService {
   public static readonly setTradeAsFaild = async (tradeId: number) =>
     put<number>(`${this.base}/middleman/${tradeId}/set-as-failed`)
 
+  public static readonly setTradeAsRealised = async (tradeId: number) =>
+    put<number>(`${this.base}/middleman/${tradeId}/set-realised`)
+
   public static readonly getMiddlemanStats = async () =>
     get<MiddlemanTradesStats>(`${this.base}/stats`)
 

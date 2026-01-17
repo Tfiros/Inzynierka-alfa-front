@@ -74,7 +74,7 @@ export type MiddlemanTradesStats = {
   all: number
   completed: number
   myActive: number
-  available: number
+  created: number
 }
 
 export type InTradeUserPhotos = {
