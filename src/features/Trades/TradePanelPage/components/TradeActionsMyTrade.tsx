@@ -4,13 +4,13 @@ import { List, X } from "lucide-react"
 type Props = {
   tokenCost: number
   onDetails: () => void
-  onCancleTrade: () => void
+  onCanceleTrade: () => void
 }
 
 const TradeActionsMyTrade = ({
   tokenCost,
   onDetails,
-  onCancleTrade,
+  onCanceleTrade,
 }: Props) => {
   return (
     <div className="mt-6 border-t pt-4">
@@ -29,7 +29,7 @@ const TradeActionsMyTrade = ({
       </Button>
       <Button
         className="mt-3 w-full gap-2 bg-red-600 text-white hover:bg-red-700 cursor-pointer"
-        onClick={onCancleTrade}
+        onClick={onCanceleTrade}
       >
         <X className="h-4 w-4" />
         Anuluj wymianę

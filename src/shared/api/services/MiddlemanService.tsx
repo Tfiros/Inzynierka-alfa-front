@@ -100,7 +100,7 @@ export class MiddlemanService {
     put<number>(`${this.base}/middleman/${tradeId}/set-as-failed`)
 
   public static readonly getMiddlemanStats = async () =>
-    get<MiddlemanTradesStats>(`${this.base}/middleman/stats`)
+    get<MiddlemanTradesStats>(`${this.base}/stats`)
 
   public static readonly getMiddlemanTradeDetails = async (tradeId: number) =>
     get<TradeDetailsResponse>(`${this.base}/middleman/${tradeId}/details`)

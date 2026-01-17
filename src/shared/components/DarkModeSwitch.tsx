@@ -1,26 +1,25 @@
 import { Switch } from "@/shared/components/switch"
-import { useEffect, useState } from "react"
-
-const status = "darkMode"
+import { useEffect } from "react"
+import { useAppStore } from "@/shared/store/appStore"
 
 const DarkModeSwitch = () => {
-  const [enabled, setEnabled] = useState(false)
+  const darkMode = useAppStore((s) => s.darkMode)
+  const setDarkMode = useAppStore((s) => s.setDarkMode)
+  const hasHydrated = useAppStore((s) => s.hasHydrated)
 
   useEffect(() => {
-    const saved = localStorage.getItem(status)
-    const initial = saved === "true"
+    if (!hasHydrated) return
+    document.documentElement.classList.toggle("dark", darkMode)
+  }, [darkMode, hasHydrated])
 
-    setEnabled(initial)
-    document.documentElement.classList.toggle("dark", initial)
-  }, [])
-
-  const toggle = (checked: boolean) => {
-    setEnabled(checked)
-    localStorage.setItem(status, String(checked))
-    document.documentElement.classList.toggle("dark", checked)
-  }
-
-  return <Switch id="dark-mode" checked={enabled} onCheckedChange={toggle} />
+  return (
+    <Switch
+      id="dark-mode"
+      checked={darkMode}
+      onCheckedChange={setDarkMode}
+      disabled={!hasHydrated}
+    />
+  )
 }
 
 export default DarkModeSwitch

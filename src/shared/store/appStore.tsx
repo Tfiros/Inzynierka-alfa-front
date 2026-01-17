@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
-import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
+import { createUiSlice, type UiSlice } from "./storeParts/UiSlice"
 import { type AuthSlice, createAuthSlice } from "./storeParts/authSlice"
 import {
   type NotificationsSlice,
@@ -8,7 +8,11 @@ import {
 } from "./storeParts/NotificationSlice"
 export type AppState = UiSlice &
   AuthSlice &
-  NotificationsSlice & { hardReset: () => Promise<void> }
+  NotificationsSlice & {
+    hardReset: () => Promise<void>
+    hasHydrated: boolean
+    setHasHydrated: (v: boolean) => void
+  }
 
 export const useAppStore = create<AppState>()(
   persist(
@@ -16,6 +20,9 @@ export const useAppStore = create<AppState>()(
       ...createUiSlice(set, get, api),
       ...createAuthSlice(set, get, api),
       ...createNotificationsSlice(set),
+      hasHydrated: false,
+      setHasHydrated: (v) => set({ hasHydrated: v }),
+
       hardReset: async () => {
         set({
           userLogin: null,
@@ -37,7 +44,11 @@ export const useAppStore = create<AppState>()(
         navbarUser: state.navbarUser,
         isAuthenticated: state.isAuthenticated,
         roles: state.roles,
+        darkMode: state.darkMode,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      },
     }
   )
 )

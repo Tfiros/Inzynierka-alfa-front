@@ -56,14 +56,15 @@ const TradeCard = ({
           <TradeActionsAvailable
             tokenCost={trade.tokenCost}
             onAssign={onAssign}
+            onCancleTrade={onCancleTrade}
           />
-        ) : (
+        ) : tab === "mine" && isMiddleman ? (
           <TradeActionsMyTrade
             tokenCost={trade.tokenCost}
             onDetails={onDetails}
-            onCancleTrade={onCancleTrade}
+            onCanceleTrade={onCancleTrade}
           />
-        )}
+        ) : null}
       </CardContent>
     </Card>
   )
