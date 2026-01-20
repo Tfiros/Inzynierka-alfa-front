@@ -29,6 +29,7 @@ export type offerListingItemDto = {
   genreName: string
   rarityId: number
   rarityName: string
+  estimatedTokenValue: number
 }
 
 export type offerItemDto = {

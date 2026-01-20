@@ -16,10 +16,26 @@ export type offerListingQueryRequest = {
   orderBy: offerOrderBy
 }
 export type offerDraftRequest = {
+  title: string
+  description: string
   durationDays: 7 | 14 | 31
   isHighlighted: boolean
   offeredItems: offerItemDto[]
   wantedItems: offerItemDto[]
+}
+
+export type offerUpdateDraftRequest = {
+  title: string
+  description: string
+  durationDays: 0 | 7 | 14 | 31
+  isHighlighted: boolean
+  offeredItems: offerItemDto[]
+  wantedItems: offerItemDto[]
+}
+
+export type offerUpdateQuoteResponse = {
+  newTotalCost: number
+  updateFee: number
 }
 
 //Response Types
@@ -47,8 +63,7 @@ export type ItemOfferDto = {
   name: string
   photo_URL: string
   estimatedTokenValue: number
-  gameId: number
-  gameName: string
+  game: GameOfferDTO
 }
 
 export type GameOfferDTO = {

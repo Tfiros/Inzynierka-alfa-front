@@ -8,6 +8,8 @@ import type {
   offerListingDtoResponse,
   offerListingQueryRequest,
   offerQuoteResponse,
+  offerUpdateDraftRequest,
+  offerUpdateQuoteResponse,
 } from "@/shared/types/offerTypes/RequestResponseTypes"
 
 export class OfferService {
@@ -23,22 +25,30 @@ export class OfferService {
   public static readonly create = async (req: offerDraftRequest) =>
     post<offerDetailsDtoResponse>(this.base, req)
   // PUT /Offers/{id}
-  public static readonly update = async (id: number, req: offerDraftRequest) =>
-    put<offerDetailsDtoResponse>(`${this.base}/${id}`, req)
+  public static readonly update = async (
+    id: number,
+    req: offerUpdateDraftRequest
+  ) => put<offerDetailsDtoResponse>(`${this.base}/${id}`, req)
   // DELETE /Offers/{id}
   public static readonly cancel = async (id: number) =>
     del<string>(`${this.base}/${id}`)
+  //QUOTE
   public static readonly offerQuote = async (req: offerDraftRequest) =>
     post<offerQuoteResponse>(`${this.base}/quote`, req)
 
   public static readonly getSuggestedItemByQuery = async (query: string) =>
-    get<ItemOfferDto[]>(`${this.base}/items/suggestions`, { query })
+    get<ItemOfferDto[]>(`${this.base}/items/suggestions`, { searchText: query })
 
   public static readonly getSuggestedItemByQueryAndGame = async (
     query: string,
     gameId: number
-  ) => get<ItemOfferDto[]>(`${this.base}/items`, { query, gameId })
+  ) => get<ItemOfferDto[]>(`${this.base}/items`, { searchText: query, gameId })
 
   public static readonly getGames = async () =>
-    get<GameOfferDTO[]>(`${this.base}/ganes`)
+    get<GameOfferDTO[]>(`${this.base}/games`)
+
+  public static readonly offerUpdateQuote = async (
+    offerId: number,
+    req: offerUpdateDraftRequest
+  ) => post<offerUpdateQuoteResponse>(`${this.base}/${offerId}/quote`, req)
 }
