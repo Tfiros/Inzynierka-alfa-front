@@ -7,6 +7,7 @@ import type {
   MiddlemanTradesStats,
   TradeDetailsResponse,
   TradeListItem,
+  CompleteAndMarkTradeRequest,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import type { PagedResponse } from "@/shared/types/PagedType"
 export class MiddlemanService {
@@ -99,8 +100,10 @@ export class MiddlemanService {
   public static readonly setTradeAsFaild = async (tradeId: number) =>
     put<number>(`${this.base}/middleman/${tradeId}/set-as-failed`)
 
-  public static readonly setTradeAsRealised = async (tradeId: number) =>
-    put<number>(`${this.base}/middleman/${tradeId}/set-realised`)
+  public static readonly setTradeAsRealised = async (
+    tradeId: number,
+    request: CompleteAndMarkTradeRequest
+  ) => put<number>(`${this.base}/middleman/${tradeId}/set-realised`, request)
 
   public static readonly getMiddlemanStats = async () =>
     get<MiddlemanTradesStats>(`${this.base}/stats`)

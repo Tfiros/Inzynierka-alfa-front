@@ -14,6 +14,7 @@ type Props = {
   onAssign: (tradeId: number) => void
   onDetails: (trade: TradeListItem) => void
   onCancleTrade: (tradeId: number) => void
+  onCompleteClick: (trade: TradeListItem) => void
   isMiddleman: boolean
 }
 
@@ -25,6 +26,7 @@ const TradesListSection = ({
   onAssign,
   onDetails,
   onCancleTrade,
+  onCompleteClick,
   isMiddleman,
 }: Props) => {
   if (loading) {
@@ -67,6 +69,7 @@ const TradesListSection = ({
           onAssign={() => onAssign(t.tradeId)}
           onDetails={() => onDetails(t)}
           onCancleTrade={() => onCancleTrade(t.tradeId)}
+          onCompleteClick={() => onCompleteClick(t)}
           isMiddleman={isMiddleman}
         />
       ))}

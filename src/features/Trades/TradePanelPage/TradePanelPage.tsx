@@ -7,6 +7,8 @@ import StatsSection from "./sections/StatsSection"
 import TabsSection from "./sections/TabsSection"
 import TradesListSection from "./sections/TradesListSection"
 import ConfirmDeleteTradeDialog from "@/shared/components/AlertDialog"
+import useSetTradeAsRealised from "./hooks/UseSetTradeAsRealised"
+import CompleteTradeWithRatingsDialog from "./components/UserMarkDialog"
 
 const TradePanelPage = () => {
   const {
@@ -19,6 +21,12 @@ const TradePanelPage = () => {
     cancelation,
     isMiddleman,
   } = useMiddlemanPanel()
+
+  const realised = useSetTradeAsRealised({
+    onSuccess: () => {
+      void Promise.all([stats.refetchStats(), list.refetchList()])
+    },
+  })
 
   const listError = list.errorList ?? assign.assignError ?? null
 
@@ -52,8 +60,11 @@ const TradePanelPage = () => {
           onDetails={(trade) => {
             void details.actions.openFor(trade)
           }}
-          onCancleTrade={(trade) => {
-            void cancelation.actions.openFor(trade)
+          onCancleTrade={(tradeId) => {
+            void cancelation.actions.openFor(tradeId)
+          }}
+          onCompleteClick={(trade) => {
+            realised.actions.openFor(trade)
           }}
           isMiddleman={isMiddleman}
         />
@@ -84,6 +95,17 @@ const TradePanelPage = () => {
         loading={cancelation.loading}
         onConfirm={cancelation.actions.deleteTrade}
         onClosedReset={cancelation.actions.reset}
+      />
+
+      <CompleteTradeWithRatingsDialog
+        open={realised.state.open}
+        onOpenChange={(o) => {
+          if (!o) realised.actions.close()
+        }}
+        buyer={realised.state.buyer}
+        seller={realised.state.seller}
+        loading={realised.isLoading}
+        onConfirm={realised.actions.confirm}
       />
     </div>
   )

@@ -1,12 +1,22 @@
 import { toast } from "sonner"
+import { useCallback, useMemo, useState } from "react"
 import type { ApiResult } from "@/shared/api/ApiResult"
-import { useCallback, useState } from "react"
 import { MiddlemanService } from "@/shared/api/services/MiddlemanService"
+import type {
+  CompleteAndMarkTradeRequest,
+  TradeListItem,
+} from "@/shared/types/tradeTypes/MiddlemanTypes"
 
-type Options = {
+type Props = {
   onSuccess?: () => void
   onError?: (err: unknown) => void
   successMessage?: string
+}
+
+type UserLite = {
+  id: number
+  nickname?: string | null
+  email?: string | null
 }
 
 function getErrorMessage(e: unknown) {
@@ -17,37 +27,126 @@ function getErrorMessage(e: unknown) {
   return "Nie udało się potwierdzić zakończenia wymiany."
 }
 
-const useSetTradeAsRealised = (tradeId: number | null, opts?: Options) => {
+const clamp10 = (v: number) => Math.max(0, Math.min(10, v))
+
+function pickFirst<T>(obj: any, keys: string[]): T | undefined {
+  for (const k of keys) {
+    const v = obj?.[k]
+    if (v !== undefined && v !== null) return v as T
+  }
+  return undefined
+}
+
+function mapParty(party: any): UserLite | null {
+  if (!party) return null
+
+  const id =
+    pickFirst<number>(party, ["id", "userId", "ID", "userID"]) ??
+    (typeof party === "number" ? party : undefined)
+
+  if (!id) return null
+
+  return {
+    id,
+    nickname: pickFirst<string>(party, [
+      "nickname",
+      "userName",
+      "username",
+      "name",
+      "displayName",
+    ]),
+    email: pickFirst<string>(party, ["email", "mail"]),
+  }
+}
+
+function extractBuyer(trade: TradeListItem | null): UserLite | null {
+  return mapParty((trade as any)?.customer)
+}
+
+function extractSeller(trade: TradeListItem | null): UserLite | null {
+  return mapParty((trade as any)?.postingUser)
+}
+
+const useSetTradeAsRealised = (opts?: Props) => {
+  const [open, setOpen] = useState(false)
+  const [trade, setTrade] = useState<TradeListItem | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const realise = useCallback(async () => {
-    if (!tradeId) {
-      toast.error("Brak ID wymiany.")
-      return
-    }
+  const buyer = useMemo(() => extractBuyer(trade), [trade])
+  const seller = useMemo(() => extractSeller(trade), [trade])
 
-    setIsLoading(true)
-    try {
-      const res = (await MiddlemanService.setTradeAsRealised(
-        tradeId
-      )) as ApiResult<number>
+  const actions = useMemo(
+    () => ({
+      openFor: (t: TradeListItem) => {
+        setTrade(t)
+        setOpen(true)
+      },
+      close: () => {
+        setOpen(false)
+        setTrade(null)
+      },
+      setOpen,
+    }),
+    []
+  )
 
-      if (!res?.isSuccess) {
-        throw new Error(res?.message || "Request failed")
+  const confirm = useCallback(
+    async (payload: CompleteAndMarkTradeRequest) => {
+      const tradeId = (trade as any)?.tradeId as number | undefined
+
+      if (!tradeId) {
+        toast.error("Brak ID wymiany.")
+        return
       }
 
-      toast.success(opts?.successMessage ?? "Wymiana została zakończona.")
-      opts?.onSuccess?.()
-    } catch (e) {
-      const msg = getErrorMessage(e)
-      toast.error(msg)
-      opts?.onError?.(e)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [tradeId, opts])
+      if (!buyer?.id || !seller?.id) {
+        toast.error("Brak danych kupującego lub wystawiającego.")
+        return
+      }
 
-  return { realise, isLoading }
+      const safePayload: CompleteAndMarkTradeRequest = {
+        ...payload,
+        buyersID: buyer.id,
+        sellersID: seller.id,
+        buyersGrade: clamp10(payload.buyersGrade),
+        sellersGrade: clamp10(payload.sellersGrade),
+        buyersDescription: payload.buyersDescription?.trim(),
+        sellersDescription: payload.sellersDescription?.trim(),
+      }
+
+      setIsLoading(true)
+      try {
+        const res = (await MiddlemanService.setTradeAsRealised(
+          tradeId,
+          safePayload
+        )) as ApiResult<number>
+
+        if (!res?.isSuccess) {
+          throw new Error(res?.message || "Request failed")
+        }
+
+        toast.success(opts?.successMessage ?? "Wymiana została zakończona.")
+        actions.close()
+        opts?.onSuccess?.()
+      } catch (e) {
+        const msg = getErrorMessage(e)
+        toast.error(msg)
+        opts?.onError?.(e)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [trade, buyer?.id, seller?.id, opts, actions]
+  )
+
+  return {
+    state: { open, trade, buyer, seller },
+    isLoading,
+    actions: {
+      ...actions,
+      confirm,
+    },
+  }
 }
 
 export default useSetTradeAsRealised

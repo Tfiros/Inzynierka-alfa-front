@@ -90,3 +90,12 @@ export type TradeDetailsResponse = {
   buyingUserPhotos: InTradeUserPhotos
   sellingUserPhotos: InTradeUserPhotos
 }
+
+export type CompleteAndMarkTradeRequest = {
+  buyersID: number
+  buyersGrade: number
+  buyersDescription: string
+  sellersID: number
+  sellersGrade: number
+  sellersDescription: string
+}

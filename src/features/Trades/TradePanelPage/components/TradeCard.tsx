@@ -16,6 +16,7 @@ type Props = {
   onAssign: () => void
   onDetails: () => void
   onCancleTrade: () => void
+  onCompleteClick: () => void
   isMiddleman: boolean
 }
 
@@ -25,6 +26,7 @@ const TradeCard = ({
   onAssign,
   onDetails,
   onCancleTrade,
+  onCompleteClick,
   isMiddleman,
 }: Props) => {
   return (
@@ -42,6 +44,7 @@ const TradeCard = ({
 
           <TradeStatusPill tradeStatusId={trade.tradeStatusId} />
         </div>
+
         <div className="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_60px_1fr] lg:items-center">
           <PartyBlock title="Klient" party={trade.customer} />
 
@@ -51,6 +54,7 @@ const TradeCard = ({
 
           <PartyBlock title="Wystawiający" party={trade.postingUser} />
         </div>
+
         {tab === "available" && isMiddleman ? (
           <TradeActionsAvailable
             tokenCost={trade.tokenCost}
@@ -62,7 +66,7 @@ const TradeCard = ({
             tokenCost={trade.tokenCost}
             onDetails={onDetails}
             onCanceleTrade={onCancleTrade}
-            tradeId={trade.tradeId}
+            onCompleteClick={onCompleteClick}
           />
         ) : null}
       </CardContent>
