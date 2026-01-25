@@ -1,5 +1,5 @@
 import TradeDetailsDialog from "./components/TradeDetailsDialog"
-import useMiddlemanPanel from "./hooks/UseMiddlemanPanel"
+import useTradePanel from "./hooks/UseTradePanel"
 import FiltersSection from "./sections/FiltersSection"
 import HeaderSection from "./sections/HeaderSection"
 import PaginationSection from "./sections/PaginationSection"
@@ -20,7 +20,7 @@ const TradePanelPage = () => {
     details,
     cancelation,
     isMiddleman,
-  } = useMiddlemanPanel()
+  } = useTradePanel()
 
   const realised = useSetTradeAsRealised({
     onSuccess: () => {

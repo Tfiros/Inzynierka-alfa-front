@@ -8,7 +8,7 @@ type State = {
   errorStats: string | null
 }
 
-const useMiddlemanStats = () => {
+const useUserStats = () => {
   const loadedRef = useRef(false)
 
   const [state, setState] = useState<State>({
@@ -61,4 +61,4 @@ const useMiddlemanStats = () => {
   }
 }
 
-export default useMiddlemanStats
+export default useUserStats

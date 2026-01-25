@@ -38,7 +38,7 @@ const toIsoOrNull = (s: string): string | null => {
   return t.length ? t : null
 }
 
-const useMiddlemanTradesQuery = (initialTab: MiddlemanTab = "available") => {
+const useUserTradesQuery = (initialTab: MiddlemanTab = "available") => {
   const [state, setState] = useState<State>({
     tab: initialTab,
     page: 1,
@@ -123,4 +123,4 @@ const useMiddlemanTradesQuery = (initialTab: MiddlemanTab = "available") => {
   return { state, q, actions }
 }
 
-export default useMiddlemanTradesQuery
+export default useUserTradesQuery

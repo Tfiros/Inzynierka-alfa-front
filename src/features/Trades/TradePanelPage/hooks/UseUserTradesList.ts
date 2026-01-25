@@ -24,7 +24,7 @@ type Args = {
   isMiddleman: boolean
 }
 
-const useMiddlemanTradesList = ({
+const useUserTradesList = ({
   tab,
   page,
   pageSize,
@@ -107,4 +107,4 @@ const useMiddlemanTradesList = ({
   }
 }
 
-export default useMiddlemanTradesList
+export default useUserTradesList

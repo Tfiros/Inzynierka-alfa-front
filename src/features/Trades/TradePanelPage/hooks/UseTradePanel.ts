@@ -1,15 +1,15 @@
 import { useMemo } from "react"
 import useDebouncedValue from "./UseDebouncedValue"
-import useMiddlemanTradesQuery from "./UseMiddlemanTradesQuery"
-import useMiddlemanStats from "./UseMiddlemanStats"
-import useMiddlemanTradesList from "./UseMiddlemanTradesList"
+import useUserTradesQuery from "./UseUserTradesQuery"
+import useUserStats from "./UseUserStats"
+import useUserTradesList from "./UseUserTradesList"
 import useAssignMiddleman from "./UseAssignMiddleman"
 import useTradeDetailsDialog from "./UseTradeDetailsDialog"
 import { useAppStore } from "@/shared/store/appStore"
 import useDeleteTrade from "./UseDeleteTrade"
 
-const useMiddlemanPanel = () => {
-  const { state, q, actions } = useMiddlemanTradesQuery("available")
+const useTradePanel = () => {
+  const { state, q, actions } = useUserTradesQuery("available")
   const debouncedSearchText = useDebouncedValue(state.searchText, 350)
   const roles = useAppStore((s) => s.roles)
   const isMiddleman = roles.some((r) => r.toLowerCase() === "middleman")
@@ -19,9 +19,9 @@ const useMiddlemanPanel = () => {
     return { ...q, searchText: st.length ? st : null }
   }, [q, debouncedSearchText])
 
-  const stats = useMiddlemanStats()
+  const stats = useUserStats()
 
-  const list = useMiddlemanTradesList({
+  const list = useUserTradesList({
     tab: state.tab,
     page: state.page,
     pageSize: state.pageSize,
@@ -64,4 +64,4 @@ const useMiddlemanPanel = () => {
   }
 }
 
-export default useMiddlemanPanel
+export default useTradePanel
