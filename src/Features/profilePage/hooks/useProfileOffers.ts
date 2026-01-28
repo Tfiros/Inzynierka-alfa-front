@@ -1,4 +1,5 @@
 import { UserInfoService } from "@/shared/api/services/UserInfoService"
+import { selectCounter, useAppStore } from "@/shared/store/AppStore"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import type { PagedResponse } from "@/shared/types/PagedType"
 import { useCallback, useEffect, useState } from "react"
@@ -17,6 +18,7 @@ export const useUserOffers = (
   const [loadingHistory, setLoadingHistory] = useState<boolean>(false)
   const [errorActive, setErrorActive] = useState<string | null>(null)
   const [errorHistory, setErrorHistory] = useState<string | null>(null)
+  const myOffersRefresh = useAppStore(selectCounter("offers:my"))
 
   const fetchActiveOffers = useCallback(async () => {
     if (!userId || Number.isNaN(userId)) return
@@ -98,7 +100,7 @@ export const useUserOffers = (
   useEffect(() => {
     if (!userId || Number.isNaN(userId)) return
     void fetchActiveOffers()
-  }, [fetchActiveOffers])
+  }, [fetchActiveOffers, myOffersRefresh])
   return {
     activeOffers,
     historyOffers,

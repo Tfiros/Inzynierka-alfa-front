@@ -44,8 +44,8 @@ export type offerListingDtoResponse = {
   offerUserDto: offerUserDto
   offeredItems: offerListingItemDto[]
   wantedItems: offerListingItemDto[]
-  offeredItemsCount: number
-  wantedItemsCount: number
+  offeredItemsTotalCount: number
+  wantedItemsTotalCount: number
 }
 export type offerDetailsDtoResponse = {
   offerCoreDto: offerCoreDto
@@ -61,7 +61,7 @@ export type offerQuoteResponse = {
 export type ItemOfferDto = {
   id: number
   name: string
-  photo_URL: string
+  photoUrl: string
   estimatedTokenValue: number
   game: GameOfferDTO
 }
@@ -69,5 +69,5 @@ export type ItemOfferDto = {
 export type GameOfferDTO = {
   id: number
   name: string
-  photo_URL: string
+  photoUrl: string | null
 }

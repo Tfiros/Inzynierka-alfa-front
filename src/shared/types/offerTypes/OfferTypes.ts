@@ -19,17 +19,12 @@ export type offerUserDto = {
 }
 
 export type offerListingItemDto = {
-  itemId: number
-  name: string
-  gameId: number
-  photoUrl: string
+  itemDto: ItemDto
   quantity: number
-  gameName: string
   genreId: number
   genreName: string
   rarityId: number
   rarityName: string
-  estimatedTokenValue: number
 }
 
 export type offerItemDto = {
@@ -46,3 +41,17 @@ export const offerOrderBy = {
   expDateDesc: 6,
 } as const
 export type offerOrderBy = (typeof offerOrderBy)[keyof typeof offerOrderBy]
+
+export type ItemDto = {
+  id: number
+  name: string
+  photoUrl: string
+  estimatedTokenValue: number
+  game: GameDto
+}
+
+export type GameDto = {
+  id: number
+  name: string
+  photoUrl: string
+}
