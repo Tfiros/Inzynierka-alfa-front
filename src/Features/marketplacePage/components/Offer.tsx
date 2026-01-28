@@ -14,32 +14,24 @@ import {
   Info,
   SquarePen,
   Trash2,
+  Sparkles,
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 import OfferItemCard from "./OfferItemCard"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useAppStore } from "@/shared/store/AppStore"
+import { cn } from "@/shared/lib/Utils"
+import { useOfferInteractionStore } from "@/shared/views/OfferInteractionView/offerInteractionStore"
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
-  onEdit?: (offerId: number) => void
-  onDelete?: (offerId: number) => void
-  onTrade?: (offerId: number) => void
-  onCounterOffer?: (offerId: number) => void
 }
 
-const Offer = ({
-  offer,
-  onShowDetails,
-  onEdit,
-  onDelete,
-  onTrade,
-  onCounterOffer,
-}: OfferProps) => {
-  const offeredCount = offer.offeredItemsCount
-  const wantedCount = offer.wantedItemsCount
-  const remainingOffered = offer.offeredItemsCount - offeredCount
-  const remainingWanted = offer.wantedItemsCount - wantedCount
+const Offer = ({ offer, onShowDetails }: OfferProps) => {
+  const remainingOffered = offer.offeredItemsTotalCount - 3
+  const remainingWanted = offer.wantedItemsTotalCount - 3
+  const requestEdit = useOfferInteractionStore((s) => s.requestEdit)
+  const requestDelete = useOfferInteractionStore((s) => s.requestDelete)
   const successRate = new Intl.NumberFormat("pl-PL", {
     style: "percent",
   }).format(offer.offerUserDto.successRate)
@@ -47,11 +39,20 @@ const Offer = ({
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   return (
-    <Card className="h-full flex flex-col">
+    <Card
+      className={cn(
+        "h-full flex flex-col",
+        offer.offerCoreDto.isHighlighted &&
+          "border-2 border-yellow-400/70 bg-yellow-50/30 shadow-[0_0_0_3px_rgba(250,204,21,0.15)]"
+      )}
+    >
       <CardHeader>
         <CardTitle className="w-full">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h1 className="text-base font-semibold lg:text-lg text-left line-clamp-2 min-h-[3.5rem]">
+            <h1 className="text-base font-semibold lg:text-lg text-left line-clamp-2 min-h-[3.5rem] flex flex-row gap-2">
+              {offer.offerCoreDto.isHighlighted && (
+                <Sparkles className="h-5 w-5 text-yellow-500 shrink-0 mt-0.5" />
+              )}
               {offer.offerCoreDto.title}
             </h1>
 
@@ -67,6 +68,11 @@ const Offer = ({
               >
                 <Heart className="group-hover:text-red-500 group-hover:fill-red-500 transition" />
               </Button>
+              {offer.offerCoreDto.isHighlighted && (
+                <Badge className="bg-yellow-400/20 text-yellow-900 border border-yellow-400/40">
+                  Wyróżniony
+                </Badge>
+              )}
             </div>
           </div>
         </CardTitle>
@@ -78,9 +84,12 @@ const Offer = ({
             <Badge className="w-fit bg-gray-100 text-gray-900 rounded-full">
               Mam
             </Badge>
-            {offer.offeredItems.map((item) => (
-              <div key={item.itemId} className="w-full max-w-[260px]">
-                <OfferItemCard item={item} />
+            {offer.offeredItems.map((listingItemDto) => (
+              <div
+                key={listingItemDto.itemDto.id}
+                className="w-full max-w-[260px]"
+              >
+                <OfferItemCard listingItemDto={listingItemDto} />
               </div>
             ))}
             {remainingOffered > 0 && (
@@ -92,9 +101,12 @@ const Offer = ({
 
           <div className="flex flex-col w-full gap-2 border-t pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4 border-gray-300">
             <Badge className="w-fit rounded-full">Chcę</Badge>
-            {offer.wantedItems.map((item) => (
-              <div key={item.itemId} className="w-full max-w-[260px]">
-                <OfferItemCard item={item} />
+            {offer.wantedItems.map((listingItemDto) => (
+              <div
+                key={listingItemDto.itemDto.id}
+                className="w-full max-w-[260px]"
+              >
+                <OfferItemCard listingItemDto={listingItemDto} />
               </div>
             ))}
             {remainingWanted > 0 && (
@@ -149,8 +161,8 @@ const Offer = ({
                 type="button"
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
-                onClick={() => onEdit?.(offer.offerCoreDto.offerId)}
-                disabled={!onEdit || !isOwner}
+                onClick={() => requestEdit(offer.offerCoreDto.offerId)}
+                disabled={!requestEdit || !isOwner}
               >
                 <SquarePen className="mr-1 h-4 w-4" /> Edytuj
               </Button>
@@ -159,8 +171,8 @@ const Offer = ({
                 type="button"
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
-                onClick={() => onDelete?.(offer.offerCoreDto.offerId)}
-                disabled={!onDelete || !isOwner}
+                onClick={() => requestDelete(offer.offerCoreDto.offerId)}
+                disabled={!isOwner}
               >
                 <Trash2 className="mr-1 h-4 w-4" /> Usuń
               </Button>
@@ -170,8 +182,8 @@ const Offer = ({
               <Button
                 type="button"
                 className="text-xs cursor-pointer w-full sm:w-auto"
-                onClick={() => onTrade?.(offer.offerCoreDto.offerId)}
-                disabled={!onTrade || isOwner}
+                onClick={() => console.log(offer.offerCoreDto.offerId)}
+                disabled={isOwner}
               >
                 Wymień
               </Button>
@@ -179,8 +191,8 @@ const Offer = ({
                 type="button"
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
-                onClick={() => onCounterOffer?.(offer.offerCoreDto.offerId)}
-                disabled={!onCounterOffer || isOwner}
+                onClick={() => console.log(offer.offerCoreDto.offerId)}
+                disabled={isOwner}
               >
                 <Plus /> Złóż kontrofertę
               </Button>
