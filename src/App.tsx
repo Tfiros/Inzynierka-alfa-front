@@ -18,6 +18,7 @@ import ProfilePage from "./Features/profilePage/profilePage"
 import PointShop from "./Features/pointShop/pointShop"
 import ContactPage from "./Features/contactPage/contactPage"
 import NotFoundPage from "./Features/NotFoundPage/NotFoundPage"
+import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
@@ -55,6 +56,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
+      <OfferInteractionHost />
     </BrowserRouter>
   )
 }
