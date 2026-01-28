@@ -121,7 +121,7 @@ const SearchSuggest = ({
                           }}
                           className="py-5 flex items-center gap-3"
                         >
-                          <Thumb src={s.photo_URL} alt={s.name} size="md" />
+                          <Thumb src={s.photoUrl} alt={s.name} size="md" />
                           <span>{s.name}</span>
                         </CommandItem>
                       ))}
@@ -143,7 +143,7 @@ function groupBy(list: ItemOfferDto[]): Group[] {
   const map = new Map<number, Group>()
   for (const s of list) {
     const gameName = s.game.name ?? "Inne"
-    const gamePhotoUrl = s.game.photo_URL
+    const gamePhotoUrl = s.game.photoUrl
     const gameId = s.game.id
     const existing = map.get(gameId)
     if (!existing) {
