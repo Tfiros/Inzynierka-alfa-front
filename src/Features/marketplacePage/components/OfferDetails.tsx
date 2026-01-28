@@ -11,28 +11,21 @@ import { Button } from "@/shared/components/button"
 import { Plus, SquarePen, Trash2 } from "lucide-react"
 import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useAppStore } from "@/shared/store/AppStore"
+import { useOfferInteractionStore } from "@/shared/views/OfferInteractionView/offerInteractionStore"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
   open: boolean
   onOpenChange: (open: boolean) => void
-  onEdit?: (offerId: number) => void
-  onDelete?: (offerId: number) => void
-  onTrade?: (offerId: number) => void
-  onCounterOffer?: (offerId: number) => void
 }
 
-const OfferDetails = ({
-  offer,
-  open,
-  onOpenChange,
-  onEdit,
-  onDelete,
-  onTrade,
-  onCounterOffer,
-}: OfferDetailsProps) => {
+const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
   const currentUserId = useAppStore((s) => s.userId)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
+  const requestEdit = useOfferInteractionStore((s) => s.requestEdit)
+
+  const requestDelete = useOfferInteractionStore((s) => s.requestDelete)
+
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -52,8 +45,8 @@ const OfferDetails = ({
                   type="button"
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => onEdit?.(offer.offerCoreDto.offerId)}
-                  disabled={!onEdit || !isOwner}
+                  onClick={() => requestEdit(offer.offerCoreDto.offerId)}
+                  disabled={!isOwner}
                 >
                   <SquarePen className="mr-1 h-4 w-4" /> Edytuj
                 </Button>
@@ -62,8 +55,8 @@ const OfferDetails = ({
                   type="button"
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => onDelete?.(offer.offerCoreDto.offerId)}
-                  disabled={!onDelete || !isOwner}
+                  onClick={() => requestDelete(offer.offerCoreDto.offerId)}
+                  disabled={!isOwner}
                 >
                   <Trash2 className="mr-1 h-4 w-4" /> Usuń
                 </Button>
@@ -73,8 +66,8 @@ const OfferDetails = ({
                 <Button
                   type="button"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => onTrade?.(offer.offerCoreDto.offerId)}
-                  disabled={!onTrade || isOwner}
+                  onClick={() => console.log(offer.offerCoreDto.offerId)}
+                  disabled={isOwner}
                 >
                   Wymień
                 </Button>
@@ -82,8 +75,8 @@ const OfferDetails = ({
                   type="button"
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => onCounterOffer?.(offer.offerCoreDto.offerId)}
-                  disabled={!onCounterOffer || isOwner}
+                  onClick={() => console.log(offer.offerCoreDto.offerId)}
+                  disabled={isOwner}
                 >
                   <Plus /> Złóż kontrofertę
                 </Button>
@@ -97,12 +90,12 @@ const OfferDetails = ({
               Mam
             </Badge>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-              {offer.offeredItems.map((item) => (
+              {offer.offeredItems.map((listingItemDto) => (
                 <div
-                  key={item.itemId}
+                  key={listingItemDto.itemDto.id}
                   className="h-full rounded-lg border border-gray-100 p-4 shadow-sm"
                 >
-                  <OfferItemCard item={item} />
+                  <OfferItemCard listingItemDto={listingItemDto} />
                 </div>
               ))}
             </div>
@@ -111,12 +104,12 @@ const OfferDetails = ({
           <div className="border-t pt-4">
             <Badge className="w-full md:w-fit rounded-full">Chcę</Badge>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-              {offer.wantedItems.map((item) => (
+              {offer.wantedItems.map((listingItemDto) => (
                 <div
-                  key={item.itemId}
+                  key={listingItemDto.itemDto.id}
                   className="h-full rounded-lg border border-gray-100 p-4 shadow-sm"
                 >
-                  <OfferItemCard item={item} />
+                  <OfferItemCard listingItemDto={listingItemDto} />
                 </div>
               ))}
             </div>
