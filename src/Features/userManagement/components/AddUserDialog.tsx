@@ -10,7 +10,8 @@ import { Button } from "@/shared/components/button"
 import { Input } from "@/shared/components/input"
 import type { RegisterRequestDto } from "@/shared/types/authTypes/AuthRequestTypes"
 import { Label } from "@radix-ui/react-label"
-import { AuthService } from "@/shared/api/services/AuthService"
+
+import useAddUser from "../hooks/actions/UseAddUser"
 
 type Props = {
   open: boolean
@@ -18,22 +19,24 @@ type Props = {
   onCreated: () => void
 }
 
-function toDateInputValue(d: Date): string {
+const toDateInputValue = (d: Date): string => {
   const yyyy = String(d.getFullYear())
   const mm = String(d.getMonth() + 1).padStart(2, "0")
   const dd = String(d.getDate()).padStart(2, "0")
   return `${yyyy}-${mm}-${dd}`
 }
 
-function fromDateInputValue(value: string): Date {
+const fromDateInputValue = (value: string): Date => {
   const [y, m, d] = value.split("-").map(Number)
   return new Date(y, (m ?? 1) - 1, d ?? 1)
 }
 
-const AddUserDialog = ({ open, onOpenChange, onCreated }: Props) => {
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+const AddUserDialog = (props: Props) => {
+  const { open, onOpenChange, onCreated } = props
 
+  const { submitting, error, reset, addUser } = useAddUser()
+
+  const [localError, setLocalError] = useState<string | null>(null)
   const [dto, setDto] = useState<RegisterRequestDto>({
     email: "",
     password: "",
@@ -43,8 +46,8 @@ const AddUserDialog = ({ open, onOpenChange, onCreated }: Props) => {
 
   useEffect(() => {
     if (!open) {
-      setError(null)
-      setSubmitting(false)
+      reset()
+      setLocalError(null)
       setDto({
         email: "",
         password: "",
@@ -52,39 +55,34 @@ const AddUserDialog = ({ open, onOpenChange, onCreated }: Props) => {
         birthDate: new Date(),
       })
     }
-  }, [open])
+  }, [open, reset])
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setError(null)
+    setLocalError(null)
 
-    if (!dto.email.trim() || !dto.password || !dto.username.trim()) {
-      setError("Uzupełnij email, username i hasło.")
+    const email = dto.email.trim()
+    const username = dto.username.trim()
+
+    if (!email || !dto.password || !username) {
+      setLocalError("Uzupełnij email, username i hasło.")
       return
     }
 
-    setSubmitting(true)
-    try {
-      const res = await AuthService.register({
-        email: dto.email.trim(),
-        password: dto.password,
-        username: dto.username.trim(),
-        birthDate: dto.birthDate,
-      })
+    const res = await addUser({
+      email,
+      password: dto.password,
+      username,
+      birthDate: dto.birthDate,
+    })
 
-      if (!res.isSuccess) {
-        setError(res.message ?? "Nie udało się dodać użytkownika.")
-        return
-      }
+    if (!res.isSuccess) return
 
-      onOpenChange(false)
-      onCreated()
-    } catch (err: any) {
-      setError(err?.message ?? "Nie udało się dodać użytkownika.")
-    } finally {
-      setSubmitting(false)
-    }
+    onOpenChange(false)
+    onCreated()
   }
+
+  const displayError = localError ?? error
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -145,9 +143,9 @@ const AddUserDialog = ({ open, onOpenChange, onCreated }: Props) => {
             />
           </div>
 
-          {error && (
+          {displayError && (
             <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              {error}
+              {displayError}
             </div>
           )}
 
@@ -169,4 +167,5 @@ const AddUserDialog = ({ open, onOpenChange, onCreated }: Props) => {
     </Dialog>
   )
 }
+
 export default AddUserDialog

@@ -8,7 +8,9 @@ type Props = {
   data: UserListPagedResponse | null
 }
 
-const StatsSection = ({ loading, data }: Props) => {
+const StatsSection = (props: Props) => {
+  const { loading, data } = props
+
   const totalCount = data?.totalCount ?? 0
   const registeredLastMonthCount = data?.registeredLastMonthCount ?? 0
   const middlemenCount = data?.middlemenCount ?? 0
@@ -38,4 +40,5 @@ const StatsSection = ({ loading, data }: Props) => {
     </div>
   )
 }
+
 export default StatsSection

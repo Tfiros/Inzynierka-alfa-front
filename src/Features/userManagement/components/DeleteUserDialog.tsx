@@ -1,6 +1,5 @@
-import { useState } from "react"
+import { useEffect } from "react"
 import type { UserListItemDto } from "@/shared/types/userTypes/UserManagementTypes"
-import { UserManagementService } from "@/shared/api/services/UserManagementService"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,6 +11,8 @@ import {
   AlertDialogTitle,
 } from "@/shared/components/alert-dialog"
 
+import useDeleteUser from "../hooks/actions/UseDeleteUser"
+
 type Props = {
   open: boolean
   user: UserListItemDto | null
@@ -19,33 +20,23 @@ type Props = {
   onDeleted: () => void
 }
 
-const DeleteUserDialog = ({ open, user, onOpenChange, onDeleted }: Props) => {
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+const DeleteUserDialog = (props: Props) => {
+  const { open, user, onOpenChange, onDeleted } = props
+
+  const { submitting, error, reset, deleteUser } = useDeleteUser()
+
+  useEffect(() => {
+    if (!open) reset()
+  }, [open, reset])
 
   const handleDelete = async () => {
     if (!user) return
 
-    setSubmitting(true)
-    setError(null)
+    const res = await deleteUser(user.auth0UserId)
+    if (!res.isSuccess) return
 
-    try {
-      const res = await UserManagementService.deleteUser({
-        authZeroUserId: user.auth0UserId,
-      })
-
-      if (!res.isSuccess) {
-        setError(res.message ?? "Nie udało się usunąć użytkownika.")
-        return
-      }
-
-      onOpenChange(false)
-      onDeleted()
-    } catch (e: any) {
-      setError(e?.message ?? "Nie udało się usunąć użytkownika.")
-    } finally {
-      setSubmitting(false)
-    }
+    onOpenChange(false)
+    onDeleted()
   }
 
   return (
@@ -66,12 +57,13 @@ const DeleteUserDialog = ({ open, user, onOpenChange, onDeleted }: Props) => {
 
         <AlertDialogFooter>
           <AlertDialogCancel disabled={submitting}>Anuluj</AlertDialogCancel>
+
           <AlertDialogAction
             onClick={(e) => {
               e.preventDefault()
               void handleDelete()
             }}
-            disabled={submitting}
+            disabled={submitting || !user}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
             {submitting ? "Usuwanie..." : "Usuń"}
@@ -81,4 +73,5 @@ const DeleteUserDialog = ({ open, user, onOpenChange, onDeleted }: Props) => {
     </AlertDialog>
   )
 }
+
 export default DeleteUserDialog

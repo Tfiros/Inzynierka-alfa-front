@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom"
 import { Button } from "@/shared/components/button"
-import CrossTradeLogo from "@/shared/photos/CrossTradeLogo.png"
+import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.png"
+import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
 import NoifyIcon from "@/shared/photos/NotificationIcon.svg"
+import NoifyIcon_Dark from "@/shared/photos/NotificationIcon_Dark.svg"
 import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
 import { useAppStore } from "@/shared/store/AppStore"
@@ -10,8 +12,9 @@ import { useAppStore } from "@/shared/store/AppStore"
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
   const roles = useAppStore((s) => s.roles)
-
+  const unread = useAppStore((s) => s.unreadNotificationsCount)
   const isAdmin = roles.some((r) => r.toLowerCase() === "admin")
+  const isMiddleman = roles.some((r) => r.toLowerCase() === "middleman")
   const tokens = navbarUser?.tokens ?? 0
   const level = navbarUser?.level ?? 1
   return (
@@ -20,9 +23,14 @@ export const UserNavbar = () => {
         <div className="flex gap-2">
           <Link to="/" className="inline-flex items-center gap-2">
             <img
-              src={CrossTradeLogo}
+              src={CrossTradeLogo_light}
               alt="CROSSTRADE"
-              className="h-15 w-15 object-contain"
+              className="h-15 w-15 object-contain dark:hidden"
+            />
+            <img
+              src={CrossTradeLogo_dark}
+              alt="CROSSTRADE"
+              className="h-15 w-15 object-contain dark:block"
             />
             <span className="sr-only">CROSSTRADE</span>
           </Link>
@@ -34,7 +42,12 @@ export const UserNavbar = () => {
               <NavItem to="/itemManagement" label="Zarządzanie przedmiotami" />
             )}
             {isAdmin && <NavItem to="/userManagement" label="Użytkownicy" />}
-            <NavItem to="marketplace" label="Oferty" />
+
+            {isMiddleman && (
+              <NavItem to="/middlemanPanel" label="Panel pośrednika" />
+            )}
+
+            <NavItem to="/marketplace" label="Oferty" />
             <NavItem to="/faqs" label="FAQs" />
             <NavItem to="/statute" label="Regulamin" />
             <NavItem to="/contact" label="Kontakt" />
@@ -79,15 +92,26 @@ export const UserNavbar = () => {
               asChild
               variant="ghost"
               size="sm"
-              className="rounded-full"
+              className="rounded-full relative"
               title="Powiadomienia"
             >
-              <Link to="/notifications">
+              <Link to="/notifications" className="relative">
                 <img
                   src={NoifyIcon}
                   alt="NotificationIcon"
-                  className="h-6 w-6 object-contain"
+                  className="h-6 w-6 object-contain block dark:hidden"
                 />
+                <img
+                  src={NoifyIcon_Dark}
+                  alt="NotificationIcon"
+                  className="h-6 w-6 object-contain hidden dark:block"
+                />
+
+                {unread > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-destructive-foreground text-[11px] leading-[18px] text-center">
+                    {unread > 99 ? "99+" : unread}
+                  </span>
+                )}
               </Link>
             </Button>
 
