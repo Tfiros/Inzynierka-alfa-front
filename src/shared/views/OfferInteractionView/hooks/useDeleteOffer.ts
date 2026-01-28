@@ -1,5 +1,5 @@
 import { OfferService } from "@/shared/api/services/OfferService"
-import { useAppStore } from "@/shared/store/AppStore"
+import { useAppStore } from "@/shared/store/appStore"
 import { useCallback, useState } from "react"
 
 export const useDeleteOffer = () => {

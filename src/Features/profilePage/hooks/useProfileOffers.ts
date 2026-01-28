@@ -1,5 +1,5 @@
 import { UserInfoService } from "@/shared/api/services/UserInfoService"
-import { selectCounter, useAppStore } from "@/shared/store/AppStore"
+import { selectCounter, useAppStore } from "@/shared/store/appStore"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import type { PagedResponse } from "@/shared/types/PagedType"
 import { useCallback, useEffect, useState } from "react"

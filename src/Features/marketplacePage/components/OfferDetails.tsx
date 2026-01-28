@@ -10,7 +10,7 @@ import OfferItemCard from "./OfferItemCard"
 import { Button } from "@/shared/components/button"
 import { Plus, SquarePen, Trash2 } from "lucide-react"
 import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
-import { useAppStore } from "@/shared/store/AppStore"
+import { useAppStore } from "@/shared/store/appStore"
 import { useOfferInteractionStore } from "@/shared/views/OfferInteractionView/offerInteractionStore"
 
 type OfferDetailsProps = {

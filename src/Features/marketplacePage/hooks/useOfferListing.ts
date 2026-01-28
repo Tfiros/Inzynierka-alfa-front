@@ -1,5 +1,5 @@
 import { OfferService } from "@/shared/api/services/OfferService"
-import { selectCounter, useAppStore } from "@/shared/store/AppStore"
+import { selectCounter, useAppStore } from "@/shared/store/appStore"
 import { offerOrderBy } from "@/shared/types/offerTypes/OfferTypes"
 import type {
   offerListingDtoResponse,

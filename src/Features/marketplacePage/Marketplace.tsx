@@ -16,7 +16,7 @@ import {
   PaginationPrevious,
 } from "@/shared/components/ui/pagination"
 import { useOfferInteractionStore } from "@/shared/views/OfferInteractionView/offerInteractionStore"
-import { useAppStore } from "@/shared/store/AppStore"
+import { useAppStore } from "@/shared/store/appStore"
 
 const MarketplacePage = () => {
   const {

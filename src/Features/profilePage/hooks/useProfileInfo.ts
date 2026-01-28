@@ -1,6 +1,6 @@
 import type { ApiResult } from "@/shared/api/ApiResult"
 import { UserInfoService } from "@/shared/api/services/UserInfoService"
-import { useAppStore } from "@/shared/store/AppStore"
+import { useAppStore } from "@/shared/store/appStore"
 import type { UserProfileInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
 import { useEffect, useMemo, useState } from "react"
 import type { StatBoxSectionProps } from "../sections/StatBoxSection"

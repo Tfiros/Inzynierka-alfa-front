@@ -19,7 +19,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 import OfferItemCard from "./OfferItemCard"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
-import { useAppStore } from "@/shared/store/AppStore"
+import { useAppStore } from "@/shared/store/appStore"
 import { cn } from "@/shared/lib/Utils"
 import { useOfferInteractionStore } from "@/shared/views/OfferInteractionView/offerInteractionStore"
 type OfferProps = {
