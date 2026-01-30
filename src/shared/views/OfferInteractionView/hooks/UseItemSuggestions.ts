@@ -1,7 +1,7 @@
 import { OfferService } from "@/shared/api/services/OfferService"
 import type { ItemOfferDto } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { useDebounceValue } from "./helpers"
+import { useDebounceValue } from "./UseDebounceValue"
 
 export const useItemSuggestions = () => {
   const [query, setQuery] = useState("")

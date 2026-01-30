@@ -1,6 +1,5 @@
 import type { offerItemDto } from "@/shared/types/offerTypes/OfferTypes"
 import type { ItemOfferDto } from "@/shared/types/offerTypes/RequestResponseTypes"
-import { useEffect, useState } from "react"
 
 export type OfferLine = { item: ItemOfferDto; quantity: number }
 
@@ -10,15 +9,6 @@ export const toOfferItemDto = (lines: OfferLine[]): offerItemDto[] => {
     quantity: x.quantity,
   }))
   return offerItemDtos
-}
-
-export const useDebounceValue = <T>(value: T, delay = 300): T => {
-  const [debouncedValue, setDebounceValue] = useState<T>(value)
-  useEffect(() => {
-    const t = setTimeout(() => setDebounceValue(value), delay)
-    return () => clearTimeout(t)
-  }, [value, delay])
-  return debouncedValue
 }
 
 export const addOfferLine = (

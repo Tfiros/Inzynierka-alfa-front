@@ -4,7 +4,7 @@ import type {
   ItemOfferDto,
 } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { useDebounceValue } from "./helpers"
+import { useDebounceValue } from "./UseDebounceValue"
 
 export const useOfferGameItemDropdown = () => {
   const minChars = 3

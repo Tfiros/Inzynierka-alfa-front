@@ -12,7 +12,7 @@ import {
   toOfferItemDto,
   validateOfferDraft,
   type OfferLine,
-} from "./helpers"
+} from "../utils/OfferHelpers"
 
 export const useCreateOffer = () => {
   const [itemsHave, setItemsHave] = useState<OfferLine[]>([])

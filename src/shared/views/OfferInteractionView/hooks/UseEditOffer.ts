@@ -14,7 +14,7 @@ import {
   toOfferItemDto,
   validateOfferDraft,
   type OfferLine,
-} from "./helpers"
+} from "../utils/OfferHelpers"
 
 export const useEditOffer = (offerId: number | null) => {
   const [isLoading, setIsLoading] = useState(false)
