@@ -1,7 +1,7 @@
 import CreateOfferModalContent from "./views/CreateOfferModalContent"
 import { Dialog, DialogContent } from "@/shared/components/dialog"
-import { useCreateOffer } from "./hooks/useCreateOffer"
 import EditOfferModalContent from "./views/EditOfferModalContent"
+import { useCreateOffer } from "./hooks/UseCreateOffer"
 
 type OfferInteractionModalTypes = {
   open: boolean

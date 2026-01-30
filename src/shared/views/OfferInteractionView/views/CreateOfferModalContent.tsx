@@ -24,12 +24,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/alert-dialog"
-import { useOfferGameItemDropdown } from "../hooks/useOfferGameItemDropdown"
+import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
 import OfferPickedItemsList from "../components/OfferPickedItemsList"
 import { Input } from "@/shared/components/input"
 import { Textarea } from "@/shared/components/textarea"
-import { useItemSuggestions } from "../hooks/useItemSuggestions"
-import type { useCreateOffer } from "../hooks/useCreateOffer"
+import { useItemSuggestions } from "../hooks/UseItemSuggestions"
+import type { useCreateOffer } from "../hooks/UseCreateOffer"
 
 type CreateOfferModalContentProps = {
   onCancel: () => void

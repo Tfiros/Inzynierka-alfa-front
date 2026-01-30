@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useItemSuggestions } from "../hooks/useItemSuggestions"
+import { useItemSuggestions } from "../hooks/UseItemSuggestions"
 import { DialogHeader, DialogTitle } from "@/shared/components/dialog"
 import { Button } from "@/shared/components/button"
 import {
@@ -25,10 +25,10 @@ import OfferPickedItemsList from "../components/OfferPickedItemsList"
 import DurationCard from "../components/DurationCard"
 import { Switch } from "@/shared/components/ui/switch"
 import { Plus } from "lucide-react"
-import { useEditOffer } from "../hooks/useEditOffer"
+import { useEditOffer } from "../hooks/UseEditOffer"
 import { Input } from "@/shared/components/input"
 import { Textarea } from "@/shared/components/textarea"
-import { useOfferGameItemDropdown } from "../hooks/useOfferGameItemDropdown"
+import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
 import type { offerUpdateQuoteResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 
 type EditOfferModalContentProps = {

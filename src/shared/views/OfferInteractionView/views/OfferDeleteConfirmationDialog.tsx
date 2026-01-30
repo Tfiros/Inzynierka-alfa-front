@@ -7,9 +7,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/alert-dialog"
-import { useDeleteOffer } from "../hooks/useDeleteOffer"
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog"
 import { useAppStore } from "@/shared/store/appStore"
+import { useDeleteOffer } from "../hooks/UseDeleteOffer"
 
 const OfferDeleteConfirmationDialog = () => {
   const open = useAppStore((s) => s.offerDeleteConfirmOpen)
