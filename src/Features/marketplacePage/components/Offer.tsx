@@ -21,7 +21,6 @@ import OfferItemCard from "./OfferItemCard"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useAppStore } from "@/shared/store/appStore"
 import { cn } from "@/shared/lib/Utils"
-import { useOfferInteractionStore } from "@/shared/views/OfferInteractionView/offerInteractionStore"
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
@@ -30,8 +29,8 @@ type OfferProps = {
 const Offer = ({ offer, onShowDetails }: OfferProps) => {
   const remainingOffered = offer.offeredItemsTotalCount - 3
   const remainingWanted = offer.wantedItemsTotalCount - 3
-  const requestEdit = useOfferInteractionStore((s) => s.requestEdit)
-  const requestDelete = useOfferInteractionStore((s) => s.requestDelete)
+  const requestEdit = useAppStore((s) => s.offerRequestEdit)
+  const requestDelete = useAppStore((s) => s.offerRequestDelete)
   const successRate = new Intl.NumberFormat("pl-PL", {
     style: "percent",
   }).format(offer.offerUserDto.successRate)

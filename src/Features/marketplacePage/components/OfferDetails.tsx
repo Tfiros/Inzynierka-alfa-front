@@ -11,7 +11,6 @@ import { Button } from "@/shared/components/button"
 import { Plus, SquarePen, Trash2 } from "lucide-react"
 import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useAppStore } from "@/shared/store/appStore"
-import { useOfferInteractionStore } from "@/shared/views/OfferInteractionView/offerInteractionStore"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
@@ -22,9 +21,9 @@ type OfferDetailsProps = {
 const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
   const currentUserId = useAppStore((s) => s.userId)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
-  const requestEdit = useOfferInteractionStore((s) => s.requestEdit)
+  const requestEdit = useAppStore((s) => s.offerRequestEdit)
 
-  const requestDelete = useOfferInteractionStore((s) => s.requestDelete)
+  const requestDelete = useAppStore((s) => s.offerRequestDelete)
 
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   return (

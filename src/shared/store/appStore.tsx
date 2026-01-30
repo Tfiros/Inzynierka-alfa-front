@@ -6,8 +6,10 @@ import {
   type NotificationsSlice,
   createNotificationsSlice,
 } from "./storeParts/NotificationSlice"
+import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
 export type AppState = UiSlice &
   AuthSlice &
+  OfferSlice &
   NotificationsSlice & { hardReset: () => Promise<void> }
 
 export const useAppStore = create<AppState>()(
@@ -15,6 +17,7 @@ export const useAppStore = create<AppState>()(
     (set, get, api) => ({
       ...createUiSlice(set, get, api),
       ...createAuthSlice(set, get, api),
+      ...createOfferSlice(set, get, api),
       ...createNotificationsSlice(set),
       hardReset: async () => {
         set({
