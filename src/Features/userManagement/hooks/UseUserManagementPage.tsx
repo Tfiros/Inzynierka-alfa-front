@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import useDebouncedValue from "./UseDebouncedValue"
+import useDebouncedValue from "@/shared/components/UseDebouncedValue"
 import useUsersQueryState from "./UseUsersQueryState"
 import useUserDialogs from "./UseUserDialog"
 import useRefetchWithRetry from "./UseRefetchWithRetry"

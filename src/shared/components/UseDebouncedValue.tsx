@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 
-type Props<T> = {
+type Args<T> = {
   value: T
   delayMs: number
 }
 
-const UseDebouncedValue = <T,>({ value, delayMs }: Props<T>) => {
+const useDebouncedValue = <T,>({ value, delayMs }: Args<T>) => {
   const [debounced, setDebounced] = useState<T>(value)
 
   useEffect(() => {
@@ -16,4 +16,4 @@ const UseDebouncedValue = <T,>({ value, delayMs }: Props<T>) => {
   return debounced
 }
 
-export default UseDebouncedValue
+export default useDebouncedValue
