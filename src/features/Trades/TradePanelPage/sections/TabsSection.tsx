@@ -25,6 +25,7 @@ const TabsSection = ({
           { value: "available", label: `Dostępne (${availableCount})` },
           { value: "mine", label: `W realizacji (${mineCount})` },
           { value: "completed", label: `Zakończone (${completedCount})` },
+          { value: "failedReturns", label: `Zwroty do realizacji ` },
         ]}
       />
     </div>

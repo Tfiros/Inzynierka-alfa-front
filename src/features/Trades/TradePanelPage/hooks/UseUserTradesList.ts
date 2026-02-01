@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { MiddlemanService } from "@/shared/api/services/MiddlemanService"
+import { TradeService } from "@/shared/api/services/TradeService"
 import type {
+  MiddlemanTab,
   TradeListItem,
   TradesQuery,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import type { PagedResponse } from "@/shared/types/PagedType"
-import type { MiddlemanTab } from "./UseMiddlemanTradesQuery"
 
 type State = {
   itemsTab: MiddlemanTab
@@ -21,14 +21,16 @@ type Args = {
   pageSize: number
   query: TradesQuery
   clearOnLoad?: boolean
+  isMiddleman: boolean
 }
 
-const useMiddlemanTradesList = ({
+const useUserTradesList = ({
   tab,
   page,
   pageSize,
   query,
   clearOnLoad = false,
+  isMiddleman,
 }: Args) => {
   const reqSeq = useRef(0)
 
@@ -53,10 +55,12 @@ const useMiddlemanTradesList = ({
 
     const call =
       tabAtStart === "available"
-        ? MiddlemanService.getMiddlemanAvailable
+        ? TradeService.getMiddlemanAvailable
         : tabAtStart === "mine"
-          ? MiddlemanService.getMiddlemanInRealization
-          : MiddlemanService.getMiddlemanCompleted
+          ? TradeService.getMiddlemanInRealization
+          : tabAtStart === "completed"
+            ? TradeService.getMiddlemanCompleted
+            : TradeService.getMyFailedWithItemsToReturn
 
     try {
       const res = await call(page, pageSize, query)
@@ -91,7 +95,7 @@ const useMiddlemanTradesList = ({
         errorList: e?.message ?? "Nie udało się pobrać danych.",
       }))
     }
-  }, [tab, page, pageSize, query, clearOnLoad])
+  }, [tab, page, pageSize, query, clearOnLoad, isMiddleman])
 
   useEffect(() => {
     void fetchList()
@@ -103,4 +107,4 @@ const useMiddlemanTradesList = ({
   }
 }
 
-export default useMiddlemanTradesList
+export default useUserTradesList

@@ -10,9 +10,9 @@ import {
 } from "@/shared/components/dropdown-menu"
 import { Button } from "@/shared/components/button"
 import { User as UserIcon, Trophy, Settings, Moon } from "lucide-react"
-import { useAppStore } from "@/shared/store/AppStore"
 import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
 import LogoutButton from "@/shared/components/logoutButton"
+import { useAppStore } from "@/shared/store/appStore"
 
 export const ProfileMenu = () => {
   const [open, setOpen] = useState(false)

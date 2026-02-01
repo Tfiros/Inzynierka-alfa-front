@@ -1,14 +1,32 @@
+import TradeDetailsDialog from "./components/TradeDetailsDialog"
+import useTradePanel from "./hooks/UseTradePanel"
+import FiltersSection from "./sections/FiltersSection"
 import HeaderSection from "./sections/HeaderSection"
+import PaginationSection from "./sections/PaginationSection"
 import StatsSection from "./sections/StatsSection"
 import TabsSection from "./sections/TabsSection"
-import FiltersSection from "./sections/FiltersSection"
 import TradesListSection from "./sections/TradesListSection"
-import PaginationSection from "./sections/PaginationSection"
-import TradeDetailsDialog from "./components/TradeDetailsDialog"
-import useMiddlemanPanel from "./hooks/UseMiddlemanPanel"
+import ConfirmDeleteTradeDialog from "@/shared/components/AlertDialog"
+import useSetTradeAsRealised from "./hooks/UseSetTradeAsRealised"
+import UseMarkDialog from "./components/UserMarkDialog"
 
-const MiddlemanPanelPage = () => {
-  const { query, stats, list, assign, counts, details } = useMiddlemanPanel()
+const TradePanelPage = () => {
+  const {
+    query,
+    stats,
+    list,
+    assign,
+    counts,
+    details,
+    cancelation,
+    isMiddleman,
+  } = useTradePanel()
+
+  const realised = useSetTradeAsRealised({
+    onSuccess: () => {
+      void Promise.all([stats.refetchStats(), list.refetchList()])
+    },
+  })
 
   const listError = list.errorList ?? assign.assignError ?? null
 
@@ -34,7 +52,7 @@ const MiddlemanPanelPage = () => {
         />
 
         <TradesListSection
-          tab={list.itemsTab}
+          tab={query.state.tab}
           loading={list.loadingList}
           error={listError}
           items={list.items}
@@ -42,6 +60,13 @@ const MiddlemanPanelPage = () => {
           onDetails={(trade) => {
             void details.actions.openFor(trade)
           }}
+          onCancleTrade={(tradeId) => {
+            void cancelation.actions.openFor(tradeId)
+          }}
+          onCompleteClick={(trade) => {
+            realised.actions.openFor(trade)
+          }}
+          isMiddleman={isMiddleman}
         />
 
         <PaginationSection
@@ -63,8 +88,27 @@ const MiddlemanPanelPage = () => {
         }}
         onSaved={details.actions.refresh}
       />
+
+      <ConfirmDeleteTradeDialog
+        open={cancelation.open}
+        onOpenChange={cancelation.setOpen}
+        loading={cancelation.loading}
+        onConfirm={cancelation.actions.deleteTrade}
+        onClosedReset={cancelation.actions.reset}
+      />
+
+      <UseMarkDialog
+        open={realised.state.open}
+        onOpenChange={(o) => {
+          if (!o) realised.actions.close()
+        }}
+        buyer={realised.state.buyer}
+        seller={realised.state.seller}
+        loading={realised.isLoading}
+        onConfirm={realised.actions.confirm}
+      />
     </div>
   )
 }
 
-export default MiddlemanPanelPage
+export default TradePanelPage

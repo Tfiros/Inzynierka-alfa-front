@@ -1,4 +1,4 @@
-export type MiddlemanTab = "available" | "mine" | "completed"
+export type MiddlemanTab = "available" | "mine" | "completed" | "failedReturns"
 
 export type AssignMiddlemanRequest = {
   tradeId: number
@@ -74,7 +74,7 @@ export type MiddlemanTradesStats = {
   all: number
   completed: number
   myActive: number
-  available: number
+  created: number
 }
 
 export type InTradeUserPhotos = {
@@ -89,4 +89,13 @@ export type TradeDetailsResponse = {
   hasSellersItems: boolean
   buyingUserPhotos: InTradeUserPhotos
   sellingUserPhotos: InTradeUserPhotos
+}
+
+export type CompleteAndMarkTradeRequest = {
+  buyersID: number
+  buyersGrade: number
+  buyersDescription: string
+  sellersID: number
+  sellersGrade: number
+  sellersDescription: string
 }

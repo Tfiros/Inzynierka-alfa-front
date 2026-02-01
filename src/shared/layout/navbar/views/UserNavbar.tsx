@@ -44,8 +44,9 @@ export const UserNavbar = () => {
             {isAdmin && <NavItem to="/userManagement" label="Użytkownicy" />}
 
             {isMiddleman && (
-              <NavItem to="/middlemanPanel" label="Panel pośrednika" />
+              <NavItem to="/tradePanel" label="Panel pośrednika" />
             )}
+            {!isMiddleman && <NavItem to="/tradePanel" label="Panel wymian" />}
 
             <NavItem to="/marketplace" label="Oferty" />
             <NavItem to="/faqs" label="FAQs" />
@@ -73,20 +74,8 @@ export const UserNavbar = () => {
               </Link>
             </Button>
 
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="rounded-full px-3"
-              title="Poziom"
-            >
-              <Link to="/points">
-                <span className="text-sm font-semibold">{level}</span>
-                <span className="ml-1 text-xs text-muted-foreground">
-                  Poziom
-                </span>
-              </Link>
-            </Button>
+            <span className="text-sm font-semibold">{level}</span>
+            <span className="ml-1 text-xs text-muted-foreground">Poziom</span>
 
             <Button
               asChild

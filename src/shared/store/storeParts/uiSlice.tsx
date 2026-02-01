@@ -7,7 +7,8 @@ export type UiSlice = {
   inc: (id: string, by?: number) => void
   reset: (id: string) => void
   notify: (msg: string) => string
-
+  darkMode: boolean
+  setDarkMode: (value: boolean) => void
   refreshNavbarUserFromAuth: () => Promise<void>
 }
 
@@ -25,6 +26,8 @@ export const createUiSlice: StateCreator<StoreState, [], [], UiSlice> = (
 
   return {
     counters: {},
+    darkMode: false,
+    setDarkMode: (value) => set({ darkMode: value }),
 
     inc: (id, by = 1) =>
       set((s) => ({

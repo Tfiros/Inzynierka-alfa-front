@@ -1,20 +1,34 @@
-import type { TradeListItem } from "@/shared/types/tradeTypes/MiddlemanTypes"
-import type { MiddlemanTab } from "../hooks/UseMiddlemanTradesQuery"
+import type {
+  MiddlemanTab,
+  TradeListItem,
+} from "@/shared/types/tradeTypes/MiddlemanTypes"
 import { Card, CardContent } from "@/shared/components/card"
 import { ArrowLeftRight } from "lucide-react"
+import { formatDateTimePl } from "../utils/dateUtils"
 import PartyBlock from "./PartyBlock"
+import TradeActionsMyTrade from "./TradeActionsMyTrade"
 import TradeStatusPill from "./TradeStatusPill"
 import TradeActionsAvailable from "./TradesActionsAvailable"
-import TradeActionsMyTrade from "./TradeActionsMyTrade"
-import { formatDateTimePl } from "../utils/dateUtils"
+
 type Props = {
   tab: MiddlemanTab
   trade: TradeListItem
   onAssign: () => void
   onDetails: () => void
+  onCancleTrade: () => void
+  onCompleteClick: () => void
+  isMiddleman: boolean
 }
 
-const TradeCard = ({ tab, trade, onAssign, onDetails }: Props) => {
+const TradeCard = ({
+  tab,
+  trade,
+  onAssign,
+  onDetails,
+  onCancleTrade,
+  onCompleteClick,
+  isMiddleman,
+}: Props) => {
   return (
     <Card className="shadow-sm">
       <CardContent className="p-6">
@@ -41,17 +55,20 @@ const TradeCard = ({ tab, trade, onAssign, onDetails }: Props) => {
           <PartyBlock title="Wystawiający" party={trade.postingUser} />
         </div>
 
-        {tab === "available" ? (
+        {tab === "available" && isMiddleman ? (
           <TradeActionsAvailable
             tokenCost={trade.tokenCost}
             onAssign={onAssign}
+            onCancleTrade={onCancleTrade}
           />
-        ) : (
+        ) : tab === "mine" && isMiddleman ? (
           <TradeActionsMyTrade
             tokenCost={trade.tokenCost}
             onDetails={onDetails}
+            onCanceleTrade={onCancleTrade}
+            onCompleteClick={onCompleteClick}
           />
-        )}
+        ) : null}
       </CardContent>
     </Card>
   )

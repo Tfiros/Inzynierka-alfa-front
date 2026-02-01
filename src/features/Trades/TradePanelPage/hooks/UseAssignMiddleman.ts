@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { MiddlemanService } from "@/shared/api/services/MiddlemanService"
+import { TradeService } from "@/shared/api/services/TradeService"
 
 type Args = {
   onSuccessRefetch: () => void | Promise<void>
@@ -14,7 +14,7 @@ const useAssignMiddleman = ({ onSuccessRefetch }: Args) => {
       setAssigning(true)
       setAssignError(null)
       try {
-        const res = await MiddlemanService.assignMiddleman({ tradeId })
+        const res = await TradeService.assignMiddleman({ tradeId })
         if (!res.isSuccess) {
           setAssignError(res.message ?? "Nie udało się przypisać wymiany.")
           return

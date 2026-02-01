@@ -1,5 +1,7 @@
-import type { TradeListItem } from "@/shared/types/tradeTypes/MiddlemanTypes"
-import type { MiddlemanTab } from "../hooks/UseMiddlemanTradesQuery"
+import type {
+  MiddlemanTab,
+  TradeListItem,
+} from "@/shared/types/tradeTypes/MiddlemanTypes"
 import TradeCard from "../components/TradeCard"
 import { Skeleton } from "@/shared/components/skeleton"
 
@@ -11,6 +13,9 @@ type Props = {
 
   onAssign: (tradeId: number) => void
   onDetails: (trade: TradeListItem) => void
+  onCancleTrade: (tradeId: number) => void
+  onCompleteClick: (trade: TradeListItem) => void
+  isMiddleman: boolean
 }
 
 const TradesListSection = ({
@@ -20,6 +25,9 @@ const TradesListSection = ({
   items,
   onAssign,
   onDetails,
+  onCancleTrade,
+  onCompleteClick,
+  isMiddleman,
 }: Props) => {
   if (loading) {
     return (
@@ -60,6 +68,9 @@ const TradesListSection = ({
           trade={t}
           onAssign={() => onAssign(t.tradeId)}
           onDetails={() => onDetails(t)}
+          onCancleTrade={() => onCancleTrade(t.tradeId)}
+          onCompleteClick={() => onCompleteClick(t)}
+          isMiddleman={isMiddleman}
         />
       ))}
     </div>
