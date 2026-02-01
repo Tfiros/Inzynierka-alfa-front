@@ -17,6 +17,7 @@ import AdminRoute from "./routes/AdminRoutes"
 import MiddlemanRoute from "./routes/MiddlemanRoutes"
 import BlankLayout from "./shared/layout/BlankLayout"
 import MainLayout from "./shared/layout/MainLayout"
+import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
 import ProfilePage from "./Features/profilePage/profilePage"
 import SettingsPage from "./Features/settingsPage/SettingsPage"
 
@@ -57,6 +58,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
+      <OfferInteractionHost />
     </BrowserRouter>
   )
 }

@@ -1,17 +1,14 @@
-import { useMemo } from "react"
 import { Layers, Trophy, Star, Percent } from "lucide-react"
 import StatBox from "../component/StatBox"
 
-const MOCK_STATS = {
-  activeOffers: 2,
-  successfulTrades: 47,
-  avgRating: 4.9,
-  successRatePct: 95,
+export type StatBoxSectionProps = {
+  activeOffers: number
+  successfulTrades: number
+  avgRating: number
+  successRatePct: number
 }
 
-const StatBoxSection = () => {
-  const stats = useMemo(() => MOCK_STATS, [])
-
+const StatBoxSection = ({ stats }: { stats: StatBoxSectionProps }) => {
   return (
     <section>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
@@ -35,7 +32,7 @@ const StatBoxSection = () => {
         />
         <StatBox
           icon={<Percent className="h-5 w-5" />}
-          value={`${stats.successRatePct}%`}
+          value={`${stats.successRatePct * 100}%`}
           label="Sukces wymian"
           highlighted
         />
