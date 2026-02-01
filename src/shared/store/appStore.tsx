@@ -6,6 +6,7 @@ import {
   type NotificationsSlice,
   createNotificationsSlice,
 } from "./storeParts/NotificationSlice"
+import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
 export type AppState = UiSlice &
   AuthSlice &
   NotificationsSlice & {
@@ -13,12 +14,14 @@ export type AppState = UiSlice &
     hasHydrated: boolean
     setHasHydrated: (v: boolean) => void
   }
+  OfferSlice & { hardReset: () => Promise<void> }
 
 export const useAppStore = create<AppState>()(
   persist(
     (set, get, api) => ({
       ...createUiSlice(set, get, api),
       ...createAuthSlice(set, get, api),
+      ...createOfferSlice(set, get, api),
       ...createNotificationsSlice(set),
       hasHydrated: false,
       setHasHydrated: (v) => set({ hasHydrated: v }),

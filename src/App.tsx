@@ -18,6 +18,7 @@ import MainDashboard from "./features/profilePanelPage/views/MainDashboard"
 import SettingsPage from "./features/settingsPage/SettingsPage"
 import StatutePage from "./features/statutePage/StatutePage"
 import UserManagementPage from "./features/userManagement/UserManagementPage"
+import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
@@ -53,6 +54,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
+      <OfferInteractionHost />
     </BrowserRouter>
   )
 }
