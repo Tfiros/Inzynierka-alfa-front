@@ -13,8 +13,7 @@ export type AppState = UiSlice &
     hardReset: () => Promise<void>
     hasHydrated: boolean
     setHasHydrated: (v: boolean) => void
-  }
-  OfferSlice & { hardReset: () => Promise<void> }
+  } & OfferSlice
 
 export const useAppStore = create<AppState>()(
   persist(

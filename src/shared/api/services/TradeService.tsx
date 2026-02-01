@@ -95,7 +95,7 @@ export class TradeService {
     q?: TradesQuery
   ) => {
     const qs = this.buildPagedQueryString(page, pageSize, q)
-    return get(`${this.base}/middleman/failed-with-return${qs}`)
+    return get(`${this.base}/failed-with-return${qs}`)
   }
 
   public static readonly setTradeAsFaild = async (tradeId: number) =>
