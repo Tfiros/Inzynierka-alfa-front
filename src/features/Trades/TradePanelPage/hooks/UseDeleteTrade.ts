@@ -1,4 +1,4 @@
-import { MiddlemanService } from "@/shared/api/services/MiddlemanService"
+import { TradeService } from "@/shared/api/services/TradeService"
 import { useCallback, useState } from "react"
 
 type Options = {
@@ -31,7 +31,7 @@ const useDeleteTrade = (options?: Options) => {
     setError(null)
 
     try {
-      const res = await MiddlemanService.setTradeAsFaild(tradeId)
+      const res = await TradeService.setTradeAsFaild(tradeId)
 
       if (!res.isSuccess) {
         let message = "Nie udało się anulować wymiany."

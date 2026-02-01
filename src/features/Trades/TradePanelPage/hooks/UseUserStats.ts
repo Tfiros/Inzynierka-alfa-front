@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { MiddlemanService } from "@/shared/api/services/MiddlemanService"
+import { TradeService } from "@/shared/api/services/TradeService"
 import type { MiddlemanTradesStats } from "@/shared/types/tradeTypes/MiddlemanTypes"
 
 type State = {
@@ -21,7 +21,7 @@ const useUserStats = () => {
     setState((s) => ({ ...s, loadingStats: true, errorStats: null }))
 
     try {
-      const res = await MiddlemanService.getMiddlemanStats()
+      const res = await TradeService.getMiddlemanStats()
       if (!res.isSuccess || !res.data) {
         setState({
           stats: null,

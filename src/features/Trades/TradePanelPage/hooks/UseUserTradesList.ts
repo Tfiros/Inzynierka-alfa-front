@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { MiddlemanService } from "@/shared/api/services/MiddlemanService"
+import { TradeService } from "@/shared/api/services/TradeService"
 import type {
   MiddlemanTab,
   TradeListItem,
@@ -55,12 +55,12 @@ const useUserTradesList = ({
 
     const call =
       tabAtStart === "available"
-        ? MiddlemanService.getMiddlemanAvailable
+        ? TradeService.getMiddlemanAvailable
         : tabAtStart === "mine"
-          ? MiddlemanService.getMiddlemanInRealization
+          ? TradeService.getMiddlemanInRealization
           : tabAtStart === "completed"
-            ? MiddlemanService.getMiddlemanCompleted
-            : MiddlemanService.getMyFailedWithItemsToReturn
+            ? TradeService.getMiddlemanCompleted
+            : TradeService.getMyFailedWithItemsToReturn
 
     try {
       const res = await call(page, pageSize, query)

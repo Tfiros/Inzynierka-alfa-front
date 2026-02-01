@@ -8,7 +8,7 @@ import TabsSection from "./sections/TabsSection"
 import TradesListSection from "./sections/TradesListSection"
 import ConfirmDeleteTradeDialog from "@/shared/components/AlertDialog"
 import useSetTradeAsRealised from "./hooks/UseSetTradeAsRealised"
-import CompleteTradeWithRatingsDialog from "./components/UserMarkDialog"
+import UseMarkDialog from "./components/UserMarkDialog"
 
 const TradePanelPage = () => {
   const {
@@ -97,7 +97,7 @@ const TradePanelPage = () => {
         onClosedReset={cancelation.actions.reset}
       />
 
-      <CompleteTradeWithRatingsDialog
+      <UseMarkDialog
         open={realised.state.open}
         onOpenChange={(o) => {
           if (!o) realised.actions.close()

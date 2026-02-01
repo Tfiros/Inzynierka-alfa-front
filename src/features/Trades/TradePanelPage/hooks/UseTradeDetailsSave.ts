@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { MiddlemanService } from "@/shared/api/services/MiddlemanService"
+import { TradeService } from "@/shared/api/services/TradeService"
 
 type UseTradeDetailsSaveArgs = {
   tradeId: number | null
@@ -26,7 +26,7 @@ const useTradeDetailsSave = ({
     setSaveError(null)
 
     try {
-      const res = await MiddlemanService.updateByMiddleman(tradeId, {
+      const res = await TradeService.updateByMiddleman(tradeId, {
         hasBuyerItems: hasBuyersItems,
         hasSellerItems: hasSellersItems,
       })

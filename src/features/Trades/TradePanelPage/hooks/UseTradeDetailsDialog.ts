@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react"
-import { MiddlemanService } from "@/shared/api/services/MiddlemanService"
+import { TradeService } from "@/shared/api/services/TradeService"
 import type {
   TradeDetailsResponse,
   TradeListItem,
@@ -47,7 +47,7 @@ const useTradeDetailsDialog = () => {
     })
 
     try {
-      const res = await MiddlemanService.getMiddlemanTradeDetails(trade.tradeId)
+      const res = await TradeService.getMiddlemanTradeDetails(trade.tradeId)
       if (seq !== reqSeq.current) return
 
       const details: TradeDetailsResponse | null =
@@ -88,7 +88,7 @@ const useTradeDetailsDialog = () => {
     setState((s) => ({ ...s, loading: true, error: null }))
 
     try {
-      const res = await MiddlemanService.getMiddlemanTradeDetails(trade.tradeId)
+      const res = await TradeService.getMiddlemanTradeDetails(trade.tradeId)
       if (seq !== reqSeq.current) return
 
       const details: TradeDetailsResponse | null =

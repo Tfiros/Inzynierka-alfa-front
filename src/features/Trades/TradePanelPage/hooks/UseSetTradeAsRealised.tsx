@@ -1,7 +1,7 @@
 import { toast } from "sonner"
 import { useCallback, useMemo, useState } from "react"
 import type { ApiResult } from "@/shared/api/ApiResult"
-import { MiddlemanService } from "@/shared/api/services/MiddlemanService"
+import { TradeService } from "@/shared/api/services/TradeService"
 import type {
   CompleteAndMarkTradeRequest,
   TradeListItem,
@@ -116,7 +116,7 @@ const useSetTradeAsRealised = (opts?: Props) => {
 
       setIsLoading(true)
       try {
-        const res = (await MiddlemanService.setTradeAsRealised(
+        const res = (await TradeService.setTradeAsRealised(
           tradeId,
           safePayload
         )) as ApiResult<number>

@@ -5,16 +5,12 @@ import type {
 } from "@/shared/types/authTypes/AuthErrorTypes"
 import type { ApiResult } from "./ApiResult"
 
-import { RateLimiter, parseRetryAfterToMs } from "./RateLimiter"
-
 type ErrorBody = { message?: string; [k: string]: unknown }
 
 export type ApiClientConfig = AxiosRequestConfig & {
   _retry?: boolean
   skipAuthRefresh?: boolean
   skipCsrfAttach?: boolean
-  skipRateLimit?: boolean
-  __rl_key?: string
 }
 
 const api = axios.create({
@@ -22,15 +18,6 @@ const api = axios.create({
   withCredentials: true,
   timeout: 10000,
   headers: { "Content-Type": "application/json" },
-})
-
-/*To Do:
-- Test to find the best values
-*/
-const limiter = new RateLimiter({
-  maxRequests: 3,
-  perMilliseconds: 1000,
-  maxConcurrent: 6,
 })
 
 let csrfToken: string | null = null
@@ -45,7 +32,6 @@ const storeCsrfFromHeaders = (headers: any) => {
   const t = headers?.["x-xsrf-token"]
   if (typeof t === "string" && t.length > 0) csrfToken = t
 }
-
 const isAuthEndpoint = (url?: string) => {
   const u = (url ?? "").toLowerCase()
   return (
@@ -64,18 +50,8 @@ const isUnsafeMethod = (method?: string) => {
   return m === "post" || m === "put" || m === "patch" || m === "delete"
 }
 
-api.interceptors.request.use(async (config) => {
+api.interceptors.request.use((config) => {
   const cfg = config as ApiClientConfig
-  const method = (cfg.method ?? "get").toLowerCase()
-  const url = cfg.url ?? ""
-  const key = `${method}:${url}`
-
-  const shouldRateLimit = !cfg.skipRateLimit
-
-  if (shouldRateLimit) {
-    await limiter.schedule(key)
-    cfg.__rl_key = key
-  }
 
   if (!cfg.skipCsrfAttach && isUnsafeMethod(cfg.method) && csrfToken) {
     cfg.headers = cfg.headers ?? {}
@@ -88,29 +64,10 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
   (response) => {
     storeCsrfFromHeaders(response.headers)
-
-    const cfg = response.config as ApiClientConfig
-    if (cfg.__rl_key) limiter.release(cfg.__rl_key)
-
     return response
   },
   async (error) => {
     if (error?.response?.headers) storeCsrfFromHeaders(error.response.headers)
-
-    const errCfg = (error?.config ?? {}) as ApiClientConfig
-    if (errCfg.__rl_key) limiter.release(errCfg.__rl_key)
-
-    if (axios.isAxiosError(error)) {
-      const status = error.response?.status
-
-      /* Auto learn limiter
-      We can keep it or delet it.
-      */
-      if (status === 429 && errCfg.__rl_key) {
-        const ra = parseRetryAfterToMs(error.response?.headers?.["retry-after"])
-        limiter.setCooldown(errCfg.__rl_key, ra ?? 1500, "HTTP 429")
-      }
-    }
 
     if (axios.isAxiosError<ErrorBody>(error)) {
       const status =
@@ -130,18 +87,15 @@ api.interceptors.response.use(
         try {
           const refreshRes = await api.post("/Auth/refresh", {}, {
             skipAuthRefresh: true,
-            skipRateLimit: true,
           } as ApiClientConfig)
-
           storeCsrfFromHeaders(refreshRes.headers)
 
           return api(originalRequest)
         } catch {
-          // clearCsrfToken()
-          // todo
+          //clearCsrfToken()
+          //todo
         }
       }
-
       const data = error.response?.data as any
 
       if (

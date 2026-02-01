@@ -25,9 +25,9 @@ type Props = {
   onConfirm: (payload: CompleteAndMarkTradeRequest) => void
 }
 
-const clamp10 = (v: number) => Math.max(0, Math.min(10, v))
+const gradeTo10 = (v: number) => Math.max(0, Math.min(10, v))
 
-const CompleteTradeWithRatingsDialog = ({
+const UseMarkDialog = ({
   open,
   onOpenChange,
   buyer,
@@ -61,10 +61,10 @@ const CompleteTradeWithRatingsDialog = ({
 
     onConfirm({
       buyersID: buyer.id,
-      buyersGrade: clamp10(buyerGrade ?? 0),
+      buyersGrade: gradeTo10(buyerGrade ?? 0),
       buyersDescription: buyerDesc.trim(),
       sellersID: seller.id,
-      sellersGrade: clamp10(sellerGrade ?? 0),
+      sellersGrade: gradeTo10(sellerGrade ?? 0),
       sellersDescription: sellerDesc.trim(),
     })
   }
@@ -101,7 +101,7 @@ const CompleteTradeWithRatingsDialog = ({
                 const raw = e.target.value
                 if (raw === "") return setBuyerGrade(null)
                 const n = Number(raw)
-                setBuyerGrade(Number.isFinite(n) ? clamp10(n) : null)
+                setBuyerGrade(Number.isFinite(n) ? gradeTo10(n) : null)
               }}
               placeholder="np. 8"
             />
@@ -141,7 +141,7 @@ const CompleteTradeWithRatingsDialog = ({
                 const raw = e.target.value
                 if (raw === "") return setSellerGrade(null)
                 const n = Number(raw)
-                setSellerGrade(Number.isFinite(n) ? clamp10(n) : null)
+                setSellerGrade(Number.isFinite(n) ? gradeTo10(n) : null)
               }}
               placeholder="np. 10"
             />
@@ -176,4 +176,4 @@ const CompleteTradeWithRatingsDialog = ({
   )
 }
 
-export default CompleteTradeWithRatingsDialog
+export default UseMarkDialog
