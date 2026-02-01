@@ -6,9 +6,9 @@ import {
   TabsTrigger,
 } from "@/shared/components/tabs"
 import { useEffect, useState } from "react"
-import { useUserOffers } from "../hooks/useProfileOffers"
+import { useUserOffers } from "../hooks/UseProfileOffers"
 import Offer from "@/Features/marketplacePage/components/Offer"
-import { useOfferDetails } from "@/Features/marketplacePage/hooks/useOfferDetails"
+import { useOfferDetails } from "@/Features/marketplacePage/hooks/UseOfferDetails"
 import OfferDetails from "@/Features/marketplacePage/components/OfferDetails"
 
 const TabSection = ({ profileId }: { profileId: number }) => {

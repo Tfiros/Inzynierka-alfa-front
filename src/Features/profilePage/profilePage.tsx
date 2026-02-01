@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom"
 import HeaderSection from "./sections/HeaderSection"
 import StatBoxSection from "./sections/StatBoxSection"
 import TabSection from "./sections/TabSection"
-import { useProfileInfo } from "./hooks/useProfileInfo"
+import { useProfileInfo } from "./hooks/UseProfileInfo"
 
 const ProfilePage = () => {
   const { id } = useParams<{ id: string }>()
