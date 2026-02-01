@@ -1,12 +1,12 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
-import { createUiSlice, type UiSlice } from "./storeParts/UiSlice"
 import { type AuthSlice, createAuthSlice } from "./storeParts/authSlice"
 import {
   type NotificationsSlice,
   createNotificationsSlice,
 } from "./storeParts/NotificationSlice"
 import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
+import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
 export type AppState = UiSlice &
   AuthSlice &
   NotificationsSlice & {
