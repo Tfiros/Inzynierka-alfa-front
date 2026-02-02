@@ -16,8 +16,8 @@ import {
   PaginationPrevious,
 } from "@/shared/components/ui/pagination"
 import { useAppStore } from "@/shared/store/appStore"
-import OffersTabsSection from "./components/OffersTabsSection"
 import type { OffersType } from "@/shared/types/offerTypes/OfferTypes"
+import OffersTabsSection from "./sections/OffersTabsSection"
 
 const MarketplacePage = () => {
   const {
