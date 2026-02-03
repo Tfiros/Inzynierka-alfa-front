@@ -7,12 +7,14 @@ import {
 } from "@/shared/components/tabs"
 import { useEffect, useState } from "react"
 import { useUserOffers } from "../hooks/UseProfileOffers"
-import Offer from "@/Features/marketplacePage/components/Offer"
-import { useOfferDetails } from "@/Features/marketplacePage/hooks/UseOfferDetails"
-import OfferDetails from "@/Features/marketplacePage/components/OfferDetails"
+import Offer from "@/features/marketplacePage/components/Offer"
+import OfferDetails from "@/features/marketplacePage/components/OfferDetails"
+import { useOfferDetails } from "@/features/marketplacePage/hooks/UseOfferDetails"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
-  const [tab, setTab] = useState<"offers" | "history">("offers")
+  const [tab, setTab] = useState<
+    "offers" | "counterOffersSent" | "counterOffersRecieve" | "history"
+  >("offers")
   const [activePage, setActivePage] = useState<number>(1)
   const [historyPage, setHistoryPage] = useState<number>(1)
   const pageSize = 10
@@ -57,9 +59,21 @@ const TabSection = ({ profileId }: { profileId: number }) => {
   return (
     <section>
       <Tabs defaultValue="offers" className="mt-6">
-        <TabsList className="w-full grid grid-cols-2">
+        <TabsList className="w-full grid grid-cols-4">
           <TabsTrigger value="offers" onClick={() => setTab("offers")}>
-            Moje wystawione oferty
+            Moje Oferty
+          </TabsTrigger>
+          <TabsTrigger
+            value="counterOffersRecive"
+            onClick={() => setTab("counterOffersRecieve")}
+          >
+            Wysłane Kontroferty
+          </TabsTrigger>
+          <TabsTrigger
+            value="counterOffersSent"
+            onClick={() => setTab("counterOffersSent")}
+          >
+            Otrzymane Kontroferty
           </TabsTrigger>
           <TabsTrigger value="history" onClick={() => setTab("history")}>
             Historia wymian

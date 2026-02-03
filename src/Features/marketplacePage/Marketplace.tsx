@@ -16,8 +16,6 @@ import {
   PaginationPrevious,
 } from "@/shared/components/ui/pagination"
 import { useAppStore } from "@/shared/store/appStore"
-import type { OffersType } from "@/shared/types/offerTypes/OfferTypes"
-import OffersTabsSection from "./sections/OffersTabsSection"
 
 const MarketplacePage = () => {
   const {
@@ -57,8 +55,6 @@ const MarketplacePage = () => {
     }
   }
 
-  const [tab, setTab] = useState<OffersType>("offers")
-
   return (
     <>
       <div className="mx-auto flex flex-col gap-6  py-6 lg:py-10">
@@ -89,13 +85,6 @@ const MarketplacePage = () => {
             </Button>
           </div>
         </header>
-        <OffersTabsSection
-          value={tab}
-          onChange={setTab}
-          offersCount={0}
-          counterOffersSentCount={0}
-          counterOffersReciveCount={0}
-        />
         <FilterBarContainer />
         {error && <p className="text-red-500">Błąd: {error}</p>}
         {loading && (

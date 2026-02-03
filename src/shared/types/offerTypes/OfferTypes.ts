@@ -1,5 +1,3 @@
-export type OffersType = "offers" | "counterOffersSent" | "counterOffersRecive"
-
 export type offerCoreDto = {
   offerId: number
   title: string
