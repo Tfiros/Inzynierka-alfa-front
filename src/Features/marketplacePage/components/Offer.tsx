@@ -26,6 +26,7 @@ import { useState } from "react"
 import { Dialog, DialogContent } from "@/shared/components/dialog"
 import { useCreateOffer } from "@/shared/views/OfferInteractionView/hooks/UseCreateOffer"
 import CreateOfferModalContent from "@/shared/views/OfferInteractionView/views/CreateCounterOfferModalContent"
+import { useCreateCounterOffer } from "../hooks/UseCreateCounterOffer"
 
 type OfferProps = {
   offer: offerListingDtoResponse
@@ -47,6 +48,7 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
   //For mock
   const [counterOpen, setCounterOpen] = useState(false)
   const counterOffer = useCreateOffer()
+  const counterBase = useCreateCounterOffer()
 
   return (
     <>
@@ -203,7 +205,11 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
                   type="button"
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => setCounterOpen(true)}
+                  onClick={() => {
+                    const id = offer.offerCoreDto.offerId
+                    setCounterOpen(true)
+                    void counterBase.fetchOffer(id)
+                  }}
                   disabled={!isAuthenticated || isOwner}
                 >
                   <Plus /> Złóż kontrofertę
@@ -213,10 +219,22 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
           </div>
         </CardFooter>
       </Card>
-      <Dialog open={counterOpen} onOpenChange={setCounterOpen}>
+      <Dialog
+        open={counterOpen}
+        onOpenChange={(o) => {
+          setCounterOpen(o)
+          if (!o) {
+            counterOffer.reset()
+            counterBase.reset()
+          }
+        }}
+      >
         <DialogContent className="max-w-3xl">
           <CreateOfferModalContent
             offer={counterOffer}
+            baseOffer={counterBase.data}
+            baseOfferLoading={counterBase.isLoading}
+            baseOfferError={counterBase.error}
             onCancel={() => setCounterOpen(false)}
           />
         </DialogContent>

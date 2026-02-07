@@ -3,9 +3,6 @@ import HeaderSection from "./sections/HeaderSection"
 import StatBoxSection from "./sections/StatBoxSection"
 import TabSection from "./sections/TabSection"
 import { useProfileInfo } from "./hooks/UseProfileInfo"
-import OffersTabsSection from "../marketplacePage/sections/OffersTabsSection"
-import type { OffersType } from "@/shared/types/offerTypes/OfferTypes"
-import { useState } from "react"
 
 const ProfilePage = () => {
   const { id } = useParams<{ id: string }>()
@@ -13,8 +10,6 @@ const ProfilePage = () => {
 
   const { profileInfo, stats, loading, error, isOwnProfile } =
     useProfileInfo(profileId)
-
-  const [tab, setTab] = useState<OffersType>("offers")
 
   if (loading) return <div className="p-4">Ładowanie profilu...</div>
   if (error) return <div className="p-4 text-red-500">{error}</div>

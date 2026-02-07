@@ -3,6 +3,7 @@ import { del, get, post, put } from "../ApiClient"
 import type {
   GameOfferDTO,
   ItemOfferDto,
+  OfferInformationDTO,
   offerDetailsDtoResponse,
   offerDraftRequest,
   offerListingDtoResponse,
@@ -51,4 +52,8 @@ export class OfferService {
     offerId: number,
     req: offerUpdateDraftRequest
   ) => post<offerUpdateQuoteResponse>(`${this.base}/${offerId}/quote`, req)
+
+  //GET /Offers/{offerId}/counter
+  public static readonly getCounterInfo = async (offerId: number) =>
+    get<OfferInformationDTO>(`${this.base}/${offerId}/counter`)
 }

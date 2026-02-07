@@ -25,13 +25,23 @@ import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
 import OfferPickedItemsList from "../components/OfferPickedItemsList"
 import { useItemSuggestions } from "../hooks/UseItemSuggestions"
 import type { useCreateOffer } from "../hooks/UseCreateOffer"
+import type { OfferInformationDTO } from "@/shared/types/offerTypes/RequestResponseTypes"
 
 type CreateCounterOfferModalContentProps = {
   onCancel: () => void
   offer: ReturnType<typeof useCreateOffer>
+
+  baseOffer: OfferInformationDTO | null
+  baseOfferLoading: boolean
+  baseOfferError: string | null
 }
+
 const CreateOfferModalContent = ({
   offer,
+  onCancel,
+  baseOffer,
+  baseOfferLoading,
+  baseOfferError,
 }: CreateCounterOfferModalContentProps) => {
   const wantSuggestions = useItemSuggestions()
 
@@ -55,9 +65,36 @@ const CreateOfferModalContent = ({
         </DialogTitle>
       </DialogHeader>
       <div className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-1">
-        <div className="mt-4">
-          <p>Tutaj będą pobierane informacje o ofercie dla bazowej</p>
+        <div className="mt-4 rounded-xl border p-3 bg-muted/30">
+          {baseOfferLoading && (
+            <p className="text-sm text-muted-foreground">
+              Ładowanie oferty bazowej...
+            </p>
+          )}
+
+          {!baseOfferLoading && baseOfferError && (
+            <p className="text-sm text-red-500">{baseOfferError}</p>
+          )}
+
+          {!baseOfferLoading && !baseOfferError && baseOffer && (
+            <div className="flex flex-col gap-1">
+              <div className="text-sm text-muted-foreground">
+                Odpowiadasz na ofertę:
+              </div>
+              <div className="font-semibold">{baseOffer.title}</div>
+              {baseOffer.description && (
+                <div className="text-sm text-muted-foreground line-clamp-2">
+                  {baseOffer.description}
+                </div>
+              )}
+              <div className="text-sm">Token cost: {baseOffer.tokenCost}</div>
+              <div className="text-xs text-muted-foreground">
+                Przedmioty: {baseOffer.items.length}
+              </div>
+            </div>
+          )}
         </div>
+
         <div className="py-12">
           <SectionTitle>Co oferujesz?</SectionTitle>
 
@@ -163,6 +200,7 @@ const CreateOfferModalContent = ({
             type="button"
             variant="outline"
             className="h-10 rounded-xl px-8 text-base"
+            onClick={onCancel}
           >
             Anuluj
           </Button>

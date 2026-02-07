@@ -71,3 +71,26 @@ export type GameOfferDTO = {
   name: string
   photoUrl: string | null
 }
+
+export type OfferListingItemDTO = {
+  itemId: number
+  name: string
+  gameId: number
+  photoUrl: string
+  quantity: number
+  gameName: string
+  genreId: number
+  genreName: string
+}
+
+export type OfferInformationDTO = {
+  offerId: number
+  ownerId: number
+  title: string
+  description: string | null
+  tokenCost: number
+  expDate: string
+  offerStatusId: number
+  creationDate: string
+  items: OfferListingItemDTO[]
+}
