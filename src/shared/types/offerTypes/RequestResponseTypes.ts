@@ -71,6 +71,7 @@ export type GameOfferDTO = {
   id: number
   name: string
   photoUrl: string | null
+  genreId: number
 }
 
 export type GenreOfferDTO = {
