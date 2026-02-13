@@ -250,6 +250,7 @@ const toOfferLine = (x: offerListingItemDto): OfferLine => ({
       id: x.itemDto.game.id,
       name: x.itemDto.game.name,
       photoUrl: x.itemDto.game.photoUrl,
+      genreId: x.genreId,
     },
   },
   quantity: x.quantity,
