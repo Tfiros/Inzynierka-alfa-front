@@ -21,6 +21,7 @@ import OfferItemCard from "./OfferItemCard"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useAppStore } from "@/shared/store/appStore"
 import { cn } from "@/shared/lib/Utils"
+import OfferStatusPill from "./OfferStatusPill"
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
@@ -37,12 +38,14 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
   const currentUserId = useAppStore((s) => s.userId)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
+  const isActive = offer.offerCoreDto.offerStatusId === 1
   return (
     <Card
       className={cn(
         "h-full flex flex-col",
         offer.offerCoreDto.isHighlighted &&
-          "border-2 border-yellow-400/70 bg-yellow-50/30 shadow-[0_0_0_3px_rgba(250,204,21,0.15)]"
+          "border-2 border-yellow-400/70 bg-yellow-50/30 shadow-[0_0_0_3px_rgba(250,204,21,0.15)]",
+        !isActive && "opacity-60"
       )}
     >
       <CardHeader>
@@ -56,6 +59,11 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
             </h1>
 
             <div className="flex flex-row items-center gap-3">
+              {!isActive && (
+                <OfferStatusPill
+                  offerStatusId={offer.offerCoreDto.offerStatusId}
+                />
+              )}
               <div className="flex flex-row items-center text-xs text-muted-foreground">
                 <CalendarDays className="w-5 h-5" />
                 <span className="pl-2">{offer.offerCoreDto.expDate}</span>
@@ -161,7 +169,7 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
                 onClick={() => requestEdit(offer.offerCoreDto.offerId)}
-                disabled={!requestEdit || !isOwner}
+                disabled={!isActive || !requestEdit || !isOwner}
               >
                 <SquarePen className="mr-1 h-4 w-4" /> Edytuj
               </Button>
@@ -171,7 +179,7 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
                 onClick={() => requestDelete(offer.offerCoreDto.offerId)}
-                disabled={!isOwner}
+                disabled={!isActive || !isOwner}
               >
                 <Trash2 className="mr-1 h-4 w-4" /> Usuń
               </Button>
@@ -182,7 +190,7 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
                 type="button"
                 className="text-xs cursor-pointer w-full sm:w-auto"
                 onClick={() => console.log(offer.offerCoreDto.offerId)}
-                disabled={isOwner}
+                disabled={!isActive || isOwner}
               >
                 Wymień
               </Button>
@@ -191,7 +199,7 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
                 onClick={() => console.log(offer.offerCoreDto.offerId)}
-                disabled={isOwner}
+                disabled={!isActive || isOwner}
               >
                 <Plus /> Złóż kontrofertę
               </Button>
