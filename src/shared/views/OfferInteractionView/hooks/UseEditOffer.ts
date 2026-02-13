@@ -165,8 +165,8 @@ export const useEditOffer = (offerId: number | null) => {
       (acc, x) => acc + x.item.estimatedTokenValue * x.quantity,
       0
     )
-    const base = Math.ceil(totalValue * 0.05)
-    return Math.max(10, base + durationFee + highlighFee)
+    const base = Math.max(10, Math.ceil(totalValue * 0.02))
+    return base + durationFee + highlighFee
   }, [itemsHave, itemsWant, durationDays, isHighlighted])
 
   const updateFeePreview = useMemo(() => {

@@ -75,9 +75,8 @@ export const useCreateOffer = () => {
       (acc, x) => acc + x.item.estimatedTokenValue * x.quantity,
       0
     )
-    let fee = sum * 0.05
-    fee += highlightFee + durationFee
-    return Math.ceil(Math.max(10, fee))
+    const base = Math.max(10, Math.ceil(sum * 0.02))
+    return base + durationFee + highlightFee
   }, [itemsHave, itemsWant, isHighlighted, durationDays])
 
   const reset = useCallback(() => {
