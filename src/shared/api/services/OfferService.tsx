@@ -2,6 +2,7 @@ import type { PagedResponse } from "@/shared/types/PagedType"
 import { del, get, post, put } from "../ApiClient"
 import type {
   GameOfferDTO,
+  GenreOfferDTO,
   ItemOfferDto,
   offerDetailsDtoResponse,
   offerDraftRequest,
@@ -10,6 +11,7 @@ import type {
   offerQuoteResponse,
   offerUpdateDraftRequest,
   offerUpdateQuoteResponse,
+  RarityOfferDTO,
 } from "@/shared/types/offerTypes/RequestResponseTypes"
 
 export class OfferService {
@@ -46,6 +48,12 @@ export class OfferService {
 
   public static readonly getGames = async () =>
     get<GameOfferDTO[]>(`${this.base}/games`)
+
+  public static readonly getGenres = async () =>
+    get<GenreOfferDTO[]>(`${this.base}/genres`)
+
+  public static readonly getRarities = async (gameId: number) =>
+    get<RarityOfferDTO[]>(`${this.base}/rarities`, { gameId })
 
   public static readonly offerUpdateQuote = async (
     offerId: number,

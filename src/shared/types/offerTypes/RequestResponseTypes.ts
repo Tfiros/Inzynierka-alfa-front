@@ -12,6 +12,7 @@ export type offerListingQueryRequest = {
   pageSize: number
   gameId?: number
   genreId?: number
+  rarityId?: number
   searchText?: string
   orderBy: offerOrderBy
 }
@@ -70,4 +71,15 @@ export type GameOfferDTO = {
   id: number
   name: string
   photoUrl: string | null
+  genreId: number
+}
+
+export type GenreOfferDTO = {
+  id: number
+  name: string
+}
+
+export type RarityOfferDTO = {
+  id: number
+  name: string
 }

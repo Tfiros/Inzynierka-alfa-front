@@ -33,8 +33,8 @@ export type offerItemDto = {
 }
 
 export const offerOrderBy = {
-  newest: 1,
-  oldest: 2,
+  oldest: 1,
+  newest: 2,
   tokenCostAsc: 3,
   tokenCostDesc: 4,
   expDateAsc: 5,
