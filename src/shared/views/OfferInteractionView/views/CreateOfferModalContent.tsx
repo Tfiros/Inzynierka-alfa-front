@@ -236,7 +236,7 @@ const CreateOfferModalContent = ({
               </Select>
               {wantDropdown.gamesError && (
                 <div className="mt-2 text-sm text-red-500">
-                  {haveDropdown.gamesError}
+                  {wantDropdown.gamesError}
                 </div>
               )}
             </div>
