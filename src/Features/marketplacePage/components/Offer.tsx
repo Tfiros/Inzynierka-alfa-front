@@ -22,6 +22,12 @@ import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestR
 import { useAppStore } from "@/shared/store/appStore"
 import { cn } from "@/shared/lib/Utils"
 import OfferStatusPill from "./OfferStatusPill"
+import PointsIcon from "@/shared/photos/PointsIcon.svg"
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/shared/components/ui/tooltip"
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
@@ -104,6 +110,21 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
                 i {remainingOffered} dodatkowych przedmiotów
               </p>
             )}
+            {offer.offerCoreDto.tokensOffered > 0 && (
+              <span className="inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
+                + {offer.offerCoreDto.tokensOffered}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <img
+                      src={PointsIcon}
+                      alt="tokenów"
+                      className="h-4 w-4 object-contain"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>tokenów</TooltipContent>
+                </Tooltip>
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col w-full gap-2 border-t pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4 border-gray-300">
@@ -120,6 +141,21 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
               <p className="text-sm text-muted-foreground">
                 i {remainingWanted} dodatkowych przedmiotów
               </p>
+            )}
+            {offer.offerCoreDto.tokensWanted > 0 && (
+              <span className="inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
+                + {offer.offerCoreDto.tokensWanted}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <img
+                      src={PointsIcon}
+                      alt="tokenów"
+                      className="h-4 w-4 object-contain"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>tokenów</TooltipContent>
+                </Tooltip>
+              </span>
             )}
           </div>
         </div>

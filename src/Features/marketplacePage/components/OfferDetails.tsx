@@ -12,6 +12,12 @@ import { Plus, SquarePen, Trash2 } from "lucide-react"
 import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useAppStore } from "@/shared/store/appStore"
 import { cn } from "@/shared/lib/Utils"
+import PointsIcon from "@/shared/photos/PointsIcon.svg"
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/shared/components/ui/tooltip"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
@@ -105,6 +111,21 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                 </div>
               ))}
             </div>
+            {offer.offerCoreDto.tokensOffered > 0 && (
+              <span className="mt-3 inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
+                + {offer.offerCoreDto.tokensOffered}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <img
+                      src={PointsIcon}
+                      alt="tokenów"
+                      className="h-4 w-4 object-contain"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>tokenów</TooltipContent>
+                </Tooltip>
+              </span>
+            )}
           </div>
 
           <div className="border-t pt-4">
@@ -119,6 +140,21 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                 </div>
               ))}
             </div>
+            {offer.offerCoreDto.tokensWanted > 0 && (
+              <span className="mt-3 inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
+                + {offer.offerCoreDto.tokensWanted}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <img
+                      src={PointsIcon}
+                      alt="tokenów"
+                      className="h-4 w-4 object-contain"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>tokenów</TooltipContent>
+                </Tooltip>
+              </span>
+            )}
           </div>
         </div>
       </DialogContent>

@@ -166,6 +166,24 @@ const EditOfferModalContent = ({
               onSetQuantity={offer.setHaveQuantity}
               onRemoveAll={offer.removeAllHaveItem}
             />
+            <div className="mt-4">
+              <label className="text-sm font-medium text-muted-foreground">
+                Tokeny oferowane (opcjonalnie)
+              </label>
+              <Input
+                type="number"
+                min={0}
+                value={offer.tokensOffered || ""}
+                onChange={(e) =>
+                  offer.setTokensOffered(
+                    Math.max(0, parseInt(e.target.value) || 0)
+                  )
+                }
+                disabled={offer.isLoading || offer.quoteIsLoading}
+                className="mt-2 h-10 rounded-xl bg-muted/40 border-muted-foreground/20"
+                placeholder="0"
+              />
+            </div>
           </div>
           <div className="py-12">
             <SectionTitle>Czego szukasz?</SectionTitle>
@@ -241,6 +259,24 @@ const EditOfferModalContent = ({
               onSetQuantity={offer.setWantQuantity}
               onRemoveAll={offer.removeAllWantItem}
             />
+            <div className="mt-4">
+              <label className="text-sm font-medium text-muted-foreground">
+                Tokeny oczekiwane (opcjonalnie)
+              </label>
+              <Input
+                type="number"
+                min={0}
+                value={offer.tokensWanted || ""}
+                onChange={(e) =>
+                  offer.setTokensWanted(
+                    Math.max(0, parseInt(e.target.value) || 0)
+                  )
+                }
+                disabled={offer.isLoading || offer.quoteIsLoading}
+                className="mt-2 h-10 rounded-xl bg-muted/40 border-muted-foreground/20"
+                placeholder="0"
+              />
+            </div>
           </div>
           <div className="mt-6">
             <SectionTitle>Ważność oferty</SectionTitle>

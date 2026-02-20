@@ -7,6 +7,8 @@ export type offerCoreDto = {
   tokenCost: number
   offerStatusId: number
   isHighlighted: boolean
+  tokensOffered: number
+  tokensWanted: number
 }
 
 export type offerUserDto = {
