@@ -1,4 +1,5 @@
 import { OfferService } from "@/shared/api/services/OfferService"
+import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
 import { selectCounter, useAppStore } from "@/shared/store/appStore"
 import { offerOrderBy } from "@/shared/types/offerTypes/OfferTypes"
 import type {
@@ -10,15 +11,6 @@ import type {
 } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
-function useDebouncedValue<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value)
-  useEffect(() => {
-    const t = setTimeout(() => setDebouncedValue(value), delay)
-    return () => clearTimeout(t)
-  }, [value, delay])
-  return debouncedValue
-}
-
 export function useOffersListing() {
   const [page, setPage] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
@@ -27,7 +19,7 @@ export function useOffersListing() {
   const [totalCount, setTotalCount] = useState<number>(0)
 
   const [searchText, setSearchText] = useState<string>("")
-  const debouncedSearchText = useDebouncedValue<string>(searchText, 300)
+  const debouncedSearchText = useDebounceValue<string>(searchText, 300)
   const [orderBy, setOrderBy] = useState<offerOrderBy>(offerOrderBy.newest)
 
   const [gameId, setGameId] = useState<number | undefined>(undefined)
