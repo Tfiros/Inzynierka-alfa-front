@@ -67,7 +67,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
         </TabsList>
 
         <TabsContent value="offers" className="mt-4">
-          {loadingActive || activeOffers == null ? (
+          {loadingActive && activeOffers == null ? (
             <Card>
               <CardContent className="p-6 text-sm text-muted-foreground">
                 Ładowanie aktywnych ofert...
@@ -104,7 +104,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
         </TabsContent>
 
         <TabsContent value="history" className="mt-4">
-          {loadingHistory || (tab == "history" && historyOffers == null) ? (
+          {loadingHistory && tab == "history" && historyOffers == null ? (
             <Card>
               <CardContent className="p-6 text-sm text-muted-foreground">
                 Ładowanie historii wymian...
