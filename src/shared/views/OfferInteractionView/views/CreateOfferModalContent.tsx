@@ -30,6 +30,7 @@ import { Input } from "@/shared/components/input"
 import { Textarea } from "@/shared/components/textarea"
 import { useItemSuggestions } from "../hooks/UseItemSuggestions"
 import type { useCreateOffer } from "../hooks/UseCreateOffer"
+import type { ItemOfferDto } from "@/shared/types/offerTypes/RequestResponseTypes"
 
 type CreateOfferModalContentProps = {
   onCancel: () => void
@@ -62,6 +63,12 @@ const CreateOfferModalContent = ({
 
   const haveDropdown = useOfferGameItemDropdown()
   const wantDropdown = useOfferGameItemDropdown()
+  const [haveLockedItem, setHaveLockedItem] = useState<ItemOfferDto | null>(
+    null
+  )
+  const [wantLockedItem, setWantLockedItem] = useState<ItemOfferDto | null>(
+    null
+  )
   return (
     <>
       <DialogHeader className="flex flex-col items-center gap-y-2">
@@ -155,8 +162,12 @@ const CreateOfferModalContent = ({
                   haveDropdown.gamesLoading
                 }
                 onPickSuggestion={(item) => {
-                  offer.addHaveItem(item)
-                  haveDropdown.reset()
+                  setHaveLockedItem(item)
+                }}
+                lockedItem={haveLockedItem}
+                onUnlock={() => {
+                  setHaveLockedItem(null)
+                  haveDropdown.setQuery("")
                 }}
               />
             </div>
@@ -164,7 +175,15 @@ const CreateOfferModalContent = ({
             <div className="shrink-0">
               <IconSquareButton
                 ariaLabel="Dodaj oferowany przedmiot"
-                onClick={() => {}}
+                onClick={() => {
+                  if (!haveLockedItem) return
+                  offer.addHaveItem(haveLockedItem)
+                  setHaveLockedItem(null)
+                  haveDropdown.reset()
+                }}
+                disabled={
+                  !haveLockedItem || offer.isLoading || offer.quoteIsLoading
+                }
               />
             </div>
           </div>
@@ -255,8 +274,12 @@ const CreateOfferModalContent = ({
                   wantDropdown.gamesLoading
                 }
                 onPickSuggestion={(item) => {
-                  offer.addWantItem(item)
-                  wantDropdown.reset()
+                  setWantLockedItem(item)
+                }}
+                lockedItem={wantLockedItem}
+                onUnlock={() => {
+                  setWantLockedItem(null)
+                  wantDropdown.setQuery("")
                 }}
               />
             </div>
@@ -264,7 +287,15 @@ const CreateOfferModalContent = ({
             <div className="shrink-0">
               <IconSquareButton
                 ariaLabel="Dodaj oferowany przedmiot"
-                onClick={() => {}}
+                onClick={() => {
+                  if (!wantLockedItem) return
+                  offer.addWantItem(wantLockedItem)
+                  setWantLockedItem(null)
+                  wantDropdown.reset()
+                }}
+                disabled={
+                  !wantLockedItem || offer.isLoading || offer.quoteIsLoading
+                }
               />
             </div>
           </div>

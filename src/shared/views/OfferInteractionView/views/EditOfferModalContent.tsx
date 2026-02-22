@@ -29,7 +29,11 @@ import { useEditOffer } from "../hooks/UseEditOffer"
 import { Input } from "@/shared/components/input"
 import { Textarea } from "@/shared/components/textarea"
 import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
-import type { offerUpdateQuoteResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
+import type {
+  ItemOfferDto,
+  offerUpdateQuoteResponse,
+} from "@/shared/types/offerTypes/RequestResponseTypes"
+import IconSquareButton from "../components/IconSquareButton"
 
 type EditOfferModalContentProps = {
   onCancel: () => void
@@ -47,6 +51,12 @@ const EditOfferModalContent = ({
 
   const haveDropdown = useOfferGameItemDropdown()
   const wantDropdown = useOfferGameItemDropdown()
+  const [haveLockedItem, setHaveLockedItem] = useState<ItemOfferDto | null>(
+    null
+  )
+  const [wantLockedItem, setWantLockedItem] = useState<ItemOfferDto | null>(
+    null
+  )
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [serverQuote, setServerQuote] =
     useState<offerUpdateQuoteResponse | null>(null)
@@ -154,7 +164,25 @@ const EditOfferModalContent = ({
                     haveDropdown.gamesLoading
                   }
                   onPickSuggestion={(item) => {
-                    offer.addHaveItem(item)
+                    setHaveLockedItem(item)
+                  }}
+                  lockedItem={haveLockedItem}
+                  onUnlock={() => {
+                    setHaveLockedItem(null)
+                    haveDropdown.setQuery("")
+                  }}
+                />
+              </div>
+              <div className="shrink-0">
+                <IconSquareButton
+                  ariaLabel="Dodaj oferowany przedmiot"
+                  disabled={
+                    !haveLockedItem || offer.isLoading || offer.quoteIsLoading
+                  }
+                  onClick={() => {
+                    if (!haveLockedItem) return
+                    offer.addHaveItem(haveLockedItem)
+                    setHaveLockedItem(null)
                     haveDropdown.reset()
                   }}
                 />
@@ -247,7 +275,25 @@ const EditOfferModalContent = ({
                     wantDropdown.gamesLoading
                   }
                   onPickSuggestion={(item) => {
-                    offer.addWantItem(item)
+                    setWantLockedItem(item)
+                  }}
+                  lockedItem={wantLockedItem}
+                  onUnlock={() => {
+                    setWantLockedItem(null)
+                    wantDropdown.setQuery("")
+                  }}
+                />
+              </div>
+              <div className="shrink-0">
+                <IconSquareButton
+                  ariaLabel="Dodaj szukany przedmiot"
+                  disabled={
+                    !wantLockedItem || offer.isLoading || offer.quoteIsLoading
+                  }
+                  onClick={() => {
+                    if (!wantLockedItem) return
+                    offer.addWantItem(wantLockedItem)
+                    setWantLockedItem(null)
                     wantDropdown.reset()
                   }}
                 />
