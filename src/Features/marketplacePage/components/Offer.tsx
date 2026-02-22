@@ -34,8 +34,9 @@ type OfferProps = {
 }
 
 const Offer = ({ offer, onShowDetails }: OfferProps) => {
-  const remainingOffered = offer.offeredItemsTotalCount - 3
-  const remainingWanted = offer.wantedItemsTotalCount - 3
+  const remainingOffered =
+    offer.offeredItemsTotalCount - offer.offeredItems.length
+  const remainingWanted = offer.wantedItemsTotalCount - offer.wantedItems.length
   const requestEdit = useAppStore((s) => s.offerRequestEdit)
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
   const successRate = new Intl.NumberFormat("pl-PL", {
