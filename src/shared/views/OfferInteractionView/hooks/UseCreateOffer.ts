@@ -25,6 +25,8 @@ export const useCreateOffer = () => {
   const [quoteIsLoading, setQuoteIsLoading] = useState(false)
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [tokensOffered, setTokensOffered] = useState(0)
+  const [tokensWanted, setTokensWanted] = useState(0)
   const inc = useAppStore((s) => s.inc)
   const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
 
@@ -64,8 +66,19 @@ export const useCreateOffer = () => {
       offeredItems: toOfferItemDto(itemsHave),
       wantedItems: toOfferItemDto(itemsWant),
       isHighlighted,
+      tokensOffered,
+      tokensWanted,
     }),
-    [title, description, durationDays, itemsHave, itemsWant, isHighlighted]
+    [
+      title,
+      description,
+      durationDays,
+      itemsHave,
+      itemsWant,
+      isHighlighted,
+      tokensOffered,
+      tokensWanted,
+    ]
   )
 
   const offerCost = useMemo(() => {
@@ -75,9 +88,18 @@ export const useCreateOffer = () => {
       (acc, x) => acc + x.item.estimatedTokenValue * x.quantity,
       0
     )
-    const base = Math.max(10, Math.ceil(sum * 0.02))
-    return base + durationFee + highlightFee
-  }, [itemsHave, itemsWant, isHighlighted, durationDays])
+    const itemBase = Math.ceil(sum * 0.02)
+    const tokenBase = Math.ceil((tokensOffered + tokensWanted) * 0.02)
+    const baseCost = itemBase < 10 ? 10 + tokenBase : itemBase + tokenBase
+    return baseCost + durationFee + highlightFee
+  }, [
+    itemsHave,
+    itemsWant,
+    isHighlighted,
+    durationDays,
+    tokensOffered,
+    tokensWanted,
+  ])
 
   const reset = useCallback(() => {
     setItemsHave([])
@@ -88,6 +110,8 @@ export const useCreateOffer = () => {
     setTitle("")
     setDescription("")
     setDurationDays(7)
+    setTokensOffered(0)
+    setTokensWanted(0)
   }, [])
 
   const getServerQuote = useCallback(async (): Promise<number | null> => {
@@ -179,5 +203,9 @@ export const useCreateOffer = () => {
     setTitle,
     description,
     setDescription,
+    tokensOffered,
+    setTokensOffered,
+    tokensWanted,
+    setTokensWanted,
   }
 }

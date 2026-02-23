@@ -23,6 +23,8 @@ export type offerDraftRequest = {
   isHighlighted: boolean
   offeredItems: offerItemDto[]
   wantedItems: offerItemDto[]
+  tokensOffered: number
+  tokensWanted: number
 }
 
 export type offerUpdateDraftRequest = {
@@ -32,6 +34,8 @@ export type offerUpdateDraftRequest = {
   isHighlighted: boolean
   offeredItems: offerItemDto[]
   wantedItems: offerItemDto[]
+  tokensOffered: number
+  tokensWanted: number
 }
 
 export type offerUpdateQuoteResponse = {

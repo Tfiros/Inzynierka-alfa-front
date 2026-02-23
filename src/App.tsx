@@ -19,6 +19,7 @@ import SettingsPage from "./features/settingsPage/SettingsPage"
 import StatutePage from "./features/statutePage/StatutePage"
 import UserManagementPage from "./features/userManagement/UserManagementPage"
 import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
+import { TooltipProvider } from "./shared/components/ui/tooltip"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
@@ -28,34 +29,36 @@ function App() {
   }, [initSecurity])
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/dashboard" element={<MainDashboard />} />
-          <Route path="oferty" element={<div>Oferty</div>} />
-          <Route path="faqs" element={<FaqsSite />} />
-          <Route path="profile/:id" element={<ProfilePage />} />
-          <Route path="statute" element={<StatutePage />} />
-          <Route path="shop" element={<PointShop />} />
-          <Route path="profileEdit" element={<ProfileEdit />} />
-          <Route path="marketplace" element={<MarketplacePage />} />
-          <Route path="contact" element={<ContactPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-          <Route path="tradePanel" element={<TradePanelPage />} />
+    <TooltipProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/dashboard" element={<MainDashboard />} />
+            <Route path="oferty" element={<div>Oferty</div>} />
+            <Route path="faqs" element={<FaqsSite />} />
+            <Route path="profile/:id" element={<ProfilePage />} />
+            <Route path="statute" element={<StatutePage />} />
+            <Route path="shop" element={<PointShop />} />
+            <Route path="profileEdit" element={<ProfileEdit />} />
+            <Route path="marketplace" element={<MarketplacePage />} />
+            <Route path="contact" element={<ContactPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="tradePanel" element={<TradePanelPage />} />
 
-          <Route element={<AdminRoute />}>
-            <Route path="userManagement" element={<UserManagementPage />} />
-            <Route path="itemManagement" element={<ItemManagementPage />} />
+            <Route element={<AdminRoute />}>
+              <Route path="userManagement" element={<UserManagementPage />} />
+              <Route path="itemManagement" element={<ItemManagementPage />} />
+            </Route>
           </Route>
-        </Route>
 
-        <Route element={<BlankLayout />}>
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-      </Routes>
-      <OfferInteractionHost />
-    </BrowserRouter>
+          <Route element={<BlankLayout />}>
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+        <OfferInteractionHost />
+      </BrowserRouter>
+    </TooltipProvider>
   )
 }
 
