@@ -32,6 +32,12 @@ const MarketplacePage = () => {
     setOrderBy,
   } = useOffersListing()
 
+  const notExpiredOffers = offers.filter((o) => {
+    const s = o.offerCoreDto.expDate
+    const expEnd = new Date(`${s}T23:59:59.999`)
+    return !Number.isNaN(expEnd.getTime()) && expEnd >= new Date()
+  })
+
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -90,7 +96,11 @@ const MarketplacePage = () => {
         {loading && (
           <p className="text-sm text-muted-foreground">Ładowanie ofert...</p>
         )}
-        <OffersGrid offers={offers} onShowDetails={handleShowDetails} />
+        <OffersGrid
+          offers={notExpiredOffers}
+          onShowDetails={handleShowDetails}
+        />
+
         {!loading && totalCount > 0 && totalPages > 1 && (
           <Pagination className="mt-6">
             <PaginationContent>

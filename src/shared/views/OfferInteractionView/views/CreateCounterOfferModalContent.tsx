@@ -1,17 +1,11 @@
 import { useState } from "react"
-import SectionTitle from "../components/SectionTitle"
-import { Button } from "@/shared/components/button"
 import { Plus } from "lucide-react"
-import { DialogHeader, DialogTitle } from "@/shared/components/dialog"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/components/select"
-import IconSquareButton from "../components/IconSquareButton"
+
+import SectionTitle from "../components/SectionTitle"
 import SearchSuggest from "../components/SearchSuggest"
+
+import { Button } from "@/shared/components/button"
+import { DialogHeader, DialogTitle } from "@/shared/components/dialog"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,49 +15,74 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/alert-dialog"
-import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
-import OfferPickedItemsList from "../components/OfferPickedItemsList"
-import { useItemSuggestions } from "../hooks/UseItemSuggestions"
-import type { useCreateOffer } from "../hooks/UseCreateOffer"
-import type { OfferInformationDTO } from "@/shared/types/offerTypes/RequestResponseTypes"
 
-type CreateCounterOfferModalContentProps = {
+import { useItemSuggestions } from "../hooks/UseItemSuggestions"
+import type { OfferInformationDTO } from "@/shared/types/offerTypes/RequestResponseTypes"
+import type { CounterOfferDraftRequest } from "@/shared/types/counterOfferTypes/RequestResponseTypes"
+import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
+
+type PickedItem = {
+  itemId: number
+  name: string
+  gameName?: string
+  quantity: number
+}
+
+type Props = {
+  offerId: number | null
   onCancel: () => void
-  offer: ReturnType<typeof useCreateOffer>
 
   baseOffer: OfferInformationDTO | null
   baseOfferLoading: boolean
   baseOfferError: string | null
 }
 
-const CreateOfferModalContent = ({
-  offer,
+export default function CreateCounterOfferModalContent({
+  offerId,
   onCancel,
   baseOffer,
   baseOfferLoading,
   baseOfferError,
-}: CreateCounterOfferModalContentProps) => {
-  const wantSuggestions = useItemSuggestions()
+}: Props) {
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const suggestions = useItemSuggestions()
+  const [items, setItems] = useState<PickedItem[]>([])
+  const [tokens, setTokens] = useState(0)
 
-  const handleOpenConfirm = async () => {
-    const cost = await offer.getServerQuote()
-    if (cost == null) return
-    setServerCost(cost)
-    setConfirmOpen(true)
+  const addItem = (item: any) => {
+    const itemId = item.id ?? item.itemId ?? item.ID
+    const name = item.name ?? item.Name
+    const gameName = item.gameName ?? item.game?.name ?? item.GameName
+
+    if (!itemId || !name) return
+
+    setItems((prev) => {
+      if (prev.some((x) => x.itemId === itemId)) return prev
+      return [...prev, { itemId, name, gameName, quantity: 1 }]
+    })
   }
 
-  const [confirmOpen, setConfirmOpen] = useState(false)
-  const [serverCost, setServerCost] = useState<number | null>(null)
+  const setQty = (itemId: number, qty: number) => {
+    const safe = Number.isFinite(qty) ? Math.max(1, qty) : 1
+    setItems((prev) =>
+      prev.map((x) => (x.itemId === itemId ? { ...x, quantity: safe } : x))
+    )
+  }
 
-  const haveDropdown = useOfferGameItemDropdown()
-  const wantDropdown = useOfferGameItemDropdown()
+  const removeOne = (itemId: number) =>
+    setItems((prev) => prev.filter((x) => x.itemId !== itemId))
+  const removeAll = () => setItems([])
+
+  const canConfirm = items.length > 0 && tokens >= 0
+
   return (
     <>
       <DialogHeader className="flex flex-col items-center gap-y-2">
         <DialogTitle className="text-lg font-semibold">
-          Złóż propozycję Kontroferty
+          Złóż propozycję kontroferty
         </DialogTitle>
       </DialogHeader>
+
       <div className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-1">
         <div className="mt-4 rounded-xl border p-3 bg-muted/30">
           {baseOfferLoading && (
@@ -77,127 +96,164 @@ const CreateOfferModalContent = ({
           )}
 
           {!baseOfferLoading && !baseOfferError && baseOffer && (
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2">
               <div className="text-sm text-muted-foreground">
-                Odpowiadasz na ofertę:
+                Koszt oferty:{" "}
+                <span className="font-medium text-foreground">
+                  {baseOffer.tokenCost}
+                </span>
               </div>
-              <div className="font-semibold">{baseOffer.title}</div>
-              {baseOffer.description && (
-                <div className="text-sm text-muted-foreground line-clamp-2">
-                  {baseOffer.description}
-                </div>
-              )}
-              <div className="text-sm">Token cost: {baseOffer.tokenCost}</div>
+
               <div className="text-xs text-muted-foreground">
-                Przedmioty: {baseOffer.items.length}
+                Przedmioty (Mam):
+              </div>
+
+              <div className="space-y-2">
+                {(() => {
+                  const offered = (baseOffer as any).offeredItems
+                  if (Array.isArray(offered)) return offered
+
+                  const items = (baseOffer as any).items ?? []
+                  return (items as any[]).filter((x) => {
+                    const flag = x?.isWanted ?? x?.is_wanted
+                    return flag === false
+                  })
+                })().map((x: any) => {
+                  const id = x?.itemDto?.id ?? x?.itemId ?? x?.item_id ?? x?.id
+                  const name =
+                    x?.itemDto?.name ??
+                    x?.name ??
+                    x?.item?.name ??
+                    `Item #${id ?? "?"}`
+                  const game =
+                    x?.itemDto?.game?.name ?? x?.gameName ?? x?.game?.name
+                  const qty = x?.quantity ?? 1
+
+                  return (
+                    <div
+                      key={x?.id ?? id ?? name}
+                      className="flex items-center justify-between rounded-lg border bg-background px-3 py-2"
+                    >
+                      <div className="flex flex-col">
+                        <div className="text-sm font-medium">{name}</div>
+                        {game && (
+                          <div className="text-xs text-muted-foreground">
+                            {game}
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        x{qty}
+                      </div>
+                    </div>
+                  )
+                })}
+
+                {(() => {
+                  const offered = (baseOffer as any).offeredItems
+                  if (Array.isArray(offered)) return offered.length === 0
+
+                  const items = (baseOffer as any).items ?? []
+                  const mam = (items as any[]).filter(
+                    (x) => (x?.isWanted ?? x?.is_wanted) === false
+                  )
+                  return mam.length === 0
+                })() && (
+                  <div className="text-sm text-muted-foreground">
+                    Brak przedmiotów w sekcji „Mam”.
+                  </div>
+                )}
               </div>
             </div>
           )}
         </div>
 
-        <div className="py-12">
+        <div className="py-10">
           <SectionTitle>Co oferujesz?</SectionTitle>
-
           <SearchSuggest
-            value={wantSuggestions.query}
-            onChange={wantSuggestions.setQuery}
-            suggestions={wantSuggestions.suggestions}
-            loading={wantSuggestions.loading}
-            error={wantSuggestions.error}
+            value={suggestions.query}
+            onChange={suggestions.setQuery}
+            suggestions={suggestions.suggestions}
+            loading={suggestions.loading}
+            error={suggestions.error}
             onPickSuggestion={(item) => {
-              offer.addWantItem(item)
-              wantSuggestions.setQuery("")
+              addItem(item)
+              suggestions.setQuery("")
             }}
-            disabled={offer.isLoading}
+            disabled={false}
           />
 
-          <div className="mt-4 flex items-center gap-3">
-            <div className="flex-1">
-              <Select
-                value={wantDropdown.gameId ? String(wantDropdown.gameId) : ""}
-                onValueChange={(v) =>
-                  wantDropdown.setGame(v ? Number(v) : null)
-                }
+          <div className="mt-4 space-y-2">
+            {items.length === 0 && (
+              <div className="text-sm text-muted-foreground">
+                Dodaj przynajmniej jeden przedmiot do kontroferty.
+              </div>
+            )}
+
+            {items.map((it) => (
+              <div
+                key={it.itemId}
+                className="flex items-center justify-between rounded-xl border p-3"
               >
-                <SelectTrigger className="h-10 rounded-xl bg-muted/40 border-muted-foreground/20 w-full">
-                  <SelectValue placeholder="Wybierz grę" />
-                </SelectTrigger>
-                <SelectContent>
-                  {wantDropdown.gamesLoading && (
-                    <SelectItem value="__loading" disabled>
-                      Ładowanie...
-                    </SelectItem>
+                <div className="flex flex-col">
+                  <div className="font-medium">{it.name}</div>
+                  {it.gameName && (
+                    <div className="text-xs text-muted-foreground">
+                      {it.gameName}
+                    </div>
                   )}
-                  {!wantDropdown.gamesLoading &&
-                    wantDropdown.games.map((g) => (
-                      <SelectItem key={g.id} value={String(g.id)}>
-                        {g.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              {wantDropdown.gamesError && (
-                <div className="mt-2 text-sm text-red-500">
-                  {haveDropdown.gamesError}
                 </div>
-              )}
-            </div>
 
-            <div className="flex-[2]">
-              <SearchSuggest
-                value={wantDropdown.query}
-                onChange={wantDropdown.setQuery}
-                suggestions={wantDropdown.items}
-                loading={wantDropdown.itemsLoading}
-                error={wantDropdown.itemsError}
-                disabled={
-                  offer.isLoading ||
-                  offer.quoteIsLoading ||
-                  wantDropdown.gameId == null ||
-                  wantDropdown.gamesLoading
-                }
-                onPickSuggestion={(item) => {
-                  offer.addWantItem(item)
-                  wantDropdown.reset()
-                }}
-              />
-            </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min={1}
+                    className="h-9 w-20 rounded-md border px-2"
+                    value={it.quantity}
+                    onChange={(e) => setQty(it.itemId, Number(e.target.value))}
+                  />
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => removeOne(it.itemId)}
+                  >
+                    Usuń
+                  </Button>
+                </div>
+              </div>
+            ))}
 
-            <div className="shrink-0">
-              <IconSquareButton
-                ariaLabel="Dodaj oferowany przedmiot"
-                onClick={() => {}}
-              />
-            </div>
+            {items.length > 0 && (
+              <Button variant="outline" onClick={removeAll}>
+                Usuń wszystko
+              </Button>
+            )}
           </div>
-          <OfferPickedItemsList
-            items={offer.itemsWant}
-            disabled={offer.isLoading || offer.quoteIsLoading}
-            onSetQuantity={offer.setWantQuantity}
-            onRemoveAll={offer.removeAllWantItem}
+        </div>
+
+        <div className="border-t pt-6">
+          <SectionTitle>Tokeny</SectionTitle>
+
+          <input
+            type="number"
+            min={0}
+            className="mt-3 h-10 w-full rounded-xl border px-3"
+            value={tokens}
+            onChange={(e) => setTokens(Number(e.target.value))}
           />
         </div>
 
         <div className="mt-10 border-t pt-4 flex items-center gap-3">
-          <div className="text-sm text-muted-foreground">Koszt: {20}</div>
           <Button
-            type="button"
             className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
-            disabled={
-              offer.isLoading ||
-              offer.quoteIsLoading ||
-              offer.itemsHave.length == 0 ||
-              offer.itemsWant.length === 0 ||
-              offer.title.trim().length === 0
-            }
-            onClick={() => void handleOpenConfirm()}
+            disabled={!canConfirm}
+            onClick={() => setConfirmOpen(true)}
           >
             <Plus className="mr-2 h-5 w-5" />
             Złóż kontrofertę
           </Button>
 
           <Button
-            type="button"
             variant="outline"
             className="h-10 rounded-xl px-8 text-base"
             onClick={onCancel}
@@ -206,23 +262,43 @@ const CreateOfferModalContent = ({
           </Button>
         </div>
       </div>
+
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Potwierdź utworzenie oferty</AlertDialogTitle>
+            <AlertDialogTitle>Potwierdź wysłanie kontroferty</AlertDialogTitle>
           </AlertDialogHeader>
+
           <AlertDialogFooter>
-            <AlertDialogCancel
-              disabled={offer.isLoading || offer.quoteIsLoading}
+            <AlertDialogCancel>Wróć</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                if (!offerId) return
+
+                const request: CounterOfferDraftRequest = {
+                  tokensOffered: tokens,
+                  items: items.map((i) => ({
+                    itemId: i.itemId,
+                    quantity: i.quantity,
+                  })),
+                }
+
+                const res = await CounterOfferService.create(offerId, request)
+
+                if (!res.isSuccess) {
+                  console.error(res.message)
+                  return
+                }
+
+                setConfirmOpen(false)
+                onCancel()
+              }}
             >
-              Wróć
-            </AlertDialogCancel>
-            <AlertDialogAction>Zatwierdź i wyślij</AlertDialogAction>
+              Wyślij
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </>
   )
 }
-
-export default CreateOfferModalContent

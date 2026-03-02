@@ -22,11 +22,10 @@ import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestR
 import { useAppStore } from "@/shared/store/appStore"
 import { cn } from "@/shared/lib/Utils"
 
-import { useState } from "react"
 import { Dialog, DialogContent } from "@/shared/components/dialog"
-import { useCreateOffer } from "@/shared/views/OfferInteractionView/hooks/UseCreateOffer"
 import CreateOfferModalContent from "@/shared/views/OfferInteractionView/views/CreateCounterOfferModalContent"
-import { useCreateCounterOffer } from "../hooks/UseCreateCounterOffer"
+import { useCounterOfferModal } from "../hooks/UseCounterOfferModal"
+import { useEffect } from "react"
 
 type OfferProps = {
   offer: offerListingDtoResponse
@@ -45,10 +44,11 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
 
-  //For mock
-  const [counterOpen, setCounterOpen] = useState(false)
-  const counterOffer = useCreateOffer()
-  const counterBase = useCreateCounterOffer()
+  const counter = useCounterOfferModal()
+  useEffect(() => {
+    console.log("OFF", offer.offeredItems)
+    console.log("WANT", offer.wantedItems)
+  }, [offer.offeredItems, offer.wantedItems])
 
   return (
     <>
@@ -205,11 +205,9 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
                   type="button"
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => {
-                    const id = offer.offerCoreDto.offerId
-                    setCounterOpen(true)
-                    void counterBase.fetchOffer(id)
-                  }}
+                  onClick={() =>
+                    void counter.openForOffer(offer.offerCoreDto.offerId)
+                  }
                   disabled={!isAuthenticated || isOwner}
                 >
                   <Plus /> Złóż kontrofertę
@@ -219,23 +217,14 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
           </div>
         </CardFooter>
       </Card>
-      <Dialog
-        open={counterOpen}
-        onOpenChange={(o) => {
-          setCounterOpen(o)
-          if (!o) {
-            counterOffer.reset()
-            counterBase.reset()
-          }
-        }}
-      >
+      <Dialog open={counter.open} onOpenChange={counter.onOpenChange}>
         <DialogContent className="max-w-3xl">
           <CreateOfferModalContent
-            offer={counterOffer}
-            baseOffer={counterBase.data}
-            baseOfferLoading={counterBase.isLoading}
-            baseOfferError={counterBase.error}
-            onCancel={() => setCounterOpen(false)}
+            offerId={counter.offerId}
+            baseOffer={counter.baseOffer}
+            baseOfferLoading={counter.baseOfferLoading}
+            baseOfferError={counter.baseOfferError}
+            onCancel={counter.close}
           />
         </DialogContent>
       </Dialog>

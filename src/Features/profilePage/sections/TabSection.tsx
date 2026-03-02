@@ -10,6 +10,9 @@ import { useUserOffers } from "../hooks/UseProfileOffers"
 import Offer from "@/features/marketplacePage/components/Offer"
 import OfferDetails from "@/features/marketplacePage/components/OfferDetails"
 import { useOfferDetails } from "@/features/marketplacePage/hooks/UseOfferDetails"
+import CounterOfferCard from "../component/CounterOfferCard"
+import { useCounterOffers } from "../hooks/UseCounterOffers"
+import { useUpdateCounterOfferStatus } from "../hooks/useUpdateCounterOfferStatus"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
   const [tab, setTab] = useState<
@@ -20,17 +23,18 @@ const TabSection = ({ profileId }: { profileId: number }) => {
   const pageSize = 10
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
+  const update = useUpdateCounterOfferStatus()
 
-  const {
-    offerDetails: detailsOffer,
-    loading: detailsLoading,
-    error: detailsError,
-  } = useOfferDetails(selectedOfferId, detailsOpen)
+  const { offerDetails: detailsOffer } = useOfferDetails(
+    selectedOfferId,
+    detailsOpen
+  )
 
   const handleShowDetails = (offerId: number) => {
     setSelectedOffer(offerId)
     setDetailsOpen(true)
   }
+
   const handleOpenDialogChange = (open: boolean) => {
     setDetailsOpen(open)
     if (!open) {
@@ -48,6 +52,9 @@ const TabSection = ({ profileId }: { profileId: number }) => {
     fetchHistoryOffers,
   } = useUserOffers(profileId, activePage, historyPage, pageSize)
 
+  const sent = useCounterOffers("sent", tab === "counterOffersSent")
+  const received = useCounterOffers("received", tab === "counterOffersRecieve")
+
   useEffect(() => {
     if (tab === "history") {
       void fetchHistoryOffers()
@@ -56,6 +63,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
 
   const activeOffersList = activeOffers?.elements ?? []
   const historyOffersList = historyOffers?.elements ?? []
+
   return (
     <section>
       <Tabs defaultValue="offers" className="mt-6">
@@ -63,18 +71,21 @@ const TabSection = ({ profileId }: { profileId: number }) => {
           <TabsTrigger value="offers" onClick={() => setTab("offers")}>
             Moje Oferty
           </TabsTrigger>
-          <TabsTrigger
-            value="counterOffersRecive"
-            onClick={() => setTab("counterOffersRecieve")}
-          >
-            Wysłane Kontroferty
-          </TabsTrigger>
+
           <TabsTrigger
             value="counterOffersSent"
             onClick={() => setTab("counterOffersSent")}
           >
+            Wysłane Kontroferty
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="counterOffersRecieve"
+            onClick={() => setTab("counterOffersRecieve")}
+          >
             Otrzymane Kontroferty
           </TabsTrigger>
+
           <TabsTrigger value="history" onClick={() => setTab("history")}>
             Historia wymian
           </TabsTrigger>
@@ -117,6 +128,80 @@ const TabSection = ({ profileId }: { profileId: number }) => {
           )}
         </TabsContent>
 
+        <TabsContent value="counterOffersSent" className="mt-4">
+          {sent.loading || sent.data == null ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-muted-foreground">
+                Ładowanie wysłanych kontrofert...
+              </CardContent>
+            </Card>
+          ) : sent.error ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-red-500">
+                {sent.error}
+              </CardContent>
+            </Card>
+          ) : sent.data.length === 0 ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-muted-foreground">
+                Brak wysłanych kontrofert.
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid xl:grid-cols-2 gap-4">
+              {sent.data.map((co) => (
+                <CounterOfferCard
+                  key={co.counterOfferId}
+                  data={co}
+                  variant="sent"
+                  onOpenOffer={handleShowDetails}
+                />
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="counterOffersRecieve" className="mt-4">
+          {received.loading || received.data == null ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-muted-foreground">
+                Ładowanie otrzymanych kontrofert...
+              </CardContent>
+            </Card>
+          ) : received.error ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-red-500">
+                {received.error}
+              </CardContent>
+            </Card>
+          ) : received.data.length === 0 ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-muted-foreground">
+                Brak otrzymanych kontrofert.
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid xl:grid-cols-2 gap-4">
+              {received.data.map((co) => (
+                <CounterOfferCard
+                  key={co.counterOfferId}
+                  data={co}
+                  variant="received"
+                  actionsDisabled={update.loadingId === co.counterOfferId}
+                  onCancel={async (id) => {
+                    const ok = await update.updateStatus(id, 3)
+                    if (ok) await received.refetch()
+                  }}
+                  onAccept={async (id) => {
+                    const ok = await update.updateStatus(id, 2)
+                    if (ok) await received.refetch()
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
         <TabsContent value="history" className="mt-4">
           {loadingHistory || (tab == "history" && historyOffers == null) ? (
             <Card>
@@ -154,6 +239,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
           )}
         </TabsContent>
       </Tabs>
+
       {detailsOffer && (
         <OfferDetails
           offer={detailsOffer}
