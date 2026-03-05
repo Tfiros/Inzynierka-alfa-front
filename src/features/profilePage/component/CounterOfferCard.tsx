@@ -1,3 +1,4 @@
+import { useState } from "react"
 import {
   Card,
   CardContent,
@@ -11,7 +12,6 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -24,8 +24,8 @@ type Props = {
   variant: "sent" | "received"
   onOpenOffer?: (offerId: number) => void
 
-  onAccept?: (counterOfferId: number) => void
-  onCancel?: (counterOfferId: number) => void
+  onAccept?: (counterOfferId: number) => void | Promise<void>
+  onCancel?: (counterOfferId: number) => void | Promise<void>
 
   actionsDisabled?: boolean
 }
@@ -39,24 +39,25 @@ const CounterOfferStatus = {
 type CounterOfferStatusId =
   (typeof CounterOfferStatus)[keyof typeof CounterOfferStatus]
 
-type BadgeVariant = "default" | "destructive" | "outline"
+type BadgeVariant = "default" | "canceled" | "accepted"
 
 function isCounterOfferStatusId(v: number): v is CounterOfferStatusId {
   return v === 1 || v === 2 || v === 3
 }
 
 function statusVariant(statusId: number): BadgeVariant {
-  if (!isCounterOfferStatusId(statusId)) return "outline"
+  if (!isCounterOfferStatusId(statusId)) return "accepted"
 
   switch (statusId) {
     case CounterOfferStatus.Accepted:
       return "default"
     case CounterOfferStatus.Denied:
-      return "destructive"
+      return "canceled"
     default:
-      return "outline"
+      return "accepted"
   }
 }
+
 export default function CounterOfferCard({
   data,
   variant,
@@ -65,13 +66,39 @@ export default function CounterOfferCard({
   onCancel,
   actionsDisabled = false,
 }: Props) {
+  const [accepting, setAccepting] = useState(false)
+  const [denying, setDenying] = useState(false)
+
   const itemsCount =
     data.items?.reduce((acc, x) => acc + (x.quantity ?? 0), 0) ?? 0
 
   const created = data.creationDate ? new Date(data.creationDate) : null
 
-  const isPending = data.statusId === 1
+  const isPending = data.statusId === CounterOfferStatus.Pending
   const showActions = variant === "received" && isPending
+
+  const anyLoading = accepting || denying
+  const disabled = actionsDisabled || anyLoading
+
+  const handleAccept = async () => {
+    if (!onAccept) return
+    setAccepting(true)
+    try {
+      await onAccept(data.counterOfferId)
+    } finally {
+      setAccepting(false)
+    }
+  }
+
+  const handleDeny = async () => {
+    if (!onCancel) return
+    setDenying(true)
+    try {
+      await onCancel(data.counterOfferId)
+    } finally {
+      setDenying(false)
+    }
+  }
 
   return (
     <Card className="hover:shadow-sm transition">
@@ -83,21 +110,12 @@ export default function CounterOfferCard({
             </CardTitle>
 
             <div className="mt-1 text-xs text-muted-foreground">
-              {variant === "sent" ? (
-                <>
-                  Do:{" "}
-                  <span className="font-medium">
-                    {data.counterOfferUserNickname || "użytkownik"}
-                  </span>
-                </>
-              ) : (
-                <>
-                  Od:{" "}
-                  <span className="font-medium">
-                    {data.counterOfferUserNickname || "użytkownik"}
-                  </span>
-                </>
-              )}
+              <div>
+                {variant === "sent" ? "Do" : "Od"}:
+                <span className="font-medium">
+                  {data.counterOfferUserNickname || "użytkownik"}
+                </span>
+              </div>
               {created && <> • {created.toLocaleString()}</>}
             </div>
           </div>
@@ -121,6 +139,7 @@ export default function CounterOfferCard({
             Itemy:{" "}
             <span className="font-medium text-foreground">{itemsCount}</span>
           </div>
+
           <button
             type="button"
             className="text-xs underline underline-offset-4 hover:opacity-80"
@@ -173,45 +192,72 @@ export default function CounterOfferCard({
           <div className="mt-4 flex gap-2 justify-end">
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive" disabled={actionsDisabled}>
-                  Anuluj
+                <Button variant="destructive" disabled={disabled}>
+                  Odrzuć
                 </Button>
               </AlertDialogTrigger>
 
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Czy jesteś pewien?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Ta akcja odrzuci kontrofertę (status: denied). Tego nie da
-                    się cofnąć.
-                  </AlertDialogDescription>
+                  <AlertDialogTitle>Odrzucić kontrofertę?</AlertDialogTitle>
                 </AlertDialogHeader>
 
                 <AlertDialogFooter>
-                  <AlertDialogCancel disabled={actionsDisabled}>
-                    Nie, wróć
+                  <AlertDialogCancel disabled={disabled}>
+                    Wróć
                   </AlertDialogCancel>
 
                   <AlertDialogAction asChild>
                     <Button
                       variant="destructive"
-                      disabled={actionsDisabled}
-                      onClick={() => onCancel?.(data.counterOfferId)}
+                      disabled={disabled}
+                      onClick={async (e) => {
+                        e.preventDefault()
+                        await handleDeny()
+                      }}
                     >
-                      Tak, anuluj
+                      {denying ? "Odrzucam..." : "Tak, odrzuć"}
                     </Button>
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
 
-            <Button
-              className="bg-green-600 hover:bg-green-700 text-white"
-              disabled={actionsDisabled}
-              onClick={() => onAccept?.(data.counterOfferId)}
-            >
-              Akceptuj
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                  disabled={disabled}
+                >
+                  Akceptuj
+                </Button>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Akceptować kontrofertę?</AlertDialogTitle>
+                </AlertDialogHeader>
+
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={disabled}>
+                    Wróć
+                  </AlertDialogCancel>
+
+                  <AlertDialogAction asChild>
+                    <Button
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      disabled={disabled}
+                      onClick={async (e) => {
+                        e.preventDefault()
+                        await handleAccept()
+                      }}
+                    >
+                      {accepting ? "Akceptuję..." : "Tak, akceptuj"}
+                    </Button>
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         )}
       </CardContent>

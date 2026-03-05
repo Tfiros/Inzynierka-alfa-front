@@ -12,18 +12,23 @@ import OfferDetails from "@/features/marketplacePage/components/OfferDetails"
 import { useOfferDetails } from "@/features/marketplacePage/hooks/UseOfferDetails"
 import CounterOfferCard from "../component/CounterOfferCard"
 import { useCounterOffers } from "../hooks/UseCounterOffers"
-import { useUpdateCounterOfferStatus } from "../hooks/useUpdateCounterOfferStatus"
+import { useUpdateCounterOfferStatus } from "../hooks/UseUpdateCounterOfferStatus"
+import { useAcceptCounterOffer } from "../hooks/useAcceptCounterOffer"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
   const [tab, setTab] = useState<
     "offers" | "counterOffersSent" | "counterOffersRecieve" | "history"
   >("offers")
+
   const [activePage, setActivePage] = useState<number>(1)
   const [historyPage, setHistoryPage] = useState<number>(1)
   const pageSize = 10
+
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
+
   const update = useUpdateCounterOfferStatus()
+  const accept = useAcceptCounterOffer()
 
   const { offerDetails: detailsOffer } = useOfferDetails(
     selectedOfferId,
@@ -37,9 +42,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
 
   const handleOpenDialogChange = (open: boolean) => {
     setDetailsOpen(open)
-    if (!open) {
-      setSelectedOffer(null)
-    }
+    if (!open) setSelectedOffer(null)
   }
 
   const {
@@ -182,22 +185,31 @@ const TabSection = ({ profileId }: { profileId: number }) => {
             </Card>
           ) : (
             <div className="grid xl:grid-cols-2 gap-4">
-              {received.data.map((co) => (
-                <CounterOfferCard
-                  key={co.counterOfferId}
-                  data={co}
-                  variant="received"
-                  actionsDisabled={update.loadingId === co.counterOfferId}
-                  onCancel={async (id) => {
-                    const ok = await update.updateStatus(id, 3)
-                    if (ok) await received.refetch()
-                  }}
-                  onAccept={async (id) => {
-                    const ok = await update.updateStatus(id, 2)
-                    if (ok) await received.refetch()
-                  }}
-                />
-              ))}
+              {received.data.map((co) => {
+                const isBusy =
+                  update.loadingId === co.counterOfferId ||
+                  accept.loadingId === co.counterOfferId
+
+                return (
+                  <CounterOfferCard
+                    key={co.counterOfferId}
+                    data={co}
+                    variant="received"
+                    onOpenOffer={handleShowDetails}
+                    actionsDisabled={isBusy}
+                    onCancel={async (id) => {
+                      const ok = await update.updateStatus(id, 3)
+                      if (ok) await received.refetch()
+                    }}
+                    onAccept={async (id) => {
+                      const res = await accept.accept(id)
+                      if (res.ok) {
+                        await received.refetch()
+                      }
+                    }}
+                  />
+                )
+              })}
             </div>
           )}
         </TabsContent>

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Plus } from "lucide-react"
 
 import SectionTitle from "../components/SectionTitle"
@@ -44,10 +44,18 @@ export default function CreateCounterOfferModalContent({
   baseOfferLoading,
   baseOfferError,
 }: Props) {
-  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [opened, setOpened] = useState(false)
   const suggestions = useItemSuggestions()
+
   const [items, setItems] = useState<PickedItem[]>([])
   const [tokens, setTokens] = useState(0)
+
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (submitError) setSubmitError(null)
+  }, [tokens, items.length])
 
   const addItem = (item: any) => {
     const itemId = item.id ?? item.itemId ?? item.ID
@@ -56,24 +64,30 @@ export default function CreateCounterOfferModalContent({
 
     if (!itemId || !name) return
 
-    setItems((prev) => {
-      if (prev.some((x) => x.itemId === itemId)) return prev
-      return [...prev, { itemId, name, gameName, quantity: 1 }]
+    setItems((previousItems) => {
+      if (previousItems.some((x) => x.itemId === itemId)) return previousItems
+      return [...previousItems, { itemId, name, gameName, quantity: 1 }]
     })
   }
 
-  const setQty = (itemId: number, qty: number) => {
-    const safe = Number.isFinite(qty) ? Math.max(1, qty) : 1
-    setItems((prev) =>
-      prev.map((x) => (x.itemId === itemId ? { ...x, quantity: safe } : x))
+  const setQuantity = (itemId: number, quantity: number) => {
+    const safe = Number.isFinite(quantity) ? Math.max(1, quantity) : 1
+    setItems((previousItems) =>
+      previousItems.map((x) =>
+        x.itemId === itemId ? { ...x, quantity: safe } : x
+      )
     )
   }
 
   const removeOne = (itemId: number) =>
-    setItems((prev) => prev.filter((x) => x.itemId !== itemId))
+    setItems((previousItems) =>
+      previousItems.filter((x) => x.itemId !== itemId)
+    )
+
   const removeAll = () => setItems([])
 
-  const canConfirm = items.length > 0 && tokens >= 0
+  const canConfirm =
+    (items.length > 0 || tokens > 0) && tokens >= 0 && !submitting
 
   return (
     <>
@@ -86,9 +100,7 @@ export default function CreateCounterOfferModalContent({
       <div className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-1">
         <div className="mt-4 rounded-xl border p-3 bg-muted/30">
           {baseOfferLoading && (
-            <p className="text-sm text-muted-foreground">
-              Ładowanie oferty bazowej...
-            </p>
+            <p className="text-sm text-muted-foreground">Ładowanie oferty</p>
           )}
 
           {!baseOfferLoading && baseOfferError && (
@@ -105,7 +117,7 @@ export default function CreateCounterOfferModalContent({
               </div>
 
               <div className="text-xs text-muted-foreground">
-                Przedmioty (Mam):
+                Przedmioty posiadane:
               </div>
 
               <div className="space-y-2">
@@ -160,7 +172,7 @@ export default function CreateCounterOfferModalContent({
                   return mam.length === 0
                 })() && (
                   <div className="text-sm text-muted-foreground">
-                    Brak przedmiotów w sekcji „Mam”.
+                    Brak przedmiotów
                   </div>
                 )}
               </div>
@@ -170,6 +182,7 @@ export default function CreateCounterOfferModalContent({
 
         <div className="py-10">
           <SectionTitle>Co oferujesz?</SectionTitle>
+
           <SearchSuggest
             value={suggestions.query}
             onChange={suggestions.setQuery}
@@ -184,12 +197,6 @@ export default function CreateCounterOfferModalContent({
           />
 
           <div className="mt-4 space-y-2">
-            {items.length === 0 && (
-              <div className="text-sm text-muted-foreground">
-                Dodaj przynajmniej jeden przedmiot do kontroferty.
-              </div>
-            )}
-
             {items.map((it) => (
               <div
                 key={it.itemId}
@@ -210,7 +217,9 @@ export default function CreateCounterOfferModalContent({
                     min={1}
                     className="h-9 w-20 rounded-md border px-2"
                     value={it.quantity}
-                    onChange={(e) => setQty(it.itemId, Number(e.target.value))}
+                    onChange={(e) =>
+                      setQuantity(it.itemId, Number(e.target.value))
+                    }
                   />
                   <Button
                     size="sm"
@@ -247,7 +256,7 @@ export default function CreateCounterOfferModalContent({
           <Button
             className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
             disabled={!canConfirm}
-            onClick={() => setConfirmOpen(true)}
+            onClick={() => setOpened(true)}
           >
             <Plus className="mr-2 h-5 w-5" />
             Złóż kontrofertę
@@ -257,23 +266,57 @@ export default function CreateCounterOfferModalContent({
             variant="outline"
             className="h-10 rounded-xl px-8 text-base"
             onClick={onCancel}
+            disabled={submitting}
           >
             Anuluj
           </Button>
         </div>
       </div>
 
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+      <AlertDialog open={opened} onOpenChange={setOpened}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Potwierdź wysłanie kontroferty</AlertDialogTitle>
           </AlertDialogHeader>
 
+          {submitError && (
+            <div className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+              {submitError}
+            </div>
+          )}
+
           <AlertDialogFooter>
-            <AlertDialogCancel>Wróć</AlertDialogCancel>
+            <AlertDialogCancel disabled={submitting}>Wróć</AlertDialogCancel>
             <AlertDialogAction
-              onClick={async () => {
+              disabled={submitting}
+              onClick={async (e) => {
+                e.preventDefault()
+
                 if (!offerId) return
+
+                const extractMsg = (x: any): string => {
+                  const msg =
+                    x?.message ??
+                    x?.data?.message ??
+                    x?.response?.data?.message ??
+                    x?.error?.message ??
+                    ""
+
+                  return typeof msg === "string" ? msg : ""
+                }
+
+                const isNotEnoughTokens = (msg: string) => {
+                  const m = msg.toLowerCase()
+                  return (
+                    m.includes("token") &&
+                    (m.includes("za mało") ||
+                      m.includes("brak") ||
+                      m.includes("niewystarcz"))
+                  )
+                }
+
+                setSubmitting(true)
+                setSubmitError(null)
 
                 const request: CounterOfferDraftRequest = {
                   tokensOffered: tokens,
@@ -283,15 +326,45 @@ export default function CreateCounterOfferModalContent({
                   })),
                 }
 
-                const res = await CounterOfferService.create(offerId, request)
+                try {
+                  const res = await CounterOfferService.create(offerId, request)
 
-                if (!res.isSuccess) {
-                  console.error(res.message)
-                  return
+                  if (!res.isSuccess) {
+                    const msg = extractMsg(res)
+
+                    if (isNotEnoughTokens(msg)) {
+                      setSubmitError(
+                        "Masz za mało tokenów, aby wysłać tę kontrofertę."
+                      )
+                      setSubmitError(msg)
+                    } else {
+                      setSubmitError(
+                        "Nie udało się wysłać kontroferty. Spróbuj ponownie."
+                      )
+                    }
+
+                    return
+                  }
+
+                  setOpened(false)
+                  onCancel()
+                } catch (err: any) {
+                  const msg = extractMsg(err)
+
+                  if (isNotEnoughTokens(msg)) {
+                    setSubmitError(
+                      "Masz za mało tokenów, aby wysłać tę kontrofertę."
+                    )
+                  } else if (msg) {
+                    setSubmitError(msg)
+                  } else {
+                    setSubmitError(
+                      "Nie udało się wysłać kontroferty. Spróbuj ponownie."
+                    )
+                  }
+                } finally {
+                  setSubmitting(false)
                 }
-
-                setConfirmOpen(false)
-                onCancel()
               }}
             >
               Wyślij
