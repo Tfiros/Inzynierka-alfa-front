@@ -45,11 +45,6 @@ const useTradePanel = () => {
     all: stats.stats?.all ?? 0,
   }
 
-  console.log(counts.available)
-  console.log(counts.mine)
-  console.log(counts.completed)
-  console.log(counts.all)
-
   const cancelation = useDeleteTrade()
 
   return {

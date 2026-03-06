@@ -8,6 +8,7 @@ import NoifyIcon_Dark from "@/shared/photos/NotificationIcon_Dark.svg"
 import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
 import { useAppStore } from "@/shared/store/AppStore"
+import NavbarChatDropdown from "@/Features/Chat/compontents/NavbarChatDropdown"
 
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
@@ -103,6 +104,7 @@ export const UserNavbar = () => {
                 )}
               </Link>
             </Button>
+            <NavbarChatDropdown />
 
             <ProfileMenu />
           </div>

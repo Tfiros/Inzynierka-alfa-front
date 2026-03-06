@@ -5,6 +5,8 @@ export type UserNavbarInfoDto = {
   tokens: number
   experience: number
   level: number
+  chatIds: number[]
+  chatUnreadTotal: number
 }
 
 export type UserProfileInfoDto = {

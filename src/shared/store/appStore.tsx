@@ -1,14 +1,17 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
-import { createUiSlice, type UiSlice } from "./storeParts/UiSlice"
+import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
 import { type AuthSlice, createAuthSlice } from "./storeParts/authSlice"
 import {
   type NotificationsSlice,
   createNotificationsSlice,
 } from "./storeParts/NotificationSlice"
 import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
+import { createChatSlice, type ChatSlice } from "./storeParts/ChatSlice"
+
 export type AppState = UiSlice &
   AuthSlice &
+  ChatSlice &
   NotificationsSlice & {
     hardReset: () => Promise<void>
     hasHydrated: boolean
@@ -22,6 +25,8 @@ export const useAppStore = create<AppState>()(
       ...createAuthSlice(set, get, api),
       ...createOfferSlice(set, get, api),
       ...createNotificationsSlice(set),
+      ...createChatSlice(set, get, api),
+
       hasHydrated: false,
       setHasHydrated: (v) => set({ hasHydrated: v }),
 
@@ -32,6 +37,7 @@ export const useAppStore = create<AppState>()(
           navbarUser: null,
           isAuthenticated: false,
           roles: [],
+          darkMode: false,
         })
 
         await useAppStore.persist.clearStorage()
@@ -57,6 +63,7 @@ export const useAppStore = create<AppState>()(
 
 export const selectCounter = (id: string) => (s: AppState) =>
   s.counters[id] ?? 0
+
 export const selectAuth = (s: AppState) => ({
   isAuthenticated: s.isAuthenticated,
   userLogin: s.userLogin,
@@ -67,3 +74,17 @@ export const selectAuth = (s: AppState) => ({
 
 export const selectHasRole = (role: string) => (s: AppState) =>
   s.roles.some((r) => r.toLowerCase() === role.toLowerCase())
+
+export const chatSelectors = {
+  isPopoverOpen: (s: AppState) => s.chat.isPopoverOpen,
+  isWindowOpen: (s: AppState) => s.chat.isWindowOpen,
+  activeChatId: (s: AppState) => s.chat.activeChatId,
+  activeChatTitle: (s: AppState) => s.chat.activeChatTitle,
+
+  threads: (s: AppState) => s.chat.threads,
+  messagesByChatId: (s: AppState) => s.chat.messagesByChatId,
+  onlineMap: (s: AppState) => s.chat.onlineMap,
+  chatActions: (s: AppState) => s.chat.actions,
+
+  totalUnread: (s: AppState) => s.counters?.chat_unread_total ?? 0,
+}
