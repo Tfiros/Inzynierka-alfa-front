@@ -8,7 +8,7 @@ import {
 } from "./storeParts/NotificationSlice"
 import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
 import { createChatSlice, type ChatSlice } from "./storeParts/ChatSlice"
-
+import { chatHubClient } from "@/shared/api/hubs/ChatHub"
 export type AppState = UiSlice &
   AuthSlice &
   ChatSlice &
@@ -31,6 +31,11 @@ export const useAppStore = create<AppState>()(
       setHasHydrated: (v) => set({ hasHydrated: v }),
 
       hardReset: async () => {
+        try {
+          await chatHubClient.stop()
+        } catch (e) {
+          console.error("chatHub stop failed", e)
+        }
         set({
           userLogin: null,
           userId: null,

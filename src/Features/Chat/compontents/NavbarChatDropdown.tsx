@@ -48,7 +48,6 @@ const NavbarChatDropdown = () => {
 
   useChatAutoSubscribe()
 
-  // ✅ otwierasz dropdown => badge = 0 (czyścimy lokalny Set + counter)
   useEffect(() => {
     if (isPopoverOpen) clearUnreadChatsLocal()
   }, [isPopoverOpen, clearUnreadChatsLocal])
@@ -57,7 +56,6 @@ const NavbarChatDropdown = () => {
     const id = threadId(t)
     if (!Number.isFinite(id) || id <= 0) return
 
-    // ✅ jak wchodzisz do konkretnego chatu też zdejmij go z local unread
     markChatReadLocal(id)
 
     actions.closePopover()

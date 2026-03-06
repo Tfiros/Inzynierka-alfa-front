@@ -1,12 +1,14 @@
 import * as signalR from "@microsoft/signalr"
-import type { ChatMessageDto } from "@/shared/types/chat/ChatDtos"
+import type { ChatMessage } from "@/shared/types/chat/ChatDtos"
 
 export type PresencePayload = { auth0UserId: string; isOnline: boolean }
+
 export type ThreadReadPayload = {
   chatConversationId: number
   lastReadMessageId: number
   unreadCount: number
 }
+
 export type MessageUpdatedPayload = {
   id: number
   chatConversationId: number
@@ -20,9 +22,9 @@ export type MessageDeletedPayload = {
 
 type Handlers = {
   onPresenceChanged?: (payload: PresencePayload) => void
-  onMessageNew?: (payload: any) => void
-  onMessageUpdated?: (payload: MessageUpdatedPayload) => void // ✅
-  onMessageDeleted?: (payload: MessageDeletedPayload) => void // ✅
+  onMessageNew?: (payload: ChatMessage | any) => void
+  onMessageUpdated?: (payload: MessageUpdatedPayload) => void
+  onMessageDeleted?: (payload: MessageDeletedPayload) => void
 }
 
 class ChatHubClient {
@@ -34,58 +36,109 @@ class ChatHubClient {
     this.handlers = h
   }
 
-  private wireHandlersOnce() {
-    if (!this.conn) return
+  private getAccessToken(): string {
+    return (
+      sessionStorage.getItem("accessToken") ||
+      sessionStorage.getItem("access_token") ||
+      ""
+    )
+  }
 
-    this.conn.on("presence.changed", (p: PresencePayload) =>
+  private buildConnection() {
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("/api/hubs/chat", {
+        accessTokenFactory: async () => this.getAccessToken(),
+        withCredentials: true,
+      })
+      .withAutomaticReconnect()
+      .build()
+
+    connection.on("presence.changed", (p: PresencePayload) => {
       this.handlers.onPresenceChanged?.(p)
-    )
+    })
 
-    this.conn.on("message.new", (m: any) => this.handlers.onMessageNew?.(m))
+    connection.on("message.new", (m: ChatMessage | any) => {
+      this.handlers.onMessageNew?.(m)
+    })
 
-    this.conn.on("chat.message.updated", (p: MessageUpdatedPayload) =>
+    connection.on("chat.message.updated", (p: MessageUpdatedPayload) => {
       this.handlers.onMessageUpdated?.(p)
-    )
+    })
 
-    this.conn.on("chat.message.deleted", (p: MessageDeletedPayload) =>
+    connection.on("chat.message.deleted", (p: MessageDeletedPayload) => {
       this.handlers.onMessageDeleted?.(p)
-    )
+    })
+
+    connection.onreconnecting((err) => {
+      console.warn("ChatHub reconnecting...", err)
+    })
+
+    connection.onreconnected((connectionId) => {
+      console.log("ChatHub reconnected:", connectionId)
+    })
+
+    connection.onclose((err) => {
+      console.warn("ChatHub closed", err)
+    })
+
+    return connection
   }
 
   async start() {
     if (!this.conn) {
-      this.conn = new signalR.HubConnectionBuilder()
-        .withUrl("/api/hubs/chat", { withCredentials: true })
-        .withAutomaticReconnect()
-        .build()
-
-      this.wireHandlersOnce()
+      this.conn = this.buildConnection()
     }
 
     const st = this.conn.state
 
-    // ✅ już działa
     if (st === signalR.HubConnectionState.Connected) return
 
-    // ✅ w trakcie łączenia/reconnectu – nie wołaj start drugi raz
     if (
       st === signalR.HubConnectionState.Connecting ||
       st === signalR.HubConnectionState.Reconnecting
     ) {
       if (this.starting) return this.starting
-      // jak nie ma starting (np. reconnect), po prostu czekamy chwilę aż się ustabilizuje
       return
     }
 
-    // ✅ tylko dla Disconnected robimy start
     if (this.starting) return this.starting
-    this.starting = this.conn.start().finally(() => (this.starting = null))
+
+    this.starting = this.conn.start().finally(() => {
+      this.starting = null
+    })
+
     return this.starting
+  }
+
+  async stop() {
+    if (!this.conn) return
+
+    const current = this.conn
+    this.conn = null
+    this.starting = null
+
+    try {
+      await current.stop()
+    } catch (e) {
+      console.error("ChatHub stop failed", e)
+    }
+  }
+
+  async restart() {
+    await this.stop()
+    await this.start()
   }
 
   private async ensureStarted() {
     await this.start()
-    if (!this.conn) throw new Error("chat_hub_not_initialized")
+
+    if (!this.conn) {
+      throw new Error("chat_hub_not_initialized")
+    }
+
+    if (this.conn.state !== signalR.HubConnectionState.Connected) {
+      throw new Error("chat_hub_not_connected")
+    }
   }
 
   async joinChat(chatId: number) {
@@ -95,6 +148,7 @@ class ChatHubClient {
 
   async leaveChat(chatId: number) {
     if (!this.conn) return
+    if (this.conn.state !== signalR.HubConnectionState.Connected) return
     await this.conn.invoke("LeaveChat", chatId)
   }
 
