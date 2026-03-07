@@ -36,6 +36,7 @@ export const useAppStore = create<AppState>()(
         } catch (e) {
           console.error("chatHub stop failed", e)
         }
+        get().chat?.actions?.resetChat?.()
         set({
           userLogin: null,
           userId: null,
