@@ -1,12 +1,6 @@
 import { useState } from "react"
 import { ChatService } from "@/shared/api/services/ChatService"
 import { useAppStore, chatSelectors } from "@/shared/store/appStore"
-import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
-
-const extractChatId = (data: any): number | null => {
-  const id = data?.chatId ?? data?.id ?? data?.threadId ?? null
-  return typeof id === "number" ? id : null
-}
 
 const useCreateDmChat = () => {
   const actions = useAppStore(chatSelectors.chatActions)
@@ -19,7 +13,7 @@ const useCreateDmChat = () => {
 
     try {
       const res = await ChatService.createDm(otherUserId)
-      const chatId = extractChatId((res as any)?.data)
+      const chatId = res?.data?.chatConversationId
       if (!chatId) {
         setError("Nie udało się odczytać chatId z odpowiedzi.")
         return
@@ -31,7 +25,7 @@ const useCreateDmChat = () => {
           pageSize: 20,
           search: null,
         })
-        const items = (t as any)?.data as ChatThreadListItemDto[] | undefined
+        const items = t?.data
         actions.setThreads(items ?? [])
       } catch {
         // best-effort

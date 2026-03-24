@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { ChatService } from "@/shared/api/services/ChatService"
 import { useAppStore, chatSelectors } from "@/shared/store/appStore"
+import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
 
 type Params = {
   enabled?: boolean
@@ -40,7 +41,7 @@ const useChatThreads = ({
         actions.setThreads(items)
 
         const ids = items
-          .map((t: any) => Number(t.chatConversationId ?? t.chatId ?? t.id))
+          .map((t: ChatThreadListItemDto) => Number(t.chatId))
           .filter((x: number) => Number.isFinite(x) && x > 0)
 
         setChatThreadIds?.(ids)

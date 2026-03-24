@@ -15,13 +15,14 @@ import NewDmDialog from "./NewDmDialog"
 import useOpenThread from "../hooks/UseOpenThread"
 import { useAppStore, chatSelectors } from "@/shared/store/appStore"
 import { useChatAutoSubscribe } from "../hooks/UseThreadsSubscriptions"
+import type { AppState } from "@auth0/auth0-react"
+import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
 
-const threadId = (t: any) => Number(t.chatConversationId ?? t.chatId ?? t.id)
-const threadTitle = (t: any) =>
-  t.displayName ?? t.title ?? `Chat #${threadId(t)}`
-const threadPreview = (t: any) =>
-  t.lastMessageText ?? t.lastMessagePreview ?? ""
-const threadUnread = (t: any) => t.unreadCount ?? 0
+const threadId = (t: ChatThreadListItemDto) => Number(t.chatConversationId)
+const threadTitle = (t: ChatThreadListItemDto) =>
+  t.displayName ?? `Chat #${threadId(t)}`
+const threadPreview = (t: ChatThreadListItemDto) => t.lastMessageText ?? ""
+const threadUnread = (t: ChatThreadListItemDto) => t.unreadCount ?? 0
 
 const NavbarChatDropdown = () => {
   const [newDmOpen, setNewDmOpen] = useState(false)
@@ -33,9 +34,11 @@ const NavbarChatDropdown = () => {
   const actions = useAppStore(chatSelectors.chatActions)
   const totalUnread = useAppStore(chatSelectors.totalUnread)
 
-  const isAuthenticated = useAppStore((s: any) => s.isAuthenticated)
-  const clearUnreadChatsLocal = useAppStore((s: any) => s.clearUnreadChatsLocal)
-  const markChatReadLocal = useAppStore((s: any) => s.markChatReadLocal)
+  const isAuthenticated = useAppStore((s: AppState) => s.isAuthenticated)
+  const clearUnreadChatsLocal = useAppStore(
+    (s: AppState) => s.clearUnreadChatsLocal
+  )
+  const markChatReadLocal = useAppStore((s: AppState) => s.markChatReadLocal)
 
   useChatHub(isAuthenticated)
 

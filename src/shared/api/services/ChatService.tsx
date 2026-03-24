@@ -39,12 +39,6 @@ export class ChatService {
       pageSize: args.pageSize ?? 50,
     })
 
-  // POST /Chat/threads/{chatId}/messages
-  public static readonly sendMessage = async (
-    chatId: number,
-    req: SendMessageRequest
-  ) => post<ChatMessage>(`${this.base}/threads/${chatId}/messages`, req)
-
   // PUT /Chat/messages/{messageId}
   public static readonly editMessage = async (
     messageId: number,

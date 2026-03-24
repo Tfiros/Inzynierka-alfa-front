@@ -1,7 +1,7 @@
 export type ChatThreadType = "direct" | "group"
 
 export type ChatThreadListItem = {
-  chatId: number
+  chatConversationId: number
   type: ChatThreadType
   title: string
   avatarUrl: string | null
@@ -50,23 +50,30 @@ export type CreateDmResponse = {
   chatId: number
 }
 export type CreateDmChatResponse = {
-  chatId: number
+  chatConversationId: number
 }
 
 export type ChatThreadListItemDto = {
-  chatId: number
-  title: string
-  type: "direct" | "group"
-  avatarUrl?: string | null
-  lastMessagePreview?: string | null
-  lastMessageAtUtc?: string | null
-  unreadCount?: number | null
-  otherAuth0UserId?: string | null
-  isOnline?: boolean | null
+  chatConversationId: number
+  isGroup: boolean
+  displayName: string
+
+  otherUserId: number
+  otherUserAuth0UserId: string
+  avatarUrl: string
+
+  isOnline: boolean
+
+  lastMessageId: number
+  lastMessageText: string
+  lastMessageSenderId: number
+  lastMessageCreatedAtUtc: string // ISO string
+
+  unreadCount: number
 }
 
 export type EditMessageRequest = {
-  text: string
+  message: string
 }
 
 export type MarkReadRequest = {
@@ -74,8 +81,9 @@ export type MarkReadRequest = {
 }
 
 export type ChatReadStateDto = {
-  chatId: number
+  chatConversationId: number
   lastReadMessageId: number
+  markedAtUtc: string
   unreadCount: number
 }
 export type GetMessagesResponse = {
