@@ -14,6 +14,7 @@ import CounterOfferCard from "../component/CounterOfferCard"
 import { useCounterOffers } from "../hooks/UseCounterOffers"
 import { useUpdateCounterOfferStatus } from "../hooks/UseUpdateCounterOfferStatus"
 import { useAcceptCounterOffer } from "../hooks/useAcceptCounterOffer"
+import { useAppStore } from "@/shared/store/appStore"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
   const [tab, setTab] = useState<
@@ -29,6 +30,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
 
   const update = useUpdateCounterOfferStatus()
   const accept = useAcceptCounterOffer()
+  const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
 
   const { offerDetails: detailsOffer } = useOfferDetails(
     selectedOfferId,
@@ -199,12 +201,18 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     actionsDisabled={isBusy}
                     onCancel={async (id) => {
                       const ok = await update.updateStatus(id, 3)
-                      if (ok) await received.refetch()
+                      if (ok) {
+                        await received.refetch()
+                        await sent.refetch()
+                        await refreshNavbar()
+                      }
                     }}
                     onAccept={async (id) => {
                       const res = await accept.accept(id)
                       if (res.ok) {
                         await received.refetch()
+                        await sent.refetch()
+                        await refreshNavbar()
                       }
                     }}
                   />
@@ -215,7 +223,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
         </TabsContent>
 
         <TabsContent value="history" className="mt-4">
-          {loadingHistory || (tab == "history" && historyOffers == null) ? (
+          {loadingHistory || (tab === "history" && historyOffers == null) ? (
             <Card>
               <CardContent className="p-6 text-sm text-muted-foreground">
                 Ładowanie historii wymian...

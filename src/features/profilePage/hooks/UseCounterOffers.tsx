@@ -26,8 +26,10 @@ export function useCounterOffers(type: Type, enabled: boolean) {
       }
 
       setData(res.data ?? [])
-    } catch (e: any) {
-      setError(e?.message ?? "Request failed")
+    } catch (e: unknown) {
+      const message =
+        e instanceof Error ? e.message : "Nie udało się pobrać kontrofert."
+      setError(message)
       setData([])
     } finally {
       setLoading(false)
@@ -35,7 +37,12 @@ export function useCounterOffers(type: Type, enabled: boolean) {
   }, [type])
 
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) {
+      setData(null)
+      setError(null)
+      return
+    }
+
     void fetch()
   }, [enabled, fetch])
 

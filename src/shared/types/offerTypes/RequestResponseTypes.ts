@@ -84,6 +84,8 @@ export type OfferListingItemDTO = {
 }
 
 export type OfferInformationDTO = {
+  offerCoreDto: any
+  offeredItems: any
   offerId: number
   ownerId: number
   title: string

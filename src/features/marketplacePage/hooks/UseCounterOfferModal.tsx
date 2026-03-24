@@ -1,12 +1,14 @@
 import { useCallback, useState } from "react"
-import type { OfferInformationDTO } from "@/shared/types/offerTypes/RequestResponseTypes"
-import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
+import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
+import { OfferService } from "@/shared/api/services/OfferService"
 
 export const useCounterOfferModal = () => {
   const [open, setOpen] = useState(false)
   const [offerId, setOfferId] = useState<number | null>(null)
 
-  const [baseOffer, setBaseOffer] = useState<OfferInformationDTO | null>(null)
+  const [baseOffer, setBaseOffer] = useState<offerDetailsDtoResponse | null>(
+    null
+  )
   const [baseOfferError, setBaseOfferError] = useState<string | null>(null)
   const [baseOfferLoading, setBaseOfferLoading] = useState(false)
 
@@ -15,22 +17,24 @@ export const useCounterOfferModal = () => {
     setBaseOfferError(null)
 
     try {
-      const res = await CounterOfferService.getOfferInfo(id)
+      const res = await OfferService.getDetails(id)
 
       if (!res.isSuccess || !res.data) {
         setBaseOffer(null)
         setBaseOfferError(
-          res.message ?? "Nie udało się pobrać oferty do kontroferty"
+          res.message ?? "Nie udało się pobrać oferty do kontroferty."
         )
         return null
       }
 
       setBaseOffer(res.data)
       return res.data
-    } catch {
+    } catch (e: unknown) {
       setBaseOffer(null)
       setBaseOfferError(
-        "Wystąpił błąd podczas pobierania oferty do kontroferty."
+        e instanceof Error
+          ? e.message
+          : "Wystąpił błąd podczas pobierania oferty do kontroferty."
       )
       return null
     } finally {

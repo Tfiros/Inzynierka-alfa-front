@@ -17,9 +17,10 @@ import {
 } from "@/shared/components/alert-dialog"
 
 import { useItemSuggestions } from "../hooks/UseItemSuggestions"
-import type { OfferInformationDTO } from "@/shared/types/offerTypes/RequestResponseTypes"
+import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import type { CounterOfferDraftRequest } from "@/shared/types/counterOfferTypes/RequestResponseTypes"
 import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
+import { useAppStore } from "@/shared/store/appStore"
 
 type PickedItem = {
   itemId: number
@@ -31,8 +32,7 @@ type PickedItem = {
 type Props = {
   offerId: number | null
   onCancel: () => void
-
-  baseOffer: OfferInformationDTO | null
+  baseOffer: offerDetailsDtoResponse | null
   baseOfferLoading: boolean
   baseOfferError: string | null
 }
@@ -46,6 +46,7 @@ export default function CreateCounterOfferModalContent({
 }: Props) {
   const [opened, setOpened] = useState(false)
   const suggestions = useItemSuggestions()
+  const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
 
   const [items, setItems] = useState<PickedItem[]>([])
   const [tokens, setTokens] = useState(0)
@@ -55,7 +56,7 @@ export default function CreateCounterOfferModalContent({
 
   useEffect(() => {
     if (submitError) setSubmitError(null)
-  }, [tokens, items.length])
+  }, [tokens, items.length, submitError])
 
   const addItem = (item: any) => {
     const itemId = item.id ?? item.itemId ?? item.ID
@@ -89,6 +90,74 @@ export default function CreateCounterOfferModalContent({
   const canConfirm =
     (items.length > 0 || tokens > 0) && tokens >= 0 && !submitting
 
+  const extractMsg = (x: any): string => {
+    const msg =
+      x?.message ??
+      x?.data?.message ??
+      x?.response?.data?.message ??
+      x?.error?.message ??
+      ""
+
+    return typeof msg === "string" ? msg : ""
+  }
+
+  const isNotEnoughTokens = (msg: string) => {
+    const m = msg.toLowerCase()
+    return (
+      m.includes("token") &&
+      (m.includes("za mało") || m.includes("brak") || m.includes("niewystarcz"))
+    )
+  }
+
+  const handleSubmit = async () => {
+    if (!offerId) return
+
+    setSubmitting(true)
+    setSubmitError(null)
+
+    const request: CounterOfferDraftRequest = {
+      tokensOffered: tokens,
+      items: items.map((i) => ({
+        itemId: i.itemId,
+        quantity: i.quantity,
+      })),
+    }
+
+    try {
+      const res = await CounterOfferService.create(offerId, request)
+
+      if (!res.isSuccess) {
+        const msg = extractMsg(res)
+
+        if (isNotEnoughTokens(msg)) {
+          setSubmitError("Masz za mało tokenów, aby wysłać tę kontrofertę.")
+        } else if (msg) {
+          setSubmitError(msg)
+        } else {
+          setSubmitError("Nie udało się wysłać kontroferty. Spróbuj ponownie.")
+        }
+
+        return
+      }
+
+      await refreshNavbar()
+      setOpened(false)
+      onCancel()
+    } catch (err: any) {
+      const msg = extractMsg(err)
+
+      if (isNotEnoughTokens(msg)) {
+        setSubmitError("Masz za mało tokenów, aby wysłać tę kontrofertę.")
+      } else if (msg) {
+        setSubmitError(msg)
+      } else {
+        setSubmitError("Nie udało się wysłać kontroferty. Spróbuj ponownie.")
+      }
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   return (
     <>
       <DialogHeader className="flex flex-col items-center gap-y-2">
@@ -110,9 +179,16 @@ export default function CreateCounterOfferModalContent({
           {!baseOfferLoading && !baseOfferError && baseOffer && (
             <div className="flex flex-col gap-2">
               <div className="text-sm text-muted-foreground">
-                Koszt oferty:{" "}
+                Tytuł oferty:{" "}
                 <span className="font-medium text-foreground">
-                  {baseOffer.tokenCost}
+                  {baseOffer.offerCoreDto.title}
+                </span>
+              </div>
+
+              <div className="text-sm text-muted-foreground">
+                Opis:{" "}
+                <span className="font-medium text-foreground">
+                  {baseOffer.offerCoreDto.description}
                 </span>
               </div>
 
@@ -121,56 +197,28 @@ export default function CreateCounterOfferModalContent({
               </div>
 
               <div className="space-y-2">
-                {(() => {
-                  const offered = (baseOffer as any).offeredItems
-                  if (Array.isArray(offered)) return offered
-
-                  const items = (baseOffer as any).items ?? []
-                  return (items as any[]).filter((x) => {
-                    const flag = x?.isWanted ?? x?.is_wanted
-                    return flag === false
-                  })
-                })().map((x: any) => {
-                  const id = x?.itemDto?.id ?? x?.itemId ?? x?.item_id ?? x?.id
-                  const name =
-                    x?.itemDto?.name ??
-                    x?.name ??
-                    x?.item?.name ??
-                    `Item #${id ?? "?"}`
-                  const game =
-                    x?.itemDto?.game?.name ?? x?.gameName ?? x?.game?.name
-                  const qty = x?.quantity ?? 1
-
-                  return (
-                    <div
-                      key={x?.id ?? id ?? name}
-                      className="flex items-center justify-between rounded-lg border bg-background px-3 py-2"
-                    >
-                      <div className="flex flex-col">
-                        <div className="text-sm font-medium">{name}</div>
-                        {game && (
-                          <div className="text-xs text-muted-foreground">
-                            {game}
-                          </div>
-                        )}
+                {baseOffer.offeredItems.map((x) => (
+                  <div
+                    key={x.itemDto.id}
+                    className="flex items-center justify-between rounded-lg border bg-background px-3 py-2"
+                  >
+                    <div className="flex flex-col">
+                      <div className="text-sm font-medium">
+                        {x.itemDto.name}
                       </div>
-                      <div className="text-sm text-muted-foreground">
-                        x{qty}
-                      </div>
+                      {x.itemDto.game?.name && (
+                        <div className="text-xs text-muted-foreground">
+                          {x.itemDto.game.name}
+                        </div>
+                      )}
                     </div>
-                  )
-                })}
+                    <div className="text-sm text-muted-foreground">
+                      x{x.quantity}
+                    </div>
+                  </div>
+                ))}
 
-                {(() => {
-                  const offered = (baseOffer as any).offeredItems
-                  if (Array.isArray(offered)) return offered.length === 0
-
-                  const items = (baseOffer as any).items ?? []
-                  const mam = (items as any[]).filter(
-                    (x) => (x?.isWanted ?? x?.is_wanted) === false
-                  )
-                  return mam.length === 0
-                })() && (
+                {baseOffer.offeredItems.length === 0 && (
                   <div className="text-sm text-muted-foreground">
                     Brak przedmiotów
                   </div>
@@ -193,7 +241,7 @@ export default function CreateCounterOfferModalContent({
               addItem(item)
               suggestions.setQuery("")
             }}
-            disabled={false}
+            disabled={submitting}
           />
 
           <div className="mt-4 space-y-2">
@@ -220,11 +268,13 @@ export default function CreateCounterOfferModalContent({
                     onChange={(e) =>
                       setQuantity(it.itemId, Number(e.target.value))
                     }
+                    disabled={submitting}
                   />
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => removeOne(it.itemId)}
+                    disabled={submitting}
                   >
                     Usuń
                   </Button>
@@ -233,7 +283,11 @@ export default function CreateCounterOfferModalContent({
             ))}
 
             {items.length > 0 && (
-              <Button variant="outline" onClick={removeAll}>
+              <Button
+                variant="outline"
+                onClick={removeAll}
+                disabled={submitting}
+              >
                 Usuń wszystko
               </Button>
             )}
@@ -248,7 +302,10 @@ export default function CreateCounterOfferModalContent({
             min={0}
             className="mt-3 h-10 w-full rounded-xl border px-3"
             value={tokens}
-            onChange={(e) => setTokens(Number(e.target.value))}
+            onChange={(e) =>
+              setTokens(Math.max(0, Number(e.target.value) || 0))
+            }
+            disabled={submitting}
           />
         </div>
 
@@ -289,82 +346,9 @@ export default function CreateCounterOfferModalContent({
             <AlertDialogCancel disabled={submitting}>Wróć</AlertDialogCancel>
             <AlertDialogAction
               disabled={submitting}
-              onClick={async (e) => {
+              onClick={(e) => {
                 e.preventDefault()
-
-                if (!offerId) return
-
-                const extractMsg = (x: any): string => {
-                  const msg =
-                    x?.message ??
-                    x?.data?.message ??
-                    x?.response?.data?.message ??
-                    x?.error?.message ??
-                    ""
-
-                  return typeof msg === "string" ? msg : ""
-                }
-
-                const isNotEnoughTokens = (msg: string) => {
-                  const m = msg.toLowerCase()
-                  return (
-                    m.includes("token") &&
-                    (m.includes("za mało") ||
-                      m.includes("brak") ||
-                      m.includes("niewystarcz"))
-                  )
-                }
-
-                setSubmitting(true)
-                setSubmitError(null)
-
-                const request: CounterOfferDraftRequest = {
-                  tokensOffered: tokens,
-                  items: items.map((i) => ({
-                    itemId: i.itemId,
-                    quantity: i.quantity,
-                  })),
-                }
-
-                try {
-                  const res = await CounterOfferService.create(offerId, request)
-
-                  if (!res.isSuccess) {
-                    const msg = extractMsg(res)
-
-                    if (isNotEnoughTokens(msg)) {
-                      setSubmitError(
-                        "Masz za mało tokenów, aby wysłać tę kontrofertę."
-                      )
-                      setSubmitError(msg)
-                    } else {
-                      setSubmitError(
-                        "Nie udało się wysłać kontroferty. Spróbuj ponownie."
-                      )
-                    }
-
-                    return
-                  }
-
-                  setOpened(false)
-                  onCancel()
-                } catch (err: any) {
-                  const msg = extractMsg(err)
-
-                  if (isNotEnoughTokens(msg)) {
-                    setSubmitError(
-                      "Masz za mało tokenów, aby wysłać tę kontrofertę."
-                    )
-                  } else if (msg) {
-                    setSubmitError(msg)
-                  } else {
-                    setSubmitError(
-                      "Nie udało się wysłać kontroferty. Spróbuj ponownie."
-                    )
-                  }
-                } finally {
-                  setSubmitting(false)
-                }
+                void handleSubmit()
               }}
             >
               Wyślij

@@ -5,10 +5,8 @@ export type CounterOfferListItemDto = {
   offerId: number
   offerTitle: string
   offerOwnerUserId: number
-
   counterOfferUserId: number
-  counterOfferUserNickname?: string | null
-
+  otherPartyNickname?: string | null
   creationDate: string
   tokensOffered: number
   statusId: number

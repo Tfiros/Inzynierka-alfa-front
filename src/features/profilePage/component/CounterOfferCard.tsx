@@ -112,8 +112,8 @@ export default function CounterOfferCard({
             <div className="mt-1 text-xs text-muted-foreground">
               <div>
                 {variant === "sent" ? "Do" : "Od"}:
-                <span className="font-medium">
-                  {data.counterOfferUserNickname || "użytkownik"}
+                <span className="ml-1 font-medium">
+                  {data.otherPartyNickname || "użytkownik"}
                 </span>
               </div>
               {created && <> • {created.toLocaleString()}</>}
