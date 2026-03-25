@@ -1,10 +1,10 @@
 import { useMemo } from "react"
-import useDebouncedValue from "@/shared/components/UseDebouncedValue"
 import useUsersQueryState from "./UseUsersQueryState"
 import useUserDialogs from "./UseUserDialog"
 import useRefetchWithRetry from "./UseRefetchWithRetry"
 import { UserListOrderBy } from "@/shared/types/userTypes/UserManagementTypes"
 import useUsersData from "./UseUsersData"
+import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
 type Props = {
   pageSize?: number
 }
@@ -17,10 +17,7 @@ const useUserManagementPage = ({ pageSize }: Props) => {
     initialOrderBy: UserListOrderBy.RegisteredAtDesc,
   })
 
-  const searchDebounced = useDebouncedValue({
-    value: state.search,
-    delayMs: 300,
-  })
+  const searchDebounced = useDebounceValue(state.search, 300)
 
   const users = useUsersData({
     page: query.page,

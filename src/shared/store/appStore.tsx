@@ -9,6 +9,7 @@ import {
 import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
 import { createChatSlice, type ChatSlice } from "./storeParts/ChatSlice"
 import { chatHubClient } from "@/shared/api/hubs/ChatHub"
+import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
 export type AppState = UiSlice &
   AuthSlice &
   ChatSlice &

@@ -12,6 +12,7 @@ export type offerListingQueryRequest = {
   pageSize: number
   gameId?: number
   genreId?: number
+  rarityId?: number
   searchText?: string
   orderBy: offerOrderBy
 }
@@ -22,6 +23,8 @@ export type offerDraftRequest = {
   isHighlighted: boolean
   offeredItems: offerItemDto[]
   wantedItems: offerItemDto[]
+  tokensOffered: number
+  tokensWanted: number
 }
 
 export type offerUpdateDraftRequest = {
@@ -31,6 +34,8 @@ export type offerUpdateDraftRequest = {
   isHighlighted: boolean
   offeredItems: offerItemDto[]
   wantedItems: offerItemDto[]
+  tokensOffered: number
+  tokensWanted: number
 }
 
 export type offerUpdateQuoteResponse = {
@@ -70,4 +75,15 @@ export type GameOfferDTO = {
   id: number
   name: string
   photoUrl: string | null
+  genreId: number
+}
+
+export type GenreOfferDTO = {
+  id: number
+  name: string
+}
+
+export type RarityOfferDTO = {
+  id: number
+  name: string
 }

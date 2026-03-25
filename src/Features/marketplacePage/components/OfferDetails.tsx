@@ -11,6 +11,13 @@ import { Button } from "@/shared/components/button"
 import { Plus, SquarePen, Trash2 } from "lucide-react"
 import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useAppStore } from "@/shared/store/appStore"
+import { cn } from "@/shared/lib/Utils"
+import PointsIcon from "@/shared/photos/PointsIcon.svg"
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/shared/components/ui/tooltip"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
@@ -26,9 +33,15 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
 
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
+  const isActive = offer.offerCoreDto.offerStatusId === 1
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-h-[80vh] overflow-y-auto sm:min-w-3xl">
+      <DialogContent
+        className={cn(
+          "w-full max-h-[80vh] overflow-y-auto sm:min-w-3xl",
+          !isActive && "bg-muted grayscale-75"
+        )}
+      >
         <DialogHeader className="flex flex-col sm:flex-row sm:justify-between mr-12">
           <div>
             <DialogTitle>{offer.offerCoreDto.title}</DialogTitle>
@@ -45,7 +58,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
                   onClick={() => requestEdit(offer.offerCoreDto.offerId)}
-                  disabled={!isOwner}
+                  disabled={!isActive || !isOwner}
                 >
                   <SquarePen className="mr-1 h-4 w-4" /> Edytuj
                 </Button>
@@ -55,7 +68,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
                   onClick={() => requestDelete(offer.offerCoreDto.offerId)}
-                  disabled={!isOwner}
+                  disabled={!isActive || !isOwner}
                 >
                   <Trash2 className="mr-1 h-4 w-4" /> Usuń
                 </Button>
@@ -66,7 +79,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                   type="button"
                   className="text-xs cursor-pointer w-full sm:w-auto"
                   onClick={() => console.log(offer.offerCoreDto.offerId)}
-                  disabled={isOwner}
+                  disabled={!isActive || isOwner}
                 >
                   Wymień
                 </Button>
@@ -75,7 +88,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
                   onClick={() => console.log(offer.offerCoreDto.offerId)}
-                  disabled={isOwner}
+                  disabled={!isActive || isOwner}
                 >
                   <Plus /> Złóż kontrofertę
                 </Button>
@@ -98,6 +111,21 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                 </div>
               ))}
             </div>
+            {offer.offerCoreDto.tokensOffered > 0 && (
+              <span className="mt-3 inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
+                + {offer.offerCoreDto.tokensOffered}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <img
+                      src={PointsIcon}
+                      alt="tokenów"
+                      className="h-4 w-4 object-contain"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>tokenów</TooltipContent>
+                </Tooltip>
+              </span>
+            )}
           </div>
 
           <div className="border-t pt-4">
@@ -112,6 +140,21 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                 </div>
               ))}
             </div>
+            {offer.offerCoreDto.tokensWanted > 0 && (
+              <span className="mt-3 inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
+                + {offer.offerCoreDto.tokensWanted}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <img
+                      src={PointsIcon}
+                      alt="tokenów"
+                      className="h-4 w-4 object-contain"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>tokenów</TooltipContent>
+                </Tooltip>
+              </span>
+            )}
           </div>
         </div>
       </DialogContent>

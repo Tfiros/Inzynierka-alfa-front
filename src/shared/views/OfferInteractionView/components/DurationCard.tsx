@@ -19,17 +19,15 @@ const DurationCard = ({
         "p-4 rounded-2xl border text-left",
         "transition shadow-sm",
         selected
-          ? "bg-black text-white border-black"
-          : "bg-white hover:bg-muted/20 border-muted-foreground/20"
+          ? "bg-primary text-primary-foreground"
+          : "bg-card hover:bg-muted/20 border-muted-foreground/20"
       )}
     >
-      <div className={cn("text-xl font-semibold", selected && "text-white")}>
-        {title}
-      </div>
+      <div className={cn("text-xl font-semibold")}>{title}</div>
       <div
         className={cn(
           "text-sm mt-1",
-          selected ? "text-white/80" : "text-muted-foreground"
+          selected ? "text-primary-foreground/80" : "text-muted-foreground"
         )}
       >
         {subtitle}

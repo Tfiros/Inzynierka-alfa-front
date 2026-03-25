@@ -1,10 +1,10 @@
 import { OfferService } from "@/shared/api/services/OfferService"
+import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
 import type {
   GameOfferDTO,
   ItemOfferDto,
 } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { useDebounceValue } from "./UseDebounceValue"
 
 export const useOfferGameItemDropdown = () => {
   const minChars = 3

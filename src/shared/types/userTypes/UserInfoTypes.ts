@@ -3,6 +3,7 @@ export type UserNavbarInfoDto = {
   nickname: string
   email: string
   tokens: number
+  escrowedTokens: number
   experience: number
   level: number
   chatIds: number[]
