@@ -1,19 +1,38 @@
-import { useEffect, useLayoutEffect } from "react"
+import { useEffect, useLayoutEffect, useRef } from "react"
 import { useNotificationsHub } from "../hooks/UseNotificationsHub"
 import { useAppStore } from "../../store/appStore"
 
 const useMainLayout = () => {
-  const isLogged = useAppStore((s) => s.isAuthenticated)
-  const syncSession = useAppStore((s) => s.syncSession)
+  const isLogged = useAppStore((s: any) => s.isAuthenticated)
+  const syncSession = useAppStore((s: any) => s.syncSession)
 
-  const darkMode = useAppStore((s) => s.darkMode)
-  const hasHydrated = useAppStore((s) => s.hasHydrated)
+  const darkMode = useAppStore((s: any) => s.darkMode)
+  const hasHydrated = useAppStore((s: any) => s.hasHydrated)
+  const refreshNavbarUserFromAuth = useAppStore(
+    (s: any) => s.refreshNavbarUserFromAuth
+  )
+
+  const ranRef = useRef(false)
+
+  useNotificationsHub(hasHydrated && isLogged)
 
   useEffect(() => {
-    void syncSession()
-  }, [syncSession])
+    if (!hasHydrated) return
 
-  useNotificationsHub()
+    if (!isLogged) {
+      ranRef.current = false
+      return
+    }
+
+    if (ranRef.current) return
+    ranRef.current = true
+
+    void Promise.resolve(syncSession())
+      .catch(console.error)
+      .finally(() => {
+        refreshNavbarUserFromAuth().catch(console.error)
+      })
+  }, [hasHydrated, isLogged, syncSession, refreshNavbarUserFromAuth])
 
   useLayoutEffect(() => {
     if (!hasHydrated) return
