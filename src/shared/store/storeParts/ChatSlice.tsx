@@ -4,159 +4,201 @@ import type {
   ChatThreadListItemDto,
 } from "@/shared/types/chat/ChatDtos"
 
+type ChatState = {
+  isPopoverOpen: boolean
+  isWindowOpen: boolean
+  activeChatId: number | null
+  activeChatTitle: string | null
+
+  threads: ChatThreadListItemDto[]
+  messagesByChatId: Record<number, ChatMessage[]>
+  onlineMap: Record<string, boolean>
+}
+
+type ChatActions = {
+  openPopover: () => void
+  closePopover: () => void
+
+  openWindow: (chatId: number, title?: string | null) => void
+  closeWindow: () => void
+
+  setThreads: (items: ChatThreadListItemDto[]) => void
+
+  setMessages: (chatId: number, items: ChatMessage[]) => void
+  prependMessages: (chatId: number, items: ChatMessage[]) => void
+  appendMessage: (chatId: number, msg: ChatMessage) => void
+
+  updateMessage: (
+    chatId: number,
+    messageId: number,
+    patch: Partial<ChatMessage>
+  ) => void
+
+  markDeletedById: (messageId: number) => void
+
+  setUserOnline: (auth0UserId: string, isOnline: boolean) => void
+  resetUnread: (chatId: number) => void
+  incrementUnread: (chatId: number) => void
+  applyReadState: (chatId: number, unreadCount: number) => void
+
+  resetChat: () => void
+}
+
 export type ChatSlice = {
-  chat: {
-    isPopoverOpen: boolean
-    isWindowOpen: boolean
-    activeChatId: number | null
-    activeChatTitle: string | null
-
-    threads: ChatThreadListItemDto[]
-    messagesByChatId: Record<number, ChatMessage[]>
-    onlineMap: Record<string, boolean>
-
-    actions: {
-      openPopover: () => void
-      closePopover: () => void
-
-      openWindow: (chatId: number, title?: string | null) => void
-      closeWindow: () => void
-
-      setThreads: (items: ChatThreadListItemDto[]) => void
-
-      setMessages: (chatId: number, items: ChatMessage[]) => void
-      prependMessages: (chatId: number, items: ChatMessage[]) => void
-      appendMessage: (chatId: number, msg: ChatMessage) => void
-
-      updateMessage: (
-        chatId: number,
-        messageId: number,
-        patch: Partial<ChatMessage>
-      ) => void
-      markDeletedById: (messageId: number) => void
-
-      setUserOnline: (auth0UserId: string, isOnline: boolean) => void
-      resetUnread: (chatId: number) => void
-      incrementUnread: (chatId: number) => void
-      applyReadState: (chatId: number, unreadCount: number) => void
-
-      resetChat: () => void
-    }
+  chat: ChatState & {
+    actions: ChatActions
   }
 }
 
-export const createChatSlice: StateCreator<any, [], [], ChatSlice> = (set) => ({
-  chat: {
-    isPopoverOpen: false,
-    isWindowOpen: false,
-    activeChatId: null,
-    activeChatTitle: null,
+const initialChatState: ChatState = {
+  isPopoverOpen: false,
+  isWindowOpen: false,
+  activeChatId: null,
+  activeChatTitle: null,
+  threads: [],
+  messagesByChatId: {},
+  onlineMap: {},
+}
 
-    threads: [],
-    messagesByChatId: {},
-    onlineMap: {},
+const getThreadChatId = (thread: ChatThreadListItemDto): number =>
+  thread.chatConversationId
+
+export const createChatSlice: StateCreator<ChatSlice, [], [], ChatSlice> = (
+  set
+) => ({
+  chat: {
+    ...initialChatState,
 
     actions: {
       openPopover: () =>
-        set((s: any) => ({ chat: { ...s.chat, isPopoverOpen: true } })),
+        set((state) => ({
+          chat: {
+            ...state.chat,
+            isPopoverOpen: true,
+          },
+        })),
 
       closePopover: () =>
-        set((s: any) => ({ chat: { ...s.chat, isPopoverOpen: false } })),
+        set((state) => ({
+          chat: {
+            ...state.chat,
+            isPopoverOpen: false,
+          },
+        })),
 
       openWindow: (chatId: number, title?: string | null) =>
-        set((s: any) => ({
+        set((state) => ({
           chat: {
-            ...s.chat,
+            ...state.chat,
             isWindowOpen: true,
             activeChatId: chatId,
             activeChatTitle:
-              title ?? s.chat.activeChatTitle ?? `Chat #${chatId}`,
+              title ?? state.chat.activeChatTitle ?? `Chat #${chatId}`,
             isPopoverOpen: false,
           },
         })),
 
       closeWindow: () =>
-        set((s: any) => ({
+        set((state) => ({
           chat: {
-            ...s.chat,
+            ...state.chat,
             isWindowOpen: false,
             activeChatId: null,
             activeChatTitle: null,
           },
         })),
 
-      setThreads: (items) =>
-        set((s: any) => ({ chat: { ...s.chat, threads: items } })),
-
-      setMessages: (chatId, items) =>
-        set((s: any) => ({
+      setThreads: (items: ChatThreadListItemDto[]) =>
+        set((state) => ({
           chat: {
-            ...s.chat,
-            messagesByChatId: { ...s.chat.messagesByChatId, [chatId]: items },
+            ...state.chat,
+            threads: items,
           },
         })),
 
-      prependMessages: (chatId, items) =>
-        set((s: any) => {
-          const prev: ChatMessage[] = s.chat.messagesByChatId?.[chatId] ?? []
+      setMessages: (chatId: number, items: ChatMessage[]) =>
+        set((state) => ({
+          chat: {
+            ...state.chat,
+            messagesByChatId: {
+              ...state.chat.messagesByChatId,
+              [chatId]: items,
+            },
+          },
+        })),
+
+      prependMessages: (chatId: number, items: ChatMessage[]) =>
+        set((state) => {
+          const prev = state.chat.messagesByChatId[chatId] ?? []
           const existingIds = new Set(prev.map((m) => m.id))
           const unique = items.filter((m) => !existingIds.has(m.id))
-          if (!unique.length) return s
+
+          if (unique.length === 0) {
+            return state
+          }
 
           return {
             chat: {
-              ...s.chat,
+              ...state.chat,
               messagesByChatId: {
-                ...s.chat.messagesByChatId,
+                ...state.chat.messagesByChatId,
                 [chatId]: [...unique, ...prev],
               },
             },
           }
         }),
 
-      appendMessage: (chatId, msg) =>
-        set((s: any) => {
-          const prev: ChatMessage[] = s.chat.messagesByChatId?.[chatId] ?? []
-          if (prev.some((x) => x.id === msg.id)) return s
+      appendMessage: (chatId: number, msg: ChatMessage) =>
+        set((state) => {
+          const prev = state.chat.messagesByChatId[chatId] ?? []
+
+          if (prev.some((x) => x.id === msg.id)) {
+            return state
+          }
 
           return {
             chat: {
-              ...s.chat,
+              ...state.chat,
               messagesByChatId: {
-                ...s.chat.messagesByChatId,
+                ...state.chat.messagesByChatId,
                 [chatId]: [...prev, msg],
               },
             },
           }
         }),
 
-      updateMessage: (chatId: number, messageId: number, patch: any) =>
-        set((s: any) => {
-          const prev = s.chat.messagesByChatId?.[chatId] ?? []
-          const next = prev.map((m: any) =>
+      updateMessage: (
+        chatId: number,
+        messageId: number,
+        patch: Partial<ChatMessage>
+      ) =>
+        set((state) => {
+          const prev = state.chat.messagesByChatId[chatId] ?? []
+
+          const next = prev.map((m) =>
             m.id === messageId ? { ...m, ...patch } : m
           )
 
           return {
             chat: {
-              ...s.chat,
+              ...state.chat,
               messagesByChatId: {
-                ...s.chat.messagesByChatId,
+                ...state.chat.messagesByChatId,
                 [chatId]: next,
               },
             },
           }
         }),
 
-      // delete event nie ma chatId – aktualizujemy wszystkie chaty
       markDeletedById: (messageId: number) =>
-        set((s: any) => {
-          const byChat = s.chat.messagesByChatId ?? {}
-          const nextByChat: any = { ...byChat }
+        set((state) => {
+          const byChat = state.chat.messagesByChatId
+          const nextByChat: Record<number, ChatMessage[]> = {}
 
-          for (const k of Object.keys(byChat)) {
-            const chatId = Number(k)
-            nextByChat[chatId] = (byChat[chatId] ?? []).map((m: any) =>
+          for (const [chatIdRaw, messages] of Object.entries(byChat)) {
+            const chatId = Number(chatIdRaw)
+
+            nextByChat[chatId] = messages.map((m) =>
               m.id === messageId
                 ? {
                     ...m,
@@ -167,64 +209,66 @@ export const createChatSlice: StateCreator<any, [], [], ChatSlice> = (set) => ({
             )
           }
 
-          return { chat: { ...s.chat, messagesByChatId: nextByChat } }
+          return {
+            chat: {
+              ...state.chat,
+              messagesByChatId: nextByChat,
+            },
+          }
         }),
 
-      setUserOnline: (auth0UserId, isOnline) =>
-        set((s: any) => ({
+      setUserOnline: (auth0UserId: string, isOnline: boolean) =>
+        set((state) => ({
           chat: {
-            ...s.chat,
-            onlineMap: { ...s.chat.onlineMap, [auth0UserId]: isOnline },
+            ...state.chat,
+            onlineMap: {
+              ...state.chat.onlineMap,
+              [auth0UserId]: isOnline,
+            },
           },
         })),
 
-      resetUnread: (chatId) =>
-        set((s: any) => ({
+      resetUnread: (chatId: number) =>
+        set((state) => ({
           chat: {
-            ...s.chat,
-            threads: s.chat.threads.map((t: any) =>
-              (t.chatConversationId ?? t.chatId ?? t.id) === chatId
-                ? { ...t, unreadCount: 0 }
-                : t
+            ...state.chat,
+            threads: state.chat.threads.map((thread) =>
+              getThreadChatId(thread) === chatId
+                ? { ...thread, unreadCount: 0 }
+                : thread
             ),
           },
         })),
 
-      incrementUnread: (chatId) =>
-        set((s: any) => ({
+      incrementUnread: (chatId: number) =>
+        set((state) => ({
           chat: {
-            ...s.chat,
-            threads: s.chat.threads.map((t: any) =>
-              (t.chatConversationId ?? t.chatId ?? t.id) === chatId
-                ? { ...t, unreadCount: (t.unreadCount ?? 0) + 1 }
-                : t
+            ...state.chat,
+            threads: state.chat.threads.map((thread) =>
+              getThreadChatId(thread) === chatId
+                ? { ...thread, unreadCount: (thread.unreadCount ?? 0) + 1 }
+                : thread
             ),
           },
         })),
 
-      applyReadState: (chatId, unreadCount) =>
-        set((s: any) => ({
+      applyReadState: (chatId: number, unreadCount: number) =>
+        set((state) => ({
           chat: {
-            ...s.chat,
-            threads: s.chat.threads.map((t: any) =>
-              (t.chatConversationId ?? t.chatId ?? t.id) === chatId
-                ? { ...t, unreadCount }
-                : t
+            ...state.chat,
+            threads: state.chat.threads.map((thread) =>
+              getThreadChatId(thread) === chatId
+                ? { ...thread, unreadCount }
+                : thread
             ),
           },
         })),
 
       resetChat: () =>
-        set((s: any) => ({
+        set((state) => ({
           chat: {
-            ...s.chat,
-            isPopoverOpen: false,
-            isWindowOpen: false,
-            activeChatId: null,
-            activeChatTitle: null,
-            threads: [],
-            messagesByChatId: {},
-            onlineMap: {},
+            ...state.chat,
+            ...initialChatState,
           },
         })),
     },

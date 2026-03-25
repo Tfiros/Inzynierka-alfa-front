@@ -1,23 +1,5 @@
 export type ChatThreadType = "direct" | "group"
 
-export type ChatThreadListItem = {
-  chatConversationId: number
-  type: ChatThreadType
-  title: string
-  avatarUrl: string | null
-  lastMessagePreview: string | null
-  lastMessageAtUtc: string | null
-  unreadCount: number
-  // dla direct: online status z huba / backendu
-  isOnline?: boolean
-}
-
-export type ChatMessageSender = {
-  auth0UserId: string
-  displayName: string
-  avatarUrl: string | null
-}
-
 export type ChatMessage = {
   id: number
   chatConversationId: number
@@ -30,25 +12,10 @@ export type ChatMessage = {
   deletedAt?: string | null
 }
 
-export type ThreadsResponse = {
-  items: ChatThreadListItem[]
-}
-
-export type MessagesResponse = {
-  items: ChatMessage[]
-}
-
 export type SendMessageRequest = {
   text: string
 }
 
-export type SendMessageResponse = {
-  message: ChatMessage
-}
-
-export type CreateDmResponse = {
-  chatId: number
-}
 export type CreateDmChatResponse = {
   chatConversationId: number
 }
@@ -85,7 +52,4 @@ export type ChatReadStateDto = {
   lastReadMessageId: number
   markedAtUtc: string
   unreadCount: number
-}
-export type GetMessagesResponse = {
-  items: ChatMessage[]
 }

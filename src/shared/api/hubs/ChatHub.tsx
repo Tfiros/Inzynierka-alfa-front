@@ -31,6 +31,7 @@ class ChatHubClient {
   private conn: signalR.HubConnection | null = null
   private starting: Promise<void> | null = null
   private handlers: Handlers = {}
+  private joinedChats = new Set<number>()
 
   setHandlers(h: Handlers) {
     this.handlers = h
@@ -42,6 +43,21 @@ class ChatHubClient {
       sessionStorage.getItem("access_token") ||
       ""
     )
+  }
+
+  private async rejoinAllChats() {
+    if (!this.conn) return
+    if (this.conn.state !== signalR.HubConnectionState.Connected) return
+
+    const chatIds = [...this.joinedChats]
+
+    for (const chatId of chatIds) {
+      try {
+        await this.conn.invoke("JoinChat", chatId)
+      } catch (e) {
+        console.error(`JoinChat failed after reconnect for chat ${chatId}`, e)
+      }
+    }
   }
 
   private buildConnection() {
@@ -73,8 +89,9 @@ class ChatHubClient {
       console.warn("ChatHub reconnecting...", err)
     })
 
-    connection.onreconnected((connectionId) => {
+    connection.onreconnected(async (connectionId) => {
       console.log("ChatHub reconnected:", connectionId)
+      await this.rejoinAllChats()
     })
 
     connection.onclose((err) => {
@@ -142,13 +159,17 @@ class ChatHubClient {
   }
 
   async joinChat(chatId: number) {
+    this.joinedChats.add(chatId)
     await this.ensureStarted()
     await this.conn!.invoke("JoinChat", chatId)
   }
 
   async leaveChat(chatId: number) {
+    this.joinedChats.delete(chatId)
+
     if (!this.conn) return
     if (this.conn.state !== signalR.HubConnectionState.Connected) return
+
     await this.conn.invoke("LeaveChat", chatId)
   }
 
