@@ -1,6 +1,5 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
-import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
 import { type AuthSlice, createAuthSlice } from "./storeParts/authSlice"
 import {
   type NotificationsSlice,
