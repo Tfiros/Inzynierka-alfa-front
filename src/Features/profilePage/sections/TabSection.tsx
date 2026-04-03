@@ -209,11 +209,12 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     }}
                     onAccept={async (id) => {
                       const res = await accept.accept(id)
-                      if (res.ok) {
-                        await received.refetch()
-                        await sent.refetch()
-                        await refreshNavbar()
+
+                      if (!res.ok) {
+                        return
                       }
+
+                      window.location.reload()
                     }}
                   />
                 )
