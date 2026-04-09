@@ -1,7 +1,7 @@
 export type CounterOfferItemsDto = {
   itemId: number
-  itemName: string
-  itemPhotoUrl: string | null
+  name: string
+  photoUrl: string | null
   gameId: number
   gameName: string
   quantity: number

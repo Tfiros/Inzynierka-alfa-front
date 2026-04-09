@@ -37,6 +37,34 @@ type Props = {
   baseOfferError: string | null
 }
 
+type SuggestionItem = {
+  id?: number
+  itemId?: number
+  ID?: number
+  name?: string
+  Name?: string
+  gameName?: string
+  GameName?: string
+  game?: {
+    name?: string
+  }
+}
+
+type ErrorLike = {
+  message?: unknown
+  data?: {
+    message?: unknown
+  }
+  response?: {
+    data?: {
+      message?: unknown
+    }
+  }
+  error?: {
+    message?: unknown
+  }
+}
+
 export default function CreateCounterOfferModalContent({
   offerId,
   onCancel,
@@ -55,10 +83,10 @@ export default function CreateCounterOfferModalContent({
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    if (submitError) setSubmitError(null)
-  }, [tokens, items.length, submitError])
+    setSubmitError(null)
+  }, [tokens, items.length])
 
-  const addItem = (item: any) => {
+  const addItem = (item: SuggestionItem) => {
     const itemId = item.id ?? item.itemId ?? item.ID
     const name = item.name ?? item.Name
     const gameName = item.gameName ?? item.game?.name ?? item.GameName
@@ -90,15 +118,46 @@ export default function CreateCounterOfferModalContent({
   const canConfirm =
     (items.length > 0 || tokens > 0) && tokens >= 0 && !submitting
 
-  const extractMsg = (x: any): string => {
-    const msg =
-      x?.message ??
-      x?.data?.message ??
-      x?.response?.data?.message ??
-      x?.error?.message ??
-      ""
+  const extractMsg = (x: unknown): string => {
+    if (!x || typeof x !== "object") {
+      return ""
+    }
 
-    return typeof msg === "string" ? msg : ""
+    const obj = x as {
+      message?: unknown
+      data?: unknown
+      response?: {
+        data?: {
+          message?: unknown
+        }
+      }
+      error?: {
+        message?: unknown
+      }
+    }
+
+    if (typeof obj.message === "string") {
+      return obj.message
+    }
+
+    if (
+      obj.data &&
+      typeof obj.data === "object" &&
+      "message" in obj.data &&
+      typeof (obj.data as { message?: unknown }).message === "string"
+    ) {
+      return (obj.data as { message: string }).message
+    }
+
+    if (typeof obj.response?.data?.message === "string") {
+      return obj.response.data.message
+    }
+
+    if (typeof obj.error?.message === "string") {
+      return obj.error.message
+    }
+
+    return ""
   }
 
   const isNotEnoughTokens = (msg: string) => {
@@ -143,7 +202,7 @@ export default function CreateCounterOfferModalContent({
       await refreshNavbar()
       setOpened(false)
       onCancel()
-    } catch (err: any) {
+    } catch (err: unknown) {
       const msg = extractMsg(err)
 
       if (isNotEnoughTokens(msg)) {

@@ -15,10 +15,11 @@ import { useCounterOffers } from "../hooks/UseCounterOffers"
 import { useUpdateCounterOfferStatus } from "../hooks/UseUpdateCounterOfferStatus"
 import { useAcceptCounterOffer } from "../hooks/useAcceptCounterOffer"
 import { useAppStore } from "@/shared/store/appStore"
+import { useCounterOfferModal } from "@/features/marketplacePage/hooks/UseCounterOfferModal"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
   const [tab, setTab] = useState<
-    "offers" | "counterOffersSent" | "counterOffersRecieve" | "history"
+    "offers" | "counterOffersSent" | "counterOffersReceive" | "history"
   >("offers")
 
   const [activePage, setActivePage] = useState<number>(1)
@@ -58,7 +59,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
   } = useUserOffers(profileId, activePage, historyPage, pageSize)
 
   const sent = useCounterOffers("sent", tab === "counterOffersSent")
-  const received = useCounterOffers("received", tab === "counterOffersRecieve")
+  const received = useCounterOffers("received", tab === "counterOffersReceive")
 
   useEffect(() => {
     if (tab === "history") {
@@ -68,6 +69,8 @@ const TabSection = ({ profileId }: { profileId: number }) => {
 
   const activeOffersList = activeOffers?.elements ?? []
   const historyOffersList = historyOffers?.elements ?? []
+
+  const counter = useCounterOfferModal()
 
   return (
     <section>
@@ -85,8 +88,8 @@ const TabSection = ({ profileId }: { profileId: number }) => {
           </TabsTrigger>
 
           <TabsTrigger
-            value="counterOffersRecieve"
-            onClick={() => setTab("counterOffersRecieve")}
+            value="counterOffersReceive"
+            onClick={() => setTab("counterOffersReceive")}
           >
             Otrzymane Kontroferty
           </TabsTrigger>
@@ -126,6 +129,9 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     key={o.offerCoreDto.offerId}
                     offer={o}
                     onShowDetails={handleShowDetails}
+                    onOpenCounterOffer={(offerId) =>
+                      void counter.openForOffer(offerId)
+                    }
                   />
                 ))}
               </div>
@@ -166,7 +172,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
           )}
         </TabsContent>
 
-        <TabsContent value="counterOffersRecieve" className="mt-4">
+        <TabsContent value="counterOffersReceive" className="mt-4">
           {received.loading || received.data == null ? (
             <Card>
               <CardContent className="p-6 text-sm text-muted-foreground">
@@ -253,6 +259,9 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     key={o.offerCoreDto.offerId}
                     offer={o}
                     onShowDetails={handleShowDetails}
+                    onOpenCounterOffer={(offerId) =>
+                      void counter.openForOffer(offerId)
+                    }
                   />
                 ))}
               </div>

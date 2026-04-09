@@ -1,4 +1,4 @@
-import api from "@/shared/api/Api"
+import { post } from "@/shared/api/ApiClient"
 import type { AcceptedOfferResponseType } from "@/shared/types/counterOfferTypes/AcceptedOfferResponseType"
 import { useCallback, useState } from "react"
 
@@ -11,10 +11,12 @@ export function useAcceptCounterOffer() {
     setError(null)
 
     try {
-      const res = await api.post(`/CounterOffers/${counterOfferId}/accept`)
+      const res = await post<AcceptedOfferResponseType>(
+        `/CounterOffers/${counterOfferId}/accept`
+      )
 
-      if (!res.data?.isSuccess) {
-        setError(res.data?.message ?? "Akceptacja nie udana")
+      if (!res.isSuccess) {
+        setError(res.message ?? "Akceptacja nieudana")
         return {
           ok: false as const,
           data: null as AcceptedOfferResponseType | null,
@@ -23,10 +25,13 @@ export function useAcceptCounterOffer() {
 
       return {
         ok: true as const,
-        data: res.data.data as AcceptedOfferResponseType,
+        data: res.data ?? null,
       }
-    } catch (e: any) {
-      setError(e?.message ?? "Request failed")
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : "Request failed"
+
+      setError(message)
+
       return {
         ok: false as const,
         data: null as AcceptedOfferResponseType | null,

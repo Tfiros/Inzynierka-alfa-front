@@ -80,6 +80,5 @@ export const useCounterOfferModal = () => {
     baseOffer,
     baseOfferLoading,
     baseOfferError,
-    refetchBaseOffer: offerId ? () => fetchBaseOffer(offerId) : undefined,
   }
 }

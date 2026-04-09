@@ -7,6 +7,7 @@ import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.png"
 import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 import { Textarea } from "@/shared/components/textarea"
 import { Label } from "@/shared/components/label"
+import { post } from "@/shared/api/ApiClient"
 
 type ContactFormData = {
   name: string
@@ -16,24 +17,10 @@ type ContactFormData = {
 }
 
 async function sendMessage(data: ContactFormData): Promise<void> {
-  const response = await fetch("https://localhost:7144/api/Contact", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(data),
-  })
+  const result = await post<null>("/Contact", data)
 
-  if (!response.ok) {
-    let message = "Spróbuj ponownie za chwilę."
-
-    try {
-      const error = await response.json()
-      message = error?.message ?? message
-    } catch {}
-
-    throw new Error(message)
+  if (!result.isSuccess) {
+    throw new Error(result.message ?? "Spróbuj ponownie za chwilę.")
   }
 }
 

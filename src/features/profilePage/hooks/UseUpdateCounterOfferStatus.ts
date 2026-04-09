@@ -1,4 +1,4 @@
-import api from "@/shared/api/Api"
+import { patch } from "@/shared/api/ApiClient"
 import { useState, useCallback } from "react"
 
 export function useUpdateCounterOfferStatus() {
@@ -11,18 +11,20 @@ export function useUpdateCounterOfferStatus() {
       setError(null)
 
       try {
-        const res = await api.patch(`/CounterOffers/${counterOfferId}`, {
+        const res = await patch<null>(`/CounterOffers/${counterOfferId}`, {
           statusId,
         })
 
-        if (!res.data.isSuccess) {
-          setError(res.data.message)
+        if (!res.isSuccess) {
+          setError(res.message ?? "Aktualizacja nieudana")
           return false
         }
 
         return true
-      } catch (e: any) {
-        setError(e?.message ?? "Request failed")
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : "Request failed"
+
+        setError(message)
         return false
       } finally {
         setLoadingId(null)

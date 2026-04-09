@@ -39,22 +39,22 @@ const CounterOfferStatus = {
 type CounterOfferStatusId =
   (typeof CounterOfferStatus)[keyof typeof CounterOfferStatus]
 
-type BadgeVariant = "default" | "canceled" | "accepted"
+type BadgeVariant = "default" | "secondary" | "destructive"
 
 function isCounterOfferStatusId(v: number): v is CounterOfferStatusId {
   return v === 1 || v === 2 || v === 3
 }
 
 function statusVariant(statusId: number): BadgeVariant {
-  if (!isCounterOfferStatusId(statusId)) return "accepted"
+  if (!isCounterOfferStatusId(statusId)) return "secondary"
 
   switch (statusId) {
-    case CounterOfferStatus.Accepted:
+    case CounterOfferStatus.Pending:
       return "default"
+    case CounterOfferStatus.Accepted:
+      return "secondary"
     case CounterOfferStatus.Denied:
-      return "canceled"
-    default:
-      return "accepted"
+      return "destructive"
   }
 }
 
@@ -121,7 +121,7 @@ export default function CounterOfferCard({
           </div>
 
           <div className="flex flex-col items-end gap-2">
-            <Badge variant={statusVariant(data.statusId) as any}>
+            <Badge variant={statusVariant(data.statusId)}>
               {data.statusName}
             </Badge>
 
@@ -156,10 +156,10 @@ export default function CounterOfferCard({
                 key={`${data.counterOfferId}-${it.itemId}`}
                 className="flex items-center gap-2 rounded-md border p-2"
               >
-                {it.itemPhotoUrl ? (
+                {it.photoUrl ? (
                   <img
-                    src={it.itemPhotoUrl}
-                    alt={it.itemName}
+                    src={it.photoUrl}
+                    alt={it.name}
                     className="h-10 w-10 rounded object-cover"
                     loading="lazy"
                   />
@@ -168,7 +168,7 @@ export default function CounterOfferCard({
                 )}
 
                 <div className="min-w-0">
-                  <div className="text-sm truncate">{it.itemName}</div>
+                  <div className="text-sm truncate">{it.name}</div>
                   <div className="text-xs text-muted-foreground truncate">
                     {it.gameName} • x{it.quantity}
                   </div>

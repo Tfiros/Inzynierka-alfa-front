@@ -52,7 +52,4 @@ export class OfferService {
     offerId: number,
     req: offerUpdateDraftRequest
   ) => post<offerUpdateQuoteResponse>(`${this.base}/${offerId}/quote`, req)
-
-  public static readonly getCounterInfo = async (offerId: number) =>
-    get<OfferInformationDTO>(`/CounterOffers/${offerId}/info`)
 }
