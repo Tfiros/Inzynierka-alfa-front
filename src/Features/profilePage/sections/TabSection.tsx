@@ -55,6 +55,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
     loadingHistory,
     errorActive,
     errorHistory,
+    fetchActiveOffers,
     fetchHistoryOffers,
   } = useUserOffers(profileId, activePage, historyPage, pageSize)
 
@@ -220,7 +221,11 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                         return
                       }
 
-                      window.location.reload()
+                      await received.refetch()
+                      await sent.refetch()
+                      await refreshNavbar()
+                      await fetchActiveOffers()
+                      await fetchHistoryOffers()
                     }}
                   />
                 )

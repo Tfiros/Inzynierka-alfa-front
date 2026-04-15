@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Plus } from "lucide-react"
 
 import SectionTitle from "../components/SectionTitle"
@@ -6,11 +6,13 @@ import SearchSuggest from "../components/SearchSuggest"
 
 import { Button } from "@/shared/components/button"
 import { DialogHeader, DialogTitle } from "@/shared/components/dialog"
+import { Input } from "@/shared/components/input"
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -21,6 +23,16 @@ import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestR
 import type { CounterOfferDraftRequest } from "@/shared/types/counterOfferTypes/RequestResponseTypes"
 import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
 import { useAppStore } from "@/shared/store/appStore"
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/select"
+import IconSquareButton from "../components/IconSquareButton"
+import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
 
 type PickedItem = {
   itemId: number
@@ -50,21 +62,6 @@ type SuggestionItem = {
   }
 }
 
-type ErrorLike = {
-  message?: unknown
-  data?: {
-    message?: unknown
-  }
-  response?: {
-    data?: {
-      message?: unknown
-    }
-  }
-  error?: {
-    message?: unknown
-  }
-}
-
 export default function CreateCounterOfferModalContent({
   offerId,
   onCancel,
@@ -72,7 +69,7 @@ export default function CreateCounterOfferModalContent({
   baseOfferLoading,
   baseOfferError,
 }: Props) {
-  const [opened, setOpened] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
   const suggestions = useItemSuggestions()
   const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
 
@@ -81,6 +78,14 @@ export default function CreateCounterOfferModalContent({
 
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+
+  const itemDropdown = useOfferGameItemDropdown()
+
+  const [serverCost, setServerCost] = useState<number | null>(null)
+  const [quoteLoading, setQuoteLoading] = useState(false)
+  const [quoteError, setQuoteError] = useState<string | null>(null)
+
+  const [tokensInput, setTokensInput] = useState("0")
 
   useEffect(() => {
     setSubmitError(null)
@@ -108,10 +113,11 @@ export default function CreateCounterOfferModalContent({
     )
   }
 
-  const removeOne = (itemId: number) =>
+  const removeOne = (itemId: number) => {
     setItems((previousItems) =>
       previousItems.filter((x) => x.itemId !== itemId)
     )
+  }
 
   const removeAll = () => setItems([])
 
@@ -119,9 +125,7 @@ export default function CreateCounterOfferModalContent({
     (items.length > 0 || tokens > 0) && tokens >= 0 && !submitting
 
   const extractMsg = (x: unknown): string => {
-    if (!x || typeof x !== "object") {
-      return ""
-    }
+    if (!x || typeof x !== "object") return ""
 
     const obj = x as {
       message?: unknown
@@ -136,9 +140,7 @@ export default function CreateCounterOfferModalContent({
       }
     }
 
-    if (typeof obj.message === "string") {
-      return obj.message
-    }
+    if (typeof obj.message === "string") return obj.message
 
     if (
       obj.data &&
@@ -168,19 +170,48 @@ export default function CreateCounterOfferModalContent({
     )
   }
 
+  const estimatedCost = useMemo(() => tokens + 20, [tokens])
+
+  const buildRequest = (): CounterOfferDraftRequest => ({
+    tokensOffered: tokens,
+    items: items.map((i) => ({
+      itemId: i.itemId,
+      quantity: i.quantity,
+    })),
+  })
+
+  const handleOpenConfirm = async () => {
+    if (!offerId) return
+
+    setQuoteLoading(true)
+    setQuoteError(null)
+    setSubmitError(null)
+
+    try {
+      const res = await CounterOfferService.quote(offerId, buildRequest())
+
+      if (!res.isSuccess || !res.data) {
+        setQuoteError(res.message ?? "Nie udało się pobrać wyceny kontroferty.")
+        return
+      }
+
+      setServerCost(res.data.totalCost)
+      setConfirmOpen(true)
+    } catch (err: unknown) {
+      const msg = extractMsg(err)
+      setQuoteError(msg || "Nie udało się pobrać wyceny kontroferty.")
+    } finally {
+      setQuoteLoading(false)
+    }
+  }
+
   const handleSubmit = async () => {
     if (!offerId) return
 
     setSubmitting(true)
     setSubmitError(null)
 
-    const request: CounterOfferDraftRequest = {
-      tokensOffered: tokens,
-      items: items.map((i) => ({
-        itemId: i.itemId,
-        quantity: i.quantity,
-      })),
-    }
+    const request = buildRequest()
 
     try {
       const res = await CounterOfferService.create(offerId, request)
@@ -200,7 +231,7 @@ export default function CreateCounterOfferModalContent({
       }
 
       await refreshNavbar()
-      setOpened(false)
+      setConfirmOpen(false)
       onCancel()
     } catch (err: unknown) {
       const msg = extractMsg(err)
@@ -217,6 +248,11 @@ export default function CreateCounterOfferModalContent({
     }
   }
 
+  const summaryText = useMemo(() => {
+    const itemsCount = items.reduce((sum, item) => sum + item.quantity, 0)
+    return `${items.length} przedmiotów, łączna liczba sztuk: ${itemsCount}, tokeny: ${tokens}`
+  }, [items, tokens])
+
   return (
     <>
       <DialogHeader className="flex flex-col items-center gap-y-2">
@@ -226,68 +262,7 @@ export default function CreateCounterOfferModalContent({
       </DialogHeader>
 
       <div className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-1">
-        <div className="mt-4 rounded-xl border p-3 bg-muted/30">
-          {baseOfferLoading && (
-            <p className="text-sm text-muted-foreground">Ładowanie oferty</p>
-          )}
-
-          {!baseOfferLoading && baseOfferError && (
-            <p className="text-sm text-red-500">{baseOfferError}</p>
-          )}
-
-          {!baseOfferLoading && !baseOfferError && baseOffer && (
-            <div className="flex flex-col gap-2">
-              <div className="text-sm text-muted-foreground">
-                Tytuł oferty:{" "}
-                <span className="font-medium text-foreground">
-                  {baseOffer.offerCoreDto.title}
-                </span>
-              </div>
-
-              <div className="text-sm text-muted-foreground">
-                Opis:{" "}
-                <span className="font-medium text-foreground">
-                  {baseOffer.offerCoreDto.description}
-                </span>
-              </div>
-
-              <div className="text-xs text-muted-foreground">
-                Przedmioty posiadane:
-              </div>
-
-              <div className="space-y-2">
-                {baseOffer.offeredItems.map((x) => (
-                  <div
-                    key={x.itemDto.id}
-                    className="flex items-center justify-between rounded-lg border bg-background px-3 py-2"
-                  >
-                    <div className="flex flex-col">
-                      <div className="text-sm font-medium">
-                        {x.itemDto.name}
-                      </div>
-                      {x.itemDto.game?.name && (
-                        <div className="text-xs text-muted-foreground">
-                          {x.itemDto.game.name}
-                        </div>
-                      )}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      x{x.quantity}
-                    </div>
-                  </div>
-                ))}
-
-                {baseOffer.offeredItems.length === 0 && (
-                  <div className="text-sm text-muted-foreground">
-                    Brak przedmiotów
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="py-10">
+        <div className="py-12">
           <SectionTitle>Co oferujesz?</SectionTitle>
 
           <SearchSuggest
@@ -303,108 +278,210 @@ export default function CreateCounterOfferModalContent({
             disabled={submitting}
           />
 
-          <div className="mt-4 space-y-2">
+          <div className="mt-4 flex items-center gap-3">
+            <div className="flex-1">
+              <Select
+                value={itemDropdown.gameId ? String(itemDropdown.gameId) : ""}
+                onValueChange={(v) =>
+                  itemDropdown.setGame(v ? Number(v) : null)
+                }
+              >
+                <SelectTrigger className="h-10 rounded-xl bg-muted/40 border-muted-foreground/20 w-full">
+                  <SelectValue placeholder="Wybierz grę" />
+                </SelectTrigger>
+                <SelectContent>
+                  {itemDropdown.gamesLoading && (
+                    <SelectItem value="__loading" disabled>
+                      Ładowanie...
+                    </SelectItem>
+                  )}
+                  {!itemDropdown.gamesLoading &&
+                    itemDropdown.games.map((g) => (
+                      <SelectItem key={g.id} value={String(g.id)}>
+                        {g.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+
+              {itemDropdown.gamesError && (
+                <div className="mt-2 text-sm text-red-500">
+                  {itemDropdown.gamesError}
+                </div>
+              )}
+            </div>
+
+            <div className="flex-[2]">
+              <SearchSuggest
+                value={itemDropdown.query}
+                onChange={itemDropdown.setQuery}
+                suggestions={itemDropdown.items}
+                loading={itemDropdown.itemsLoading}
+                error={itemDropdown.itemsError}
+                disabled={
+                  submitting ||
+                  itemDropdown.gameId == null ||
+                  itemDropdown.gamesLoading
+                }
+                onPickSuggestion={(item) => {
+                  addItem(item)
+                  itemDropdown.reset()
+                }}
+              />
+            </div>
+
+            <div className="shrink-0">
+              <IconSquareButton
+                ariaLabel="Dodaj przedmiot do kontroferty"
+                onClick={() => {}}
+              />
+            </div>
+          </div>
+
+          <div className="mt-4 space-y-3">
             {items.map((it) => (
               <div
                 key={it.itemId}
-                className="flex items-center justify-between rounded-xl border p-3"
+                className="rounded-xl border bg-background px-4 py-3"
               >
-                <div className="flex flex-col">
-                  <div className="font-medium">{it.name}</div>
-                  {it.gameName && (
-                    <div className="text-xs text-muted-foreground">
-                      {it.gameName}
-                    </div>
-                  )}
-                </div>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium">{it.name}</div>
+                    {it.gameName && (
+                      <div className="text-xs text-muted-foreground">
+                        {it.gameName}
+                      </div>
+                    )}
+                  </div>
 
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    min={1}
-                    className="h-9 w-20 rounded-md border px-2"
-                    value={it.quantity}
-                    onChange={(e) =>
-                      setQuantity(it.itemId, Number(e.target.value))
-                    }
-                    disabled={submitting}
-                  />
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => removeOne(it.itemId)}
-                    disabled={submitting}
-                  >
-                    Usuń
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      min={1}
+                      value={it.quantity}
+                      onChange={(e) =>
+                        setQuantity(it.itemId, Number(e.target.value))
+                      }
+                      disabled={submitting}
+                      className="h-10 w-24 rounded-xl bg-muted/40 border-muted-foreground/20"
+                    />
+
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="rounded-xl"
+                      onClick={() => removeOne(it.itemId)}
+                      disabled={submitting}
+                    >
+                      Usuń
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
 
             {items.length > 0 && (
-              <Button
-                variant="outline"
-                onClick={removeAll}
-                disabled={submitting}
-              >
-                Usuń wszystko
-              </Button>
+              <div className="pt-1">
+                <Button
+                  variant="outline"
+                  className="rounded-xl"
+                  onClick={removeAll}
+                  disabled={submitting}
+                >
+                  Usuń wszystko
+                </Button>
+              </div>
             )}
           </div>
         </div>
-
-        <div className="border-t pt-6">
+        <div className="mt-2">
           <SectionTitle>Tokeny</SectionTitle>
 
-          <input
-            type="number"
-            min={0}
-            className="mt-3 h-10 w-full rounded-xl border px-3"
-            value={tokens}
-            onChange={(e) =>
-              setTokens(Math.max(0, Number(e.target.value) || 0))
-            }
-            disabled={submitting}
-          />
+          <div className="mt-3">
+            <Input
+              type="text"
+              inputMode="numeric"
+              value={tokensInput}
+              onFocus={() => {
+                if (tokensInput === "0") {
+                  setTokensInput("")
+                }
+              }}
+              onChange={(e) => {
+                const digitsOnly = e.target.value.replace(/\D/g, "")
+                setTokensInput(digitsOnly)
+                setTokens(digitsOnly === "" ? 0 : Number(digitsOnly))
+              }}
+              onBlur={() => {
+                if (tokensInput === "") {
+                  setTokensInput("0")
+                }
+              }}
+              disabled={submitting}
+              className="h-10 rounded-xl bg-muted/40 border-muted-foreground/20"
+              placeholder="0"
+            />
+          </div>
         </div>
 
+        {submitError && (
+          <div className="mt-4 text-sm text-red-500">{submitError}</div>
+        )}
+
         <div className="mt-10 border-t pt-4 flex items-center gap-3">
+          <div className="text-sm text-muted-foreground">
+            Szacowany koszt: {estimatedCost} tokenów
+          </div>
+
           <Button
             className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
-            disabled={!canConfirm}
-            onClick={() => setOpened(true)}
+            disabled={!canConfirm || quoteLoading}
+            onClick={() => void handleOpenConfirm()}
           >
             <Plus className="mr-2 h-5 w-5" />
-            Złóż kontrofertę
+            {quoteLoading ? "Pobieranie wyceny..." : "Złóż kontrofertę"}
           </Button>
 
           <Button
             variant="outline"
             className="h-10 rounded-xl px-8 text-base"
             onClick={onCancel}
-            disabled={submitting}
+            disabled={submitting || quoteLoading}
           >
             Anuluj
           </Button>
         </div>
+
+        {quoteError && (
+          <div className="mt-2 text-sm text-red-500">{quoteError}</div>
+        )}
       </div>
 
-      <AlertDialog open={opened} onOpenChange={setOpened}>
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Potwierdź wysłanie kontroferty</AlertDialogTitle>
+            <AlertDialogDescription>
+              Finalny koszt kontroferty:
+              <span className="ml-2 font-semibold">
+                {serverCost ?? "-"} tokenów
+              </span>
+              .
+            </AlertDialogDescription>
           </AlertDialogHeader>
 
+          <div className="text-sm text-muted-foreground">{summaryText}</div>
+
           {submitError && (
-            <div className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-              {submitError}
-            </div>
+            <div className="mt-2 text-sm text-red-500">{submitError}</div>
           )}
 
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={submitting}>Wróć</AlertDialogCancel>
+            <AlertDialogCancel disabled={submitting || quoteLoading}>
+              Wróć
+            </AlertDialogCancel>
             <AlertDialogAction
-              disabled={submitting}
+              disabled={submitting || quoteLoading}
               onClick={(e) => {
                 e.preventDefault()
                 void handleSubmit()
