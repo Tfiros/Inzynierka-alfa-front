@@ -393,6 +393,7 @@ const CreateOfferModalContent = ({
             variant="outline"
             className="h-10 rounded-xl px-8 text-base"
             onClick={onCancel}
+            disabled={offer.isLoading}
           >
             Anuluj
           </Button>

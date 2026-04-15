@@ -4,7 +4,6 @@ import type {
   GameOfferDTO,
   GenreOfferDTO,
   ItemOfferDto,
-  OfferInformationDTO,
   offerDetailsDtoResponse,
   offerDraftRequest,
   offerListingDtoResponse,

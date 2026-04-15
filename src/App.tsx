@@ -13,13 +13,13 @@ import MarketplacePage from "./Features/marketplacePage/Marketplace"
 import NotFoundPage from "./features/notFoundPage/NotFoundPage"
 import PointShop from "./features/pointShop/PointShop"
 import ProfileEdit from "./features/profileEditPage/ProfileEdit"
+import ProfilePage from "./features/profilePage/ProfilePage"
 import MainDashboard from "./features/profilePanelPage/views/MainDashboard"
 import SettingsPage from "./features/settingsPage/SettingsPage"
 import StatutePage from "./features/statutePage/StatutePage"
 import UserManagementPage from "./features/userManagement/UserManagementPage"
 import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
 import { TooltipProvider } from "./shared/components/ui/tooltip"
-import ProfilePage from "./features/profilePage/profilePage"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
