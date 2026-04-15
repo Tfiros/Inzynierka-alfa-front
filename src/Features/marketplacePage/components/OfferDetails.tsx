@@ -18,6 +18,8 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/shared/components/ui/tooltip"
+import { useCounterOfferModal } from "../hooks/UseCounterOfferModal"
+import CreateCounterOfferModalContent from "@/shared/views/OfferInteractionView/views/CreateCounterOfferModalContent"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
@@ -31,6 +33,8 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
   const requestEdit = useAppStore((s) => s.offerRequestEdit)
 
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
+
+  const counter = useCounterOfferModal()
 
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   const isActive = offer.offerCoreDto.offerStatusId === 1
@@ -128,17 +132,18 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
             )}
           </div>
 
-          <div className="border-t pt-4">
-            <Badge className="w-full md:w-fit rounded-full">Chcę</Badge>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-              {offer.wantedItems.map((listingItemDto) => (
-                <div
-                  key={listingItemDto.itemDto.id}
-                  className="h-full rounded-lg border border-gray-100 p-4 shadow-sm"
-                >
-                  <OfferItemCard listingItemDto={listingItemDto} />
-                </div>
-              ))}
+            <div className="border-t pt-4">
+              <Badge className="w-full md:w-fit rounded-full">Chcę</Badge>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                {offer.wantedItems.map((listingItemDto) => (
+                  <div
+                    key={listingItemDto.itemDto.id}
+                    className="h-full rounded-lg border border-gray-100 p-4 shadow-sm"
+                  >
+                    <OfferItemCard listingItemDto={listingItemDto} />
+                  </div>
+                ))}
+              </div>
             </div>
             {offer.offerCoreDto.tokensWanted > 0 && (
               <span className="mt-3 inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
@@ -156,9 +161,23 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
               </span>
             )}
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={counter.open} onOpenChange={counter.onOpenChange}>
+        <DialogContent className="max-w-3xl">
+          <CreateCounterOfferModalContent
+            offerId={counter.offerId}
+            baseOffer={counter.baseOffer}
+            baseOfferLoading={counter.baseOfferLoading}
+            baseOfferError={counter.baseOfferError}
+            onCancel={() => {
+              counter.close()
+              onOpenChange(true)
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 

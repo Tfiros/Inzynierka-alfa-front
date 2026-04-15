@@ -87,3 +87,19 @@ export type RarityOfferDTO = {
   id: number
   name: string
 }
+
+export type OfferListingItemDTO = {
+  itemId: number
+  name: string
+  gameId: number
+  photoUrl: string | null
+  quantity: number
+  gameName: string
+  genreId: number
+  genreName: string
+}
+
+export type OfferInformationDTO = {
+  offerCoreDto: offerCoreDto
+  offeredItems: OfferListingItemDTO[]
+}

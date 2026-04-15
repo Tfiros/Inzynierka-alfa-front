@@ -31,9 +31,10 @@ import {
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
+  onOpenCounterOffer: (offerId: number) => void
 }
 
-const Offer = ({ offer, onShowDetails }: OfferProps) => {
+const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   const remainingOffered =
     offer.offeredItemsTotalCount - offer.offeredItems.length
   const remainingWanted = offer.wantedItemsTotalCount - offer.wantedItems.length
@@ -167,7 +168,7 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
       </CardContent>
 
       <CardFooter className="mt-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full">
-        <div className="flex flex-row  items-center">
+        <div className="flex flex-row items-center">
           <Avatar>
             <AvatarImage
               src={
@@ -183,13 +184,14 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
             <span className="font-medium text-foreground">
               {offer.offerUserDto.nickname}
             </span>
-            <span className="">
+            <span>
               {offer.offerUserDto.rating}/5 ★ •{" "}
               {offer.offerUserDto.successTradesCount} wymian • {successRate} SR
             </span>
-            <span className=""></span>
+            <span />
           </div>
         </div>
+
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:justify-end">
           <Button
             type="button"
@@ -199,6 +201,7 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
           >
             <Info /> Szczegóły
           </Button>
+
           {isOwner ? (
             <>
               <Button
@@ -231,12 +234,13 @@ const Offer = ({ offer, onShowDetails }: OfferProps) => {
               >
                 Wymień
               </Button>
+
               <Button
                 type="button"
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
-                onClick={() => console.log(offer.offerCoreDto.offerId)}
-                disabled={!isActive || isOwner}
+                onClick={() => onOpenCounterOffer(offer.offerCoreDto.offerId)}
+                disabled={!isAuthenticated || isOwner || !isActive}
               >
                 <Plus /> Złóż kontrofertę
               </Button>

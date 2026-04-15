@@ -7,33 +7,45 @@ import {
 } from "@/shared/components/tabs"
 import { useEffect, useState } from "react"
 import { useUserOffers } from "../hooks/UseProfileOffers"
-import Offer from "@/Features/marketplacePage/components/Offer"
-import { useOfferDetails } from "@/Features/marketplacePage/hooks/UseOfferDetails"
-import OfferDetails from "@/Features/marketplacePage/components/OfferDetails"
+import Offer from "@/features/marketplacePage/components/Offer"
+import OfferDetails from "@/features/marketplacePage/components/OfferDetails"
+import { useOfferDetails } from "@/features/marketplacePage/hooks/UseOfferDetails"
+import CounterOfferCard from "../component/CounterOfferCard"
+import { useCounterOffers } from "../hooks/UseCounterOffers"
+import { useUpdateCounterOfferStatus } from "../hooks/UseUpdateCounterOfferStatus"
+import { useAcceptCounterOffer } from "../hooks/useAcceptCounterOffer"
+import { useAppStore } from "@/shared/store/appStore"
+import { useCounterOfferModal } from "@/features/marketplacePage/hooks/UseCounterOfferModal"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
-  const [tab, setTab] = useState<"offers" | "history">("offers")
+  const [tab, setTab] = useState<
+    "offers" | "counterOffersSent" | "counterOffersReceive" | "history"
+  >("offers")
+
   const [activePage, setActivePage] = useState<number>(1)
   const [historyPage, setHistoryPage] = useState<number>(1)
   const pageSize = 10
+
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
 
-  const {
-    offerDetails: detailsOffer,
-    loading: detailsLoading,
-    error: detailsError,
-  } = useOfferDetails(selectedOfferId, detailsOpen)
+  const update = useUpdateCounterOfferStatus()
+  const accept = useAcceptCounterOffer()
+  const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
+
+  const { offerDetails: detailsOffer } = useOfferDetails(
+    selectedOfferId,
+    detailsOpen
+  )
 
   const handleShowDetails = (offerId: number) => {
     setSelectedOffer(offerId)
     setDetailsOpen(true)
   }
+
   const handleOpenDialogChange = (open: boolean) => {
     setDetailsOpen(open)
-    if (!open) {
-      setSelectedOffer(null)
-    }
+    if (!open) setSelectedOffer(null)
   }
 
   const {
@@ -43,8 +55,12 @@ const TabSection = ({ profileId }: { profileId: number }) => {
     loadingHistory,
     errorActive,
     errorHistory,
+    fetchActiveOffers,
     fetchHistoryOffers,
   } = useUserOffers(profileId, activePage, historyPage, pageSize)
+
+  const sent = useCounterOffers("sent", tab === "counterOffersSent")
+  const received = useCounterOffers("received", tab === "counterOffersReceive")
 
   useEffect(() => {
     if (tab === "history") {
@@ -54,13 +70,31 @@ const TabSection = ({ profileId }: { profileId: number }) => {
 
   const activeOffersList = activeOffers?.elements ?? []
   const historyOffersList = historyOffers?.elements ?? []
+
+  const counter = useCounterOfferModal()
+
   return (
     <section>
       <Tabs defaultValue="offers" className="mt-6">
-        <TabsList className="w-full grid grid-cols-2">
+        <TabsList className="w-full grid grid-cols-4">
           <TabsTrigger value="offers" onClick={() => setTab("offers")}>
-            Moje wystawione oferty
+            Moje Oferty
           </TabsTrigger>
+
+          <TabsTrigger
+            value="counterOffersSent"
+            onClick={() => setTab("counterOffersSent")}
+          >
+            Wysłane Kontroferty
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="counterOffersReceive"
+            onClick={() => setTab("counterOffersReceive")}
+          >
+            Otrzymane Kontroferty
+          </TabsTrigger>
+
           <TabsTrigger value="history" onClick={() => setTab("history")}>
             Historia wymian
           </TabsTrigger>
@@ -96,10 +130,107 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     key={o.offerCoreDto.offerId}
                     offer={o}
                     onShowDetails={handleShowDetails}
+                    onOpenCounterOffer={(offerId) =>
+                      void counter.openForOffer(offerId)
+                    }
                   />
                 ))}
               </div>
             </>
+          )}
+        </TabsContent>
+
+        <TabsContent value="counterOffersSent" className="mt-4">
+          {sent.loading || sent.data == null ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-muted-foreground">
+                Ładowanie wysłanych kontrofert...
+              </CardContent>
+            </Card>
+          ) : sent.error ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-red-500">
+                {sent.error}
+              </CardContent>
+            </Card>
+          ) : sent.data.length === 0 ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-muted-foreground">
+                Brak wysłanych kontrofert.
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid xl:grid-cols-2 gap-4">
+              {sent.data.map((co) => (
+                <CounterOfferCard
+                  key={co.counterOfferId}
+                  data={co}
+                  variant="sent"
+                  onOpenOffer={handleShowDetails}
+                />
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="counterOffersReceive" className="mt-4">
+          {received.loading || received.data == null ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-muted-foreground">
+                Ładowanie otrzymanych kontrofert...
+              </CardContent>
+            </Card>
+          ) : received.error ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-red-500">
+                {received.error}
+              </CardContent>
+            </Card>
+          ) : received.data.length === 0 ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-muted-foreground">
+                Brak otrzymanych kontrofert.
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid xl:grid-cols-2 gap-4">
+              {received.data.map((co) => {
+                const isBusy =
+                  update.loadingId === co.counterOfferId ||
+                  accept.loadingId === co.counterOfferId
+
+                return (
+                  <CounterOfferCard
+                    key={co.counterOfferId}
+                    data={co}
+                    variant="received"
+                    onOpenOffer={handleShowDetails}
+                    actionsDisabled={isBusy}
+                    onCancel={async (id) => {
+                      const ok = await update.updateStatus(id, 3)
+                      if (ok) {
+                        await received.refetch()
+                        await sent.refetch()
+                        await refreshNavbar()
+                      }
+                    }}
+                    onAccept={async (id) => {
+                      const res = await accept.accept(id)
+
+                      if (!res.ok) {
+                        return
+                      }
+
+                      await received.refetch()
+                      await sent.refetch()
+                      await refreshNavbar()
+                      await fetchActiveOffers()
+                      await fetchHistoryOffers()
+                    }}
+                  />
+                )
+              })}
+            </div>
           )}
         </TabsContent>
 
@@ -133,6 +264,9 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     key={o.offerCoreDto.offerId}
                     offer={o}
                     onShowDetails={handleShowDetails}
+                    onOpenCounterOffer={(offerId) =>
+                      void counter.openForOffer(offerId)
+                    }
                   />
                 ))}
               </div>
@@ -140,6 +274,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
           )}
         </TabsContent>
       </Tabs>
+
       {detailsOffer && (
         <OfferDetails
           offer={detailsOffer}
