@@ -4,11 +4,8 @@ import OfferDetails from "./components/OfferDetails"
 import { useState } from "react"
 import { useOffersListing } from "./hooks/UseOfferListing"
 import { useOfferDetails } from "./hooks/UseOfferDetails"
-import { useCounterOfferModal } from "./hooks/UseCounterOfferModal"
 import { Plus } from "lucide-react"
 import { Button } from "@/shared/components/button"
-import { Dialog, DialogContent } from "@/shared/components/dialog"
-import CreateOfferModalContent from "@/shared/views/OfferInteractionView/views/CreateCounterOfferModalContent"
 import {
   Pagination,
   PaginationContent,
@@ -47,12 +44,11 @@ const MarketplacePage = () => {
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
-  const counter = useCounterOfferModal()
-
-  const { offerDetails: detailsOffer } = useOfferDetails(
-    selectedOfferId,
-    detailsOpen
-  )
+  const {
+    offerDetails: detailsOffer,
+    loading: detailsLoading,
+    error: detailsError,
+  } = useOfferDetails(selectedOfferId, detailsOpen)
 
   const requestCreate = useAppStore((s) => s.offerRequestCreate)
 
@@ -60,7 +56,6 @@ const MarketplacePage = () => {
     setSelectedOffer(offerId)
     setDetailsOpen(true)
   }
-
   const handleOpenDialogChange = (open: boolean) => {
     setDetailsOpen(open)
     if (!open) {
@@ -70,7 +65,7 @@ const MarketplacePage = () => {
 
   return (
     <>
-      <div className="mx-auto flex flex-col gap-6 py-6 lg:py-10">
+      <div className="mx-auto flex flex-col gap-6  py-6 lg:py-10">
         <header className="flex flex-col gap-3 pb-2 md:flex-row md:items-center md:justify-between">
           <div className="text-left">
             <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
@@ -80,12 +75,10 @@ const MarketplacePage = () => {
               Przeglądaj oferty wymiany i znajdź najlepsze okazje!
             </p>
           </div>
-
           <div className="flex items-center gap-3 md:self-end">
             <div className="text-sm text-muted-foreground md:text-right md:self-end">
               <p>{totalCount} znalezionych ofert</p>
             </div>
-
             <Button
               type="button"
               className="fixed bottom-6 right-6 z-50 rounded-full shadow-lg"
@@ -116,17 +109,10 @@ const MarketplacePage = () => {
           onOrderByChange={setOrderBy}
         />
         {error && <p className="text-red-500">Błąd: {error}</p>}
-
         {loading && (
           <p className="text-sm text-muted-foreground">Ładowanie ofert...</p>
         )}
-
-        <OffersGrid
-          offers={offers}
-          onShowDetails={handleShowDetails}
-          onOpenCounterOffer={(offerId) => void counter.openForOffer(offerId)}
-        />
-
+        <OffersGrid offers={offers} onShowDetails={handleShowDetails} />
         {!loading && totalCount > 0 && totalPages > 1 && (
           <Pagination className="mt-6">
             <PaginationContent>
@@ -140,7 +126,6 @@ const MarketplacePage = () => {
                   className={page === 1 ? "pointer-events-none opacity-50" : ""}
                 />
               </PaginationItem>
-
               {getPageItems(page, totalPages).map((p, idx) =>
                 p === "..." ? (
                   <PaginationItem key={`dots-${idx}`}>
@@ -161,7 +146,6 @@ const MarketplacePage = () => {
                   </PaginationItem>
                 )
               )}
-
               <PaginationItem>
                 <PaginationNext
                   href="#"
@@ -177,7 +161,6 @@ const MarketplacePage = () => {
             </PaginationContent>
           </Pagination>
         )}
-
         {detailsOffer && (
           <OfferDetails
             offer={detailsOffer}
@@ -185,18 +168,6 @@ const MarketplacePage = () => {
             onOpenChange={handleOpenDialogChange}
           />
         )}
-
-        <Dialog open={counter.open} onOpenChange={counter.onOpenChange}>
-          <DialogContent className="max-w-3xl">
-            <CreateOfferModalContent
-              offerId={counter.offerId}
-              baseOffer={counter.baseOffer}
-              baseOfferLoading={counter.baseOfferLoading}
-              baseOfferError={counter.baseOfferError}
-              onCancel={counter.close}
-            />
-          </DialogContent>
-        </Dialog>
       </div>
     </>
   )

@@ -4,14 +4,8 @@ import Offer from "./Offer"
 type OfferGridProps = {
   offers: offerListingDtoResponse[]
   onShowDetails: (offerId: number) => void
-  onOpenCounterOffer: (offerId: number) => void
 }
-
-const OffersGrid = ({
-  offers,
-  onShowDetails,
-  onOpenCounterOffer,
-}: OfferGridProps) => {
+const OffersGrid = ({ offers, onShowDetails }: OfferGridProps) => {
   if (!offers || offers.length === 0) {
     return (
       <div className="flex items-center justify-center rounded-lg border text-sm text-muted-foreground h-32">
@@ -19,7 +13,6 @@ const OffersGrid = ({
       </div>
     )
   }
-
   return (
     <div className="grid xl:grid-cols-2 gap-6">
       {offers.map((offer) => (
@@ -27,7 +20,6 @@ const OffersGrid = ({
           key={offer.offerCoreDto.offerId}
           offer={offer}
           onShowDetails={onShowDetails}
-          onOpenCounterOffer={onOpenCounterOffer}
         />
       ))}
     </div>

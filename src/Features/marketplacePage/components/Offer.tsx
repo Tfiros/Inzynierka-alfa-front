@@ -31,10 +31,9 @@ import {
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
-  onOpenCounterOffer: (offerId: number) => void
 }
 
-const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
+const Offer = ({ offer, onShowDetails }: OfferProps) => {
   const remainingOffered =
     offer.offeredItemsTotalCount - offer.offeredItems.length
   const remainingWanted = offer.wantedItemsTotalCount - offer.wantedItems.length
@@ -168,7 +167,7 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
       </CardContent>
 
       <CardFooter className="mt-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full">
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row  items-center">
           <Avatar>
             <AvatarImage
               src={
@@ -184,14 +183,13 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
             <span className="font-medium text-foreground">
               {offer.offerUserDto.nickname}
             </span>
-            <span>
+            <span className="">
               {offer.offerUserDto.rating}/5 ★ •{" "}
               {offer.offerUserDto.successTradesCount} wymian • {successRate} SR
             </span>
-            <span />
+            <span className=""></span>
           </div>
         </div>
-
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:justify-end">
           <Button
             type="button"
@@ -201,7 +199,6 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
           >
             <Info /> Szczegóły
           </Button>
-
           {isOwner ? (
             <>
               <Button
@@ -234,13 +231,12 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
               >
                 Wymień
               </Button>
-
               <Button
                 type="button"
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
-                onClick={() => onOpenCounterOffer(offer.offerCoreDto.offerId)}
-                disabled={!isAuthenticated || isOwner || !isActive}
+                onClick={() => console.log(offer.offerCoreDto.offerId)}
+                disabled={!isActive || isOwner}
               >
                 <Plus /> Złóż kontrofertę
               </Button>
