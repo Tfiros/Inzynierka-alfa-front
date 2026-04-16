@@ -262,6 +262,35 @@ export default function CreateCounterOfferModalContent({
       </DialogHeader>
 
       <div className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-1">
+        <div className="mt-4 rounded-xl border bg-muted/20 px-4 py-3">
+          {baseOfferLoading && (
+            <p className="text-sm text-muted-foreground">Ładowanie oferty...</p>
+          )}
+
+          {!baseOfferLoading && baseOfferError && (
+            <p className="text-sm text-red-500">{baseOfferError}</p>
+          )}
+
+          {!baseOfferLoading && !baseOfferError && baseOffer && (
+            <div className="flex items-center justify-between gap-4">
+              <p className="min-w-0 text-sm font-medium text-foreground line-clamp-1">
+                {baseOffer.offeredItems
+                  .slice(0, 2)
+                  .map((x) => {
+                    const itemName = x.itemDto.name
+                    const gameName = x.itemDto.game?.name
+                    return gameName ? `${itemName} · ${gameName}` : itemName
+                  })
+                  .join(", ")}
+                {baseOffer.offeredItems.length > 3 ? "..." : ""}
+              </p>
+
+              <div className="shrink-0 text-xs text-muted-foreground">
+                {baseOffer.offeredItems.length} szt.
+              </div>
+            </div>
+          )}
+        </div>
         <div className="py-12">
           <SectionTitle>Co oferujesz?</SectionTitle>
 
