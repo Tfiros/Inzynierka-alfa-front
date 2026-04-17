@@ -10,12 +10,14 @@ import { useUserOffers } from "../hooks/UseProfileOffers"
 import Offer from "@/features/marketplacePage/components/Offer"
 import OfferDetails from "@/features/marketplacePage/components/OfferDetails"
 import { useOfferDetails } from "@/features/marketplacePage/hooks/UseOfferDetails"
-import CounterOfferCard from "../component/CounterOfferCard"
+import CounterOfferCard, {
+  CounterOfferStatus,
+} from "../component/CounterOfferCard"
 import { useCounterOffers } from "../hooks/UseCounterOffers"
 import { useUpdateCounterOfferStatus } from "../hooks/UseUpdateCounterOfferStatus"
-import { useAcceptCounterOffer } from "../hooks/useAcceptCounterOffer"
 import { useAppStore } from "@/shared/store/appStore"
 import { useCounterOfferModal } from "@/features/marketplacePage/hooks/UseCounterOfferModal"
+import { useAcceptCounterOffer } from "../hooks/useAcceptCounterOffer"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
   const [tab, setTab] = useState<
@@ -207,7 +209,10 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     onOpenOffer={handleShowDetails}
                     actionsDisabled={isBusy}
                     onCancel={async (id) => {
-                      const ok = await update.updateStatus(id, 3)
+                      const ok = await update.updateStatus(
+                        id,
+                        CounterOfferStatus.Denied
+                      )
                       if (ok) {
                         await received.refetch()
                         await sent.refetch()

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import { get } from "@/shared/api/ApiClient"
-import type { ApiResult } from "@/shared/api/ApiResult"
+import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
 import type { CounterOfferListItemDto } from "@/shared/types/counterOfferTypes/CounterOfferListItemDto"
 
 type Type = "sent" | "received"
@@ -15,9 +14,7 @@ export function useCounterOffers(type: Type, enabled: boolean) {
     setError(null)
 
     try {
-      const res: ApiResult<CounterOfferListItemDto[]> = await get(
-        `/CounterOffers/${type}`
-      )
+      const res = await CounterOfferService.getByType(type)
 
       if (!res.isSuccess) {
         setError(res.message ?? "Nie udało się pobrać kontrofert.")

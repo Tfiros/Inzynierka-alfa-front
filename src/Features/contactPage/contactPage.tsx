@@ -7,21 +7,13 @@ import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.png"
 import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 import { Textarea } from "@/shared/components/textarea"
 import { Label } from "@/shared/components/label"
-import { post } from "@/shared/api/ApiClient"
+import { ContactService } from "@/shared/api/services/ContactService"
 
 type ContactFormData = {
   name: string
   email: string
   subject: string
   message: string
-}
-
-async function sendMessage(data: ContactFormData): Promise<void> {
-  const result = await post<null>("/Contact", data)
-
-  if (!result.isSuccess) {
-    throw new Error(result.message ?? "Spróbuj ponownie za chwilę.")
-  }
 }
 
 const ContactPage = () => {
@@ -47,7 +39,12 @@ const ContactPage = () => {
     setSubmitError(null)
 
     try {
-      await sendMessage(data)
+      const result = await ContactService.sendMessage(data)
+
+      if (!result.isSuccess) {
+        throw new Error(result.message ?? "Spróbuj ponownie za chwilę.")
+      }
+
       reset()
       setIsSuccessModalOpen(true)
     } catch (e) {

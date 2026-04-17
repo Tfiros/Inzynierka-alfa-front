@@ -1,4 +1,4 @@
-import { post } from "@/shared/api/ApiClient"
+import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
 import type { AcceptedOfferResponseType } from "@/shared/types/counterOfferTypes/AcceptedOfferResponseType"
 import { useCallback, useState } from "react"
 
@@ -11,9 +11,7 @@ export function useAcceptCounterOffer() {
     setError(null)
 
     try {
-      const res = await post<AcceptedOfferResponseType>(
-        `/CounterOffers/${counterOfferId}/accept`
-      )
+      const res = await CounterOfferService.accept(counterOfferId)
 
       if (!res.isSuccess) {
         setError(res.message ?? "Akceptacja nieudana")

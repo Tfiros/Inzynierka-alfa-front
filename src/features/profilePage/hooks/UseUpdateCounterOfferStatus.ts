@@ -1,4 +1,4 @@
-import { patch } from "@/shared/api/ApiClient"
+import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
 import { useState, useCallback } from "react"
 
 export function useUpdateCounterOfferStatus() {
@@ -11,9 +11,10 @@ export function useUpdateCounterOfferStatus() {
       setError(null)
 
       try {
-        const res = await patch<null>(`/CounterOffers/${counterOfferId}`, {
-          statusId,
-        })
+        const res = await CounterOfferService.updateStatus(
+          counterOfferId,
+          statusId
+        )
 
         if (!res.isSuccess) {
           setError(res.message ?? "Aktualizacja nieudana")

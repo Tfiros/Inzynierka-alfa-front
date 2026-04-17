@@ -19,7 +19,10 @@ import {
 } from "@/shared/components/alert-dialog"
 
 import { useItemSuggestions } from "../hooks/UseItemSuggestions"
-import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
+import type {
+  ItemOfferDto,
+  offerDetailsDtoResponse,
+} from "@/shared/types/offerTypes/RequestResponseTypes"
 import type { CounterOfferDraftRequest } from "@/shared/types/counterOfferTypes/RequestResponseTypes"
 import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
 import { useAppStore } from "@/shared/store/appStore"
@@ -47,19 +50,6 @@ type Props = {
   baseOffer: offerDetailsDtoResponse | null
   baseOfferLoading: boolean
   baseOfferError: string | null
-}
-
-type SuggestionItem = {
-  id?: number
-  itemId?: number
-  ID?: number
-  name?: string
-  Name?: string
-  gameName?: string
-  GameName?: string
-  game?: {
-    name?: string
-  }
 }
 
 export default function CreateCounterOfferModalContent({
@@ -91,16 +81,21 @@ export default function CreateCounterOfferModalContent({
     setSubmitError(null)
   }, [tokens, items.length])
 
-  const addItem = (item: SuggestionItem) => {
-    const itemId = item.id ?? item.itemId ?? item.ID
-    const name = item.name ?? item.Name
-    const gameName = item.gameName ?? item.game?.name ?? item.GameName
-
-    if (!itemId || !name) return
-
+  const addItem = (item: ItemOfferDto) => {
     setItems((previousItems) => {
-      if (previousItems.some((x) => x.itemId === itemId)) return previousItems
-      return [...previousItems, { itemId, name, gameName, quantity: 1 }]
+      if (previousItems.some((x) => x.itemId === item.id)) {
+        return previousItems
+      }
+
+      return [
+        ...previousItems,
+        {
+          itemId: item.id,
+          name: item.name,
+          gameName: item.game?.name,
+          quantity: 1,
+        },
+      ]
     })
   }
 

@@ -30,13 +30,13 @@ type Props = {
   actionsDisabled?: boolean
 }
 
-const CounterOfferStatus = {
+export const CounterOfferStatus = {
   Pending: 1,
   Accepted: 2,
   Denied: 3,
 } as const
 
-type CounterOfferStatusId =
+export type CounterOfferStatusId =
   (typeof CounterOfferStatus)[keyof typeof CounterOfferStatus]
 
 type BadgeVariant = "default" | "secondary" | "destructive"
