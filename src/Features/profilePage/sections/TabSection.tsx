@@ -17,11 +17,11 @@ import { useCounterOffers } from "../hooks/UseCounterOffers"
 import { useUpdateCounterOfferStatus } from "../hooks/UseUpdateCounterOfferStatus"
 import { useAppStore } from "@/shared/store/appStore"
 import { useCounterOfferModal } from "@/features/marketplacePage/hooks/UseCounterOfferModal"
-import { useAcceptCounterOffer } from "../hooks/useAcceptCounterOffer"
+import { UseAcceptCounterOffer } from "../hooks/UseAcceptCounterOffer"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
   const [tab, setTab] = useState<
-    "offers" | "counterOffersSent" | "counterOffersReceive" | "history"
+    "offers" | "counterOffersSent" | "counterOffersReceived" | "history"
   >("offers")
 
   const [activePage, setActivePage] = useState<number>(1)
@@ -32,7 +32,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
   const [detailsOpen, setDetailsOpen] = useState(false)
 
   const update = useUpdateCounterOfferStatus()
-  const accept = useAcceptCounterOffer()
+  const accept = UseAcceptCounterOffer()
   const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
 
   const { offerDetails: detailsOffer } = useOfferDetails(
@@ -62,7 +62,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
   } = useUserOffers(profileId, activePage, historyPage, pageSize)
 
   const sent = useCounterOffers("sent", tab === "counterOffersSent")
-  const received = useCounterOffers("received", tab === "counterOffersReceive")
+  const received = useCounterOffers("received", tab === "counterOffersReceived")
 
   useEffect(() => {
     if (tab === "history") {
@@ -92,7 +92,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
 
           <TabsTrigger
             value="counterOffersReceive"
-            onClick={() => setTab("counterOffersReceive")}
+            onClick={() => setTab("counterOffersReceived")}
           >
             Otrzymane Kontroferty
           </TabsTrigger>

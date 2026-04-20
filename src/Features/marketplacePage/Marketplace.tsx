@@ -8,7 +8,7 @@ import { useCounterOfferModal } from "./hooks/UseCounterOfferModal"
 import { Plus } from "lucide-react"
 import { Button } from "@/shared/components/button"
 import { Dialog, DialogContent } from "@/shared/components/dialog"
-import CreateOfferModalContent from "@/shared/views/OfferInteractionView/views/CreateCounterOfferModalContent"
+import CreateCounterOfferModalContent from "@/shared/views/OfferInteractionView/views/CreateCounterOfferModalContent"
 import {
   Pagination,
   PaginationContent,
@@ -156,7 +156,7 @@ const MarketplacePage = () => {
 
         <Dialog open={counter.open} onOpenChange={counter.onOpenChange}>
           <DialogContent className="max-w-3xl">
-            <CreateOfferModalContent
+            <CreateCounterOfferModalContent
               offerId={counter.offerId}
               baseOffer={counter.baseOffer}
               baseOfferLoading={counter.baseOfferLoading}

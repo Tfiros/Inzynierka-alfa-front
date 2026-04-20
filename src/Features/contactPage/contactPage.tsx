@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Mail, MessageSquare, User } from "lucide-react"
 import { Input } from "@/shared/components/input"
@@ -7,7 +6,7 @@ import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.png"
 import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 import { Textarea } from "@/shared/components/textarea"
 import { Label } from "@/shared/components/label"
-import { ContactService } from "@/shared/api/services/ContactService"
+import useContactPage from "./hooks/UseContactPage"
 
 type ContactFormData = {
   name: string
@@ -17,9 +16,6 @@ type ContactFormData = {
 }
 
 const ContactPage = () => {
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-
   const {
     register,
     handleSubmit,
@@ -35,24 +31,8 @@ const ContactPage = () => {
     mode: "onTouched",
   })
 
-  const onSubmit = async (data: ContactFormData) => {
-    setSubmitError(null)
-
-    try {
-      const result = await ContactService.sendMessage(data)
-
-      if (!result.isSuccess) {
-        throw new Error(result.message ?? "Spróbuj ponownie za chwilę.")
-      }
-
-      reset()
-      setIsSuccessModalOpen(true)
-    } catch (e) {
-      setSubmitError(
-        e instanceof Error ? e.message : "Spróbuj ponownie za chwilę."
-      )
-    }
-  }
+  const { submitError, isSuccessModalOpen, setIsSuccessModalOpen, onSubmit } =
+    useContactPage(reset)
 
   return (
     <>

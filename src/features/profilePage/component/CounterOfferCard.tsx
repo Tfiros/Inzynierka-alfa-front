@@ -18,6 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/shared/components/alert-dialog"
 import type { CounterOfferListItemDto } from "@/shared/types/counterOfferTypes/CounterOfferListItemDto"
+import { CounterOfferStatus } from "@/shared/enums/counterOfferStatus"
 
 type Props = {
   data: CounterOfferListItemDto
@@ -30,19 +31,14 @@ type Props = {
   actionsDisabled?: boolean
 }
 
-export const CounterOfferStatus = {
-  Pending: 1,
-  Accepted: 2,
-  Denied: 3,
-} as const
-
-export type CounterOfferStatusId =
-  (typeof CounterOfferStatus)[keyof typeof CounterOfferStatus]
-
 type BadgeVariant = "default" | "secondary" | "destructive"
 
-function isCounterOfferStatusId(v: number): v is CounterOfferStatusId {
-  return v === 1 || v === 2 || v === 3
+function isCounterOfferStatusId(v: number): v is CounterOfferStatus {
+  return (
+    v === CounterOfferStatus.Pending ||
+    v === CounterOfferStatus.Accepted ||
+    v === CounterOfferStatus.Denied
+  )
 }
 
 function statusVariant(statusId: number): BadgeVariant {
@@ -69,8 +65,7 @@ export default function CounterOfferCard({
   const [accepting, setAccepting] = useState(false)
   const [denying, setDenying] = useState(false)
 
-  const itemsCount =
-    data.items?.reduce((acc, x) => acc + (x.quantity ?? 0), 0) ?? 0
+  const itemsCount = data.items.reduce((acc, x) => acc + x.quantity, 0)
 
   const created = data.creationDate ? new Date(data.creationDate) : null
 
@@ -149,9 +144,9 @@ export default function CounterOfferCard({
           </button>
         </div>
 
-        {data.items?.length ? (
+        {data.items.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {data.items.slice(0, 6).map((it) => (
+            {data.items.slice(0, 3).map((it) => (
               <div
                 key={`${data.counterOfferId}-${it.itemId}`}
                 className="flex items-center gap-2 rounded-md border p-2"
@@ -182,9 +177,9 @@ export default function CounterOfferCard({
           </div>
         )}
 
-        {data.items?.length > 6 && (
+        {data.items.length > 3 && (
           <div className="text-xs text-muted-foreground mt-2">
-            +{data.items.length - 6} więcej…
+            +{data.items.length - 3} więcej…
           </div>
         )}
 

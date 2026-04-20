@@ -164,7 +164,7 @@ const EditOfferModalContent = ({
               items={offer.itemsHave}
               disabled={offer.isLoading || offer.quoteIsLoading}
               onSetQuantity={offer.setHaveQuantity}
-              onRemoveAll={offer.removeAllHaveItem}
+              onRemoveItem={offer.removeAllHaveItem}
             />
           </div>
           <div className="py-12">
@@ -239,7 +239,7 @@ const EditOfferModalContent = ({
               items={offer.itemsWant}
               disabled={offer.isLoading || offer.quoteIsLoading}
               onSetQuantity={offer.setWantQuantity}
-              onRemoveAll={offer.removeAllWantItem}
+              onRemoveItem={offer.removeAllWantItem}
             />
           </div>
           <div className="mt-6">

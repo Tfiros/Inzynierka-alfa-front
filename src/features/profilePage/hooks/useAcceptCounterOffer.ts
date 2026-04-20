@@ -2,7 +2,7 @@ import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
 import type { AcceptedOfferResponseType } from "@/shared/types/counterOfferTypes/AcceptedOfferResponseType"
 import { useCallback, useState } from "react"
 
-export function useAcceptCounterOffer() {
+export function UseAcceptCounterOffer() {
   const [loadingId, setLoadingId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
 

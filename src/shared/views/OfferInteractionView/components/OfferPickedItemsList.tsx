@@ -7,14 +7,14 @@ type Props = {
   items: OfferLine[]
   disabled: boolean
   onSetQuantity: (item: ItemOfferDto, quantity: number) => void
-  onRemoveAll: (itemId: number) => void
+  onRemoveItem: (itemId: number) => void
 }
 
 const OfferPickedItemsList = ({
   items,
   disabled,
   onSetQuantity,
-  onRemoveAll,
+  onRemoveItem: onRemoveAll,
 }: Props) => {
   if (items.length === 0) return null
 

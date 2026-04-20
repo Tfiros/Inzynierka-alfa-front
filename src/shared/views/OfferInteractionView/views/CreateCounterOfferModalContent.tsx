@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { Plus } from "lucide-react"
-
 import SectionTitle from "../components/SectionTitle"
 import SearchSuggest from "../components/SearchSuggest"
-
 import { Button } from "@/shared/components/button"
 import { DialogHeader, DialogTitle } from "@/shared/components/dialog"
 import { Input } from "@/shared/components/input"
@@ -17,7 +15,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/alert-dialog"
-
 import { useItemSuggestions } from "../hooks/UseItemSuggestions"
 import type {
   ItemOfferDto,
@@ -26,7 +23,6 @@ import type {
 import type { CounterOfferDraftRequest } from "@/shared/types/counterOfferTypes/RequestResponseTypes"
 import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
 import { useAppStore } from "@/shared/store/appStore"
-
 import {
   Select,
   SelectContent,
@@ -34,15 +30,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/select"
-import IconSquareButton from "../components/IconSquareButton"
 import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
-
-type PickedItem = {
-  itemId: number
-  name: string
-  gameName?: string
-  quantity: number
-}
+import OfferPickedItemsList from "../components/OfferPickedItemsList"
+import {
+  addOfferLine,
+  removeOfferLine,
+  setOfferLineQuantity,
+  type OfferLine,
+} from "../utils/OfferHelpers"
 
 type Props = {
   offerId: number | null
@@ -63,7 +58,7 @@ export default function CreateCounterOfferModalContent({
   const suggestions = useItemSuggestions()
   const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
 
-  const [items, setItems] = useState<PickedItem[]>([])
+  const [items, setItems] = useState<OfferLine[]>([])
   const [tokens, setTokens] = useState(0)
 
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -79,98 +74,31 @@ export default function CreateCounterOfferModalContent({
 
   useEffect(() => {
     setSubmitError(null)
-  }, [tokens, items.length])
+  }, [tokens, items])
 
   const addItem = (item: ItemOfferDto) => {
-    setItems((previousItems) => {
-      if (previousItems.some((x) => x.itemId === item.id)) {
-        return previousItems
-      }
-
-      return [
-        ...previousItems,
-        {
-          itemId: item.id,
-          name: item.name,
-          gameName: item.game?.name,
-          quantity: 1,
-        },
-      ]
-    })
+    setItems((previousItems) => addOfferLine(previousItems, item))
   }
 
-  const setQuantity = (itemId: number, quantity: number) => {
-    const safe = Number.isFinite(quantity) ? Math.max(1, quantity) : 1
+  const setQuantity = (item: ItemOfferDto, quantity: number) => {
     setItems((previousItems) =>
-      previousItems.map((x) =>
-        x.itemId === itemId ? { ...x, quantity: safe } : x
-      )
+      setOfferLineQuantity(previousItems, item, quantity)
     )
   }
 
   const removeOne = (itemId: number) => {
-    setItems((previousItems) =>
-      previousItems.filter((x) => x.itemId !== itemId)
-    )
+    setItems((previousItems) => removeOfferLine(previousItems, itemId))
   }
-
-  const removeAll = () => setItems([])
 
   const canConfirm =
     (items.length > 0 || tokens > 0) && tokens >= 0 && !submitting
-
-  const extractMsg = (x: unknown): string => {
-    if (!x || typeof x !== "object") return ""
-
-    const obj = x as {
-      message?: unknown
-      data?: unknown
-      response?: {
-        data?: {
-          message?: unknown
-        }
-      }
-      error?: {
-        message?: unknown
-      }
-    }
-
-    if (typeof obj.message === "string") return obj.message
-
-    if (
-      obj.data &&
-      typeof obj.data === "object" &&
-      "message" in obj.data &&
-      typeof (obj.data as { message?: unknown }).message === "string"
-    ) {
-      return (obj.data as { message: string }).message
-    }
-
-    if (typeof obj.response?.data?.message === "string") {
-      return obj.response.data.message
-    }
-
-    if (typeof obj.error?.message === "string") {
-      return obj.error.message
-    }
-
-    return ""
-  }
-
-  const isNotEnoughTokens = (msg: string) => {
-    const m = msg.toLowerCase()
-    return (
-      m.includes("token") &&
-      (m.includes("za mało") || m.includes("brak") || m.includes("niewystarcz"))
-    )
-  }
 
   const estimatedCost = useMemo(() => tokens + 20, [tokens])
 
   const buildRequest = (): CounterOfferDraftRequest => ({
     tokensOffered: tokens,
     items: items.map((i) => ({
-      itemId: i.itemId,
+      itemId: i.item.id,
       quantity: i.quantity,
     })),
   })
@@ -186,15 +114,14 @@ export default function CreateCounterOfferModalContent({
       const res = await CounterOfferService.quote(offerId, buildRequest())
 
       if (!res.isSuccess || !res.data) {
-        setQuoteError(res.message ?? "Nie udało się pobrać wyceny kontroferty.")
+        setQuoteError(res.message || "Nie udało się pobrać wyceny kontroferty.")
         return
       }
 
       setServerCost(res.data.totalCost)
       setConfirmOpen(true)
-    } catch (err: unknown) {
-      const msg = extractMsg(err)
-      setQuoteError(msg || "Nie udało się pobrać wyceny kontroferty.")
+    } catch {
+      setQuoteError("Nie udało się pobrać wyceny kontroferty.")
     } finally {
       setQuoteLoading(false)
     }
@@ -212,32 +139,15 @@ export default function CreateCounterOfferModalContent({
       const res = await CounterOfferService.create(offerId, request)
 
       if (!res.isSuccess) {
-        const msg = extractMsg(res)
-
-        if (isNotEnoughTokens(msg)) {
-          setSubmitError("Masz za mało tokenów, aby wysłać tę kontrofertę.")
-        } else if (msg) {
-          setSubmitError(msg)
-        } else {
-          setSubmitError("Nie udało się wysłać kontroferty. Spróbuj ponownie.")
-        }
-
+        setSubmitError(res.message || "Nie udało się wysłać kontroferty.")
         return
       }
 
       await refreshNavbar()
       setConfirmOpen(false)
       onCancel()
-    } catch (err: unknown) {
-      const msg = extractMsg(err)
-
-      if (isNotEnoughTokens(msg)) {
-        setSubmitError("Masz za mało tokenów, aby wysłać tę kontrofertę.")
-      } else if (msg) {
-        setSubmitError(msg)
-      } else {
-        setSubmitError("Nie udało się wysłać kontroferty. Spróbuj ponownie.")
-      }
+    } catch {
+      setSubmitError("Nie udało się wysłać kontroferty.")
     } finally {
       setSubmitting(false)
     }
@@ -273,7 +183,7 @@ export default function CreateCounterOfferModalContent({
                   .slice(0, 2)
                   .map((x) => {
                     const itemName = x.itemDto.name
-                    const gameName = x.itemDto.game?.name
+                    const gameName = x.itemDto.game.name
                     return gameName ? `${itemName} · ${gameName}` : itemName
                   })
                   .join(", ")}
@@ -353,70 +263,14 @@ export default function CreateCounterOfferModalContent({
                 }}
               />
             </div>
-
-            <div className="shrink-0">
-              <IconSquareButton
-                ariaLabel="Dodaj przedmiot do kontroferty"
-                onClick={() => {}}
-              />
-            </div>
           </div>
 
-          <div className="mt-4 space-y-3">
-            {items.map((it) => (
-              <div
-                key={it.itemId}
-                className="rounded-xl border bg-background px-4 py-3"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="font-medium">{it.name}</div>
-                    {it.gameName && (
-                      <div className="text-xs text-muted-foreground">
-                        {it.gameName}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="number"
-                      min={1}
-                      value={it.quantity}
-                      onChange={(e) =>
-                        setQuantity(it.itemId, Number(e.target.value))
-                      }
-                      disabled={submitting}
-                      className="h-10 w-24 rounded-xl bg-muted/40 border-muted-foreground/20"
-                    />
-
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="rounded-xl"
-                      onClick={() => removeOne(it.itemId)}
-                      disabled={submitting}
-                    >
-                      Usuń
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            {items.length > 0 && (
-              <div className="pt-1">
-                <Button
-                  variant="outline"
-                  className="rounded-xl"
-                  onClick={removeAll}
-                  disabled={submitting}
-                >
-                  Usuń wszystko
-                </Button>
-              </div>
-            )}
-          </div>
+          <OfferPickedItemsList
+            items={items}
+            disabled={submitting}
+            onSetQuantity={setQuantity}
+            onRemoveItem={removeOne}
+          />
         </div>
         <div className="mt-2">
           <SectionTitle>Tokeny</SectionTitle>
