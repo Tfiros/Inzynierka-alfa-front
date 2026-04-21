@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
 import type { CounterOfferListItemDto } from "@/shared/types/counterOfferTypes/CounterOfferListItemDto"
+import { useAppStore } from "@/shared/store/appStore"
 
 type Type = "sent" | "received"
 
@@ -8,6 +9,10 @@ export function useCounterOffers(type: Type, enabled: boolean) {
   const [data, setData] = useState<CounterOfferListItemDto[] | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const refreshKey = useAppStore(
+    (s) => s.counters[`counterOffers:${type}`] ?? 0
+  )
 
   const fetch = useCallback(async () => {
     setLoading(true)
@@ -41,7 +46,7 @@ export function useCounterOffers(type: Type, enabled: boolean) {
     }
 
     void fetch()
-  }, [enabled, fetch])
+  }, [enabled, fetch, refreshKey])
 
   return { data, loading, error, refetch: fetch }
 }
