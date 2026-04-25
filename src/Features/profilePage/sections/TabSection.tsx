@@ -5,7 +5,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components/tabs"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useUserOffers } from "../hooks/UseProfileOffers"
 import Offer from "@/features/marketplacePage/components/Offer"
 import OfferDetails from "@/features/marketplacePage/components/OfferDetails"
@@ -57,7 +57,6 @@ const TabSection = ({ profileId }: { profileId: number }) => {
     loadingHistory,
     errorActive,
     errorHistory,
-    fetchHistoryOffers,
   } = useUserOffers(profileId, activePage, historyPage, pageSize)
 
   const sent = useCounterOffers(
@@ -75,12 +74,6 @@ const TabSection = ({ profileId }: { profileId: number }) => {
     pageSize,
     2
   )
-
-  useEffect(() => {
-    if (tab === "history") {
-      void fetchHistoryOffers()
-    }
-  }, [tab, fetchHistoryOffers])
 
   const activeOffersList = activeOffers?.elements ?? []
   const historyOffersList = historyOffers?.elements ?? []

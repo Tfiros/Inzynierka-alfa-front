@@ -1,15 +1,26 @@
 import { useState } from "react"
+import { useForm } from "react-hook-form"
 import { ContactService } from "@/shared/api/services/ContactService"
+import type { ContactFormData } from "@/shared/types/contactTypes"
 
-type ContactFormData = {
-  name: string
-  email: string
-  subject: string
-  message: string
-}
-const useContactPage = (reset: () => void) => {
+const useContactPage = () => {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactFormData>({
+    defaultValues: {
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    },
+    mode: "onTouched",
+  })
 
   const onSubmit = async (data: ContactFormData) => {
     setSubmitError(null)
@@ -30,6 +41,10 @@ const useContactPage = (reset: () => void) => {
   }
 
   return {
+    register,
+    handleSubmit,
+    errors,
+    isSubmitting,
     submitError,
     isSuccessModalOpen,
     setIsSuccessModalOpen,

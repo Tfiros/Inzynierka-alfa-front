@@ -27,7 +27,7 @@ export function useUpdateCounterOfferStatus() {
 
         inc("counterOffers:sent")
         inc("counterOffers:received")
-        await refreshNavbar()
+        void refreshNavbar()
 
         return true
       } catch (e: unknown) {

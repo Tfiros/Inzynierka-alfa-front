@@ -30,7 +30,7 @@ export function UseAcceptCounterOffer() {
         inc("counterOffers:received")
         inc("offers:list")
         inc("offers:my")
-        await refreshNavbar()
+        void refreshNavbar()
 
         return {
           ok: true as const,

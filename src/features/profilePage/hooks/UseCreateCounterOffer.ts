@@ -20,7 +20,7 @@ export const useCreateCounterOffer = ({
   onSuccess,
 }: UseCreateCounterOfferProps) => {
   const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
-  const initRefetch = useAppStore((s) => s.inc)
+  const inc = useAppStore((s) => s.inc)
 
   const [items, setItems] = useState<OfferLine[]>([])
   const [tokens, setTokens] = useState(0)
@@ -102,8 +102,8 @@ export const useCreateCounterOffer = ({
         return false
       }
 
-      initRefetch("counterOffers:sent")
-      await refreshNavbar()
+      inc("counterOffers:sent")
+      void refreshNavbar()
       onSuccess()
       return true
     } catch {
@@ -124,8 +124,8 @@ export const useCreateCounterOffer = ({
     setTokens,
     submitError,
     submitting,
-    serverCost,
     quoteLoading,
+    serverCost,
     quoteError,
     canConfirm,
     estimatedCost,

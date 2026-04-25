@@ -1,4 +1,3 @@
-import { useForm } from "react-hook-form"
 import { Mail, MessageSquare, User } from "lucide-react"
 import { Input } from "@/shared/components/input"
 import { Button } from "@/shared/components/button"
@@ -7,27 +6,18 @@ import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 import { Textarea } from "@/shared/components/textarea"
 import { Label } from "@/shared/components/label"
 import useContactPage from "./hooks/UseContactPage"
-import type { ContactFormData } from "@/shared/types/contactTypes"
 
 const ContactPage = () => {
   const {
     register,
     handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<ContactFormData>({
-    defaultValues: {
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    },
-    mode: "onTouched",
-  })
-
-  const { submitError, isSuccessModalOpen, setIsSuccessModalOpen, onSubmit } =
-    useContactPage(reset)
-
+    errors,
+    isSubmitting,
+    submitError,
+    isSuccessModalOpen,
+    setIsSuccessModalOpen,
+    onSubmit,
+  } = useContactPage()
   return (
     <>
       <section className="w-full">

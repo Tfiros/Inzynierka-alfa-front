@@ -1,7 +1,7 @@
 import { Button } from "@/shared/components/button"
 import type { ItemOfferDto } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { Minus, Plus, X } from "lucide-react"
-import type { OfferLine } from "../hooks/helpers"
+import type { OfferLine } from "../utils/OfferHelpers"
 
 type Props = {
   items: OfferLine[]
