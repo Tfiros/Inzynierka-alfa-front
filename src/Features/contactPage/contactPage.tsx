@@ -7,13 +7,7 @@ import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 import { Textarea } from "@/shared/components/textarea"
 import { Label } from "@/shared/components/label"
 import useContactPage from "./hooks/UseContactPage"
-
-type ContactFormData = {
-  name: string
-  email: string
-  subject: string
-  message: string
-}
+import type { ContactFormData } from "@/shared/types/contactTypes"
 
 const ContactPage = () => {
   const {

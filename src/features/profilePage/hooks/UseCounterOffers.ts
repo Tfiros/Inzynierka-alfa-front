@@ -1,12 +1,21 @@
 import { useCallback, useEffect, useState } from "react"
 import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
 import type { CounterOfferListItemDto } from "@/shared/types/counterOfferTypes/CounterOfferListItemDto"
+import type { PagedResponse } from "@/shared/types/PagedType"
 import { useAppStore } from "@/shared/store/appStore"
 
 type Type = "sent" | "received"
 
-export function useCounterOffers(type: Type, enabled: boolean) {
-  const [data, setData] = useState<CounterOfferListItemDto[] | null>(null)
+export function useCounterOffers(
+  type: Type,
+  enabled: boolean,
+  page = 1,
+  pageSize = 10,
+  orderBy = 2
+) {
+  const [data, setData] =
+    useState<PagedResponse<CounterOfferListItemDto> | null>(null)
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -14,29 +23,39 @@ export function useCounterOffers(type: Type, enabled: boolean) {
     (s) => s.counters[`counterOffers:${type}`] ?? 0
   )
 
+  const emptyPage: PagedResponse<CounterOfferListItemDto> = {
+    page,
+    pageSize,
+    totalCount: 0,
+    totalPages: 1,
+    elements: [],
+  }
+
   const fetch = useCallback(async () => {
     setLoading(true)
     setError(null)
 
     try {
-      const res = await CounterOfferService.getByType(type)
+      const res = await CounterOfferService.getByType(type, {
+        page,
+        pageSize,
+        orderBy,
+      })
 
-      if (!res.isSuccess) {
+      if (!res.isSuccess || !res.data) {
         setError(res.message ?? "Nie udało się pobrać kontrofert.")
-        setData([])
+        setData(emptyPage)
         return
       }
 
-      setData(res.data ?? [])
-    } catch (e: unknown) {
-      const message =
-        e instanceof Error ? e.message : "Nie udało się pobrać kontrofert."
-      setError(message)
-      setData([])
+      setData(res.data)
+    } catch {
+      setError("Nie udało się pobrać kontrofert.")
+      setData(emptyPage)
     } finally {
       setLoading(false)
     }
-  }, [type])
+  }, [type, page, pageSize, orderBy])
 
   useEffect(() => {
     if (!enabled) {

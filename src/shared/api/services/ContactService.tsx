@@ -1,11 +1,5 @@
 import { post } from "@/shared/api/ApiClient"
-
-export type ContactFormData = {
-  name: string
-  email: string
-  subject: string
-  message: string
-}
+import type { ContactFormData } from "@/shared/types/contactTypes"
 
 export class ContactService {
   private static readonly base = "/Contact"

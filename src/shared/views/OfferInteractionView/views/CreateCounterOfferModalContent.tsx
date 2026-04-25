@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useState } from "react"
 import { Plus } from "lucide-react"
 import SectionTitle from "../components/SectionTitle"
 import SearchSuggest from "../components/SearchSuggest"
@@ -16,13 +16,7 @@ import {
   AlertDialogTitle,
 } from "@/shared/components/alert-dialog"
 import { useItemSuggestions } from "../hooks/UseItemSuggestions"
-import type {
-  ItemOfferDto,
-  offerDetailsDtoResponse,
-} from "@/shared/types/offerTypes/RequestResponseTypes"
-import type { CounterOfferDraftRequest } from "@/shared/types/counterOfferTypes/RequestResponseTypes"
-import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
-import { useAppStore } from "@/shared/store/appStore"
+import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import {
   Select,
   SelectContent,
@@ -32,12 +26,7 @@ import {
 } from "@/shared/components/select"
 import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
 import OfferPickedItemsList from "../components/OfferPickedItemsList"
-import {
-  addOfferLine,
-  removeOfferLine,
-  setOfferLineQuantity,
-  type OfferLine,
-} from "../utils/OfferHelpers"
+import { useCreateCounterOffer } from "@/features/profilePage/hooks/UseCreateCounterOffer"
 
 type Props = {
   offerId: number | null
@@ -55,108 +44,34 @@ export default function CreateCounterOfferModalContent({
   baseOfferError,
 }: Props) {
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const suggestions = useItemSuggestions()
-  const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
-
-  const [items, setItems] = useState<OfferLine[]>([])
-  const [tokens, setTokens] = useState(0)
-
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-
-  const itemDropdown = useOfferGameItemDropdown()
-
-  const [serverCost, setServerCost] = useState<number | null>(null)
-  const [quoteLoading, setQuoteLoading] = useState(false)
-  const [quoteError, setQuoteError] = useState<string | null>(null)
-
   const [tokensInput, setTokensInput] = useState("0")
 
-  useEffect(() => {
-    setSubmitError(null)
-  }, [tokens, items])
+  const suggestions = useItemSuggestions()
+  const itemDropdown = useOfferGameItemDropdown()
 
-  const addItem = (item: ItemOfferDto) => {
-    setItems((previousItems) => addOfferLine(previousItems, item))
-  }
-
-  const setQuantity = (item: ItemOfferDto, quantity: number) => {
-    setItems((previousItems) =>
-      setOfferLineQuantity(previousItems, item, quantity)
-    )
-  }
-
-  const removeOne = (itemId: number) => {
-    setItems((previousItems) => removeOfferLine(previousItems, itemId))
-  }
-
-  const canConfirm =
-    (items.length > 0 || tokens > 0) && tokens >= 0 && !submitting
-
-  const estimatedCost = useMemo(() => tokens + 20, [tokens])
-
-  const buildRequest = (): CounterOfferDraftRequest => ({
-    tokensOffered: tokens,
-    items: items.map((i) => ({
-      itemId: i.item.id,
-      quantity: i.quantity,
-    })),
-  })
-
-  const handleOpenConfirm = async () => {
-    if (!offerId) return
-
-    setQuoteLoading(true)
-    setQuoteError(null)
-    setSubmitError(null)
-
-    try {
-      const res = await CounterOfferService.quote(offerId, buildRequest())
-
-      if (!res.isSuccess || !res.data) {
-        setQuoteError(res.message || "Nie udało się pobrać wyceny kontroferty.")
-        return
-      }
-
-      setServerCost(res.data.totalCost)
-      setConfirmOpen(true)
-    } catch {
-      setQuoteError("Nie udało się pobrać wyceny kontroferty.")
-    } finally {
-      setQuoteLoading(false)
-    }
-  }
-
-  const handleSubmit = async () => {
-    if (!offerId) return
-
-    setSubmitting(true)
-    setSubmitError(null)
-
-    const request = buildRequest()
-
-    try {
-      const res = await CounterOfferService.create(offerId, request)
-
-      if (!res.isSuccess) {
-        setSubmitError(res.message || "Nie udało się wysłać kontroferty.")
-        return
-      }
-
-      await refreshNavbar()
+  const {
+    items,
+    setTokens,
+    submitError,
+    submitting,
+    serverCost,
+    quoteLoading,
+    quoteError,
+    canConfirm,
+    estimatedCost,
+    summaryText,
+    addItem,
+    setQuantity,
+    removeItem,
+    openConfirm,
+    submit,
+  } = useCreateCounterOffer({
+    offerId,
+    onSuccess: () => {
       setConfirmOpen(false)
       onCancel()
-    } catch {
-      setSubmitError("Nie udało się wysłać kontroferty.")
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const summaryText = useMemo(() => {
-    const itemsCount = items.reduce((sum, item) => sum + item.quantity, 0)
-    return `${items.length} przedmiotów, łączna liczba sztuk: ${itemsCount}, tokeny: ${tokens}`
-  }, [items, tokens])
+    },
+  })
 
   return (
     <>
@@ -269,7 +184,7 @@ export default function CreateCounterOfferModalContent({
             items={items}
             disabled={submitting}
             onSetQuantity={setQuantity}
-            onRemoveItem={removeOne}
+            onRemoveItem={removeItem}
           />
         </div>
         <div className="mt-2">
@@ -314,7 +229,12 @@ export default function CreateCounterOfferModalContent({
           <Button
             className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
             disabled={!canConfirm || quoteLoading}
-            onClick={() => void handleOpenConfirm()}
+            onClick={async () => {
+              const ok = await openConfirm()
+              if (ok) {
+                setConfirmOpen(true)
+              }
+            }}
           >
             <Plus className="mr-2 h-5 w-5" />
             {quoteLoading ? "Pobieranie wyceny..." : "Złóż kontrofertę"}
@@ -362,7 +282,7 @@ export default function CreateCounterOfferModalContent({
               disabled={submitting || quoteLoading}
               onClick={(e) => {
                 e.preventDefault()
-                void handleSubmit()
+                void submit()
               }}
             >
               Wyślij

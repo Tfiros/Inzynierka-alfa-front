@@ -16,15 +16,18 @@ import { useCounterOfferModal } from "@/features/marketplacePage/hooks/UseCounte
 import { UseAcceptCounterOffer } from "../hooks/UseAcceptCounterOffer"
 import CounterOfferCard from "../component/CounterOfferCard"
 import { CounterOfferStatus } from "@/shared/enums/counterOfferStatus"
+import { Button } from "@/shared/components/button"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
   const [tab, setTab] = useState<
     "offers" | "counterOffersSent" | "counterOffersReceived" | "history"
   >("offers")
 
-  const [activePage, setActivePage] = useState<number>(1)
-  const [historyPage, setHistoryPage] = useState<number>(1)
+  const [activePage] = useState<number>(1)
+  const [historyPage] = useState<number>(1)
   const pageSize = 10
+  const [sentPage, setSentPage] = useState<number>(1)
+  const [receivedPage, setReceivedPage] = useState<number>(1)
 
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
@@ -57,8 +60,21 @@ const TabSection = ({ profileId }: { profileId: number }) => {
     fetchHistoryOffers,
   } = useUserOffers(profileId, activePage, historyPage, pageSize)
 
-  const sent = useCounterOffers("sent", tab === "counterOffersSent")
-  const received = useCounterOffers("received", tab === "counterOffersReceived")
+  const sent = useCounterOffers(
+    "sent",
+    tab === "counterOffersSent",
+    sentPage,
+    pageSize,
+    2
+  )
+
+  const received = useCounterOffers(
+    "received",
+    tab === "counterOffersReceived",
+    receivedPage,
+    pageSize,
+    2
+  )
 
   useEffect(() => {
     if (tab === "history") {
@@ -68,6 +84,8 @@ const TabSection = ({ profileId }: { profileId: number }) => {
 
   const activeOffersList = activeOffers?.elements ?? []
   const historyOffersList = historyOffers?.elements ?? []
+  const sentList = sent.data?.elements ?? []
+  const receivedList = received.data?.elements ?? []
 
   const counter = useCounterOfferModal()
 
@@ -153,23 +171,49 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                 {sent.error}
               </CardContent>
             </Card>
-          ) : sent.data.length === 0 ? (
+          ) : sentList.length === 0 ? (
             <Card>
               <CardContent className="p-6 text-sm text-muted-foreground">
                 Brak wysłanych kontrofert.
               </CardContent>
             </Card>
           ) : (
-            <div className="grid xl:grid-cols-2 gap-4">
-              {sent.data.map((co) => (
-                <CounterOfferCard
-                  key={co.counterOfferId}
-                  data={co}
-                  variant="sent"
-                  onOpenOffer={handleShowDetails}
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid xl:grid-cols-2 gap-4">
+                {sentList.map((co) => (
+                  <CounterOfferCard
+                    key={co.counterOfferId}
+                    data={co}
+                    variant="sent"
+                    onOpenOffer={handleShowDetails}
+                  />
+                ))}
+              </div>
+
+              {sent.data && sent.data.totalPages > 1 && (
+                <div className="mt-4 flex items-center justify-center gap-3">
+                  <Button
+                    variant="outline"
+                    disabled={sentPage <= 1 || sent.loading}
+                    onClick={() => setSentPage((p) => Math.max(1, p - 1))}
+                  >
+                    Poprzednia
+                  </Button>
+
+                  <span className="text-sm text-muted-foreground">
+                    Strona {sent.data.page} z {sent.data.totalPages}
+                  </span>
+
+                  <Button
+                    variant="outline"
+                    disabled={sentPage >= sent.data.totalPages || sent.loading}
+                    onClick={() => setSentPage((p) => p + 1)}
+                  >
+                    Następna
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </TabsContent>
 
@@ -186,36 +230,65 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                 {received.error}
               </CardContent>
             </Card>
-          ) : received.data.length === 0 ? (
+          ) : receivedList.length === 0 ? (
             <Card>
               <CardContent className="p-6 text-sm text-muted-foreground">
                 Brak otrzymanych kontrofert.
               </CardContent>
             </Card>
           ) : (
-            <div className="grid xl:grid-cols-2 gap-4">
-              {received.data.map((co) => {
-                const isBusy =
-                  update.loadingId === co.counterOfferId ||
-                  acceptCounterOffer.loadingId === co.counterOfferId
+            <>
+              <div className="grid xl:grid-cols-2 gap-4">
+                {receivedList.map((co) => {
+                  const isBusy =
+                    update.loadingId === co.counterOfferId ||
+                    acceptCounterOffer.loadingId === co.counterOfferId
 
-                return (
-                  <CounterOfferCard
-                    key={co.counterOfferId}
-                    data={co}
-                    variant="received"
-                    onOpenOffer={handleShowDetails}
-                    actionsDisabled={isBusy}
-                    onCancel={async (id) => {
-                      await update.updateStatus(id, CounterOfferStatus.Denied)
-                    }}
-                    onAccept={async (id) => {
-                      await acceptCounterOffer.accept(id)
-                    }}
-                  />
-                )
-              })}
-            </div>
+                  return (
+                    <CounterOfferCard
+                      key={co.counterOfferId}
+                      data={co}
+                      variant="received"
+                      onOpenOffer={handleShowDetails}
+                      actionsDisabled={isBusy}
+                      onCancel={async (id) => {
+                        await update.updateStatus(id, CounterOfferStatus.Denied)
+                      }}
+                      onAccept={async (id) => {
+                        await acceptCounterOffer.accept(id)
+                      }}
+                    />
+                  )
+                })}
+              </div>
+
+              {received.data.totalPages > 1 && (
+                <div className="mt-4 flex items-center justify-center gap-3">
+                  <Button
+                    variant="outline"
+                    disabled={receivedPage <= 1 || received.loading}
+                    onClick={() => setReceivedPage((p) => Math.max(1, p - 1))}
+                  >
+                    Poprzednia
+                  </Button>
+
+                  <span className="text-sm text-muted-foreground">
+                    Strona {received.data.page} z {received.data.totalPages}
+                  </span>
+
+                  <Button
+                    variant="outline"
+                    disabled={
+                      receivedPage >= received.data.totalPages ||
+                      received.loading
+                    }
+                    onClick={() => setReceivedPage((p) => p + 1)}
+                  >
+                    Następna
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </TabsContent>
 

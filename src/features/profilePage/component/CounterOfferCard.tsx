@@ -67,7 +67,7 @@ export default function CounterOfferCard({
 
   const itemsCount = data.items.reduce((acc, x) => acc + x.quantity, 0)
 
-  const created = data.creationDate ? new Date(data.creationDate) : null
+  const created = data.creationDate
 
   const isPending = data.statusId === CounterOfferStatus.Pending
   const showActions = variant === "received" && isPending
@@ -101,14 +101,14 @@ export default function CounterOfferCard({
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <CardTitle className="text-base truncate">
-              {data.offerTitle || `Oferta #${data.offerId}`}
+              {data.offerTitle}
             </CardTitle>
 
             <div className="mt-1 text-xs text-muted-foreground">
               <div>
                 {variant === "sent" ? "Do" : "Od"}:
                 <span className="ml-1 font-medium">
-                  {data.otherPartyNickname || "użytkownik"}
+                  {data.otherPartyNickname}
                 </span>
               </div>
               {created && <> • {created.toLocaleString()}</>}
