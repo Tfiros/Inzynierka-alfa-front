@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
-import useDebouncedValue from "@/shared/components/UseDebouncedValue"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import { mapApiList } from "./MapApiList"
+import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
 
 type Args = {
   enabled?: boolean
@@ -25,7 +25,7 @@ const useDropdownQuery = ({
   const [items, setItems] = useState<DropdownOption[]>([])
   const [loading, setLoading] = useState(false)
 
-  const q = useDebouncedValue({ value: search, delayMs })
+  const q = useDebounceValue(search, delayMs)
 
   const selectedName = useMemo(() => {
     if (!selectedId) return ""

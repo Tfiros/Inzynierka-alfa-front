@@ -1,5 +1,5 @@
 import OffersGrid from "./components/OffersGrid"
-import FilterBarContainer from "./components/FilterBarContainer"
+import FilterBar from "./components/FilterBar"
 import OfferDetails from "./components/OfferDetails"
 import { useState } from "react"
 import { useOffersListing } from "./hooks/UseOfferListing"
@@ -18,8 +18,28 @@ import {
 import { useAppStore } from "@/shared/store/appStore"
 
 const MarketplacePage = () => {
-  const { offers, totalCount, totalPages, page, setPage, loading, error } =
-    useOffersListing()
+  const {
+    offers,
+    totalCount,
+    totalPages,
+    page,
+    setPage,
+    loading,
+    error,
+    searchText,
+    setSearchText,
+    orderBy,
+    setOrderBy,
+    gameId,
+    setGameId,
+    genreId,
+    setGenreId,
+    rarityId,
+    setRarityId,
+    games,
+    genres,
+    rarities,
+  } = useOffersListing()
 
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
@@ -77,9 +97,21 @@ const MarketplacePage = () => {
             </Button>
           </div>
         </header>
-
-        <FilterBarContainer />
-
+        <FilterBar
+          searchText={searchText}
+          onSearchTextChange={setSearchText}
+          gameId={gameId}
+          onGameIdChange={setGameId}
+          games={games}
+          genreId={genreId}
+          onGenreIdChange={setGenreId}
+          genres={genres}
+          rarityId={rarityId}
+          onRarityIdChange={setRarityId}
+          rarities={rarities}
+          orderBy={orderBy}
+          onOrderByChange={setOrderBy}
+        />
         {error && <p className="text-red-500">Błąd: {error}</p>}
 
         {loading && (

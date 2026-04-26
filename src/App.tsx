@@ -9,7 +9,7 @@ import TradePanelPage from "./features/Trades/TradePanelPage/TradePanelPage"
 import ContactPage from "./features/contactPage/ContactPage"
 import FaqsSite from "./features/faqsPage/FaqsSite"
 import LandingPage from "./features/landingPage/LandingPage"
-import MarketplacePage from "./features/marketplacePage/Marketplace"
+import MarketplacePage from "./Features/marketplacePage/Marketplace"
 import NotFoundPage from "./features/notFoundPage/NotFoundPage"
 import PointShop from "./features/pointShop/PointShop"
 import ProfileEdit from "./features/profileEditPage/ProfileEdit"
@@ -20,6 +20,7 @@ import UserManagementPage from "./features/userManagement/UserManagementPage"
 import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
 import ProfilePage from "./features/profilePage/ProfilePage"
 import CounterOfferInteractionHost from "./shared/views/OfferInteractionView/CounterOfferInteractionHost"
+import { TooltipProvider } from "./shared/components/ui/tooltip"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
@@ -29,27 +30,28 @@ function App() {
   }, [initSecurity])
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/dashboard" element={<MainDashboard />} />
-          <Route path="oferty" element={<div>Oferty</div>} />
-          <Route path="faqs" element={<FaqsSite />} />
-          <Route path="profile/:id" element={<ProfilePage />} />
-          <Route path="statute" element={<StatutePage />} />
-          <Route path="shop" element={<PointShop />} />
-          <Route path="profileEdit" element={<ProfileEdit />} />
-          <Route path="marketplace" element={<MarketplacePage />} />
-          <Route path="contact" element={<ContactPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-          <Route path="tradePanel" element={<TradePanelPage />} />
+    <TooltipProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/dashboard" element={<MainDashboard />} />
+            <Route path="oferty" element={<div>Oferty</div>} />
+            <Route path="faqs" element={<FaqsSite />} />
+            <Route path="profile/:id" element={<ProfilePage />} />
+            <Route path="statute" element={<StatutePage />} />
+            <Route path="shop" element={<PointShop />} />
+            <Route path="profileEdit" element={<ProfileEdit />} />
+            <Route path="marketplace" element={<MarketplacePage />} />
+            <Route path="contact" element={<ContactPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="tradePanel" element={<TradePanelPage />} />
 
-          <Route element={<AdminRoute />}>
-            <Route path="userManagement" element={<UserManagementPage />} />
-            <Route path="itemManagement" element={<ItemManagementPage />} />
+            <Route element={<AdminRoute />}>
+              <Route path="userManagement" element={<UserManagementPage />} />
+              <Route path="itemManagement" element={<ItemManagementPage />} />
+            </Route>
           </Route>
-        </Route>
 
         <Route element={<BlankLayout />}>
           <Route path="*" element={<NotFoundPage />} />

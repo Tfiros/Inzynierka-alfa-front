@@ -33,6 +33,8 @@ export const useEditOffer = (offerId: number | null) => {
   const [quoteIsLoading, setQuoteIsLoading] = useState(false)
   const [quoteError, setQuoteError] = useState<string | null>(null)
   const [quote, setQuote] = useState<offerUpdateQuoteResponse | null>(null)
+  const [tokensOffered, setTokensOffered] = useState(0)
+  const [tokensWanted, setTokensWanted] = useState(0)
 
   const reset = useCallback(() => {
     setError(null)
@@ -44,12 +46,23 @@ export const useEditOffer = (offerId: number | null) => {
     setItemsWant([])
     setQuote(null)
     setQuoteError(null)
+    setTokensOffered(0)
+    setTokensWanted(0)
     setOriginalTokenCost(null)
   }, [])
   useEffect(() => {
     setQuote(null)
     setQuoteError(null)
-  }, [title, description, isHighlighted, durationDays, itemsHave, itemsWant])
+  }, [
+    title,
+    description,
+    isHighlighted,
+    durationDays,
+    itemsHave,
+    itemsWant,
+    tokensOffered,
+    tokensWanted,
+  ])
 
   useEffect(() => {
     if (!offerId) {
@@ -75,6 +88,8 @@ export const useEditOffer = (offerId: number | null) => {
         setDurationDays(0)
         setItemsHave(data.offeredItems.map(toOfferLine))
         setItemsWant(data.wantedItems.map(toOfferLine))
+        setTokensOffered(data.offerCoreDto.tokensOffered)
+        setTokensWanted(data.offerCoreDto.tokensWanted)
         setQuote(null)
         setQuoteError(null)
       } catch {
@@ -126,8 +141,19 @@ export const useEditOffer = (offerId: number | null) => {
       isHighlighted,
       offeredItems: toOfferItemDto(itemsHave),
       wantedItems: toOfferItemDto(itemsWant),
+      tokensOffered,
+      tokensWanted,
     }),
-    [title, description, durationDays, isHighlighted, itemsHave, itemsWant]
+    [
+      title,
+      description,
+      durationDays,
+      isHighlighted,
+      itemsHave,
+      itemsWant,
+      tokensOffered,
+      tokensWanted,
+    ]
   )
 
   const getServerQuote =
@@ -161,13 +187,22 @@ export const useEditOffer = (offerId: number | null) => {
   const newTotalPreview = useMemo(() => {
     const durationFee = durationDays === 14 ? 30 : durationDays === 31 ? 60 : 0
     const highlighFee = isHighlighted ? 50 : 0
-    const totalValue = [...itemsHave, ...itemsWant].reduce(
+    const itemSum = [...itemsHave, ...itemsWant].reduce(
       (acc, x) => acc + x.item.estimatedTokenValue * x.quantity,
       0
     )
-    const base = Math.ceil(totalValue * 0.05)
-    return Math.max(10, base + durationFee + highlighFee)
-  }, [itemsHave, itemsWant, durationDays, isHighlighted])
+    const itemBase = Math.ceil(itemSum * 0.02)
+    const tokenBase = Math.ceil((tokensOffered + tokensWanted) * 0.02)
+    const baseCost = itemBase < 10 ? 10 + tokenBase : itemBase + tokenBase
+    return baseCost + durationFee + highlighFee
+  }, [
+    itemsHave,
+    itemsWant,
+    durationDays,
+    isHighlighted,
+    tokensOffered,
+    tokensWanted,
+  ])
 
   const updateFeePreview = useMemo(() => {
     if (originalTokenCost == null) return null
@@ -236,6 +271,10 @@ export const useEditOffer = (offerId: number | null) => {
     getServerQuote,
     updateOffer,
     canSubmit,
+    tokensOffered,
+    setTokensOffered,
+    tokensWanted,
+    setTokensWanted,
     reset,
   }
 }
@@ -250,6 +289,7 @@ const toOfferLine = (x: offerListingItemDto): OfferLine => ({
       id: x.itemDto.game.id,
       name: x.itemDto.game.name,
       photoUrl: x.itemDto.game.photoUrl,
+      genreId: x.genreId,
     },
   },
   quantity: x.quantity,

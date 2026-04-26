@@ -1,5 +1,4 @@
 import { useMemo } from "react"
-import useDebouncedValue from "./UseDebouncedValue"
 import useUserTradesQuery from "./UseUserTradesQuery"
 import useUserStats from "./UseUserStats"
 import useUserTradesList from "./UseUserTradesList"
@@ -7,10 +6,11 @@ import useAssignMiddleman from "./UseAssignMiddleman"
 import useTradeDetailsDialog from "./UseTradeDetailsDialog"
 import { useAppStore } from "@/shared/store/appStore"
 import useDeleteTrade from "./UseDeleteTrade"
+import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
 
 const useTradePanel = () => {
   const { state, q, actions } = useUserTradesQuery("available")
-  const debouncedSearchText = useDebouncedValue(state.searchText, 350)
+  const debouncedSearchText = useDebounceValue(state.searchText, 350)
   const roles = useAppStore((s) => s.roles)
   const isMiddleman = roles.some((r) => r.toLowerCase() === "middleman")
 
@@ -44,11 +44,6 @@ const useTradePanel = () => {
     completed: stats.stats?.completed ?? 0,
     all: stats.stats?.all ?? 0,
   }
-
-  console.log(counts.available)
-  console.log(counts.mine)
-  console.log(counts.completed)
-  console.log(counts.all)
 
   const cancelation = useDeleteTrade()
 

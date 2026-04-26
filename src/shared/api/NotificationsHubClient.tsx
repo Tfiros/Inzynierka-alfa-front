@@ -42,7 +42,6 @@ export class NotificationsHubClient {
         .build()
 
       conn.on("notificationCreated", (n: NotificationDto) => {
-        console.log("[SignalR] notificationCreated", n)
         useAppStore.getState().pushNotification(n)
       })
 

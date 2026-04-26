@@ -4,6 +4,7 @@ import { Footer } from "./Footer"
 import GuestNavbar from "./navbar/views/GuestNavbar"
 import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
 import useMainLayout from "./hooks/UseMainLayout"
+import ChatWindowHost from "@/Features/Chat/components/ChatWindowHost"
 
 const MainLayout = () => {
   const { isLogged, hasHydrated } = useMainLayout()
@@ -22,6 +23,8 @@ const MainLayout = () => {
       <main className="flex-1 mx-auto w-full px-4 pt-6 pb-12">
         <Outlet />
       </main>
+      {isLogged && <ChatWindowHost />}
+
       <Footer />
     </div>
   )

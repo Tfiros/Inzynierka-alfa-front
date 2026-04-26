@@ -6,7 +6,7 @@ import {
   PopoverAnchor,
 } from "@/shared/components/popover"
 import { CommandEmpty, CommandGroup, CommandItem, CommandList } from "cmdk"
-import { Search } from "lucide-react"
+import { Search, X } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import type { ItemOfferDto } from "@/shared/types/offerTypes/RequestResponseTypes"
 import Thumb from "./Thumb"
@@ -19,6 +19,8 @@ type Props = {
   error: string | null
   onPickSuggestion: (s: ItemOfferDto) => void
   disabled: boolean
+  lockedItem?: ItemOfferDto | null
+  onUnlock?: () => void
 }
 
 type Group = {
@@ -36,6 +38,8 @@ const SearchSuggest = ({
   error,
   onPickSuggestion,
   disabled,
+  lockedItem,
+  onUnlock,
 }: Props) => {
   const [open, setOpen] = useState(false)
   const query = value.trim()
@@ -50,6 +54,21 @@ const SearchSuggest = ({
       setOpen(true)
     }
   }, [canShow])
+  if (lockedItem) {
+    return (
+      <div className="flex items-center gap-2 h-10 rounded-xl border bg-white border-muted-foreground px-3">
+        <Thumb src={lockedItem.photoUrl} alt={lockedItem.name} size="sm" />
+        <span className="flex-1 text-sm truncate">{lockedItem.name}</span>
+        <button
+          type="button"
+          onClick={onUnlock}
+          className="text-muted-foreground hover:text-foreground"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+    )
+  }
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverAnchor asChild>

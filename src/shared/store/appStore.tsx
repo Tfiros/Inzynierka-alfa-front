@@ -6,7 +6,8 @@ import {
   createNotificationsSlice,
 } from "./storeParts/NotificationSlice"
 import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
-
+import { createChatSlice, type ChatSlice } from "./storeParts/ChatSlice"
+import { chatHubClient } from "@/shared/api/hubs/ChatHub"
 import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
 import {
   createCounterOfferSlice,
@@ -15,9 +16,10 @@ import {
 
 export type AppState = UiSlice &
   AuthSlice &
-  NotificationsSlice &
   OfferSlice &
   CounterOfferSlice & {
+  ChatSlice &
+  NotificationsSlice & {
     hardReset: () => Promise<void>
     hasHydrated: boolean
     setHasHydrated: (v: boolean) => void
@@ -31,10 +33,18 @@ export const useAppStore = create<AppState>()(
       ...createOfferSlice(set, get, api),
       ...createCounterOfferSlice(set, get, api),
       ...createNotificationsSlice(set),
+      ...createChatSlice(set, get, api),
+
       hasHydrated: false,
       setHasHydrated: (v) => set({ hasHydrated: v }),
 
       hardReset: async () => {
+        try {
+          await chatHubClient.stop()
+        } catch (e) {
+          console.error("chatHub stop failed", e)
+        }
+        get().chat?.actions?.resetChat?.()
         set({
           userLogin: null,
           userId: null,
@@ -43,6 +53,7 @@ export const useAppStore = create<AppState>()(
           roles: [],
           counterOfferOpen: false,
           counterOfferOfferId: null,
+          darkMode: false,
         })
 
         await useAppStore.persist.clearStorage()
@@ -79,3 +90,17 @@ export const selectAuth = (s: AppState) => ({
 
 export const selectHasRole = (role: string) => (s: AppState) =>
   s.roles.some((r) => r.toLowerCase() === role.toLowerCase())
+
+export const chatSelectors = {
+  isPopoverOpen: (s: AppState) => s.chat.isPopoverOpen,
+  isWindowOpen: (s: AppState) => s.chat.isWindowOpen,
+  activeChatId: (s: AppState) => s.chat.activeChatId,
+  activeChatTitle: (s: AppState) => s.chat.activeChatTitle,
+
+  threads: (s: AppState) => s.chat.threads,
+  messagesByChatId: (s: AppState) => s.chat.messagesByChatId,
+  onlineMap: (s: AppState) => s.chat.onlineMap,
+  chatActions: (s: AppState) => s.chat.actions,
+
+  totalUnread: (s: AppState) => s.counters?.chat_unread_total ?? 0,
+}

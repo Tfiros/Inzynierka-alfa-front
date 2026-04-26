@@ -21,7 +21,13 @@ import OfferItemCard from "./OfferItemCard"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useAppStore } from "@/shared/store/appStore"
 import { cn } from "@/shared/lib/Utils"
-
+import OfferStatusPill from "./OfferStatusPill"
+import PointsIcon from "@/shared/photos/PointsIcon.svg"
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/shared/components/ui/tooltip"
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
@@ -29,8 +35,9 @@ type OfferProps = {
 }
 
 const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
-  const remainingOffered = offer.offeredItemsTotalCount - 3
-  const remainingWanted = offer.wantedItemsTotalCount - 3
+const remainingOffered =
+    offer.offeredItemsTotalCount - offer.offeredItems.length
+  const remainingWanted = offer.wantedItemsTotalCount - offer.wantedItems.length
   const requestEdit = useAppStore((s) => s.offerRequestEdit)
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
   const successRate = new Intl.NumberFormat("pl-PL", {
@@ -39,13 +46,14 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   const currentUserId = useAppStore((s) => s.userId)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
-
+  const isActive = offer.offerCoreDto.offerStatusId === 1
   return (
     <Card
       className={cn(
         "h-full flex flex-col",
         offer.offerCoreDto.isHighlighted &&
-          "border-2 border-yellow-400/70 bg-yellow-50/30 shadow-[0_0_0_3px_rgba(250,204,21,0.15)]"
+          "border-2 border-yellow-400/70 bg-yellow-50/30 shadow-[0_0_0_3px_rgba(250,204,21,0.15)]",
+        !isActive && "opacity-60"
       )}
     >
       <CardHeader>
@@ -59,6 +67,11 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
             </h1>
 
             <div className="flex flex-row items-center gap-3">
+              {!isActive && (
+                <OfferStatusPill
+                  offerStatusId={offer.offerCoreDto.offerStatusId}
+                />
+              )}
               <div className="flex flex-row items-center text-xs text-muted-foreground">
                 <CalendarDays className="w-5 h-5" />
                 <span className="pl-2">{offer.offerCoreDto.expDate}</span>
@@ -99,6 +112,21 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
                 i {remainingOffered} dodatkowych przedmiotów
               </p>
             )}
+            {offer.offerCoreDto.tokensOffered > 0 && (
+              <span className="inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
+                + {offer.offerCoreDto.tokensOffered}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <img
+                      src={PointsIcon}
+                      alt="tokenów"
+                      className="h-4 w-4 object-contain"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>tokenów</TooltipContent>
+                </Tooltip>
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col w-full gap-2 border-t pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4 border-gray-300">
@@ -115,6 +143,21 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
               <p className="text-sm text-muted-foreground">
                 i {remainingWanted} dodatkowych przedmiotów
               </p>
+            )}
+            {offer.offerCoreDto.tokensWanted > 0 && (
+              <span className="inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
+                + {offer.offerCoreDto.tokensWanted}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <img
+                      src={PointsIcon}
+                      alt="tokenów"
+                      className="h-4 w-4 object-contain"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>tokenów</TooltipContent>
+                </Tooltip>
+              </span>
             )}
           </div>
         </div>
@@ -166,7 +209,7 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
                 onClick={() => requestEdit(offer.offerCoreDto.offerId)}
-                disabled={!requestEdit || !isOwner}
+                disabled={!isActive || !requestEdit || !isOwner}
               >
                 <SquarePen className="mr-1 h-4 w-4" /> Edytuj
               </Button>
@@ -176,7 +219,7 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
                 onClick={() => requestDelete(offer.offerCoreDto.offerId)}
-                disabled={!isOwner}
+                disabled={!isActive || !isOwner}
               >
                 <Trash2 className="mr-1 h-4 w-4" /> Usuń
               </Button>
@@ -187,7 +230,7 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
                 type="button"
                 className="text-xs cursor-pointer w-full sm:w-auto"
                 onClick={() => console.log(offer.offerCoreDto.offerId)}
-                disabled={isOwner}
+                disabled={!isActive || isOwner}
               >
                 Wymień
               </Button>
@@ -197,7 +240,7 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
                 onClick={() => onOpenCounterOffer(offer.offerCoreDto.offerId)}
-                disabled={!isAuthenticated || isOwner}
+                disabled={!isAuthenticated || isOwner || !isActive}
               >
                 <Plus /> Złóż kontrofertę
               </Button>

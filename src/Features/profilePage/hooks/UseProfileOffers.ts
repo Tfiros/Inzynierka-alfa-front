@@ -21,7 +21,6 @@ export const useUserOffers = (
 
   const fetchActiveOffers = useCallback(async () => {
     if (!userId || Number.isNaN(userId)) return
-    setActiveOffers(null)
     setLoadingActive(true)
     setErrorActive(null)
     try {
@@ -60,7 +59,6 @@ export const useUserOffers = (
 
   const fetchHistoryOffers = useCallback(async () => {
     if (!userId || Number.isNaN(userId)) return
-    setHistoryOffers(null)
     setLoadingHistory(true)
     setErrorHistory(null)
     try {

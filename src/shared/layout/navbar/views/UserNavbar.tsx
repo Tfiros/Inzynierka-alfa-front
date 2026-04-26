@@ -8,6 +8,13 @@ import NoifyIcon_Dark from "@/shared/photos/NotificationIcon_Dark.svg"
 import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
 import { useAppStore } from "@/shared/store/AppStore"
+import NavbarChatDropdown from "@/Features/Chat/components/NavbarChatDropdown"
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/shared/components/ui/tooltip"
 
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
@@ -16,6 +23,7 @@ export const UserNavbar = () => {
   const isAdmin = roles.some((r) => r.toLowerCase() === "admin")
   const isMiddleman = roles.some((r) => r.toLowerCase() === "middleman")
   const tokens = navbarUser?.tokens ?? 0
+  const escrowedTokens = navbarUser?.escrowedTokens ?? 0
   const level = navbarUser?.level ?? 1
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -71,6 +79,19 @@ export const UserNavbar = () => {
                 <span className="ml-1 text-sm font-medium">
                   {tokens.toLocaleString("pl-PL")}
                 </span>
+                {escrowedTokens > 0 && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="ml-1 rounded-md border border-green-500/40 bg-green-500/10 px-2 py-0.5 text-sm font-medium text-green-400">
+                        +{escrowedTokens.toString()}
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Oczekujące saldo - zostanie zwolnione po zakończeniu
+                      wymiany.
+                    </TooltipContent>
+                  </Tooltip>
+                )}
               </Link>
             </Button>
 
@@ -103,6 +124,7 @@ export const UserNavbar = () => {
                 )}
               </Link>
             </Button>
+            <NavbarChatDropdown />
 
             <ProfileMenu />
           </div>
