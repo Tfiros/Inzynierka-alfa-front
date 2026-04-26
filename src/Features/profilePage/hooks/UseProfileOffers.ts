@@ -100,7 +100,8 @@ export const useUserOffers = (
   useEffect(() => {
     if (!userId || Number.isNaN(userId)) return
     void fetchActiveOffers()
-  }, [fetchActiveOffers, myOffersRefresh])
+    void fetchHistoryOffers()
+  }, [fetchActiveOffers, myOffersRefresh, fetchHistoryOffers])
   return {
     activeOffers,
     historyOffers,

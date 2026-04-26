@@ -31,14 +31,9 @@ export class CounterOfferService {
     type: CounterOfferType,
     query: CounterOfferListingsQueryType
   ) => {
-    const params = new URLSearchParams({
-      page: String(query.page),
-      pageSize: String(query.pageSize),
-      orderBy: String(query.orderBy),
-    })
-
     return get<PagedResponse<CounterOfferListItemDto>>(
-      `${this.base}/${type}?${params.toString()}`
+      `${this.base}/${type}`,
+      query
     )
   }
 
