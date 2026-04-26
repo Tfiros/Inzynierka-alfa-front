@@ -6,14 +6,22 @@ import {
   createNotificationsSlice,
 } from "./storeParts/NotificationSlice"
 import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
+
 import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
+import {
+  createCounterOfferSlice,
+  type CounterOfferSlice,
+} from "./storeParts/CounterOfferSlice"
+
 export type AppState = UiSlice &
   AuthSlice &
-  NotificationsSlice & {
+  NotificationsSlice &
+  OfferSlice &
+  CounterOfferSlice & {
     hardReset: () => Promise<void>
     hasHydrated: boolean
     setHasHydrated: (v: boolean) => void
-  } & OfferSlice
+  }
 
 export const useAppStore = create<AppState>()(
   persist(
@@ -21,6 +29,7 @@ export const useAppStore = create<AppState>()(
       ...createUiSlice(set, get, api),
       ...createAuthSlice(set, get, api),
       ...createOfferSlice(set, get, api),
+      ...createCounterOfferSlice(set),
       ...createNotificationsSlice(set),
       hasHydrated: false,
       setHasHydrated: (v) => set({ hasHydrated: v }),
@@ -32,6 +41,8 @@ export const useAppStore = create<AppState>()(
           navbarUser: null,
           isAuthenticated: false,
           roles: [],
+          counterOfferOpen: false,
+          counterOfferOfferId: null,
         })
 
         await useAppStore.persist.clearStorage()
@@ -57,6 +68,7 @@ export const useAppStore = create<AppState>()(
 
 export const selectCounter = (id: string) => (s: AppState) =>
   s.counters[id] ?? 0
+
 export const selectAuth = (s: AppState) => ({
   isAuthenticated: s.isAuthenticated,
   userLogin: s.userLogin,

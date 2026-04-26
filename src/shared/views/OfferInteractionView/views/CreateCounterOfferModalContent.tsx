@@ -16,7 +16,6 @@ import {
   AlertDialogTitle,
 } from "@/shared/components/alert-dialog"
 import { useItemSuggestions } from "../hooks/UseItemSuggestions"
-import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import {
   Select,
   SelectContent,
@@ -27,22 +26,14 @@ import {
 import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
 import OfferPickedItemsList from "../components/OfferPickedItemsList"
 import { useCreateCounterOffer } from "@/features/profilePage/hooks/UseCreateCounterOffer"
+import { useCounterOfferModal } from "@/features/marketplacePage/hooks/UseCounterOfferModal"
 
 type Props = {
-  offerId: number | null
   onCancel: () => void
-  baseOffer: offerDetailsDtoResponse | null
-  baseOfferLoading: boolean
-  baseOfferError: string | null
 }
-
-export default function CreateCounterOfferModalContent({
-  offerId,
-  onCancel,
-  baseOffer,
-  baseOfferLoading,
-  baseOfferError,
-}: Props) {
+export default function CreateCounterOfferModalContent({ onCancel }: Props) {
+  const { offerId, baseOffer, baseOfferLoading, baseOfferError } =
+    useCounterOfferModal()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [tokensInput, setTokensInput] = useState("0")
 

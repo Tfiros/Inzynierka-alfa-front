@@ -4,11 +4,8 @@ import OfferDetails from "./components/OfferDetails"
 import { useState } from "react"
 import { useOffersListing } from "./hooks/UseOfferListing"
 import { useOfferDetails } from "./hooks/UseOfferDetails"
-import { useCounterOfferModal } from "./hooks/UseCounterOfferModal"
 import { Plus } from "lucide-react"
 import { Button } from "@/shared/components/button"
-import { Dialog, DialogContent } from "@/shared/components/dialog"
-import CreateCounterOfferModalContent from "@/shared/views/OfferInteractionView/views/CreateCounterOfferModalContent"
 import {
   Pagination,
   PaginationContent,
@@ -27,7 +24,7 @@ const MarketplacePage = () => {
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
-  const counter = useCounterOfferModal()
+  const openCounterOffer = useAppStore((s) => s.openCounterOffer)
 
   const { offerDetails: detailsOffer } = useOfferDetails(
     selectedOfferId,
@@ -92,7 +89,7 @@ const MarketplacePage = () => {
         <OffersGrid
           offers={offers}
           onShowDetails={handleShowDetails}
-          onOpenCounterOffer={(offerId) => void counter.openForOffer(offerId)}
+          onOpenCounterOffer={openCounterOffer}
         />
 
         {!loading && totalCount > 0 && totalPages > 1 && (
@@ -153,18 +150,6 @@ const MarketplacePage = () => {
             onOpenChange={handleOpenDialogChange}
           />
         )}
-
-        <Dialog open={counter.open} onOpenChange={counter.onOpenChange}>
-          <DialogContent className="max-w-3xl">
-            <CreateCounterOfferModalContent
-              offerId={counter.offerId}
-              baseOffer={counter.baseOffer}
-              baseOfferLoading={counter.baseOfferLoading}
-              baseOfferError={counter.baseOfferError}
-              onCancel={counter.close}
-            />
-          </DialogContent>
-        </Dialog>
       </div>
     </>
   )

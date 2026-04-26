@@ -1,10 +1,13 @@
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { OfferService } from "@/shared/api/services/OfferService"
+import { useAppStore } from "@/shared/store/appStore"
 
 export const useCounterOfferModal = () => {
-  const [open, setOpen] = useState(false)
-  const [offerId, setOfferId] = useState<number | null>(null)
+  const open = useAppStore((s) => s.counterOfferOpen)
+  const offerId = useAppStore((s) => s.counterOfferOfferId)
+  const setOpen = useAppStore((s) => s.setCounterOfferOpen)
+  const closeCounterOffer = useAppStore((s) => s.closeCounterOffer)
 
   const [baseOffer, setBaseOffer] = useState<offerDetailsDtoResponse | null>(
     null
@@ -24,11 +27,10 @@ export const useCounterOfferModal = () => {
         setBaseOfferError(
           res.message ?? "Nie udało się pobrać oferty do kontroferty."
         )
-        return null
+        return
       }
 
       setBaseOffer(res.data)
-      return res.data
     } catch (e: unknown) {
       setBaseOffer(null)
       setBaseOfferError(
@@ -36,45 +38,46 @@ export const useCounterOfferModal = () => {
           ? e.message
           : "Wystąpił błąd podczas pobierania oferty do kontroferty."
       )
-      return null
     } finally {
       setBaseOfferLoading(false)
     }
   }, [])
 
-  const openForOffer = useCallback(
-    async (id: number) => {
-      setOfferId(id)
-      setOpen(true)
-      await fetchBaseOffer(id)
-    },
-    [fetchBaseOffer]
-  )
-
-  const reset = useCallback(() => {
-    setOfferId(null)
+  const resetBaseOffer = useCallback(() => {
     setBaseOffer(null)
     setBaseOfferError(null)
     setBaseOfferLoading(false)
   }, [])
 
   const close = useCallback(() => {
-    setOpen(false)
-    reset()
-  }, [reset])
+    closeCounterOffer()
+    resetBaseOffer()
+  }, [closeCounterOffer, resetBaseOffer])
 
   const onOpenChange = useCallback(
     (value: boolean) => {
-      if (!value) close()
-      else setOpen(true)
+      if (!value) {
+        close()
+        return
+      }
+
+      setOpen(true)
     },
-    [close]
+    [close, setOpen]
   )
+
+  useEffect(() => {
+    if (!open || offerId == null) {
+      resetBaseOffer()
+      return
+    }
+
+    void fetchBaseOffer(offerId)
+  }, [open, offerId, fetchBaseOffer, resetBaseOffer])
 
   return {
     open,
     offerId,
-    openForOffer,
     close,
     onOpenChange,
     baseOffer,

@@ -12,11 +12,11 @@ import OfferDetails from "@/features/marketplacePage/components/OfferDetails"
 import { useOfferDetails } from "@/features/marketplacePage/hooks/UseOfferDetails"
 import { useCounterOffers } from "../hooks/UseCounterOffers"
 import { useUpdateCounterOfferStatus } from "../hooks/UseUpdateCounterOfferStatus"
-import { useCounterOfferModal } from "@/features/marketplacePage/hooks/UseCounterOfferModal"
 import { UseAcceptCounterOffer } from "../hooks/UseAcceptCounterOffer"
 import CounterOfferCard from "../component/CounterOfferCard"
 import { CounterOfferStatus } from "@/shared/enums/counterOfferStatus"
 import { Button } from "@/shared/components/button"
+import { useAppStore } from "@/shared/store/appStore"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
   const [tab, setTab] = useState<
@@ -80,7 +80,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
   const sentList = sent.data?.elements ?? []
   const receivedList = received.data?.elements ?? []
 
-  const counter = useCounterOfferModal()
+  const openCounterOffer = useAppStore((s) => s.openCounterOffer)
 
   return (
     <section>
@@ -141,9 +141,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     key={o.offerCoreDto.offerId}
                     offer={o}
                     onShowDetails={handleShowDetails}
-                    onOpenCounterOffer={(offerId) =>
-                      void counter.openForOffer(offerId)
-                    }
+                    onOpenCounterOffer={openCounterOffer}
                   />
                 ))}
               </div>
@@ -315,9 +313,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     key={o.offerCoreDto.offerId}
                     offer={o}
                     onShowDetails={handleShowDetails}
-                    onOpenCounterOffer={(offerId) =>
-                      void counter.openForOffer(offerId)
-                    }
+                    onOpenCounterOffer={openCounterOffer}
                   />
                 ))}
               </div>

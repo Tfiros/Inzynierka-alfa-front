@@ -18,7 +18,8 @@ import SettingsPage from "./features/settingsPage/SettingsPage"
 import StatutePage from "./features/statutePage/StatutePage"
 import UserManagementPage from "./features/userManagement/UserManagementPage"
 import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
-import ProfilePage from "./features/profilePage/profilePage"
+import ProfilePage from "./features/profilePage/ProfilePage"
+import CounterOfferInteractionHost from "./shared/views/OfferInteractionView/CounterOfferInteractionHost"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
@@ -55,6 +56,7 @@ function App() {
         </Route>
       </Routes>
       <OfferInteractionHost />
+      <CounterOfferInteractionHost />
     </BrowserRouter>
   )
 }

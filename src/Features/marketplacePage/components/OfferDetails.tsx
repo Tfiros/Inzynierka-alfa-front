@@ -11,7 +11,6 @@ import { Button } from "@/shared/components/button"
 import { Plus, SquarePen, Trash2 } from "lucide-react"
 import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useAppStore } from "@/shared/store/appStore"
-import { useCounterOfferModal } from "../hooks/UseCounterOfferModal"
 import CreateCounterOfferModalContent from "@/shared/views/OfferInteractionView/views/CreateCounterOfferModalContent"
 
 type OfferDetailsProps = {
@@ -27,7 +26,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
 
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
 
-  const counter = useCounterOfferModal()
+  const openCounterOffer = useAppStore((s) => s.openCounterOffer)
 
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   return (
@@ -81,7 +80,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                     className="text-xs cursor-pointer w-full sm:w-auto"
                     onClick={() => {
                       onOpenChange(false)
-                      void counter.openForOffer(offer.offerCoreDto.offerId)
+                      openCounterOffer(offer.offerCoreDto.offerId)
                     }}
                     disabled={!isAuthenticated || isOwner}
                   >
@@ -124,22 +123,11 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
           </div>
         </DialogContent>
       </Dialog>
-      <Dialog open={counter.open} onOpenChange={counter.onOpenChange}>
-        <DialogContent className="max-w-3xl">
-          <CreateCounterOfferModalContent
-            offerId={counter.offerId}
-            baseOffer={counter.baseOffer}
-            baseOfferLoading={counter.baseOfferLoading}
-            baseOfferError={counter.baseOfferError}
-            onCancel={() => {
-              counter.close()
-              onOpenChange(true)
-            }}
-          />
-        </DialogContent>
-      </Dialog>
     </>
   )
 }
 
 export default OfferDetails
+function UseCounterOfferModal() {
+  throw new Error("Function not implemented.")
+}
