@@ -9,14 +9,21 @@ import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
 import { createChatSlice, type ChatSlice } from "./storeParts/ChatSlice"
 import { chatHubClient } from "@/shared/api/hubs/ChatHub"
 import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
+import {
+  createCounterOfferSlice,
+  type CounterOfferSlice,
+} from "./storeParts/CounterOfferSlice"
+
 export type AppState = UiSlice &
   AuthSlice &
+  OfferSlice &
+  CounterOfferSlice & {
   ChatSlice &
   NotificationsSlice & {
     hardReset: () => Promise<void>
     hasHydrated: boolean
     setHasHydrated: (v: boolean) => void
-  } & OfferSlice
+  }
 
 export const useAppStore = create<AppState>()(
   persist(
@@ -24,6 +31,7 @@ export const useAppStore = create<AppState>()(
       ...createUiSlice(set, get, api),
       ...createAuthSlice(set, get, api),
       ...createOfferSlice(set, get, api),
+      ...createCounterOfferSlice(set, get, api),
       ...createNotificationsSlice(set),
       ...createChatSlice(set, get, api),
 
@@ -43,6 +51,8 @@ export const useAppStore = create<AppState>()(
           navbarUser: null,
           isAuthenticated: false,
           roles: [],
+          counterOfferOpen: false,
+          counterOfferOfferId: null,
           darkMode: false,
         })
 

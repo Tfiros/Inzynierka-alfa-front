@@ -191,7 +191,7 @@ const CreateOfferModalContent = ({
             items={offer.itemsHave}
             disabled={offer.isLoading || offer.quoteIsLoading}
             onSetQuantity={offer.setHaveQuantity}
-            onRemoveAll={offer.removeAllHaveItem}
+            onRemoveItem={offer.removeAllHaveItem}
           />
           <div className="mt-4">
             <label className="text-sm font-medium text-muted-foreground">
@@ -303,7 +303,7 @@ const CreateOfferModalContent = ({
             items={offer.itemsWant}
             disabled={offer.isLoading || offer.quoteIsLoading}
             onSetQuantity={offer.setWantQuantity}
-            onRemoveAll={offer.removeAllWantItem}
+            onRemoveItem={offer.removeAllWantItem}
           />
           <div className="mt-4">
             <label className="text-sm font-medium text-muted-foreground">
@@ -393,7 +393,7 @@ const CreateOfferModalContent = ({
             variant="outline"
             className="h-10 rounded-xl px-8 text-base"
             onClick={onCancel}
-            disabled={offer.isLoading}
+            disabled={offer.isLoading || offer.quoteIsLoading}
           >
             Anuluj
           </Button>

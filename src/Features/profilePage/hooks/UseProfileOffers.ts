@@ -18,7 +18,6 @@ export const useUserOffers = (
   const [loadingHistory, setLoadingHistory] = useState<boolean>(false)
   const [errorActive, setErrorActive] = useState<string | null>(null)
   const [errorHistory, setErrorHistory] = useState<string | null>(null)
-  const myOffersRefresh = useAppStore(selectCounter("offers:my"))
 
   const fetchActiveOffers = useCallback(async () => {
     if (!userId || Number.isNaN(userId)) return
@@ -44,7 +43,7 @@ export const useUserOffers = (
         return
       }
       setActiveOffers(res.data)
-    } catch (e) {
+    } catch {
       setErrorActive("Wystąpił błąd podczas ładowania aktywnych ofert.")
       setActiveOffers({
         page: activePageCounter,
@@ -82,7 +81,7 @@ export const useUserOffers = (
         return
       }
       setHistoryOffers(res.data)
-    } catch (e) {
+    } catch {
       setErrorHistory("Wystąpił błąd podczas ładowania historii ofert.")
       setHistoryOffers({
         page: historyPageCounter,
@@ -95,10 +94,12 @@ export const useUserOffers = (
       setLoadingHistory(false)
     }
   }, [userId, historyPageCounter, pageSize])
+  const myOffersRefresh = useAppStore(selectCounter("offers:my"))
   useEffect(() => {
     if (!userId || Number.isNaN(userId)) return
     void fetchActiveOffers()
-  }, [fetchActiveOffers, myOffersRefresh])
+    void fetchHistoryOffers()
+  }, [fetchActiveOffers, myOffersRefresh, fetchHistoryOffers])
   return {
     activeOffers,
     historyOffers,

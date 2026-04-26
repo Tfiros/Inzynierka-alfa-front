@@ -13,12 +13,13 @@ import MarketplacePage from "./Features/marketplacePage/Marketplace"
 import NotFoundPage from "./features/notFoundPage/NotFoundPage"
 import PointShop from "./features/pointShop/PointShop"
 import ProfileEdit from "./features/profileEditPage/ProfileEdit"
-import ProfilePage from "./features/profilePage/ProfilePage"
 import MainDashboard from "./features/profilePanelPage/views/MainDashboard"
 import SettingsPage from "./features/settingsPage/SettingsPage"
 import StatutePage from "./features/statutePage/StatutePage"
 import UserManagementPage from "./features/userManagement/UserManagementPage"
 import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
+import ProfilePage from "./features/profilePage/ProfilePage"
+import CounterOfferInteractionHost from "./shared/views/OfferInteractionView/CounterOfferInteractionHost"
 import { TooltipProvider } from "./shared/components/ui/tooltip"
 
 function App() {
@@ -52,13 +53,13 @@ function App() {
             </Route>
           </Route>
 
-          <Route element={<BlankLayout />}>
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
-        </Routes>
-        <OfferInteractionHost />
-      </BrowserRouter>
-    </TooltipProvider>
+        <Route element={<BlankLayout />}>
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+      <OfferInteractionHost />
+      <CounterOfferInteractionHost />
+    </BrowserRouter>
   )
 }
 

@@ -209,6 +209,8 @@ const EditOfferModalContent = ({
                 )
               }
               disabled={offer.isLoading || offer.quoteIsLoading}
+              onSetQuantity={offer.setHaveQuantity}
+              onRemoveItem={offer.removeAllHaveItem}
               className="mt-2 h-10 rounded-xl bg-muted/40 border-muted-foreground/20"
               placeholder="0"
             />
@@ -320,6 +322,8 @@ const EditOfferModalContent = ({
                 )
               }
               disabled={offer.isLoading || offer.quoteIsLoading}
+              onSetQuantity={offer.setWantQuantity}
+              onRemoveItem={offer.removeAllWantItem}
               className="mt-2 h-10 rounded-xl bg-muted/40 border-muted-foreground/20"
               placeholder="0"
             />
