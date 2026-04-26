@@ -24,7 +24,7 @@ const MarketplacePage = () => {
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
-  const openCounterOffer = useAppStore((s) => s.openCounterOffer)
+  const requestCounterOffer = useAppStore((s) => s.counterOfferRequest)
 
   const { offerDetails: detailsOffer } = useOfferDetails(
     selectedOfferId,
@@ -89,7 +89,7 @@ const MarketplacePage = () => {
         <OffersGrid
           offers={offers}
           onShowDetails={handleShowDetails}
-          onOpenCounterOffer={openCounterOffer}
+          onOpenCounterOffer={requestCounterOffer}
         />
 
         {!loading && totalCount > 0 && totalPages > 1 && (

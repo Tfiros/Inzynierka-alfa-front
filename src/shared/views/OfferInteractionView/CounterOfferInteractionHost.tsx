@@ -5,12 +5,17 @@ import CreateCounterOfferModalContent from "./views/CreateCounterOfferModalConte
 const CounterOfferInteractionHost = () => {
   const open = useAppStore((s) => s.counterOfferOpen)
   const setOpen = useAppStore((s) => s.setCounterOfferOpen)
-  const close = useAppStore((s) => s.closeCounterOffer)
+  const targetOfferId = useAppStore((s) => s.counterOfferOfferId)
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-3xl">
-        <CreateCounterOfferModalContent onCancel={close} />
+        <CreateCounterOfferModalContent
+          offerId={targetOfferId}
+          onCancel={() => {
+            setOpen(false)
+          }}
+        />
       </DialogContent>
     </Dialog>
   )

@@ -29,11 +29,15 @@ import { useCreateCounterOffer } from "@/features/profilePage/hooks/UseCreateCou
 import { useCounterOfferModal } from "@/features/marketplacePage/hooks/UseCounterOfferModal"
 
 type Props = {
+  offerId: number | null
   onCancel: () => void
 }
-export default function CreateCounterOfferModalContent({ onCancel }: Props) {
-  const { offerId, baseOffer, baseOfferLoading, baseOfferError } =
-    useCounterOfferModal()
+export default function CreateCounterOfferModalContent({
+  offerId,
+  onCancel,
+}: Props) {
+  const { baseOffer, baseOfferLoading, baseOfferError } =
+    useCounterOfferModal(offerId)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [tokensInput, setTokensInput] = useState("0")
 

@@ -1,30 +1,33 @@
+import type { StateCreator } from "zustand"
+
 export type CounterOfferSlice = {
   counterOfferOpen: boolean
   counterOfferOfferId: number | null
-  openCounterOffer: (offerId: number) => void
-  closeCounterOffer: () => void
+  counterOfferRequest: (offerId: number) => void
   setCounterOfferOpen: (open: boolean) => void
 }
 
-export const createCounterOfferSlice = (set: any): CounterOfferSlice => ({
+type StoreState = CounterOfferSlice & Record<string, unknown>
+
+export const createCounterOfferSlice: StateCreator<
+  StoreState,
+  [],
+  [],
+  CounterOfferSlice
+> = (set) => ({
   counterOfferOpen: false,
   counterOfferOfferId: null,
 
-  openCounterOffer: (offerId) =>
+  counterOfferRequest: (offerId) =>
     set({
       counterOfferOpen: true,
       counterOfferOfferId: offerId,
     }),
 
-  closeCounterOffer: () =>
-    set({
-      counterOfferOpen: false,
-      counterOfferOfferId: null,
-    }),
-
   setCounterOfferOpen: (open) =>
-    set((state: CounterOfferSlice) => ({
-      counterOfferOpen: open,
-      counterOfferOfferId: open ? state.counterOfferOfferId : null,
-    })),
+    set(
+      open
+        ? { counterOfferOpen: true }
+        : { counterOfferOpen: false, counterOfferOfferId: null }
+    ),
 })

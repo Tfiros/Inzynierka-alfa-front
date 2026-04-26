@@ -25,7 +25,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
 
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
 
-  const openCounterOffer = useAppStore((s) => s.openCounterOffer)
+  const requestCounterOffer = useAppStore((s) => s.counterOfferRequest)
 
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   return (
@@ -79,7 +79,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                     className="text-xs cursor-pointer w-full sm:w-auto"
                     onClick={() => {
                       onOpenChange(false)
-                      openCounterOffer(offer.offerCoreDto.offerId)
+                      requestCounterOffer(offer.offerCoreDto.offerId)
                     }}
                     disabled={!isAuthenticated || isOwner}
                   >
@@ -127,6 +127,3 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
 }
 
 export default OfferDetails
-function UseCounterOfferModal() {
-  throw new Error("Function not implemented.")
-}

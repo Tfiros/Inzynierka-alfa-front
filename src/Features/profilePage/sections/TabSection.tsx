@@ -80,7 +80,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
   const sentList = sent.data?.elements ?? []
   const receivedList = received.data?.elements ?? []
 
-  const openCounterOffer = useAppStore((s) => s.openCounterOffer)
+  const requestCounterOffer = useAppStore((s) => s.counterOfferRequest)
 
   return (
     <section>
@@ -141,7 +141,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     key={o.offerCoreDto.offerId}
                     offer={o}
                     onShowDetails={handleShowDetails}
-                    onOpenCounterOffer={openCounterOffer}
+                    onOpenCounterOffer={requestCounterOffer}
                   />
                 ))}
               </div>
@@ -313,7 +313,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     key={o.offerCoreDto.offerId}
                     offer={o}
                     onShowDetails={handleShowDetails}
-                    onOpenCounterOffer={openCounterOffer}
+                    onOpenCounterOffer={requestCounterOffer}
                   />
                 ))}
               </div>

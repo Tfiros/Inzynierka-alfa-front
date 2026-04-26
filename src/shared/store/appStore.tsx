@@ -29,7 +29,7 @@ export const useAppStore = create<AppState>()(
       ...createUiSlice(set, get, api),
       ...createAuthSlice(set, get, api),
       ...createOfferSlice(set, get, api),
-      ...createCounterOfferSlice(set),
+      ...createCounterOfferSlice(set, get, api),
       ...createNotificationsSlice(set),
       hasHydrated: false,
       setHasHydrated: (v) => set({ hasHydrated: v }),
