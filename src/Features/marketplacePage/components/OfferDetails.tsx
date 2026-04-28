@@ -90,9 +90,9 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
                   onClick={() => {
-                      onOpenChange(false)
-                      requestCounterOffer(offer.offerCoreDto.offerId)
-                    }}
+                    onOpenChange(false)
+                    requestCounterOffer(offer.offerCoreDto.offerId)
+                  }}
                   disabled={!isActive || isOwner || !isAuthenticated}
                 >
                   <Plus /> Złóż kontrofertę
@@ -133,38 +133,37 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
             )}
           </div>
 
-            <div className="border-t pt-4">
-              <Badge className="w-full md:w-fit rounded-full">Chcę</Badge>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                {offer.wantedItems.map((listingItemDto) => (
-                  <div
-                    key={listingItemDto.itemDto.id}
-                    className="h-full rounded-lg border border-gray-100 p-4 shadow-sm"
-                  >
-                    <OfferItemCard listingItemDto={listingItemDto} />
-                  </div>
-                ))}
-              </div>
+          <div className="border-t pt-4">
+            <Badge className="w-full md:w-fit rounded-full">Chcę</Badge>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+              {offer.wantedItems.map((listingItemDto) => (
+                <div
+                  key={listingItemDto.itemDto.id}
+                  className="h-full rounded-lg border border-gray-100 p-4 shadow-sm"
+                >
+                  <OfferItemCard listingItemDto={listingItemDto} />
+                </div>
+              ))}
             </div>
-            {offer.offerCoreDto.tokensWanted > 0 && (
-              <span className="mt-3 inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
-                + {offer.offerCoreDto.tokensWanted}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <img
-                      src={PointsIcon}
-                      alt="tokenów"
-                      className="h-4 w-4 object-contain"
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent>tokenów</TooltipContent>
-                </Tooltip>
-              </span>
-            )}
           </div>
-        </DialogContent>
-      </Dialog>
-    </>
+          {offer.offerCoreDto.tokensWanted > 0 && (
+            <span className="mt-3 inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
+              + {offer.offerCoreDto.tokensWanted}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <img
+                    src={PointsIcon}
+                    alt="tokenów"
+                    className="h-4 w-4 object-contain"
+                  />
+                </TooltipTrigger>
+                <TooltipContent>tokenów</TooltipContent>
+              </Tooltip>
+            </span>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 
