@@ -10,6 +10,7 @@ import LoginModalView from "../../views/LoginView"
 import RegisterModalView from "../../views/RegisterView"
 import RecoveryEmailView from "../../views/RecoveryEmailView"
 import SuccessChangeView from "../../views/SuccessChangeView"
+import RegisterConfirmEmailView from "@/shared/views/RegisterConfirmEmailView"
 
 const AuthModal = ({
   open,
@@ -34,6 +35,9 @@ const AuthModal = ({
 
         {view === "login" && <LoginModalView onSwitch={onViewChange} />}
         {view === "register" && <RegisterModalView onSwitch={onViewChange} />}
+        {view === "register-confirm-email" && (
+          <RegisterConfirmEmailView onSwitch={onViewChange} />
+        )}
         {view === "forgot-email" && (
           <RecoveryEmailView onSwitch={onViewChange} />
         )}
