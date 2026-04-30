@@ -1,7 +1,6 @@
 import type { NotificationDto } from "@/shared/types/notificationsTypes/notificationsDtos"
 
 export type NotificationsSlice = {
-  unreadNotificationsCount: number
   notifications: NotificationDto[]
 
   setNotifications: (items: NotificationDto[]) => void
@@ -12,8 +11,7 @@ export type NotificationsSlice = {
   markAllNotificationsAsReadLocal: () => void
   removeNotificationLocal: (id: number) => void
 
-  resetUnreadNotifications: () => void
-  setUnreadNotificationsCount: (count: number) => void
+  setNavbarNotificationsUnreadTotal: (count: number) => void
 }
 
 const mergeUnique = (
@@ -35,16 +33,22 @@ const mergeUnique = (
   })
 }
 
+const setNavbarUnreadCount = (state: any, count: number) =>
+  state.navbarUser
+    ? {
+        ...state.navbarUser,
+        notificationsUnreadTotal: Math.max(0, count),
+      }
+    : null
+
 export const createNotificationsSlice = (
   set: (fn: (state: any) => any) => void
 ): NotificationsSlice => ({
-  unreadNotificationsCount: 0,
   notifications: [],
 
   setNotifications: (items) =>
     set(() => ({
       notifications: items,
-      unreadNotificationsCount: items.filter((x) => !x.isRead).length,
     })),
 
   appendNotifications: (items) =>
@@ -53,7 +57,6 @@ export const createNotificationsSlice = (
 
       return {
         notifications: merged,
-        unreadNotificationsCount: merged.filter((x) => !x.isRead).length,
       }
     }),
 
@@ -63,18 +66,24 @@ export const createNotificationsSlice = (
         (x: NotificationDto) => x.id === n.id
       )
 
-      if (exists) {
-        return {}
-      }
+      if (exists) return {}
+
+      const currentUnread = s.navbarUser?.notificationsUnreadTotal ?? 0
 
       return {
         notifications: [n, ...(s.notifications ?? [])],
-        unreadNotificationsCount: (s.unreadNotificationsCount ?? 0) + 1,
+        navbarUser: n.isRead
+          ? s.navbarUser
+          : setNavbarUnreadCount(s, currentUnread + 1),
       }
     }),
 
   markNotificationAsReadLocal: (id) =>
     set((s: any) => {
+      const wasUnread = (s.notifications ?? []).some(
+        (n: NotificationDto) => n.id === id && !n.isRead
+      )
+
       const notifications = (s.notifications ?? []).map((n: NotificationDto) =>
         n.id === id
           ? {
@@ -85,11 +94,13 @@ export const createNotificationsSlice = (
           : n
       )
 
+      const currentUnread = s.navbarUser?.notificationsUnreadTotal ?? 0
+
       return {
         notifications,
-        unreadNotificationsCount: notifications.filter(
-          (x: NotificationDto) => !x.isRead
-        ).length,
+        navbarUser: wasUnread
+          ? setNavbarUnreadCount(s, currentUnread - 1)
+          : s.navbarUser,
       }
     }),
 
@@ -103,31 +114,33 @@ export const createNotificationsSlice = (
           isRead: true,
           readAt: n.readAt ?? now,
         })),
-        unreadNotificationsCount: 0,
+        navbarUser: setNavbarUnreadCount(s, 0),
       }
     }),
 
   removeNotificationLocal: (id) =>
     set((s: any) => {
+      const removed = (s.notifications ?? []).find(
+        (n: NotificationDto) => n.id === id
+      )
+
       const notifications = (s.notifications ?? []).filter(
         (n: NotificationDto) => n.id !== id
       )
 
+      const currentUnread = s.navbarUser?.notificationsUnreadTotal ?? 0
+
       return {
         notifications,
-        unreadNotificationsCount: notifications.filter(
-          (x: NotificationDto) => !x.isRead
-        ).length,
+        navbarUser:
+          removed && !removed.isRead
+            ? setNavbarUnreadCount(s, currentUnread - 1)
+            : s.navbarUser,
       }
     }),
 
-  resetUnreadNotifications: () =>
-    set(() => ({
-      unreadNotificationsCount: 0,
-    })),
-
-  setUnreadNotificationsCount: (count) =>
-    set(() => ({
-      unreadNotificationsCount: Math.max(0, count),
+  setNavbarNotificationsUnreadTotal: (count) =>
+    set((s: any) => ({
+      navbarUser: setNavbarUnreadCount(s, count),
     })),
 })

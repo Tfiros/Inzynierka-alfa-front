@@ -63,7 +63,6 @@ export const useAppStore = create<AppState>()(
           counterOfferOpen: false,
           counterOfferOfferId: null,
           darkMode: false,
-          unreadNotificationsCount: 0,
           notifications: [],
         })
 

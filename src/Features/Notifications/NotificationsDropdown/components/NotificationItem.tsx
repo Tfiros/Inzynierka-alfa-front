@@ -31,7 +31,6 @@ export const NotificationItem = ({ notification, onRead, onDelete }: Props) => {
         isUnread ? "bg-blue-500/5 dark:bg-blue-500/10" : "bg-transparent"
       )}
     >
-      {/* LEFT */}
       <div className="flex min-w-0 items-start gap-2">
         {isUnread && (
           <span className="mt-[6px] h-2 w-2 shrink-0 rounded-full bg-blue-500" />
@@ -55,7 +54,6 @@ export const NotificationItem = ({ notification, onRead, onDelete }: Props) => {
         </div>
       </div>
 
-      {/* RIGHT */}
       <div className="flex shrink-0 items-start gap-2">
         <span className="text-[11px] text-muted-foreground">
           {formatNotificationDate(notification.createdAt)}

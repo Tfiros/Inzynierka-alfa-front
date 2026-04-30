@@ -12,7 +12,7 @@ export const NotificationsDropdown = () => {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
-  const unread = useAppStore((s) => s.unreadNotificationsCount)
+  const unread = useAppStore((s) => s.navbarUser?.notificationsUnreadTotal ?? 0)
 
   const {
     notifications,

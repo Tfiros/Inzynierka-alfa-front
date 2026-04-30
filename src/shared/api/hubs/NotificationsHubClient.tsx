@@ -5,89 +5,114 @@ import type { NotificationDto } from "@/shared/types/notificationsTypes/notifica
 export class NotificationsHubClient {
   private static connection: signalR.HubConnection | null = null
   private static starting: Promise<void> | null = null
-  private static stopRequested = false
+  private static stopping: Promise<void> | null = null
 
-  public static start(): Promise<void> {
-    if (this.connection?.state === signalR.HubConnectionState.Connected) {
-      return Promise.resolve()
+  private static buildConnection() {
+    const conn = new signalR.HubConnectionBuilder()
+      .withUrl("/api/hubs/notifications", {
+        withCredentials: true,
+      })
+      .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
+      .build()
+
+    conn.on("notificationCreated", (payload: any) => {
+      const notification: NotificationDto = {
+        id: payload.id,
+        title: payload.title,
+        message: payload.message,
+        createdAt: payload.createdAt,
+        readAt: null,
+        isRead: false,
+      }
+
+      useAppStore.getState().pushNotification(notification)
+
+      window.dispatchEvent(
+        new CustomEvent("notification:created", {
+          detail: notification,
+        })
+      )
+    })
+
+    conn.onclose((err) => {
+      if (err) {
+        console.warn("[NotificationsHub] connection closed", err)
+      }
+    })
+
+    return conn
+  }
+
+  public static async start(): Promise<void> {
+    if (this.stopping) {
+      await this.stopping.catch(() => {})
     }
 
-    if (this.starting) return this.starting
+    if (this.connection?.state === signalR.HubConnectionState.Connected) {
+      return
+    }
 
-    this.stopRequested = false
+    if (this.connection?.state === signalR.HubConnectionState.Connecting) {
+      return this.starting ?? Promise.resolve()
+    }
 
-    this.starting = (async () => {
-      if (this.connection) {
-        try {
-          await this.connection.stop()
-        } catch {}
-        this.connection = null
-      }
+    if (this.connection?.state === signalR.HubConnectionState.Reconnecting) {
+      return
+    }
 
-      const conn = new signalR.HubConnectionBuilder()
-        .withUrl("/api/hubs/notifications", {
-          withCredentials: true,
-        })
-        .withAutomaticReconnect()
-        .configureLogging(signalR.LogLevel.Information)
-        .build()
+    if (this.starting) {
+      return this.starting
+    }
 
-      conn.on("notificationCreated", (payload: any) => {
-        const notification: NotificationDto = {
-          id: payload.id,
-          title: payload.title,
-          message: payload.message,
-          createdAt: payload.createdAt,
-          readAt: null,
-          isRead: false,
+    if (!this.connection) {
+      this.connection = this.buildConnection()
+    }
+
+    const conn = this.connection
+
+    this.starting = conn
+      .start()
+      .catch((e) => {
+        if (this.connection === conn) {
+          this.connection = null
         }
 
-        useAppStore.getState().pushNotification(notification)
-
-        window.dispatchEvent(
-          new CustomEvent("notification:created", {
-            detail: notification,
-          })
-        )
-      })
-
-      this.connection = conn
-
-      try {
-        await conn.start()
-      } catch (e) {
-        this.connection = null
         throw e
-      } finally {
+      })
+      .finally(() => {
         this.starting = null
-      }
-
-      if (this.stopRequested) {
-        await this.stop()
-      }
-    })()
+      })
 
     return this.starting
   }
 
   public static async stop(): Promise<void> {
     if (this.starting) {
-      this.stopRequested = true
-      try {
-        await this.starting
-      } catch {}
-      return
+      await this.starting.catch(() => {})
     }
 
     if (!this.connection) return
 
-    const c = this.connection
+    const conn = this.connection
     this.connection = null
 
-    try {
-      await c.stop()
-    } catch (e) {
-      console.error("Error stopping NotificationsHubClient", e)
+    if (
+      conn.state === signalR.HubConnectionState.Disconnected ||
+      conn.state === signalR.HubConnectionState.Disconnecting
+    ) {
+      return
     }
+
+    this.stopping = conn
+      .stop()
+      .catch((e) => {
+        console.error("[NotificationsHub] stop failed", e)
+      })
+      .finally(() => {
+        this.stopping = null
+      })
+
+    await this.stopping
   }
 }

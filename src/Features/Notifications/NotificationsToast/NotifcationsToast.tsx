@@ -52,7 +52,6 @@ export const NotificationRealtimeToastHost = () => {
             animate-in slide-in-from-left-5 fade-in duration-300
           "
         >
-          {/* 🔵 pasek */}
           <div className="absolute left-0 top-0 h-full w-1 bg-blue-500" />
 
           <div className="flex items-start justify-between gap-3 pl-2">

@@ -8,6 +8,7 @@ export type UserNavbarInfoDto = {
   level: number
   chatIds: number[]
   chatUnreadTotal: number
+  notificationsUnreadTotal: number
 }
 
 export type UserProfileInfoDto = {
