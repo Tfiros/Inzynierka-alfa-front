@@ -13,6 +13,7 @@ import {
   createCounterOfferSlice,
   type CounterOfferSlice,
 } from "./storeParts/CounterOfferSlice"
+import { NotificationsHubClient } from "../api/hubs/NotificationsHubClient"
 
 export type AppState = UiSlice &
   AuthSlice &
@@ -44,7 +45,15 @@ export const useAppStore = create<AppState>()(
         } catch (e) {
           console.error("chatHub stop failed", e)
         }
+
+        try {
+          await NotificationsHubClient.stop()
+        } catch (e) {
+          console.error("notificationsHub stop failed", e)
+        }
+
         get().chat?.actions?.resetChat?.()
+
         set({
           userLogin: null,
           userId: null,
@@ -54,6 +63,8 @@ export const useAppStore = create<AppState>()(
           counterOfferOpen: false,
           counterOfferOfferId: null,
           darkMode: false,
+          unreadNotificationsCount: 0,
+          notifications: [],
         })
 
         await useAppStore.persist.clearStorage()

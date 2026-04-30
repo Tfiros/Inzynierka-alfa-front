@@ -3,8 +3,6 @@ import { Button } from "@/shared/components/button"
 import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.png"
 import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
-import NoifyIcon from "@/shared/photos/NotificationIcon.svg"
-import NoifyIcon_Dark from "@/shared/photos/NotificationIcon_Dark.svg"
 import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
 import { useAppStore } from "@/shared/store/AppStore"
@@ -15,11 +13,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip"
+import { NotificationsDropdown } from "@/Features/Notifications/NotificationsDropdown/components/NotificationsDropdown"
 
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
   const roles = useAppStore((s) => s.roles)
-  const unread = useAppStore((s) => s.unreadNotificationsCount)
   const isAdmin = roles.some((r) => r.toLowerCase() === "admin")
   const isMiddleman = roles.some((r) => r.toLowerCase() === "middleman")
   const tokens = navbarUser?.tokens ?? 0
@@ -98,32 +96,7 @@ export const UserNavbar = () => {
             <span className="text-sm font-semibold">{level}</span>
             <span className="ml-1 text-xs text-muted-foreground">Poziom</span>
 
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="rounded-full relative"
-              title="Powiadomienia"
-            >
-              <Link to="/notifications" className="relative">
-                <img
-                  src={NoifyIcon}
-                  alt="NotificationIcon"
-                  className="h-6 w-6 object-contain block dark:hidden"
-                />
-                <img
-                  src={NoifyIcon_Dark}
-                  alt="NotificationIcon"
-                  className="h-6 w-6 object-contain hidden dark:block"
-                />
-
-                {unread > 0 && (
-                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-destructive-foreground text-[11px] leading-[18px] text-center">
-                    {unread > 99 ? "99+" : unread}
-                  </span>
-                )}
-              </Link>
-            </Button>
+            <NotificationsDropdown />
             <NavbarChatDropdown />
 
             <ProfileMenu />

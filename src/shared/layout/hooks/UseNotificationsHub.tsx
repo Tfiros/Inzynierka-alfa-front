@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useAppStore } from "@/shared/store/AppStore"
-import { NotificationsHubClient } from "@/shared/api/NotificationsHubClient"
+import { NotificationsHubClient } from "@/shared/api/hubs/NotificationsHubClient"
 
 type Props = {
   logErrors?: boolean

@@ -4,15 +4,21 @@ import tailwindcss from "@tailwindcss/vite"
 import fs from "fs"
 import path from "path"
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    https: {
-      key: fs.readFileSync("./certs/localhost+2-key.pem"),
-      cert: fs.readFileSync("./certs/localhost+2.pem"),
-    },
+    host: "localhost",
     port: 5173,
+    strictPort: true,
+    https: {
+      key: fs.readFileSync("./certs/localhost-key.pem"),
+      cert: fs.readFileSync("./certs/localhost.pem"),
+    },
+    hmr: {
+      protocol: "wss",
+      host: "localhost",
+      clientPort: 5173,
+    },
     proxy: {
       "/api": {
         target: "https://localhost:7144",

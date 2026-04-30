@@ -1,14 +1,6 @@
 import * as signalR from "@microsoft/signalr"
-import { HttpTransportType } from "@microsoft/signalr"
 import { useAppStore } from "@/shared/store/AppStore"
-
-export type NotificationDto = {
-  id: number
-  title: string
-  message: string
-  createdAt: string
-  readAt?: string | null
-}
+import type { NotificationDto } from "@/shared/types/notificationsTypes/notificationsDtos"
 
 export class NotificationsHubClient {
   private static connection: signalR.HubConnection | null = null
@@ -35,14 +27,28 @@ export class NotificationsHubClient {
       const conn = new signalR.HubConnectionBuilder()
         .withUrl("/api/hubs/notifications", {
           withCredentials: true,
-          transport: HttpTransportType.WebSockets,
         })
         .withAutomaticReconnect()
         .configureLogging(signalR.LogLevel.Information)
         .build()
 
-      conn.on("notificationCreated", (n: NotificationDto) => {
-        useAppStore.getState().pushNotification(n)
+      conn.on("notificationCreated", (payload: any) => {
+        const notification: NotificationDto = {
+          id: payload.id,
+          title: payload.title,
+          message: payload.message,
+          createdAt: payload.createdAt,
+          readAt: null,
+          isRead: false,
+        }
+
+        useAppStore.getState().pushNotification(notification)
+
+        window.dispatchEvent(
+          new CustomEvent("notification:created", {
+            detail: notification,
+          })
+        )
       })
 
       this.connection = conn

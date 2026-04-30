@@ -14,7 +14,7 @@ const useMainLayout = () => {
 
   const ranRef = useRef(false)
 
-  useNotificationsHub(hasHydrated && isLogged)
+  useNotificationsHub()
 
   useEffect(() => {
     if (!hasHydrated) return
