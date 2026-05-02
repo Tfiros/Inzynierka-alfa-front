@@ -44,4 +44,7 @@ export class CounterOfferService {
     patch<null>(`${this.base}/${counterOfferId}`, {
       statusId,
     })
+
+  public static readonly getForOffer = async (offerId: number) =>
+    get<CounterOfferListItemDto[]>(`${this.base}/offer/${offerId}`)
 }

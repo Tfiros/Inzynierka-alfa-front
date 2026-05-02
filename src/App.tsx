@@ -53,13 +53,14 @@ function App() {
             </Route>
           </Route>
 
-        <Route element={<BlankLayout />}>
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-      </Routes>
-      <OfferInteractionHost />
-      <CounterOfferInteractionHost />
-    </BrowserRouter>
+          <Route element={<BlankLayout />}>
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+        <OfferInteractionHost />
+        <CounterOfferInteractionHost />
+      </BrowserRouter>
+    </TooltipProvider>
   )
 }
 

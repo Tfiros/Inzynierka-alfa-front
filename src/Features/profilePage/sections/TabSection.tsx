@@ -25,7 +25,6 @@ const TabSection = ({ profileId }: { profileId: number }) => {
 
   const [activePage] = useState<number>(1)
   const [historyPage] = useState<number>(1)
-  const pageSize = 10
   const [sentPage, setSentPage] = useState<number>(1)
   const [receivedPage, setReceivedPage] = useState<number>(1)
 
@@ -34,6 +33,9 @@ const TabSection = ({ profileId }: { profileId: number }) => {
 
   const update = useUpdateCounterOfferStatus()
   const acceptCounterOffer = UseAcceptCounterOffer()
+  const pageSize = 10
+  const currentUserId = useAppStore((s) => s.userId)
+  const isOwnProfile = currentUserId === profileId
 
   const { offerDetails: detailsOffer } = useOfferDetails(
     selectedOfferId,
@@ -61,7 +63,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
 
   const sent = useCounterOffers(
     "sent",
-    tab === "counterOffersSent",
+    isOwnProfile && tab === "counterOffersSent",
     sentPage,
     pageSize,
     2
@@ -69,7 +71,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
 
   const received = useCounterOffers(
     "received",
-    tab === "counterOffersReceived",
+    isOwnProfile && tab === "counterOffersReceived",
     receivedPage,
     pageSize,
     2
@@ -86,27 +88,44 @@ const TabSection = ({ profileId }: { profileId: number }) => {
     <section>
       <Tabs
         value={tab}
-        onValueChange={(value) =>
-          setTab(
-            value as
-              | "offers"
-              | "counterOffersSent"
-              | "counterOffersReceived"
-              | "history"
-          )
-        }
+        onValueChange={(value) => {
+          const nextTab = value as
+            | "offers"
+            | "counterOffersSent"
+            | "counterOffersReceived"
+            | "history"
+
+          if (
+            !isOwnProfile &&
+            (nextTab === "counterOffersSent" ||
+              nextTab === "counterOffersReceived")
+          ) {
+            setTab("offers")
+            return
+          }
+
+          setTab(nextTab)
+        }}
         className="mt-6"
       >
-        <TabsList className="w-full grid grid-cols-4">
-          <TabsTrigger value="offers">Moje Oferty</TabsTrigger>
-
-          <TabsTrigger value="counterOffersSent">
-            Wysłane Kontroferty
+        <TabsList
+          className={`w-full grid ${isOwnProfile ? "grid-cols-4" : "grid-cols-2"}`}
+        >
+          <TabsTrigger value="offers">
+            {isOwnProfile ? "Moje Oferty" : "Oferty"}
           </TabsTrigger>
 
-          <TabsTrigger value="counterOffersReceived">
-            Otrzymane Kontroferty
-          </TabsTrigger>
+          {isOwnProfile && (
+            <>
+              <TabsTrigger value="counterOffersSent">
+                Wysłane Kontroferty
+              </TabsTrigger>
+
+              <TabsTrigger value="counterOffersReceived">
+                Otrzymane Kontroferty
+              </TabsTrigger>
+            </>
+          )}
 
           <TabsTrigger value="history">Historia wymian</TabsTrigger>
         </TabsList>
@@ -133,7 +152,9 @@ const TabSection = ({ profileId }: { profileId: number }) => {
           ) : (
             <>
               <div className="text-sm text-muted-foreground mb-3">
-                Oferty wymian, które obecnie masz wystawione na platformie
+                {isOwnProfile
+                  ? "Oferty wymian, które obecnie masz wystawione na platformie"
+                  : "Oferty wymian wystawione przez tego użytkownika"}
               </div>
               <div className="grid xl:grid-cols-2 gap-6">
                 {activeOffersList.map((o) => (

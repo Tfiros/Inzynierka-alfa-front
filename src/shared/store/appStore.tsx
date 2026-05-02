@@ -17,7 +17,7 @@ import {
 export type AppState = UiSlice &
   AuthSlice &
   OfferSlice &
-  CounterOfferSlice & {
+  CounterOfferSlice &
   ChatSlice &
   NotificationsSlice & {
     hardReset: () => Promise<void>

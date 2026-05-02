@@ -18,6 +18,9 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/shared/components/ui/tooltip"
+import { useCreateTrade } from "@/shared/views/OfferInteractionView/hooks/UseCreateTrade"
+import { useState } from "react"
+import OfferCounterOffersSection from "./OfferCounterOffersDetails"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
@@ -29,10 +32,13 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
   const currentUserId = useAppStore((s) => s.userId)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
   const requestEdit = useAppStore((s) => s.offerRequestEdit)
+  const trade = useCreateTrade()
 
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
 
   const requestCounterOffer = useAppStore((s) => s.counterOfferRequest)
+
+  const [counterOffersOpen, setCounterOffersOpen] = useState(false)
 
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   const isActive = offer.offerCoreDto.offerStatusId === 1
@@ -80,19 +86,29 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                 <Button
                   type="button"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => console.log(offer.offerCoreDto.offerId)}
-                  disabled={!isActive || isOwner}
+                  onClick={async () => {
+                    const ok = await trade.createTrade(
+                      offer.offerCoreDto.offerId
+                    )
+
+                    if (ok) {
+                      onOpenChange(false)
+                    }
+                  }}
+                  disabled={
+                    !isAuthenticated || !isActive || isOwner || trade.loading
+                  }
                 >
-                  Wymień
+                  {trade.loading ? "Tworzę..." : "Wymień"}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
                   onClick={() => {
-                      onOpenChange(false)
-                      requestCounterOffer(offer.offerCoreDto.offerId)
-                    }}
+                    onOpenChange(false)
+                    requestCounterOffer(offer.offerCoreDto.offerId)
+                  }}
                   disabled={!isActive || isOwner || !isAuthenticated}
                 >
                   <Plus /> Złóż kontrofertę
@@ -133,38 +149,66 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
             )}
           </div>
 
-            <div className="border-t pt-4">
-              <Badge className="w-full md:w-fit rounded-full">Chcę</Badge>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                {offer.wantedItems.map((listingItemDto) => (
-                  <div
-                    key={listingItemDto.itemDto.id}
-                    className="h-full rounded-lg border border-gray-100 p-4 shadow-sm"
-                  >
-                    <OfferItemCard listingItemDto={listingItemDto} />
-                  </div>
-                ))}
-              </div>
+          <div className="border-t pt-4">
+            <Badge className="w-full md:w-fit rounded-full">Chcę</Badge>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+              {offer.wantedItems.map((listingItemDto) => (
+                <div
+                  key={listingItemDto.itemDto.id}
+                  className="h-full rounded-lg border border-gray-100 p-4 shadow-sm"
+                >
+                  <OfferItemCard listingItemDto={listingItemDto} />
+                </div>
+              ))}
             </div>
-            {offer.offerCoreDto.tokensWanted > 0 && (
-              <span className="mt-3 inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
-                + {offer.offerCoreDto.tokensWanted}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <img
-                      src={PointsIcon}
-                      alt="tokenów"
-                      className="h-4 w-4 object-contain"
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent>tokenów</TooltipContent>
-                </Tooltip>
+          </div>
+          {offer.offerCoreDto.tokensWanted > 0 && (
+            <span className="mt-3 inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
+              + {offer.offerCoreDto.tokensWanted}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <img
+                    src={PointsIcon}
+                    alt="tokenów"
+                    className="h-4 w-4 object-contain"
+                  />
+                </TooltipTrigger>
+                <TooltipContent>tokenów</TooltipContent>
+              </Tooltip>
+            </span>
+          )}
+        </div>
+        {isOwner && isActive && (
+          <div className="mt-4 rounded-2xl border bg-muted/20 p-4">
+            <button
+              type="button"
+              className="flex w-full items-center justify-between gap-3 text-left"
+              onClick={() => setCounterOffersOpen((v) => !v)}
+            >
+              <div>
+                <div className="text-sm font-semibold">Kontroferty</div>
+                <div className="text-xs text-muted-foreground">
+                  Zobacz propozycje złożone do tej oferty
+                </div>
+              </div>
+
+              <span className="text-xs text-muted-foreground">
+                {counterOffersOpen ? "Ukryj" : "Pokaż"}
               </span>
+            </button>
+
+            {counterOffersOpen && (
+              <div className="mt-4 space-y-2">
+                <OfferCounterOffersSection
+                  offerId={offer.offerCoreDto.offerId}
+                  open={counterOffersOpen}
+                />
+              </div>
             )}
           </div>
-        </DialogContent>
-      </Dialog>
-    </>
+        )}
+      </DialogContent>
+    </Dialog>
   )
 }
 
