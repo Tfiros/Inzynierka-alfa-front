@@ -117,6 +117,13 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
             )}
           </div>
         </DialogHeader>
+
+        {trade.error && !isOwner && (
+          <div className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {trade.error}
+          </div>
+        )}
+
         <div className="mt-4">
           <div className="pb-4">
             <Badge className="w-full md:w-fit bg-gray-100 text-gray-900 rounded-full">
