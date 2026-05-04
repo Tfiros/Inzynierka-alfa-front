@@ -1,10 +1,12 @@
 import { useCallback, useMemo, useState } from "react"
 import { ChatService } from "@/shared/api/services/ChatService"
 import type { ChatMessage } from "@/shared/types/chat/ChatDtos"
+import { isMessageEditExpired } from "@/shared/utilities/Chat/isMessageEditExpired"
 
 type Params = {
   chatId: number
   userId: number | null
+  isClosed: boolean
   messages: ChatMessage[]
   updateMessage: (
     chatId: number,
@@ -17,6 +19,7 @@ type Params = {
 export const useChatMessageActions = ({
   chatId,
   userId,
+  isClosed,
   messages,
   updateMessage,
   markDeletedById,
@@ -41,17 +44,20 @@ export const useChatMessageActions = ({
 
   const canEditOrDelete = useCallback(
     (m: ChatMessage) => {
-      if (!userId) return false
+      if (!userId || isClosed) return false
       const isMine = m.senderId === userId
       const isDeleted = !!m.deletedAt || m.message === "[deleted]"
       return isMine && !isDeleted
     },
-    [userId]
+    [userId, isClosed]
   )
 
   const startEdit = useCallback(
     (m: ChatMessage) => {
       if (!canEditOrDelete(m)) return
+      if (isMessageEditExpired(m.createdAt)) {
+        return
+      }
       setEditingId(m.id)
       setEditText(m.message ?? "")
     },
@@ -65,9 +71,11 @@ export const useChatMessageActions = ({
 
   const saveEdit = useCallback(
     async (messageId: number) => {
+      if (isClosed) return
       const txt = editText.trim()
       if (!txt) return
-
+      const original = messages.find((m) => m.id === messageId)
+      if (!original || isMessageEditExpired(original.createdAt)) return
       setBusy(messageId, true)
       try {
         // API: PUT /Chat/messages/{messageId}
@@ -87,11 +95,12 @@ export const useChatMessageActions = ({
         setBusy(messageId, false)
       }
     },
-    [chatId, editText, setBusy, updateMessage]
+    [chatId, editText, isClosed, messages, setBusy, updateMessage]
   )
 
   const deleteMessage = useCallback(
     async (messageId: number) => {
+      if (isClosed) return
       setBusy(messageId, true)
       try {
         await ChatService.deleteMessage(messageId)
@@ -108,7 +117,7 @@ export const useChatMessageActions = ({
         setBusy(messageId, false)
       }
     },
-    [editingId, markDeletedById, setBusy]
+    [editingId, isClosed, markDeletedById, setBusy]
   )
 
   return useMemo(

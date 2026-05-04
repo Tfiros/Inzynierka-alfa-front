@@ -1,5 +1,3 @@
-export type ChatThreadType = "direct" | "group"
-
 export type ChatMessage = {
   id: number
   chatConversationId: number
@@ -16,27 +14,25 @@ export type SendMessageRequest = {
   text: string
 }
 
-export type CreateDmChatResponse = {
-  chatConversationId: number
-}
-
 export type ChatThreadListItemDto = {
   chatConversationId: number
-  isGroup: boolean
-  displayName: string
 
-  otherUserId: number
-  otherUserAuth0UserId: string
-  avatarUrl: string
+  otherUserId: number | null
+  otherUserAuth0UserId: string | null
+  otherUserNickname: string | null
+  otherUserTradeRole: "Buyer" | "Seller" | "Middleman" | null
+  avatarUrl: string | null
 
-  isOnline: boolean
+  isOnline: boolean | null
 
-  lastMessageId: number
-  lastMessageText: string
-  lastMessageSenderId: number
-  lastMessageCreatedAtUtc: string // ISO string
+  lastMessageId: number | null
+  lastMessageText: string | null
+  lastMessageSenderId: number | null
+  lastMessageCreatedAtUtc: string | null // ISO string
 
   unreadCount: number
+  tradeId: number
+  closedAtUtc: string | null
 }
 
 export type EditMessageRequest = {

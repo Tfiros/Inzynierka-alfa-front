@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,25 +7,22 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/dropdown-menu"
 import { Button } from "@/shared/components/button"
-import { MessageCircle, MessageSquare } from "lucide-react"
+import { MessageCircle } from "lucide-react"
 
 import useChatHub from "../hooks/UseChatHub"
 import useChatThreads from "../hooks/UseChatThreads"
-import NewDmDialog from "./NewDmDialog"
 import useOpenThread from "../hooks/UseOpenThread"
 import { useAppStore, chatSelectors } from "@/shared/store/appStore"
 import { useChatAutoSubscribe } from "../hooks/UseThreadsSubscriptions"
 import type { AppState } from "@auth0/auth0-react"
 import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
+import { chatThreadTitle } from "@/shared/utilities/Chat/chatThreadTitle"
 
 const threadId = (t: ChatThreadListItemDto) => Number(t.chatConversationId)
-const threadTitle = (t: ChatThreadListItemDto) =>
-  t.displayName ?? `Chat #${threadId(t)}`
 const threadPreview = (t: ChatThreadListItemDto) => t.lastMessageText ?? ""
 const threadUnread = (t: ChatThreadListItemDto) => t.unreadCount ?? 0
 
 const NavbarChatDropdown = () => {
-  const [newDmOpen, setNewDmOpen] = useState(false)
   const openThread = useOpenThread()
 
   const isPopoverOpen = useAppStore(chatSelectors.isPopoverOpen)
@@ -55,14 +52,14 @@ const NavbarChatDropdown = () => {
     if (isPopoverOpen) clearUnreadChatsLocal()
   }, [isPopoverOpen, clearUnreadChatsLocal])
 
-  const handleOpen = async (t: any) => {
+  const handleOpen = async (t: ChatThreadListItemDto) => {
     const id = threadId(t)
     if (!Number.isFinite(id) || id <= 0) return
 
     markChatReadLocal(id)
 
     actions.closePopover()
-    await openThread(id, threadTitle(t))
+    await openThread(id, t.tradeId, t.closedAtUtc, chatThreadTitle(t))
   }
 
   return (
@@ -101,8 +98,9 @@ const NavbarChatDropdown = () => {
           <DropdownMenuSeparator />
 
           <div className="max-h-[320px] overflow-auto p-2">
-            {threads.map((t: any) => {
+            {threads.map((t: ChatThreadListItemDto) => {
               const id = threadId(t)
+              const isClosed = !!t.closedAtUtc
               if (!Number.isFinite(id) || id <= 0) return null
 
               return (
@@ -114,11 +112,18 @@ const NavbarChatDropdown = () => {
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <div className="truncate text-sm font-medium">
-                        {threadTitle(t)}
+                      <div className="flex items-center gap-2">
+                        <div className="truncate text-sm font-medium">
+                          {chatThreadTitle(t)}
+                        </div>
+                        {isClosed && (
+                          <span className="shrink-0 rounded-full border px-2 py-0.5 text-[11px] text-muted-foreground">
+                            Zamknięty
+                          </span>
+                        )}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {threadPreview(t)}
+                        {isClosed ? "Czat zamknięty" : threadPreview(t)}
                       </div>
                     </div>
 
@@ -138,24 +143,8 @@ const NavbarChatDropdown = () => {
               </div>
             )}
           </div>
-
-          <DropdownMenuSeparator />
-
-          <div className="p-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-center gap-2"
-              onClick={() => setNewDmOpen(true)}
-            >
-              <MessageSquare className="h-4 w-4" />
-              Nowa wiadomość
-            </Button>
-          </div>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <NewDmDialog open={newDmOpen} onOpenChange={setNewDmOpen} />
     </>
   )
 }

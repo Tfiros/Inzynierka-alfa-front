@@ -9,6 +9,8 @@ import TradesListSection from "./sections/TradesListSection"
 import ConfirmDeleteTradeDialog from "@/shared/components/AlertDialog"
 import useSetTradeAsRealised from "./hooks/UseSetTradeAsRealised"
 import UseMarkDialog from "./components/UserMarkDialog"
+import { useSearchParams } from "react-router-dom"
+import { useEffect, useRef } from "react"
 
 const TradePanelPage = () => {
   const {
@@ -29,6 +31,30 @@ const TradePanelPage = () => {
   })
 
   const listError = list.errorList ?? assign.assignError ?? null
+  const [searchParams, setSearchParams] = useSearchParams()
+  const linkTradeId = Number(searchParams.get("tradeId"))
+  const linkRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (!Number.isFinite(linkTradeId) || linkTradeId <= 0) return
+    if (linkRef.current === linkTradeId) return
+    if (list.loadingList) return
+
+    const trade = list.items.find((x) => x.tradeId === linkTradeId)
+    if (!trade) return
+
+    requestAnimationFrame(() => {
+      const element = document.querySelector(`[data-trade-id="${linkTradeId}"]`)
+      if (!element) return
+
+      linkRef.current = linkTradeId
+      element.scrollIntoView({ behavior: "smooth", block: "center" })
+
+      const next = new URLSearchParams(searchParams)
+      next.delete("tradeId")
+      setSearchParams(next, { replace: true })
+    })
+  }, [linkTradeId, list.items, list.loadingList, searchParams, setSearchParams])
 
   return (
     <div className="min-h-screen bg-background text-foreground">
