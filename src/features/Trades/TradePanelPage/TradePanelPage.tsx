@@ -10,7 +10,9 @@ import ConfirmDeleteTradeDialog from "@/shared/components/AlertDialog"
 import useSetTradeAsRealised from "./hooks/UseSetTradeAsRealised"
 import UseMarkDialog from "./components/UserMarkDialog"
 import { useSearchParams } from "react-router-dom"
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect } from "react"
+import useLinkedTradeDialog from "./hooks/UseLinkedTradeDialog"
+import LinkedTradeDialog from "./components/LinkedTradeDialog"
 
 const TradePanelPage = () => {
   const {
@@ -33,28 +35,18 @@ const TradePanelPage = () => {
   const listError = list.errorList ?? assign.assignError ?? null
   const [searchParams, setSearchParams] = useSearchParams()
   const linkTradeId = Number(searchParams.get("tradeId"))
-  const linkRef = useRef<number | null>(null)
+  const linkedTrade = useLinkedTradeDialog()
+  const closeLinkedTrade = useCallback(() => {
+    linkedTrade.close()
+
+    const next = new URLSearchParams(searchParams)
+    next.delete("tradeId")
+    setSearchParams(next, { replace: true })
+  }, [linkedTrade.close, searchParams, setSearchParams])
 
   useEffect(() => {
-    if (!Number.isFinite(linkTradeId) || linkTradeId <= 0) return
-    if (linkRef.current === linkTradeId) return
-    if (list.loadingList) return
-
-    const trade = list.items.find((x) => x.tradeId === linkTradeId)
-    if (!trade) return
-
-    requestAnimationFrame(() => {
-      const element = document.querySelector(`[data-trade-id="${linkTradeId}"]`)
-      if (!element) return
-
-      linkRef.current = linkTradeId
-      element.scrollIntoView({ behavior: "smooth", block: "center" })
-
-      const next = new URLSearchParams(searchParams)
-      next.delete("tradeId")
-      setSearchParams(next, { replace: true })
-    })
-  }, [linkTradeId, list.items, list.loadingList, searchParams, setSearchParams])
+    void linkedTrade.openForId(linkTradeId)
+  }, [linkTradeId, linkedTrade.openForId])
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -102,6 +94,32 @@ const TradePanelPage = () => {
           onPageChange={query.actions.setPage}
         />
       </div>
+
+      <LinkedTradeDialog
+        open={linkedTrade.state.open}
+        loading={linkedTrade.state.loading}
+        error={linkedTrade.state.error}
+        trade={linkedTrade.state.trade}
+        isMiddleman={isMiddleman}
+        onOpenChange={(open) => {
+          if (!open) closeLinkedTrade()
+        }}
+        onAssign={(tradeId) => {
+          assign.assignToMe(tradeId).then(closeLinkedTrade)
+        }}
+        onDetails={(trade) => {
+          closeLinkedTrade()
+          void details.actions.openFor(trade)
+        }}
+        onCancelTrade={(tradeId) => {
+          closeLinkedTrade()
+          void cancelation.actions.openFor(tradeId)
+        }}
+        onCompleteClick={(trade) => {
+          closeLinkedTrade()
+          realised.actions.openFor(trade)
+        }}
+      />
 
       <TradeDetailsDialog
         open={details.state.open}
