@@ -49,14 +49,6 @@ class ChatHubClient {
     this.handlers = h
   }
 
-  private getAccessToken(): string {
-    return (
-      sessionStorage.getItem("accessToken") ||
-      sessionStorage.getItem("access_token") ||
-      ""
-    )
-  }
-
   private async rejoinAllChats() {
     if (!this.conn) return
     if (this.conn.state !== signalR.HubConnectionState.Connected) return
@@ -75,7 +67,6 @@ class ChatHubClient {
   private buildConnection() {
     const connection = new signalR.HubConnectionBuilder()
       .withUrl("/api/hubs/chat", {
-        accessTokenFactory: async () => this.getAccessToken(),
         withCredentials: true,
       })
       .withAutomaticReconnect()
