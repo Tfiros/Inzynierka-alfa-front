@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/dropdown-menu"
 import { Button } from "@/shared/components/button"
-import { MessageCircle } from "lucide-react"
+import { MessageCircle, Search } from "lucide-react"
 
 import useChatHub from "../hooks/UseChatHub"
 import useChatThreads from "../hooks/UseChatThreads"
@@ -17,6 +17,8 @@ import { useChatAutoSubscribe } from "../hooks/UseThreadsSubscriptions"
 import type { AppState } from "@auth0/auth0-react"
 import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
 import { chatThreadTitle } from "@/shared/utilities/Chat/chatThreadTitle"
+import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
+import { Input } from "@/shared/components/input"
 
 const threadId = (t: ChatThreadListItemDto) => Number(t.chatConversationId)
 const threadPreview = (t: ChatThreadListItemDto) => t.lastMessageText ?? ""
@@ -37,13 +39,17 @@ const NavbarChatDropdown = () => {
   )
   const markChatReadLocal = useAppStore((s: AppState) => s.markChatReadLocal)
 
+  const [search, setSearch] = useState("")
+  const debouncedSearch = useDebounceValue(search, 360)
+  const trimmedSearch = debouncedSearch.trim()
+
   useChatHub(isAuthenticated)
 
   useChatThreads({
     enabled: isPopoverOpen || isWindowOpen,
     page: 1,
     pageSize: 50,
-    search: null,
+    search: trimmedSearch.length ? trimmedSearch : null,
   })
 
   useChatAutoSubscribe()
@@ -95,6 +101,20 @@ const NavbarChatDropdown = () => {
             </div>
           </div>
 
+          <div className="px-3 pb-2">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => e.stopPropagation()}
+                placeholder="Szukaj (nick, #123)"
+                className="pl-8"
+              />
+            </div>
+          </div>
+
           <DropdownMenuSeparator />
 
           <div className="max-h-[320px] overflow-auto p-2">
@@ -139,7 +159,7 @@ const NavbarChatDropdown = () => {
 
             {!threads.length && (
               <div className="px-3 py-8 text-center text-sm text-muted-foreground">
-                Brak konwersacji
+                {trimmedSearch ? "Brak wyników" : "Brak konwersacji"}
               </div>
             )}
           </div>
