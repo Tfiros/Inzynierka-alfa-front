@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import useUserTradesQuery from "./UseUserTradesQuery"
 import useUserStats from "./UseUserStats"
 import useUserTradesList from "./UseUserTradesList"
@@ -7,6 +7,8 @@ import useTradeDetailsDialog from "./UseTradeDetailsDialog"
 import { useAppStore } from "@/shared/store/appStore"
 import useDeleteTrade from "./UseDeleteTrade"
 import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
+import { useSearchParams } from "react-router-dom"
+import useLinkedTradeDialog from "./UseLinkedTradeDialog"
 
 const useTradePanel = () => {
   const { state, q, actions } = useUserTradesQuery("available")
@@ -46,6 +48,22 @@ const useTradePanel = () => {
   }
 
   const cancelation = useDeleteTrade()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const linkTradeId = Number(searchParams.get("tradeId"))
+  const linkedTrade = useLinkedTradeDialog()
+
+  const closeLinkedTrade = useCallback(() => {
+    linkedTrade.close()
+
+    const next = new URLSearchParams(searchParams)
+    next.delete("tradeId")
+    setSearchParams(next, { replace: true })
+  }, [linkedTrade.close, searchParams, setSearchParams])
+
+  useEffect(() => {
+    if (!Number.isFinite(linkTradeId) || linkTradeId <= 0) return
+    void linkedTrade.openForId(linkTradeId)
+  }, [linkTradeId, linkedTrade.openForId])
 
   return {
     query: { state, actions, effectiveQuery },
@@ -56,6 +74,10 @@ const useTradePanel = () => {
     details,
     cancelation,
     isMiddleman,
+    linkedTrade: {
+      state: linkedTrade.state,
+      close: closeLinkedTrade,
+    },
   }
 }
 

@@ -9,9 +9,6 @@ import TradesListSection from "./sections/TradesListSection"
 import ConfirmDeleteTradeDialog from "@/shared/components/AlertDialog"
 import useSetTradeAsRealised from "./hooks/UseSetTradeAsRealised"
 import UseMarkDialog from "./components/UserMarkDialog"
-import { useSearchParams } from "react-router-dom"
-import { useCallback, useEffect } from "react"
-import useLinkedTradeDialog from "./hooks/UseLinkedTradeDialog"
 import LinkedTradeDialog from "./components/LinkedTradeDialog"
 
 const TradePanelPage = () => {
@@ -24,6 +21,7 @@ const TradePanelPage = () => {
     details,
     cancelation,
     isMiddleman,
+    linkedTrade,
   } = useTradePanel()
 
   const realised = useSetTradeAsRealised({
@@ -33,20 +31,6 @@ const TradePanelPage = () => {
   })
 
   const listError = list.errorList ?? assign.assignError ?? null
-  const [searchParams, setSearchParams] = useSearchParams()
-  const linkTradeId = Number(searchParams.get("tradeId"))
-  const linkedTrade = useLinkedTradeDialog()
-  const closeLinkedTrade = useCallback(() => {
-    linkedTrade.close()
-
-    const next = new URLSearchParams(searchParams)
-    next.delete("tradeId")
-    setSearchParams(next, { replace: true })
-  }, [linkedTrade.close, searchParams, setSearchParams])
-
-  useEffect(() => {
-    void linkedTrade.openForId(linkTradeId)
-  }, [linkTradeId, linkedTrade.openForId])
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -102,21 +86,21 @@ const TradePanelPage = () => {
         trade={linkedTrade.state.trade}
         isMiddleman={isMiddleman}
         onOpenChange={(open) => {
-          if (!open) closeLinkedTrade()
+          if (!open) linkedTrade.close()
         }}
         onAssign={(tradeId) => {
-          assign.assignToMe(tradeId).then(closeLinkedTrade)
+          assign.assignToMe(tradeId).then(() => linkedTrade.close())
         }}
         onDetails={(trade) => {
-          closeLinkedTrade()
+          linkedTrade.close()
           void details.actions.openFor(trade)
         }}
         onCancelTrade={(tradeId) => {
-          closeLinkedTrade()
+          linkedTrade.close()
           void cancelation.actions.openFor(tradeId)
         }}
         onCompleteClick={(trade) => {
-          closeLinkedTrade()
+          linkedTrade.close()
           realised.actions.openFor(trade)
         }}
       />
