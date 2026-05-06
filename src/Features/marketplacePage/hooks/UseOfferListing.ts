@@ -117,31 +117,29 @@ export function useOffersListing() {
     [page, pageSize, debouncedSearchText, orderBy, gameId, genreId, rarityId]
   )
 
+  const refetchOffers = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+
+    const res = await OfferService.getPaged(query)
+
+    setLoading(false)
+
+    if (!res.isSuccess || !res.data) {
+      setError(res.message ?? "Unknown error")
+      return
+    }
+
+    setOffers(res.data.elements)
+    setTotalPages(res.data.totalPages)
+    setTotalCount(res.data.totalCount)
+    setPage(res.data.page)
+    setPageSize(res.data.pageSize)
+  }, [query])
+
   useEffect(() => {
-    let alive = true
-    const load = async () => {
-      setLoading(true)
-      setError(null)
-
-      const res = await OfferService.getPaged(query)
-      if (!alive) return
-      setLoading(false)
-
-      if (!res.isSuccess || !res.data) {
-        setError(res.message ?? "Unknown error")
-        return
-      }
-      setOffers(res.data.elements)
-      setTotalPages(res.data.totalPages)
-      setTotalCount(res.data.totalCount)
-      setPage(res.data.page)
-      setPageSize(res.data.pageSize)
-    }
-    void load()
-    return () => {
-      alive = false
-    }
-  }, [query, offersRefresh])
+    void refetchOffers()
+  }, [refetchOffers, offersRefresh])
 
   return {
     offers,
@@ -164,5 +162,6 @@ export function useOffersListing() {
     rarities,
     loading,
     error,
+    refetchOffers,
   }
 }

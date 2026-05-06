@@ -1,9 +1,3 @@
-import OffersGrid from "./components/OffersGrid"
-import FilterBar from "./components/FilterBar"
-import OfferDetails from "./components/OfferDetails"
-import { useState } from "react"
-import { useOffersListing } from "./hooks/UseOfferListing"
-import { useOfferDetails } from "./hooks/UseOfferDetails"
 import { Plus } from "lucide-react"
 import { Button } from "@/shared/components/button"
 import {
@@ -16,6 +10,13 @@ import {
   PaginationPrevious,
 } from "@/shared/components/ui/pagination"
 import { useAppStore } from "@/shared/store/appStore"
+import AcceptOfferInteractionHost from "@/shared/views/OfferInteractionView/AcceptOfferInteractionHost"
+import { useState } from "react"
+import FilterBar from "./components/FilterBar"
+import OfferDetails from "./components/OfferDetails"
+import OffersGrid from "./components/OffersGrid"
+import { useOfferDetails } from "./hooks/UseOfferDetails"
+import { useOffersListing } from "./hooks/UseOfferListing"
 
 const MarketplacePage = () => {
   const {
@@ -39,6 +40,7 @@ const MarketplacePage = () => {
     games,
     genres,
     rarities,
+    refetchOffers,
   } = useOffersListing()
 
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
@@ -183,6 +185,8 @@ const MarketplacePage = () => {
           />
         )}
       </div>
+
+      <AcceptOfferInteractionHost onRefreshOffers={refetchOffers} />
     </>
   )
 }

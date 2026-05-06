@@ -13,11 +13,16 @@ import {
   createCounterOfferSlice,
   type CounterOfferSlice,
 } from "./storeParts/CounterOfferSlice"
+import {
+  createAcceptOfferSlice,
+  type AcceptOfferSlice,
+} from "./storeParts/AcceptOfferSlice"
 
 export type AppState = UiSlice &
   AuthSlice &
   OfferSlice &
   CounterOfferSlice &
+  AcceptOfferSlice &
   ChatSlice &
   NotificationsSlice & {
     hardReset: () => Promise<void>
@@ -32,6 +37,7 @@ export const useAppStore = create<AppState>()(
       ...createAuthSlice(set, get, api),
       ...createOfferSlice(set, get, api),
       ...createCounterOfferSlice(set, get, api),
+      ...createAcceptOfferSlice(set, get, api),
       ...createNotificationsSlice(set),
       ...createChatSlice(set, get, api),
 
@@ -54,6 +60,8 @@ export const useAppStore = create<AppState>()(
           counterOfferOpen: false,
           counterOfferOfferId: null,
           darkMode: false,
+          acceptOfferOpen: false,
+          acceptOfferOfferId: null,
         })
 
         await useAppStore.persist.clearStorage()
