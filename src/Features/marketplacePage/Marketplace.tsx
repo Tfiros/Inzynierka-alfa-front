@@ -10,7 +10,6 @@ import {
   PaginationPrevious,
 } from "@/shared/components/ui/pagination"
 import { useAppStore } from "@/shared/store/appStore"
-import AcceptOfferInteractionHost from "@/shared/views/OfferInteractionView/AcceptOfferInteractionHost"
 import { useState } from "react"
 import FilterBar from "./components/FilterBar"
 import OfferDetails from "./components/OfferDetails"
@@ -40,7 +39,6 @@ const MarketplacePage = () => {
     games,
     genres,
     rarities,
-    refetchOffers,
   } = useOffersListing()
 
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
@@ -185,8 +183,6 @@ const MarketplacePage = () => {
           />
         )}
       </div>
-
-      <AcceptOfferInteractionHost onRefreshOffers={refetchOffers} />
     </>
   )
 }

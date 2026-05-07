@@ -9,9 +9,12 @@ type UseAcceptOfferArgs = {
 
 export function useAcceptOffer({ offerId, onSuccess }: UseAcceptOfferArgs) {
   const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
+  const inc = useAppStore((s) => s.inc)
 
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const reset = () => setSubmitError(null)
 
   const submit = async () => {
     if (!offerId || submitting) return
@@ -27,7 +30,11 @@ export function useAcceptOffer({ offerId, onSuccess }: UseAcceptOfferArgs) {
         return
       }
 
-      await refreshNavbar()
+      inc("offers:list")
+      inc("offers:my")
+      inc("counterOffers:sent")
+      inc("counterOffers:received")
+      void refreshNavbar()
       onSuccess?.()
     } catch {
       setSubmitError("Nie udało się zaakceptować oferty.")
@@ -40,5 +47,6 @@ export function useAcceptOffer({ offerId, onSuccess }: UseAcceptOfferArgs) {
     submitting,
     submitError,
     submit,
+    reset,
   }
 }

@@ -21,6 +21,7 @@ import ProfilePage from "./features/profilePage/ProfilePage"
 import CounterOfferInteractionHost from "./shared/views/OfferInteractionView/CounterOfferInteractionHost"
 import { TooltipProvider } from "./shared/components/ui/tooltip"
 import MarketplacePage from "./features/marketplacePage/Marketplace"
+import AcceptOfferInteractionHost from "./shared/views/OfferInteractionView/AcceptOfferInteractionHost"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
@@ -59,6 +60,7 @@ function App() {
         </Routes>
         <OfferInteractionHost />
         <CounterOfferInteractionHost />
+        <AcceptOfferInteractionHost />
       </BrowserRouter>
     </TooltipProvider>
   )

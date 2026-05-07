@@ -25,14 +25,9 @@ import { useAcceptOfferModal } from "./hooks/UseAcceptOfferModal"
 type Props = {
   offerId: number | null
   onCancel: () => void
-  onRefreshOffers?: () => Promise<void>
 }
 
-export default function AcceptOfferModalContent({
-  offerId,
-  onCancel,
-  onRefreshOffers,
-}: Props) {
+export default function AcceptOfferModalContent({ offerId, onCancel }: Props) {
   const [successOpen, setSuccessOpen] = useState(false)
 
   const { baseOffer, baseOfferLoading, baseOfferError } =
@@ -179,7 +174,6 @@ export default function AcceptOfferModalContent({
           <AlertDialogFooter>
             <AlertDialogAction
               onClick={async () => {
-                await onRefreshOffers?.()
                 setSuccessOpen(false)
                 onCancel()
               }}

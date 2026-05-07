@@ -54,6 +54,7 @@ export const UserNavbar = () => {
             {isMiddleman && (
               <NavItem to="/tradePanel" label="Panel pośrednika" />
             )}
+            {!isMiddleman && <NavItem to="/tradePanel" label="Panel wymian" />}
 
             <NavItem to="/marketplace" label="Oferty" />
             <NavItem to="/faqs" label="FAQs" />

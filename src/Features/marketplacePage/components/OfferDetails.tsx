@@ -18,9 +18,19 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/shared/components/ui/tooltip"
-import { useCreateTrade } from "@/shared/views/OfferInteractionView/hooks/UseCreateTrade"
 import { useState } from "react"
 import OfferCounterOffersSection from "./OfferCounterOffersDetails"
+import { useAcceptOffer } from "@/shared/views/OfferInteractionView/hooks/UseAcceptOffer"
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogAction,
+} from "@/shared/components/alert-dialog"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
@@ -32,16 +42,25 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
   const currentUserId = useAppStore((s) => s.userId)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
   const requestEdit = useAppStore((s) => s.offerRequestEdit)
-  const trade = useCreateTrade()
-
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
-
   const requestCounterOffer = useAppStore((s) => s.counterOfferRequest)
 
+  const [acceptConfirmOpen, setAcceptConfirmOpen] = useState(false)
   const [counterOffersOpen, setCounterOffersOpen] = useState(false)
 
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   const isActive = offer.offerCoreDto.offerStatusId === 1
+
+  const handleAcceptSuccess = () => {
+    setAcceptConfirmOpen(false)
+    onOpenChange(false)
+  }
+
+  const acceptOffer = useAcceptOffer({
+    offerId: offer.offerCoreDto.offerId,
+    onSuccess: handleAcceptSuccess,
+  })
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -86,20 +105,17 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                 <Button
                   type="button"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={async () => {
-                    const ok = await trade.createTrade(
-                      offer.offerCoreDto.offerId
-                    )
-
-                    if (ok) {
-                      onOpenChange(false)
-                    }
+                  onClick={() => {
+                    setAcceptConfirmOpen(true)
                   }}
                   disabled={
-                    !isAuthenticated || !isActive || isOwner || trade.loading
+                    !isAuthenticated ||
+                    !isActive ||
+                    isOwner ||
+                    acceptOffer.submitting
                   }
                 >
-                  {trade.loading ? "Tworzę..." : "Wymień"}
+                  {acceptOffer.submitting ? "Akceptuję..." : "Wymień"}
                 </Button>
                 <Button
                   type="button"
@@ -117,12 +133,6 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
             )}
           </div>
         </DialogHeader>
-
-        {trade.error && !isOwner && (
-          <div className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {trade.error}
-          </div>
-        )}
 
         <div className="mt-4">
           <div className="pb-4">
@@ -215,6 +225,44 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
           </div>
         )}
       </DialogContent>
+      <AlertDialog
+        open={acceptConfirmOpen}
+        onOpenChange={(openState) => {
+          if (acceptOffer.submitting) {
+            return
+          }
+          setAcceptConfirmOpen(openState)
+          if (!openState) acceptOffer.reset()
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Zaakceptować ofertę?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Po potwierdzeniu zostanie utworzona wymiana dla tej oferty.{" "}
+              {acceptOffer.submitError && (
+                <div className="mt-2 text-sm text-red-500">
+                  {acceptOffer.submitError}
+                </div>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={acceptOffer.submitting}>
+              Wróć
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={acceptOffer.submitting}
+              onClick={(e) => {
+                e.preventDefault()
+                void acceptOffer.submit()
+              }}
+            >
+              {acceptOffer.submitting ? "Akceptuję..." : "Akceptuj"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }

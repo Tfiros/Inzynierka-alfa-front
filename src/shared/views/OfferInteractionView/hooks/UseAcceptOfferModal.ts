@@ -20,6 +20,7 @@ export const useAcceptOfferModal = (offerId: number | null) => {
     let alive = true
 
     const load = async () => {
+      setBaseOffer(null)
       setBaseOfferLoading(true)
       setBaseOfferError(null)
 

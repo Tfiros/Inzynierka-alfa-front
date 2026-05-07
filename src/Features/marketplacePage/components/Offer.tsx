@@ -231,7 +231,7 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
                 type="button"
                 className="text-xs cursor-pointer w-full sm:w-auto"
                 onClick={() => requestAcceptOffer(offer.offerCoreDto.offerId)}
-                disabled={!isActive || isOwner}
+                disabled={!isActive || isOwner || !isAuthenticated}
               >
                 Wymień
               </Button>

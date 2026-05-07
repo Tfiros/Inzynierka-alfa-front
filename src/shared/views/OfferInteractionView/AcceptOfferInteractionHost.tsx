@@ -2,11 +2,7 @@ import { Dialog, DialogContent } from "@/shared/components/dialog"
 import { useAppStore } from "@/shared/store/appStore"
 import AcceptOfferModalContent from "./AcceptOfferModalContent"
 
-type Props = {
-  onRefreshOffers?: () => Promise<void>
-}
-
-const AcceptOfferInteractionHost = ({ onRefreshOffers }: Props) => {
+const AcceptOfferInteractionHost = () => {
   const open = useAppStore((s) => s.acceptOfferOpen)
   const setOpen = useAppStore((s) => s.setAcceptOfferOpen)
   const targetOfferId = useAppStore((s) => s.acceptOfferOfferId)
@@ -17,7 +13,6 @@ const AcceptOfferInteractionHost = ({ onRefreshOffers }: Props) => {
         <AcceptOfferModalContent
           offerId={targetOfferId}
           onCancel={() => setOpen(false)}
-          onRefreshOffers={onRefreshOffers}
         />
       </DialogContent>
     </Dialog>
