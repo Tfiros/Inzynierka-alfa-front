@@ -54,7 +54,7 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
       })
 
       setOkMsg(res?.message ?? "Konto zostało utworzone.")
-      setTimeout(() => onSwitch("login"), 800)
+      setTimeout(() => onSwitch("register-confirm-email"), 500)
     } catch (err: any) {
       const msg =
         err?.message ??

@@ -104,6 +104,8 @@ export const chatSelectors = {
   isWindowOpen: (s: AppState) => s.chat.isWindowOpen,
   activeChatId: (s: AppState) => s.chat.activeChatId,
   activeChatTitle: (s: AppState) => s.chat.activeChatTitle,
+  activeChatTradeId: (s: AppState) => s.chat.activeChatTradeId,
+  activeChatClosedAt: (s: AppState) => s.chat.activeChatClosedAt,
 
   threads: (s: AppState) => s.chat.threads,
   messagesByChatId: (s: AppState) => s.chat.messagesByChatId,

@@ -3,18 +3,16 @@ import type {
   ChatMessage,
   ChatReadStateDto,
   ChatThreadListItemDto,
-  CreateDmChatResponse,
   EditMessageRequest,
   MarkReadRequest,
-  SendMessageRequest,
 } from "@/shared/types/chat/ChatDtos"
 
 export class ChatService {
   private static readonly base = "/Chat"
 
-  // POST /Chat/dm/{otherUserId}
-  public static readonly createDm = async (otherUserId: number) =>
-    post<CreateDmChatResponse>(`${this.base}/dm/${otherUserId}`, {})
+  // GET /Chat/by-trade/{tradeId}
+  public static readonly getByTrade = async (tradeId: number) =>
+    get<ChatThreadListItemDto[]>(`${this.base}/by-trade/${tradeId}`)
 
   // GET /Chat/threads?page=&pageSize=&search=
   public static readonly getThreads = async (args?: {

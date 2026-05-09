@@ -9,6 +9,7 @@ import TradesListSection from "./sections/TradesListSection"
 import ConfirmDeleteTradeDialog from "@/shared/components/AlertDialog"
 import useSetTradeAsRealised from "./hooks/UseSetTradeAsRealised"
 import UseMarkDialog from "./components/UserMarkDialog"
+import LinkedTradeDialog from "./components/LinkedTradeDialog"
 
 const TradePanelPage = () => {
   const {
@@ -20,6 +21,7 @@ const TradePanelPage = () => {
     details,
     cancelation,
     isMiddleman,
+    linkedTrade,
   } = useTradePanel()
 
   const realised = useSetTradeAsRealised({
@@ -76,6 +78,32 @@ const TradePanelPage = () => {
           onPageChange={query.actions.setPage}
         />
       </div>
+
+      <LinkedTradeDialog
+        open={linkedTrade.state.open}
+        loading={linkedTrade.state.loading}
+        error={linkedTrade.state.error}
+        trade={linkedTrade.state.trade}
+        isMiddleman={isMiddleman}
+        onOpenChange={(open) => {
+          if (!open) linkedTrade.close()
+        }}
+        onAssign={(tradeId) => {
+          assign.assignToMe(tradeId).then(() => linkedTrade.close())
+        }}
+        onDetails={(trade) => {
+          linkedTrade.close()
+          void details.actions.openFor(trade)
+        }}
+        onCancelTrade={(tradeId) => {
+          linkedTrade.close()
+          void cancelation.actions.openFor(tradeId)
+        }}
+        onCompleteClick={(trade) => {
+          linkedTrade.close()
+          realised.actions.openFor(trade)
+        }}
+      />
 
       <TradeDetailsDialog
         open={details.state.open}

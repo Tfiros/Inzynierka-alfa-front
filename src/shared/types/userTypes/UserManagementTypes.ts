@@ -33,6 +33,7 @@ export type UserListPagedResponse = {
   elements: UserListItemDto[]
   registeredLastMonthCount: number
   middlemenCount: number
+  totalUsers: number
 }
 
 export type UpdateUserRequestDto = {
