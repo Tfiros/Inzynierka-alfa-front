@@ -135,13 +135,15 @@ export default function CounterOfferCard({
             <span className="font-medium text-foreground">{itemsCount}</span>
           </div>
 
-          <button
-            type="button"
-            className="text-xs underline underline-offset-4 hover:opacity-80"
-            onClick={() => onOpenOffer?.(data.offerId)}
-          >
-            Otwórz ofertę
-          </button>
+          {onOpenOffer && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onOpenOffer(data.offerId)}
+            >
+              Otwórz ofertę
+            </Button>
+          )}
         </div>
 
         {data.items.length ? (

@@ -52,8 +52,8 @@ export const useCreateCounterOffer = ({
 
   const canConfirm =
     (items.length > 0 || tokens > 0) && tokens >= 0 && !submitting
-
-  const estimatedCost = useMemo(() => tokens + 20, [tokens])
+  const COUNTER_OFFER_CREATION_FEE = 20
+  const estimatedCost = useMemo(() => COUNTER_OFFER_CREATION_FEE, [])
 
   const buildRequest = (): CounterOfferDraftRequest => ({
     tokensOffered: tokens,

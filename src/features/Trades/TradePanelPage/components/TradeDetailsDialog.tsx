@@ -18,6 +18,7 @@ import Flag from "./Flag"
 import PhotosList from "./PhotosList"
 import CheckboxRow from "./CheckboxRow"
 import useTradeDetailsSave from "../hooks/UseTradeDetailsSave"
+import TradeStatusPill from "./TradeStatusPill"
 
 type Props = {
   open: boolean
@@ -122,7 +123,7 @@ const TradeDetailsDialog = ({
         {trade ? (
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="secondary">Token cost: {trade.tokenCost}</Badge>
-            <Badge variant="secondary">StatusId: {trade.tradeStatusId}</Badge>
+            <TradeStatusPill tradeStatusId={trade.tradeStatusId} />
           </div>
         ) : null}
 

@@ -18,6 +18,19 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/shared/components/ui/tooltip"
+import { useState } from "react"
+import OfferCounterOffersSection from "./OfferCounterOffersDetails"
+import { useAcceptOffer } from "@/shared/views/OfferInteractionView/hooks/UseAcceptOffer"
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogAction,
+} from "@/shared/components/alert-dialog"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
@@ -29,13 +42,25 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
   const currentUserId = useAppStore((s) => s.userId)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
   const requestEdit = useAppStore((s) => s.offerRequestEdit)
-
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
-
   const requestCounterOffer = useAppStore((s) => s.counterOfferRequest)
+
+  const [acceptConfirmOpen, setAcceptConfirmOpen] = useState(false)
+  const [counterOffersOpen, setCounterOffersOpen] = useState(false)
 
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   const isActive = offer.offerCoreDto.offerStatusId === 1
+
+  const handleAcceptSuccess = () => {
+    setAcceptConfirmOpen(false)
+    onOpenChange(false)
+  }
+
+  const acceptOffer = useAcceptOffer({
+    offerId: offer.offerCoreDto.offerId,
+    onSuccess: handleAcceptSuccess,
+  })
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -80,10 +105,17 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                 <Button
                   type="button"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => console.log(offer.offerCoreDto.offerId)}
-                  disabled={!isActive || isOwner}
+                  onClick={() => {
+                    setAcceptConfirmOpen(true)
+                  }}
+                  disabled={
+                    !isAuthenticated ||
+                    !isActive ||
+                    isOwner ||
+                    acceptOffer.submitting
+                  }
                 >
-                  Wymień
+                  {acceptOffer.submitting ? "Akceptuję..." : "Wymień"}
                 </Button>
                 <Button
                   type="button"
@@ -101,6 +133,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
             )}
           </div>
         </DialogHeader>
+
         <div className="mt-4">
           <div className="pb-4">
             <Badge className="w-full md:w-fit bg-gray-100 text-gray-900 rounded-full">
@@ -162,7 +195,74 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
             </span>
           )}
         </div>
+        {isOwner && isActive && (
+          <div className="mt-4 rounded-2xl border bg-muted/20 p-4">
+            <button
+              type="button"
+              className="flex w-full items-center justify-between gap-3 text-left"
+              onClick={() => setCounterOffersOpen((v) => !v)}
+            >
+              <div>
+                <div className="text-sm font-semibold">Kontroferty</div>
+                <div className="text-xs text-muted-foreground">
+                  Zobacz propozycje złożone do tej oferty
+                </div>
+              </div>
+
+              <span className="text-xs text-muted-foreground">
+                {counterOffersOpen ? "Ukryj" : "Pokaż"}
+              </span>
+            </button>
+
+            {counterOffersOpen && (
+              <div className="mt-4 space-y-2">
+                <OfferCounterOffersSection
+                  offerId={offer.offerCoreDto.offerId}
+                  open={counterOffersOpen}
+                />
+              </div>
+            )}
+          </div>
+        )}
       </DialogContent>
+      <AlertDialog
+        open={acceptConfirmOpen}
+        onOpenChange={(openState) => {
+          if (acceptOffer.submitting) {
+            return
+          }
+          setAcceptConfirmOpen(openState)
+          if (!openState) acceptOffer.reset()
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Zaakceptować ofertę?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Po potwierdzeniu zostanie utworzona wymiana dla tej oferty.{" "}
+              {acceptOffer.submitError && (
+                <div className="mt-2 text-sm text-red-500">
+                  {acceptOffer.submitError}
+                </div>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={acceptOffer.submitting}>
+              Wróć
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={acceptOffer.submitting}
+              onClick={(e) => {
+                e.preventDefault()
+                void acceptOffer.submit()
+              }}
+            >
+              {acceptOffer.submitting ? "Akceptuję..." : "Akceptuj"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }
