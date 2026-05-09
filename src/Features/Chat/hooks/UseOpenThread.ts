@@ -6,10 +6,15 @@ const useOpenThread = () => {
   const actions = useAppStore(chatSelectors.chatActions)
 
   return useCallback(
-    async (chatId: number, title?: string | null) => {
+    async (
+      chatId: number,
+      tradeId: number,
+      closedAtUtc?: string | null,
+      title?: string | null
+    ) => {
       if (!Number.isFinite(chatId) || chatId <= 0) return
 
-      actions.openWindow(chatId, title ?? null)
+      actions.openWindow(chatId, tradeId, closedAtUtc ?? null, title ?? null)
       actions.resetUnread(chatId)
 
       const res = await ChatService.getMessages({

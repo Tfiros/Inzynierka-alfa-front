@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react"
 import { ChatService } from "@/shared/api/services/ChatService"
-import { useAppStore, chatSelectors } from "@/shared/store/appStore"
+import {
+  useAppStore,
+  chatSelectors,
+  selectCounter,
+} from "@/shared/store/appStore"
 import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
 
 type Params = {
@@ -23,6 +27,7 @@ const useChatThreads = ({
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const refreshKey = useAppStore(selectCounter("chat:threads"))
 
   useEffect(() => {
     if (!enabled) return
@@ -41,7 +46,7 @@ const useChatThreads = ({
         actions.setThreads(items)
 
         const ids = items
-          .map((t: ChatThreadListItemDto) => Number(t.chatId))
+          .map((t: ChatThreadListItemDto) => Number(t.chatConversationId))
           .filter((x: number) => Number.isFinite(x) && x > 0)
 
         setChatThreadIds?.(ids)
@@ -55,7 +60,7 @@ const useChatThreads = ({
     return () => {
       cancelled = true
     }
-  }, [enabled, page, pageSize, search, actions, setChatThreadIds])
+  }, [enabled, page, pageSize, search, refreshKey, actions, setChatThreadIds])
 
   return { loading, error }
 }

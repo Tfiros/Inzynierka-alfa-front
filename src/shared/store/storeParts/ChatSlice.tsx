@@ -8,6 +8,8 @@ type ChatState = {
   isPopoverOpen: boolean
   isWindowOpen: boolean
   activeChatId: number | null
+  activeChatTradeId: number | null
+  activeChatClosedAt: string | null
   activeChatTitle: string | null
 
   threads: ChatThreadListItemDto[]
@@ -19,8 +21,14 @@ type ChatActions = {
   openPopover: () => void
   closePopover: () => void
 
-  openWindow: (chatId: number, title?: string | null) => void
+  openWindow: (
+    chatId: number,
+    tradeId: number,
+    closedAtUtc?: string | null,
+    title?: string | null
+  ) => void
   closeWindow: () => void
+  markThreadClosed: (chatId: number, closedAtUtc: string) => void
 
   setThreads: (items: ChatThreadListItemDto[]) => void
 
@@ -55,6 +63,8 @@ const initialChatState: ChatState = {
   isWindowOpen: false,
   activeChatId: null,
   activeChatTitle: null,
+  activeChatTradeId: null,
+  activeChatClosedAt: null,
   threads: [],
   messagesByChatId: {},
   onlineMap: {},
@@ -86,14 +96,20 @@ export const createChatSlice: StateCreator<ChatSlice, [], [], ChatSlice> = (
           },
         })),
 
-      openWindow: (chatId: number, title?: string | null) =>
+      openWindow: (
+        chatId: number,
+        tradeId: number,
+        closedAtUtc?: string | null,
+        title?: string | null
+      ) =>
         set((state) => ({
           chat: {
             ...state.chat,
             isWindowOpen: true,
             activeChatId: chatId,
-            activeChatTitle:
-              title ?? state.chat.activeChatTitle ?? `Chat #${chatId}`,
+            activeChatTitle: title ?? null,
+            activeChatTradeId: tradeId,
+            activeChatClosedAt: closedAtUtc ?? null,
             isPopoverOpen: false,
           },
         })),
@@ -105,6 +121,23 @@ export const createChatSlice: StateCreator<ChatSlice, [], [], ChatSlice> = (
             isWindowOpen: false,
             activeChatId: null,
             activeChatTitle: null,
+            activeChatTradeId: null,
+            activeChatClosedAt: null,
+          },
+        })),
+      markThreadClosed: (chatId: number, closedAtUtc: string) =>
+        set((state) => ({
+          chat: {
+            ...state.chat,
+            threads: state.chat.threads.map((thread) =>
+              getThreadChatId(thread) === chatId
+                ? { ...thread, closedAtUtc }
+                : thread
+            ),
+            activeChatClosedAt:
+              state.chat.activeChatId === chatId
+                ? closedAtUtc
+                : state.chat.activeChatClosedAt,
           },
         })),
 

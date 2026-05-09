@@ -3,12 +3,14 @@ import type {
   TradeListItem,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import { Card, CardContent } from "@/shared/components/card"
-import { ArrowLeftRight } from "lucide-react"
+import { ArrowLeftRight, MessageCircle } from "lucide-react"
 import { formatDateTimePl } from "../utils/dateUtils"
 import PartyBlock from "./PartyBlock"
 import TradeActionsMyTrade from "./TradeActionsMyTrade"
 import TradeStatusPill from "./TradeStatusPill"
 import TradeActionsAvailable from "./TradesActionsAvailable"
+import useTradeChats from "../hooks/UseTradeChats"
+import { Button } from "@/shared/components/button"
 
 type Props = {
   tab: MiddlemanTab
@@ -29,8 +31,17 @@ const TradeCard = ({
   onCompleteClick,
   isMiddleman,
 }: Props) => {
+  const hasMiddleman = trade.middlemanUserId != null
+  const { isLoadingChats, openBuyerChat, openSellerChat, openMyChat } =
+    useTradeChats({
+      tradeId: trade.tradeId,
+      hasMiddleman,
+      isMiddleman,
+      buyerUserId: trade.customer.userId,
+      sellerUserId: trade.postingUser.userId,
+    })
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm" data-trade-id={trade.tradeId}>
       <CardContent className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -69,6 +80,40 @@ const TradeCard = ({
             onCompleteClick={onCompleteClick}
           />
         ) : null}
+        <div className="mt-3 flex flex-wrap gap-2 border-t pt-3">
+          {isMiddleman ? (
+            <>
+              <Button
+                variant="outline"
+                className="gap-2"
+                disabled={!hasMiddleman || isLoadingChats}
+                onClick={() => void openBuyerChat()}
+              >
+                <MessageCircle className="h-4 w-4" />
+                Czat z kupującym
+              </Button>
+              <Button
+                variant="outline"
+                className="gap-2"
+                disabled={!hasMiddleman || isLoadingChats}
+                onClick={() => void openSellerChat()}
+              >
+                <MessageCircle className="h-4 w-4" />
+                Czat z wystawiającym
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="outline"
+              className="gap-2"
+              disabled={!hasMiddleman || isLoadingChats}
+              onClick={() => void openMyChat()}
+            >
+              <MessageCircle className="h-4 w-4" />
+              Otwórz czat z pośrednikiem
+            </Button>
+          )}
+        </div>
       </CardContent>
     </Card>
   )

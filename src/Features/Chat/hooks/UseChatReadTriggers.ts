@@ -15,10 +15,7 @@ const invokeMarkRead = async (chatId: number, lastReadMessageId: number) => {
   if (!Number.isFinite(chatId) || chatId <= 0) return
   if (!Number.isFinite(lastReadMessageId) || lastReadMessageId <= 0) return
 
-  await ChatService.markRead({
-    chatConversationId: chatId,
-    lastReadMessageId,
-  })
+  await ChatService.markRead(chatId, { lastReadMessageId })
 }
 
 export const useChatReadTriggers = ({ chatId, enabled, messages }: Params) => {
