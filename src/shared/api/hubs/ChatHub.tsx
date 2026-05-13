@@ -20,11 +20,23 @@ export type MessageDeletedPayload = {
   messageId: number
 }
 
+export type ChatClosedPayload = {
+  chatConversationId: number
+  closedAtUtc: string
+}
+
+export type ChatCreatedPayload = {
+  chatConversationId: number
+  tradeId: number
+}
+
 type Handlers = {
   onPresenceChanged?: (payload: PresencePayload) => void
   onMessageNew?: (payload: ChatMessage | any) => void
   onMessageUpdated?: (payload: MessageUpdatedPayload) => void
   onMessageDeleted?: (payload: MessageDeletedPayload) => void
+  onChatClosed?: (payload: ChatClosedPayload) => void
+  onChatCreated?: (payload: ChatCreatedPayload) => void
 }
 
 class ChatHubClient {
@@ -35,14 +47,6 @@ class ChatHubClient {
 
   setHandlers(h: Handlers) {
     this.handlers = h
-  }
-
-  private getAccessToken(): string {
-    return (
-      sessionStorage.getItem("accessToken") ||
-      sessionStorage.getItem("access_token") ||
-      ""
-    )
   }
 
   private async rejoinAllChats() {
@@ -63,7 +67,6 @@ class ChatHubClient {
   private buildConnection() {
     const connection = new signalR.HubConnectionBuilder()
       .withUrl("/api/hubs/chat", {
-        accessTokenFactory: async () => this.getAccessToken(),
         withCredentials: true,
       })
       .withAutomaticReconnect()
@@ -83,6 +86,14 @@ class ChatHubClient {
 
     connection.on("chat.message.deleted", (p: MessageDeletedPayload) => {
       this.handlers.onMessageDeleted?.(p)
+    })
+
+    connection.on("chat.closed", (p: ChatClosedPayload) => {
+      this.handlers.onChatClosed?.(p)
+    })
+
+    connection.on("chat.created", (p: ChatCreatedPayload) => {
+      this.handlers.onChatCreated?.(p)
     })
 
     connection.onreconnecting((err) => {

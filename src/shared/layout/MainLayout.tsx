@@ -5,7 +5,7 @@ import GuestNavbar from "./navbar/views/GuestNavbar"
 import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
 import useMainLayout from "./hooks/UseMainLayout"
 import ChatWindowHost from "@/Features/Chat/components/ChatWindowHost"
-import { NotificationRealtimeToastHost } from "@/Features/Notifications/NotificationsToast/NotifcationsToast"
+import { NotificationRealtimeToastHost } from "@/Features/Notifications/NotificationsToast/components/NotificationsToast"
 const MainLayout = () => {
   const { isLogged, hasHydrated } = useMainLayout()
 

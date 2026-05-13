@@ -218,7 +218,7 @@ export default function CreateCounterOfferModalContent({
 
         <div className="mt-10 border-t pt-4 flex items-center gap-3">
           <div className="text-sm text-muted-foreground">
-            Szacowany koszt: {estimatedCost} tokenów
+            Opłata za utworzenie kontroferty: {estimatedCost} tokenów
           </div>
 
           <Button
@@ -255,7 +255,7 @@ export default function CreateCounterOfferModalContent({
           <AlertDialogHeader>
             <AlertDialogTitle>Potwierdź wysłanie kontroferty</AlertDialogTitle>
             <AlertDialogDescription>
-              Finalny koszt kontroferty:
+              Finalna opłata za utworzenie kontroferty:
               <span className="ml-2 font-semibold">
                 {serverCost ?? "-"} tokenów
               </span>

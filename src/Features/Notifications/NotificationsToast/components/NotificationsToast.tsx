@@ -1,39 +1,8 @@
-import { useEffect, useState } from "react"
-import type { NotificationDto } from "@/shared/types/notificationsTypes/notificationsDtos"
 import { X } from "lucide-react"
-
-type ToastItem = NotificationDto & {
-  toastId: string
-}
+import { useNotificationsToast } from "../hooks/UseNotificationsToast"
 
 export const NotificationRealtimeToastHost = () => {
-  const [items, setItems] = useState<ToastItem[]>([])
-
-  useEffect(() => {
-    const handler = (event: Event) => {
-      const customEvent = event as CustomEvent<NotificationDto>
-      const notification = customEvent.detail
-
-      if (!notification) return
-
-      const toast: ToastItem = {
-        ...notification,
-        toastId: `${notification.id}-${Date.now()}`,
-      }
-
-      setItems((prev) => [toast, ...prev].slice(0, 4))
-
-      window.setTimeout(() => {
-        setItems((prev) => prev.filter((x) => x.toastId !== toast.toastId))
-      }, 5000)
-    }
-
-    window.addEventListener("notification:created", handler)
-
-    return () => {
-      window.removeEventListener("notification:created", handler)
-    }
-  }, [])
+  const { items, removeToast } = useNotificationsToast()
 
   if (items.length === 0) return null
 
@@ -59,6 +28,7 @@ export const NotificationRealtimeToastHost = () => {
               <p className="line-clamp-1 text-sm font-semibold text-foreground">
                 {item.title}
               </p>
+
               <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">
                 {item.message}
               </p>
@@ -71,11 +41,7 @@ export const NotificationRealtimeToastHost = () => {
                 hover:bg-blue-500/10 hover:text-blue-500
                 transition
               "
-              onClick={() =>
-                setItems((prev) =>
-                  prev.filter((x) => x.toastId !== item.toastId)
-                )
-              }
+              onClick={() => removeToast(item.toastId)}
             >
               <X className="h-4 w-4" />
             </button>

@@ -1,20 +1,13 @@
 import type { NotificationDto } from "@/shared/types/notificationsTypes/notificationsDtos"
 import { X } from "lucide-react"
 import { cn } from "@/shared/lib/Utils"
+import { formatNotificationDate } from "@/shared/utilities/Notifications/dateFormat"
 
 type Props = {
   notification: NotificationDto
   onRead: (id: number) => void
   onDelete: (id: number) => void
 }
-
-const formatNotificationDate = (date: string) =>
-  new Intl.DateTimeFormat("pl-PL", {
-    day: "2-digit",
-    month: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(date))
 
 export const NotificationItem = ({ notification, onRead, onDelete }: Props) => {
   const isUnread = !notification.isRead

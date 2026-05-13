@@ -14,11 +14,16 @@ import {
   type CounterOfferSlice,
 } from "./storeParts/CounterOfferSlice"
 import { NotificationsHubClient } from "../api/hubs/NotificationsHubClient"
+import {
+  createAcceptOfferSlice,
+  type AcceptOfferSlice,
+} from "./storeParts/AcceptOfferSlice"
 
 export type AppState = UiSlice &
   AuthSlice &
   OfferSlice &
   CounterOfferSlice &
+  AcceptOfferSlice &
   ChatSlice &
   NotificationsSlice & {
     hardReset: () => Promise<void>
@@ -33,6 +38,7 @@ export const useAppStore = create<AppState>()(
       ...createAuthSlice(set, get, api),
       ...createOfferSlice(set, get, api),
       ...createCounterOfferSlice(set, get, api),
+      ...createAcceptOfferSlice(set, get, api),
       ...createNotificationsSlice(set),
       ...createChatSlice(set, get, api),
 
@@ -64,6 +70,8 @@ export const useAppStore = create<AppState>()(
           counterOfferOfferId: null,
           darkMode: false,
           notifications: [],
+          acceptOfferOpen: false,
+          acceptOfferOfferId: null,
         })
 
         await useAppStore.persist.clearStorage()
@@ -106,6 +114,8 @@ export const chatSelectors = {
   isWindowOpen: (s: AppState) => s.chat.isWindowOpen,
   activeChatId: (s: AppState) => s.chat.activeChatId,
   activeChatTitle: (s: AppState) => s.chat.activeChatTitle,
+  activeChatTradeId: (s: AppState) => s.chat.activeChatTradeId,
+  activeChatClosedAt: (s: AppState) => s.chat.activeChatClosedAt,
 
   threads: (s: AppState) => s.chat.threads,
   messagesByChatId: (s: AppState) => s.chat.messagesByChatId,

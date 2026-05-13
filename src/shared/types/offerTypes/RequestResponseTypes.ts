@@ -87,3 +87,8 @@ export type RarityOfferDTO = {
   id: number
   name: string
 }
+
+export type acceptOfferDtoResponse = {
+  tradeId: number
+  offerId: number
+}

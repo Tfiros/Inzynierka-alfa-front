@@ -7,25 +7,24 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/dropdown-menu"
 import { Button } from "@/shared/components/button"
-import { MessageCircle, MessageSquare } from "lucide-react"
+import { MessageCircle, Search } from "lucide-react"
 
 import useChatHub from "../hooks/UseChatHub"
 import useChatThreads from "../hooks/UseChatThreads"
-import NewDmDialog from "./NewDmDialog"
 import useOpenThread from "../hooks/UseOpenThread"
 import { useAppStore, chatSelectors } from "@/shared/store/appStore"
 import { useChatAutoSubscribe } from "../hooks/UseThreadsSubscriptions"
 import type { AppState } from "@auth0/auth0-react"
 import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
+import { chatThreadTitle } from "@/shared/utilities/Chat/chatThreadTitle"
+import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
+import { Input } from "@/shared/components/input"
 
 const threadId = (t: ChatThreadListItemDto) => Number(t.chatConversationId)
-const threadTitle = (t: ChatThreadListItemDto) =>
-  t.displayName ?? `Chat #${threadId(t)}`
 const threadPreview = (t: ChatThreadListItemDto) => t.lastMessageText ?? ""
 const threadUnread = (t: ChatThreadListItemDto) => t.unreadCount ?? 0
 
 const NavbarChatDropdown = () => {
-  const [newDmOpen, setNewDmOpen] = useState(false)
   const openThread = useOpenThread()
 
   const isPopoverOpen = useAppStore(chatSelectors.isPopoverOpen)
@@ -40,13 +39,17 @@ const NavbarChatDropdown = () => {
   )
   const markChatReadLocal = useAppStore((s: AppState) => s.markChatReadLocal)
 
+  const [search, setSearch] = useState("")
+  const debouncedSearch = useDebounceValue(search, 360)
+  const trimmedSearch = debouncedSearch.trim()
+
   useChatHub(isAuthenticated)
 
   useChatThreads({
     enabled: isPopoverOpen || isWindowOpen,
     page: 1,
     pageSize: 50,
-    search: null,
+    search: trimmedSearch.length ? trimmedSearch : null,
   })
 
   useChatAutoSubscribe()
@@ -55,14 +58,14 @@ const NavbarChatDropdown = () => {
     if (isPopoverOpen) clearUnreadChatsLocal()
   }, [isPopoverOpen, clearUnreadChatsLocal])
 
-  const handleOpen = async (t: any) => {
+  const handleOpen = async (t: ChatThreadListItemDto) => {
     const id = threadId(t)
     if (!Number.isFinite(id) || id <= 0) return
 
     markChatReadLocal(id)
 
     actions.closePopover()
-    await openThread(id, threadTitle(t))
+    await openThread(id, t.tradeId, t.closedAtUtc, chatThreadTitle(t))
   }
 
   return (
@@ -98,11 +101,26 @@ const NavbarChatDropdown = () => {
             </div>
           </div>
 
+          <div className="px-3 pb-2">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => e.stopPropagation()}
+                placeholder="Szukaj (nick, #123)"
+                className="pl-8"
+              />
+            </div>
+          </div>
+
           <DropdownMenuSeparator />
 
           <div className="max-h-[320px] overflow-auto p-2">
-            {threads.map((t: any) => {
+            {threads.map((t: ChatThreadListItemDto) => {
               const id = threadId(t)
+              const isClosed = !!t.closedAtUtc
               if (!Number.isFinite(id) || id <= 0) return null
 
               return (
@@ -114,11 +132,18 @@ const NavbarChatDropdown = () => {
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <div className="truncate text-sm font-medium">
-                        {threadTitle(t)}
+                      <div className="flex items-center gap-2">
+                        <div className="truncate text-sm font-medium">
+                          {chatThreadTitle(t)}
+                        </div>
+                        {isClosed && (
+                          <span className="shrink-0 rounded-full border px-2 py-0.5 text-[11px] text-muted-foreground">
+                            Zamknięty
+                          </span>
+                        )}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {threadPreview(t)}
+                        {isClosed ? "Czat zamknięty" : threadPreview(t)}
                       </div>
                     </div>
 
@@ -134,28 +159,12 @@ const NavbarChatDropdown = () => {
 
             {!threads.length && (
               <div className="px-3 py-8 text-center text-sm text-muted-foreground">
-                Brak konwersacji
+                {trimmedSearch ? "Brak wyników" : "Brak konwersacji"}
               </div>
             )}
           </div>
-
-          <DropdownMenuSeparator />
-
-          <div className="p-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-center gap-2"
-              onClick={() => setNewDmOpen(true)}
-            >
-              <MessageSquare className="h-4 w-4" />
-              Nowa wiadomość
-            </Button>
-          </div>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <NewDmDialog open={newDmOpen} onOpenChange={setNewDmOpen} />
     </>
   )
 }

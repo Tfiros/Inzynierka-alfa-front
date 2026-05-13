@@ -5,14 +5,14 @@ import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
 import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
-import { useAppStore } from "@/shared/store/AppStore"
-import NavbarChatDropdown from "@/Features/Chat/components/NavbarChatDropdown"
 
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip"
+import { useAppStore } from "@/shared/store/appStore"
+import NavbarChatDropdown from "@/Features/Chat/components/NavbarChatDropdown"
 import { NotificationsDropdown } from "@/Features/Notifications/NotificationsDropdown/components/NotificationsDropdown"
 
 export const UserNavbar = () => {

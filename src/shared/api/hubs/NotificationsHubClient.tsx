@@ -1,11 +1,26 @@
 import * as signalR from "@microsoft/signalr"
-import { useAppStore } from "@/shared/store/AppStore"
 import type { NotificationDto } from "@/shared/types/notificationsTypes/notificationsDtos"
+
+type NotificationCreatedHandler = (notification: NotificationDto) => void
+
+type NotificationsHubHandlers = {
+  notificationCreated?: NotificationCreatedHandler
+}
 
 export class NotificationsHubClient {
   private static connection: signalR.HubConnection | null = null
   private static starting: Promise<void> | null = null
   private static stopping: Promise<void> | null = null
+
+  private static handlers: NotificationsHubHandlers = {}
+
+  public static setHandlers(handlers: NotificationsHubHandlers) {
+    this.handlers = handlers
+  }
+
+  public static clearHandlers() {
+    this.handlers = {}
+  }
 
   private static buildConnection() {
     const conn = new signalR.HubConnectionBuilder()
@@ -26,13 +41,7 @@ export class NotificationsHubClient {
         isRead: false,
       }
 
-      useAppStore.getState().pushNotification(notification)
-
-      window.dispatchEvent(
-        new CustomEvent("notification:created", {
-          detail: notification,
-        })
-      )
+      this.handlers.notificationCreated?.(notification)
     })
 
     conn.onclose((err) => {

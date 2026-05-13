@@ -91,7 +91,7 @@ const CreateOfferModalContent = ({
             />
 
             <Textarea
-              placeholder="Opis (opcjonalnie)"
+              placeholder="Opis"
               value={offer.description}
               onChange={(e) => offer.setDescription(e.target.value)}
               disabled={offer.isLoading || offer.quoteIsLoading}

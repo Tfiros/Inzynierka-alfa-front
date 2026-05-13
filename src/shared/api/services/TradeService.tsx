@@ -114,4 +114,7 @@ export class TradeService {
 
   public static readonly create = async (req: CreateTradeRequest) =>
     post<number>(`${this.base}`, req)
+
+  public static readonly getById = async (tradeId: number) =>
+    get<TradeListItem>(`${this.base}/${tradeId}`)
 }

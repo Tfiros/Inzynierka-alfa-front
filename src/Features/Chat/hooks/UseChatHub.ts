@@ -1,16 +1,13 @@
 import { useEffect } from "react"
-import { chatHubClient } from "@/shared/api/hubs/ChatHub"
+import {
+  chatHubClient,
+  type ChatClosedPayload,
+  type ChatCreatedPayload,
+  type MessageDeletedPayload,
+  type MessageUpdatedPayload,
+} from "@/shared/api/hubs/ChatHub"
 import { useAppStore, chatSelectors } from "@/shared/store/appStore"
 import type { ChatMessage } from "@/shared/types/chat/ChatDtos"
-
-type UpdatedPayload = {
-  id: number
-  chatConversationId: number
-  message: string
-  editedAtUtc?: string | null
-}
-
-type DeletedPayload = { messageId: number }
 
 const useChatHub = (enabled = true) => {
   const actions = useAppStore(chatSelectors.chatActions)
@@ -37,15 +34,27 @@ const useChatHub = (enabled = true) => {
         }
       },
 
-      onMessageUpdated: (p: UpdatedPayload) => {
+      onMessageUpdated: (p: MessageUpdatedPayload) => {
         actions.updateMessage(p.chatConversationId, p.id, {
           message: p.message,
           editedAt: p.editedAtUtc ?? new Date().toISOString(),
         })
       },
 
-      onMessageDeleted: (p: DeletedPayload) => {
+      onMessageDeleted: (p: MessageDeletedPayload) => {
         actions.markDeletedById(p.messageId)
+      },
+
+      onChatClosed: (p: ChatClosedPayload) => {
+        actions.markThreadClosed(p.chatConversationId, p.closedAtUtc)
+      },
+
+      onChatCreated: (p: ChatCreatedPayload) => {
+        const chatId = Number(p.chatConversationId)
+        if (!Number.isFinite(chatId) || chatId <= 0) return
+
+        chatHubClient.joinChat(chatId).catch(console.error)
+        useAppStore.getState().inc("chat:threads")
       },
     })
 

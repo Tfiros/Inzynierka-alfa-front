@@ -26,12 +26,21 @@ import { useInfiniteChatMessages } from "../hooks/UseInfiniteChatMessages"
 import { useChatAutoScroll } from "../hooks/UseChatAutoScroll"
 import { useChatMessageActions } from "../hooks/UseChatMessagesActions"
 import useChatMembership from "../hooks/UseChatMembership"
+import { Link } from "react-router-dom"
+import { isMessageEditExpired } from "@/shared/utilities/Chat/isMessageEditExpired"
 
-type Props = { chatId: number; title: string }
-
+type Props = {
+  chatId: number
+  title: string | null
+  tradeId: number | null
+  closedAt: string | null
+}
 const EMPTY_MESSAGES: ChatMessage[] = []
 
-const ChatWindow = ({ chatId, title }: Props) => {
+const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
+  const displayTitle =
+    title ?? (tradeId ? `Wymiana #${tradeId}` : `Chat #${chatId}`)
+  const isClosed = !!closedAt
   const actions = useAppStore(chatSelectors.chatActions)
   const userId = useAppStore((s: any) => s.userId as number | null)
 
@@ -92,6 +101,7 @@ const ChatWindow = ({ chatId, title }: Props) => {
   } = useChatMessageActions({
     chatId,
     userId,
+    isClosed,
     messages,
     updateMessage: actions.updateMessage,
     markDeletedById: actions.markDeletedById,
@@ -105,7 +115,7 @@ const ChatWindow = ({ chatId, title }: Props) => {
   const send = async () => {
     const msg = text.trim()
     if (!msg) return
-    if (sending) return
+    if (sending || isClosed) return
 
     setSending(true)
     try {
@@ -133,13 +143,25 @@ const ChatWindow = ({ chatId, title }: Props) => {
     <div className="fixed bottom-6 right-6 z-50 w-[420px] overflow-hidden rounded-xl border bg-background shadow-lg">
       <div className="flex items-center justify-between border-b px-4 py-3">
         <div className="min-w-0">
-          <div className="truncate text-sm font-semibold">{title}</div>
+          {tradeId ? (
+            <Link
+              to={`/tradePanel?tradeId=${tradeId}`}
+              className="truncate text-sm font-semibold hover:underline"
+              title={displayTitle}
+            >
+              {displayTitle}
+            </Link>
+          ) : (
+            <div className="truncate text-sm font-semibold">{displayTitle}</div>
+          )}
           <div className="text-xs text-muted-foreground">
-            {loadingMore
-              ? "Ładowanie starszych..."
-              : hasMore
-                ? "Przewiń w górę po starsze"
-                : "To już wszystko"}
+            {isClosed
+              ? "Czat zamknięty (wymiana zakończona)"
+              : loadingMore
+                ? "Ładowanie starszych..."
+                : hasMore
+                  ? "Przewiń w górę po starsze"
+                  : "To już wszystko"}
           </div>
         </div>
 
@@ -158,6 +180,7 @@ const ChatWindow = ({ chatId, title }: Props) => {
             const mine = !!userId && m.senderId === userId
             const busy = isBusy(m.id)
             const deleted = isDeleted(m)
+            const editExpired = isMessageEditExpired(m.createdAt)
 
             return (
               <div
@@ -168,7 +191,7 @@ const ChatWindow = ({ chatId, title }: Props) => {
                   className={`max-w-[78%] ${mine ? "text-right" : "text-left"}`}
                 >
                   <div className="mb-1 text-[11px] text-muted-foreground">
-                    {mine ? "Ty" : title} •{" "}
+                    {mine ? "Ty" : displayTitle} •{" "}
                     {new Date(m.createdAt).toLocaleString()}
                     {m.editedAt ? " (edyt.)" : ""}
                   </div>
@@ -190,10 +213,10 @@ const ChatWindow = ({ chatId, title }: Props) => {
                           <DropdownMenuContent align="start">
                             <DropdownMenuItem
                               onClick={() => startEdit(m)}
-                              disabled={busy || deleted}
+                              disabled={busy || deleted || editExpired}
                             >
                               <Pencil className="mr-2 h-4 w-4" />
-                              Edytuj
+                              {editExpired ? "Edycja wygasła" : "Edytuj"}
                             </DropdownMenuItem>
 
                             <DropdownMenuItem
@@ -271,11 +294,12 @@ const ChatWindow = ({ chatId, title }: Props) => {
         <Input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Napisz..."
+          placeholder={isClosed ? "Chat zamknięty" : "Napisz..."}
           onKeyDown={onKeyDownSend}
+          disabled={isClosed}
         />
 
-        <Button onClick={send} disabled={sending}>
+        <Button onClick={send} disabled={sending || isClosed}>
           {sending ? "..." : "Wyślij"}
         </Button>
       </div>

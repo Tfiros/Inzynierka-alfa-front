@@ -17,17 +17,17 @@ import {
   Sparkles,
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
-import OfferItemCard from "./OfferItemCard"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useAppStore } from "@/shared/store/appStore"
 import { cn } from "@/shared/lib/Utils"
-import OfferStatusPill from "./OfferStatusPill"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
 } from "@/shared/components/ui/tooltip"
+import OfferItemCard from "./OfferItemCard"
+import OfferStatusPill from "./OfferStatusPill"
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
@@ -35,11 +35,12 @@ type OfferProps = {
 }
 
 const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
-const remainingOffered =
+  const remainingOffered =
     offer.offeredItemsTotalCount - offer.offeredItems.length
   const remainingWanted = offer.wantedItemsTotalCount - offer.wantedItems.length
   const requestEdit = useAppStore((s) => s.offerRequestEdit)
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
+  const requestAcceptOffer = useAppStore((s) => s.acceptOfferRequest)
   const successRate = new Intl.NumberFormat("pl-PL", {
     style: "percent",
   }).format(offer.offerUserDto.successRate)
@@ -229,8 +230,8 @@ const remainingOffered =
               <Button
                 type="button"
                 className="text-xs cursor-pointer w-full sm:w-auto"
-                onClick={() => console.log(offer.offerCoreDto.offerId)}
-                disabled={!isActive || isOwner}
+                onClick={() => requestAcceptOffer(offer.offerCoreDto.offerId)}
+                disabled={!isActive || isOwner || !isAuthenticated}
               >
                 Wymień
               </Button>

@@ -1,10 +1,10 @@
 import type { PagedResponse } from "@/shared/types/PagedType"
 import { del, get, post, put } from "../ApiClient"
 import type {
+  acceptOfferDtoResponse,
   GameOfferDTO,
   GenreOfferDTO,
   ItemOfferDto,
-  OfferInformationDTO,
   offerDetailsDtoResponse,
   offerDraftRequest,
   offerListingDtoResponse,
@@ -60,4 +60,7 @@ export class OfferService {
     offerId: number,
     req: offerUpdateDraftRequest
   ) => post<offerUpdateQuoteResponse>(`${this.base}/${offerId}/quote`, req)
+
+  public static readonly accept = async (offerId: number) =>
+    post<acceptOfferDtoResponse>(`${this.base}/${offerId}/accept`)
 }
