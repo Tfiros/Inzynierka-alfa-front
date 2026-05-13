@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef } from "react"
-import { useNotificationsHub } from "../hooks/UseNotificationsHub"
+import { useNotificationsHub } from "../../../Features/Notifications/NotificationsDropdown/hooks/UseNotificationsHub"
 import { useAppStore } from "../../store/appStore"
 
 const useMainLayout = () => {
@@ -14,7 +14,7 @@ const useMainLayout = () => {
 
   const ranRef = useRef(false)
 
-  useNotificationsHub(hasHydrated && isLogged)
+  useNotificationsHub()
 
   useEffect(() => {
     if (!hasHydrated) return

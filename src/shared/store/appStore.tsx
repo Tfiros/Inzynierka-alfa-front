@@ -13,6 +13,7 @@ import {
   createCounterOfferSlice,
   type CounterOfferSlice,
 } from "./storeParts/CounterOfferSlice"
+import { NotificationsHubClient } from "../api/hubs/NotificationsHubClient"
 import {
   createAcceptOfferSlice,
   type AcceptOfferSlice,
@@ -50,7 +51,15 @@ export const useAppStore = create<AppState>()(
         } catch (e) {
           console.error("chatHub stop failed", e)
         }
+
+        try {
+          await NotificationsHubClient.stop()
+        } catch (e) {
+          console.error("notificationsHub stop failed", e)
+        }
+
         get().chat?.actions?.resetChat?.()
+
         set({
           userLogin: null,
           userId: null,
@@ -60,6 +69,7 @@ export const useAppStore = create<AppState>()(
           counterOfferOpen: false,
           counterOfferOfferId: null,
           darkMode: false,
+          notifications: [],
           acceptOfferOpen: false,
           acceptOfferOfferId: null,
         })
