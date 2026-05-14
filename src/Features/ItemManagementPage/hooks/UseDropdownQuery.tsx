@@ -8,6 +8,7 @@ type Args = {
   open: boolean
   search: string
   delayMs?: number
+  loadOnMount?: boolean
   load: (q: string) => Promise<any>
   selectedId: number | null
   setSelectedId: (v: number | null) => void
@@ -18,6 +19,7 @@ const useDropdownQuery = ({
   open,
   search,
   delayMs = 250,
+  loadOnMount = false,
   load,
   selectedId,
   setSelectedId,
@@ -38,6 +40,7 @@ const useDropdownQuery = ({
     setLoading(true)
     try {
       const res = await load((q as any) || "")
+
       if (!res?.isSuccess) {
         setItems([])
         setSelectedId(null)
@@ -61,10 +64,13 @@ const useDropdownQuery = ({
   }
 
   useEffect(() => {
-    if (!open) return
+    if (!enabled) return
+    if (!open && !loadOnMount) return
+
     void fetch()
-  }, [open, q, enabled])
+  }, [open, q, enabled, loadOnMount])
 
   return { items, loading, selectedName, refetch: fetch }
 }
+
 export default useDropdownQuery

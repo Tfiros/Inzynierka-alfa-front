@@ -23,6 +23,7 @@ const useGamesTab = () => {
     load: (q) => GenresService.dropdown(q),
     selectedId: genreId,
     setSelectedId: setGenreId,
+    loadOnMount: true,
   })
 
   const selectedGenreName = useMemo(

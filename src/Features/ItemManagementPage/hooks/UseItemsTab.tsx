@@ -18,6 +18,7 @@ const useItemsTab = () => {
     load: (q) => GamesService.dropdown(q),
     selectedId: gameId,
     setSelectedId: setGameId,
+    loadOnMount: true,
   })
 
   const [search, setSearch] = useState("")

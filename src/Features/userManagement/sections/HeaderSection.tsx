@@ -1,5 +1,5 @@
 import { Button } from "@/shared/components/button"
-import { Settings, UserPlus } from "lucide-react"
+import { UserPlus } from "lucide-react"
 
 type Props = {
   onAddUser: () => void
@@ -21,10 +21,6 @@ const HeaderSection = (props: Props) => {
       </div>
 
       <div className="flex items-center gap-3">
-        <Button variant="outline" size="icon" aria-label="Ustawienia">
-          <Settings className="h-4 w-4" />
-        </Button>
-
         <Button onClick={onAddUser} disabled={loading}>
           <UserPlus className="h-4 w-4" />
           Dodaj użytkownika
