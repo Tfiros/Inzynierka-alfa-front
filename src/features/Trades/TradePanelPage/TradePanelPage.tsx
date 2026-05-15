@@ -22,6 +22,7 @@ const TradePanelPage = () => {
     cancelation,
     isMiddleman,
     linkedTrade,
+    onDetailsSaved,
   } = useTradePanel()
 
   const realised = useSetTradeAsRealised({
@@ -114,7 +115,7 @@ const TradePanelPage = () => {
         onOpenChange={(o) => {
           if (!o) details.actions.close()
         }}
-        onSaved={details.actions.refresh}
+        onSaved={onDetailsSaved}
       />
 
       <ConfirmDeleteTradeDialog

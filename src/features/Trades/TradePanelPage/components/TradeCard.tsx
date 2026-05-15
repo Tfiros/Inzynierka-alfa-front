@@ -79,8 +79,9 @@ const TradeCard = ({
             tokenCost={trade.tokenCost}
             onAssign={onAssign}
           />
-        ) : tab === "mine" && isMiddleman ? (
+        ) : (tab === "mine" || tab == "failedReturns") && isMiddleman ? (
           <TradeActionsMyTrade
+            tab={tab}
             tokenCost={trade.tokenCost}
             onDetails={onDetails}
             onCanceleTrade={onCancleTrade}
