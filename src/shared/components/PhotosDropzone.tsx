@@ -2,17 +2,31 @@ import { UploadCloud, X } from "lucide-react"
 import { cn } from "@/shared/lib/Utils"
 import { Button } from "@/shared/components/button"
 import { usePhotosDropzone } from "../hooks/UsePhotosDropzone"
+import { Input } from "@/shared/components/input"
+import { IMAGE_ACCEPT_ATTR } from "../lib/ImageValidation"
 
 type Props = {
+  photos: File[]
+  onChange: (files: File[]) => void
   maxFiles?: number
   disabled?: boolean
+  title?: string
 }
 
-const PhotosDropzone = ({ maxFiles = 5, disabled }: Props) => {
-  const { previews, isOver, remaining, actions, handlers } = usePhotosDropzone({
-    maxFiles,
-    disabled,
-  })
+const PhotosDropzone = ({
+  photos,
+  onChange,
+  maxFiles = 5,
+  disabled,
+  title,
+}: Props) => {
+  const { previews, isOver, remaining, error, actions, handlers } =
+    usePhotosDropzone({
+      photos,
+      onChange,
+      maxFiles,
+      disabled,
+    })
 
   return (
     <div className="space-y-3">
@@ -29,18 +43,18 @@ const PhotosDropzone = ({ maxFiles = 5, disabled }: Props) => {
       >
         <UploadCloud className="h-5 w-5 text-muted-foreground" />
         <div className="text-sm font-medium">
-          Przeciągnij zdjęcia tutaj (max {maxFiles})
+          {maxFiles === 1
+            ? "Przeciągnij zdjęcie tutaj"
+            : `Przeciągnij zdjęcia tutaj (max ${maxFiles})`}
         </div>
-        <div className="text-xs text-muted-foreground">
-          Na razie to tylko UI — nie wysyłamy jeszcze na backend.
-        </div>
+        {title && <div className="text-xs text-muted-foreground">{title}</div>}
 
         <div className="mt-2">
           <label className={cn(disabled && "pointer-events-none")}>
-            <input
+            <Input
               type="file"
-              accept="image/*"
-              multiple
+              accept={IMAGE_ACCEPT_ATTR}
+              multiple={maxFiles > 1}
               className="hidden"
               onChange={handlers.onInputChange}
             />
@@ -48,14 +62,15 @@ const PhotosDropzone = ({ maxFiles = 5, disabled }: Props) => {
               type="button"
               variant="outline"
               disabled={disabled || remaining <= 0}
+              asChild
             >
-              Wybierz pliki
+              <span>{maxFiles === 1 ? "Wybierz plik" : "Wybierz pliki"}</span>
             </Button>
           </label>
         </div>
       </div>
 
-      {previews.length ? (
+      {previews.length > 0 && (
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {previews.map((p, idx) => (
             <div
@@ -86,11 +101,8 @@ const PhotosDropzone = ({ maxFiles = 5, disabled }: Props) => {
             </div>
           ))}
         </div>
-      ) : (
-        <div className="text-xs text-muted-foreground">
-          Nie dodano jeszcze żadnych plików.
-        </div>
       )}
+      {error && <div className="text-xs text-red-600">{error}</div>}
     </div>
   )
 }
