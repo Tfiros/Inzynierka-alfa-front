@@ -79,6 +79,7 @@ const ItemsTab = () => {
             title={i.name}
             metaLeft={`Gra: ${i.gameName}`}
             id={i.id}
+            thumbnailUrl={i.photo_URL || undefined}
             onEdit={() => vm.actions.openEdit(i)}
             onDelete={() => vm.actions.openDelete(i)}
           />
@@ -102,6 +103,8 @@ const ItemsTab = () => {
         onRaritySearchChange={vm.add.rarity.setSearch}
         rarities={vm.add.rarity.items}
         saving={vm.add.saving}
+        image={vm.add.image}
+        onImageChange={vm.add.setImage}
         canSubmit={
           !!vm.game.id &&
           !!vm.add.name.trim() &&
@@ -117,15 +120,9 @@ const ItemsTab = () => {
             open={vm.edit.editOpen}
             onOpenChange={vm.edit.setEditOpen}
             initialName={vm.edit.selected.name}
-            initialEstimatedTokenValue={
-              (vm.edit.selected as any).estimatedTokenValue ?? 0
-            }
+            initialEstimatedTokenValue={vm.edit.selected.estimatedTokenValue}
             initialGameId={vm.edit.selected.gameId}
-            initialRarityItemId={
-              (vm.edit.selected as any).itemRarityId ??
-              (vm.edit.selected as any).rarityItemId ??
-              0
-            }
+            initialRarityItemId={vm.edit.selected.itemRarityId}
             onSave={vm.actions.saveEdit}
           />
 

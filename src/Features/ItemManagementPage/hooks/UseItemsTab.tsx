@@ -44,6 +44,7 @@ const useItemsTab = () => {
   const [addSaving, setAddSaving] = useState(false)
   const [addName, setAddName] = useState("")
   const [addEstimatedTokenValue, setAddEstimatedTokenValue] = useState("")
+  const [addImage, setAddImage] = useState<File | null>(null)
 
   const [raritiesOpen, setRaritiesOpen] = useState(false)
   const [raritySearch, setRaritySearch] = useState("")
@@ -64,6 +65,7 @@ const useItemsTab = () => {
     setRaritySearch("")
     setRarityId(null)
     setRaritiesOpen(false)
+    setAddImage(null)
   }
 
   const isAddTokenOk = useMemo(() => {
@@ -92,7 +94,8 @@ const useItemsTab = () => {
     saveEdit: async (payload: {
       name: string
       estimatedTokenValue: number
-      rarityItemId: number
+      itemRarityId: number
+      image?: File | null
     }) => {
       if (!selected) return
 
@@ -136,6 +139,7 @@ const useItemsTab = () => {
           estimatedTokenValue: token,
           gameId,
           itemRarityId: rarityId,
+          image: addImage,
         })
 
         if (!res.isSuccess) {
@@ -177,6 +181,8 @@ const useItemsTab = () => {
       token: addEstimatedTokenValue,
       setToken: setAddEstimatedTokenValue,
       isTokenOk: isAddTokenOk,
+      image: addImage,
+      setImage: setAddImage,
       rarity: {
         id: rarityId,
         setId: setRarityId,

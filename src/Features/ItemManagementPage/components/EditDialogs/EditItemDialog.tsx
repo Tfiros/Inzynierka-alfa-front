@@ -18,11 +18,13 @@ import {
   SelectValue,
 } from "@/shared/components/select"
 import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
+import PhotosDropzone from "@/shared/components/PhotosDropzone"
 
 type EditItemPayload = {
   name: string
   estimatedTokenValue: number
-  rarityItemId: number
+  itemRarityId: number
+  image?: File | null
 }
 
 const EditItemDialog = (props: {
@@ -49,6 +51,7 @@ const EditItemDialog = (props: {
   const [raritiesOpen, setRaritiesOpen] = useState(false)
   const [raritySearch, setRaritySearch] = useState("")
   const [raritiesLoading, setRaritiesLoading] = useState(false)
+  const [image, setImage] = useState<File | null>(null)
 
   const extractDropdownItems = (res: any): DropdownOption[] => {
     const d = res?.data
@@ -84,6 +87,7 @@ const EditItemDialog = (props: {
     setRaritySearch("")
     setRarities([])
     setRaritiesOpen(false)
+    setImage(null)
   }, [
     props.open,
     props.initialName,
@@ -93,9 +97,8 @@ const EditItemDialog = (props: {
 
   useEffect(() => {
     if (!props.open) return
-    if (!raritiesOpen) return
     void loadRaritiesDropdown()
-  }, [raritiesOpen, props.open])
+  }, [props.open, props.initialGameId])
 
   useEffect(() => {
     if (!props.open) return
@@ -120,7 +123,8 @@ const EditItemDialog = (props: {
     await props.onSave({
       name: trimmed,
       estimatedTokenValue: Number(estimatedTokenValue),
-      rarityItemId: rarityId,
+      itemRarityId: rarityId,
+      image,
     })
   }
 
@@ -186,6 +190,14 @@ const EditItemDialog = (props: {
                 )}
               </SelectContent>
             </Select>
+            <div className="space-y-2">
+              <div className="text-sm opacity-70">Zdjęcie</div>
+              <PhotosDropzone
+                photos={image ? [image] : []}
+                onChange={(fs) => setImage(fs[0] ?? null)}
+                maxFiles={1}
+              />
+            </div>
           </div>
         </div>
 
