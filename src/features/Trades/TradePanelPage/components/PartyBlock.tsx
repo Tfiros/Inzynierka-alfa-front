@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 import type { InTradeUser } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import { User, Package } from "lucide-react"
 
@@ -20,9 +21,16 @@ const PartyBlock = ({ party, title }: Props) => {
       <div className="text-xs text-muted-foreground">{title}</div>
 
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-md bg-muted">
-          <User className="h-4 w-4 text-muted-foreground" />
-        </div>
+        <Avatar>
+          <AvatarImage
+            src={party.imageUrl ?? undefined}
+            alt={party.nickname}
+            className="rounded-md object-cover"
+          />
+          <AvatarFallback>
+            <User className="h-4 w-4 text-muted-foreground" />
+          </AvatarFallback>
+        </Avatar>
         <div>
           <div className="text-sm font-medium">{party.nickname}</div>
           <div className="text-xs text-muted-foreground">{party.email}</div>

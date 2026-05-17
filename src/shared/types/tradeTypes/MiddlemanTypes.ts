@@ -56,6 +56,7 @@ export type InTradeUser = {
   userId: number
   nickname: string
   email: string
+  imageUrl?: string | null
   offeredItems?: ItemInfo[] | null
 }
 
