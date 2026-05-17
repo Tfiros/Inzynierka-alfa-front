@@ -10,6 +10,7 @@ export type AddGamePayload = {
   name: string
   genreId: number
   itemRaritiesNames: string[]
+  image: File | null
 }
 
 const useGamesTab = () => {
@@ -78,7 +79,11 @@ const useGamesTab = () => {
       await list.fetch()
     },
 
-    saveEdit: async (payload: { name?: string; genreId?: number }) => {
+    saveEdit: async (payload: {
+      name?: string
+      genreId?: number
+      image?: File | null
+    }) => {
       if (!selected) return
 
       const res = await GamesService.update(selected.id, payload)

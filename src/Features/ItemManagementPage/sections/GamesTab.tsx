@@ -86,6 +86,7 @@ const GamesTab = () => {
               vm.genre.id ? `Gatunek: ${vm.genre.selectedName}` : undefined
             }
             id={g.id}
+            thumbnailUrl={g.photo_URL || undefined}
             onEdit={() => vm.actions.openEdit(g)}
             onDelete={() => vm.actions.openDelete(g)}
           />

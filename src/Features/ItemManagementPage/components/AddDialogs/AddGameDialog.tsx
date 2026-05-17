@@ -16,11 +16,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/select"
+import PhotosDropzone from "@/shared/components/PhotosDropzone"
 
 type AddGamePayload = {
   name: string
   genreId: number
   itemRaritiesNames: string[]
+  image: File | null
 }
 
 const AddGameDialog = (props: {
@@ -38,6 +40,7 @@ const AddGameDialog = (props: {
 
   const [rarityInput, setRarityInput] = useState("")
   const [rarities, setRarities] = useState<string[]>([])
+  const [image, setImage] = useState<File | null>(null)
 
   useEffect(() => {
     if (!props.open) return
@@ -46,6 +49,7 @@ const AddGameDialog = (props: {
 
     setRarityInput("")
     setRarities([])
+    setImage(null)
   }, [props.open, props.initialGenreId, props.genres])
 
   const normalizedRarities = useMemo(
@@ -78,6 +82,7 @@ const AddGameDialog = (props: {
         name: trimmed,
         genreId,
         itemRaritiesNames: normalizedRarities,
+        image,
       })
       props.onOpenChange(false)
     } finally {
@@ -177,6 +182,15 @@ const AddGameDialog = (props: {
                 pustą listę, jeśli backend na to pozwala).
               </div>
             )}
+            <div className="space-y-2">
+              <div className="text-sm opacity-70">Zdjęcie</div>
+              <PhotosDropzone
+                photos={image ? [image] : []}
+                onChange={(fs) => setImage(fs[0] ?? null)}
+                maxFiles={1}
+                disabled={saving}
+              />
+            </div>
           </div>
         </div>
 
