@@ -2,7 +2,7 @@ import type {
   UpdateProfileRequest,
   UserProfileInfoResponse,
 } from "@/shared/types/ApiUserEdit"
-import { get, put } from "../ApiClient"
+import { get, put, putForm } from "../ApiClient"
 
 export type Profile = {
   username: string
@@ -23,12 +23,22 @@ export class ProfileInfoService {
   static updateProfile(body: UpdateProfileRequest, id: number | null) {
     return put<UserProfileInfoResponse>(`${this.base}/profileInfo/${id}`, body)
   }
+
+  static updateAvatar(image: File, id: number | null) {
+    const form = new FormData()
+    form.append("Image", image)
+    return putForm<UserProfileInfoResponse>(
+      `${this.base}/profileInfo/${id}/avatar`,
+      form
+    )
+  }
 }
 
 export function mapBackendToProfile(v: UserProfileInfoResponse): Profile {
   return {
     username: v.nickname,
     bio: v.description,
+    avatar: v.imageUrl ?? undefined,
     level: v.level,
     coins: v.experience,
     memberSince: memberFor(v.registrationDate),

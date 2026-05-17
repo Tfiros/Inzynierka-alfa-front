@@ -1,11 +1,12 @@
 import type { Profile } from "@/shared/api/services/ProfileInfoService"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
+import { Button } from "@/shared/components/button"
 import { Card } from "@/shared/components/card"
-import { Separator } from "@radix-ui/react-dropdown-menu"
-import { Button } from "react-day-picker"
+import { Separator } from "@/shared/components/separator"
 
 type Props = {
   profile: Profile
+  onOpenAvatarDialog: () => void
 }
 
 export const initials = (name?: string) =>
@@ -17,7 +18,7 @@ export const initials = (name?: string) =>
       .join("") || "?"
   ).toUpperCase()
 
-const ProfileCardSection = ({ profile }: Props) => {
+const ProfileCardSection = ({ profile, onOpenAvatarDialog }: Props) => {
   return (
     <Card className="p-4 md:p-6">
       <div className="flex flex-col items-center gap-4">
@@ -29,7 +30,9 @@ const ProfileCardSection = ({ profile }: Props) => {
         </Avatar>
 
         <div className="flex flex-col items-center gap-2">
-          <Button>Zmień avatar</Button>
+          <Button type="button" onClick={onOpenAvatarDialog}>
+            Zmień avatar
+          </Button>
         </div>
 
         <Separator className="my-2 w-full" />

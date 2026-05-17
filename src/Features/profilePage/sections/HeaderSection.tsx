@@ -16,7 +16,7 @@ const HeaderSection = ({ profile, canEdit }: HeaderSectionProps) => {
           handle={`@${profile.nickname}`}
           name={profile.nickname}
           bio={profile.description ?? "Ten użytkownik nie dodał jeszcze opisu."}
-          avatar={undefined}
+          avatar={profile.imageUrl ?? undefined}
           joinedYear={joinedYear}
           editPath="/profileEdit"
           canEdit={canEdit}

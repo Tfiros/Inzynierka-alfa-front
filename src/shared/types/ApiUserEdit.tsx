@@ -5,6 +5,7 @@ export type UserProfileInfoResponse = {
   registrationDate: string
   nickname: string
   description: string
+  imageUrl?: string | null
 }
 
 export type UpdateProfileRequest = {

@@ -13,6 +13,7 @@ import { User as UserIcon, Trophy, Settings, Moon } from "lucide-react"
 import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
 import LogoutButton from "@/shared/components/logoutButton"
 import { useAppStore } from "@/shared/store/appStore"
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 
 export const ProfileMenu = () => {
   const [open, setOpen] = useState(false)
@@ -47,9 +48,16 @@ export const ProfileMenu = () => {
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuLabel className="font-normal px-3 py-2">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-black text-xs font-semibold text-white">
-              {initials}
-            </div>
+            <Avatar className="w-10 h-10 rounded-md">
+              <AvatarImage
+                src={navbarUser?.imageUrl ?? undefined}
+                alt={displayName}
+                className="rounded-md object-cover"
+              />
+              <AvatarFallback className="rounded-md bg-black text-xs font-semibold text-white">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
             <div className="flex flex-col">
               <span className="text-sm font-medium leading-none">
                 {displayName}
