@@ -40,6 +40,14 @@ const useTradePanel = () => {
 
   const details = useTradeDetailsDialog()
 
+  const onDetailsSaved = useCallback(async () => {
+    await Promise.all([
+      details.actions.refresh(),
+      list.refetchList(),
+      stats.refetchStats(),
+    ])
+  }, [details.actions.refresh, list.refetchList, stats.refetchStats])
+
   const counts = {
     available: stats.stats?.created ?? 0,
     mine: stats.stats?.myActive ?? 0,
@@ -78,6 +86,7 @@ const useTradePanel = () => {
       state: linkedTrade.state,
       close: closeLinkedTrade,
     },
+    onDetailsSaved,
   }
 }
 

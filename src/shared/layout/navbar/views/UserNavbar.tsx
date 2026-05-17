@@ -36,7 +36,7 @@ export const UserNavbar = () => {
             <img
               src={CrossTradeLogo_dark}
               alt="CROSSTRADE"
-              className="h-15 w-15 object-contain dark:block"
+              className="h-15 w-15 object-contain hidden dark:block"
             />
             <span className="sr-only">CROSSTRADE</span>
           </Link>

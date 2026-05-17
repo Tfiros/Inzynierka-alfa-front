@@ -68,6 +68,8 @@ export type TradeListItem = {
   customer: InTradeUser
   postingUser: InTradeUser
   middlemanUserId?: number | null
+  tokensOffered: number
+  tokensWanted: number
 }
 
 export type MiddlemanTradesStats = {
