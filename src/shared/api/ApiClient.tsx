@@ -47,3 +47,33 @@ export async function patch<T>(
   const res = await api.patch<ApiResult<T>>(url, body, config)
   return res.data
 }
+
+export async function postForm<T>(
+  url: string,
+  form: FormData,
+  config?: AxiosRequestConfig
+): Promise<ApiResult<T>> {
+  const res = await api.post<ApiResult<T>>(url, form, {
+    ...config,
+    headers: {
+      ...(config?.headers ?? {}),
+      "Content-Type": "multipart/form-data",
+    },
+  })
+  return res.data
+}
+
+export async function putForm<T>(
+  url: string,
+  form: FormData,
+  config?: AxiosRequestConfig
+): Promise<ApiResult<T>> {
+  const res = await api.put<ApiResult<T>>(url, form, {
+    ...config,
+    headers: {
+      ...(config?.headers ?? {}),
+      "Content-Type": "multipart/form-data",
+    },
+  })
+  return res.data
+}
