@@ -28,6 +28,7 @@ import {
 } from "@/shared/components/ui/tooltip"
 import OfferItemCard from "./OfferItemCard"
 import OfferStatusPill from "./OfferStatusPill"
+import { formatRating, formatSuccessRating } from "@/shared/lib/formatters"
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
@@ -41,9 +42,8 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   const requestEdit = useAppStore((s) => s.offerRequestEdit)
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
   const requestAcceptOffer = useAppStore((s) => s.acceptOfferRequest)
-  const successRate = new Intl.NumberFormat("pl-PL", {
-    style: "percent",
-  }).format(offer.offerUserDto.successRate)
+  const successRate = formatSuccessRating(offer.offerUserDto.successRate)
+  const rating = formatRating(offer.offerUserDto.rating)
   const currentUserId = useAppStore((s) => s.userId)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
@@ -186,8 +186,8 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
               {offer.offerUserDto.nickname}
             </span>
             <span>
-              {offer.offerUserDto.rating}/5 ★ •{" "}
-              {offer.offerUserDto.successTradesCount} wymian • {successRate} SR
+              {rating}/10 ★ • {offer.offerUserDto.successTradesCount} wymian •{" "}
+              {successRate} SR
             </span>
             <span />
           </div>
