@@ -13,12 +13,14 @@ import type {
   TradeListItem,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import { Edit3, Eye } from "lucide-react"
-import PhotosDropzone from "./PhotosDropzone"
 import Flag from "./Flag"
 import PhotosList from "./PhotosList"
 import CheckboxRow from "./CheckboxRow"
 import useTradeDetailsSave from "../hooks/UseTradeDetailsSave"
 import TradeStatusPill from "./TradeStatusPill"
+import useTradePhotoUpload from "../hooks/UseTradePhotoUpload"
+import PhotosDropzone from "@/shared/components/PhotosDropzone"
+import SegmentedTabs from "./SegmentedTabs"
 
 type Props = {
   open: boolean
@@ -28,6 +30,7 @@ type Props = {
   details: TradeDetailsResponse | null
   onOpenChange: (open: boolean) => void
   onSaved: () => void | Promise<void>
+  onPhotoUpload: () => void | Promise<void>
 }
 
 type Mode = "view" | "edit"
@@ -40,8 +43,10 @@ const TradeDetailsDialog = ({
   details,
   onOpenChange,
   onSaved,
+  onPhotoUpload,
 }: Props) => {
   const [mode, setMode] = useState<Mode>("view")
+  const [side, setSide] = useState<"buyer" | "seller">("buyer")
 
   const initial = useMemo(() => {
     return {
@@ -61,11 +66,18 @@ const TradeDetailsDialog = ({
     onAfterSave: () => setMode("view"),
   })
 
+  const photos = useTradePhotoUpload({
+    tradeId: trade?.tradeId ?? null,
+    onUpload: onPhotoUpload,
+  })
+
   useEffect(() => {
     setMode("view")
+    setSide("buyer")
     setSaveError(null)
     setHasBuyersItems(initial.hasBuyersItems)
     setHasSellersItems(initial.hasSellersItems)
+    photos.actions.reset()
   }, [open, initial.hasBuyersItems, initial.hasSellersItems, setSaveError])
 
   return (
@@ -232,16 +244,51 @@ const TradeDetailsDialog = ({
                 />
               </div>
             </div>
-
-            <div className="rounded-xl border p-4">
-              <div className="text-sm font-medium">Zdjęcia (wkrótce)</div>
-              <div className="mt-2 text-xs text-muted-foreground">
-                Dodamy upload do backendu później. Teraz możesz przygotować
-                pliki (max 5).
-              </div>
-              <div className="mt-3">
-                <PhotosDropzone maxFiles={5} disabled={saving} />
-              </div>
+            <div className="space-y-3">
+              <div className="text-sm font-medium">Upload zdjęć</div>
+              <SegmentedTabs
+                value={side}
+                onChange={setSide}
+                tabs={[
+                  { value: "buyer", label: "Kupujący" },
+                  { value: "seller", label: "Wystawiający" },
+                ]}
+              />
+              <PhotosDropzone
+                photos={
+                  side === "buyer" ? photos.buyerFiles : photos.sellerFiles
+                }
+                onChange={
+                  side === "buyer"
+                    ? photos.setBuyerFiles
+                    : photos.setSellerFiles
+                }
+                maxFiles={5}
+                disabled={saving || photos.uploadTradeSide !== null}
+              />
+              <Button
+                type="button"
+                className="w-full"
+                disabled={
+                  !trade ||
+                  (side === "buyer"
+                    ? !photos.buyerFiles.length
+                    : !photos.sellerFiles.length) ||
+                  photos.uploadTradeSide !== null
+                }
+                onClick={() =>
+                  void (side === "buyer"
+                    ? photos.actions.uploadBuyer()
+                    : photos.actions.uploadSeller())
+                }
+              >
+                {photos.uploadTradeSide === side
+                  ? "Wysyłanie..."
+                  : `Wyślij (${side === "buyer" ? photos.buyerFiles.length : photos.sellerFiles.length})`}
+              </Button>
+              {photos.uploadError && (
+                <div className="text-xs text-red-600">{photos.uploadError}</div>
+              )}
             </div>
           </div>
         )}

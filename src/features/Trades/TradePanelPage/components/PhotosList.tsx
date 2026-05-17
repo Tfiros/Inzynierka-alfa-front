@@ -1,5 +1,3 @@
-import { Image as ImageIcon } from "lucide-react"
-
 type PhotosListProps = {
   photos: string[]
 }
@@ -10,17 +8,20 @@ const PhotosList = ({ photos }: PhotosListProps) => {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
       {photos.map((url, i) => (
         <a
           key={`${url}-${i}`}
           href={url}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm hover:bg-muted"
+          className="block overflow-hidden rounded-sm border hover:opacity-90"
         >
-          <ImageIcon className="h-4 w-4" />
-          <span className="truncate">{url}</span>
+          <img
+            src={url}
+            alt={`Zdjęcie ${i + 1}`}
+            className="aspect-square w-full object-cover"
+          />
         </a>
       ))}
     </div>

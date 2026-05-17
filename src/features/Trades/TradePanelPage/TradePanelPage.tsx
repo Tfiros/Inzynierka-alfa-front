@@ -115,6 +115,7 @@ const TradePanelPage = () => {
           if (!o) details.actions.close()
         }}
         onSaved={details.actions.refresh}
+        onPhotoUpload={details.actions.refresh}
       />
 
       <ConfirmDeleteTradeDialog
