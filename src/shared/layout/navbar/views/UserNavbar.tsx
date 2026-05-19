@@ -85,8 +85,12 @@ export const UserNavbar = () => {
                       </span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      Oczekujące saldo - zostanie zwolnione po zakończeniu
-                      wymiany.
+                      Trzymane przy aktywnych ofertach, kontrofertach i
+                      trwających wymianach.
+                      <br />
+                      Wracają do salda, gdy wymiana się zakończy, anulujesz
+                      ofertę/kontrofertę lub twoja kontroferta zostanie
+                      odrzucona
                     </TooltipContent>
                   </Tooltip>
                 )}
