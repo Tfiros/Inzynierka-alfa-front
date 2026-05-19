@@ -17,6 +17,7 @@ import CounterOfferCard from "../component/CounterOfferCard"
 import { CounterOfferStatus } from "@/shared/enums/counterOfferStatus"
 import { Button } from "@/shared/components/button"
 import { useAppStore } from "@/shared/store/appStore"
+import { useCancelCounterOffer } from "../hooks/UseCancelCounterOffer"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
   const [tab, setTab] = useState<
@@ -32,6 +33,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
   const [detailsOpen, setDetailsOpen] = useState(false)
 
   const update = useUpdateCounterOfferStatus()
+  const cancel = useCancelCounterOffer()
   const acceptCounterOffer = UseAcceptCounterOffer()
   const pageSize = 10
   const currentUserId = useAppStore((s) => s.userId)
@@ -198,6 +200,10 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     data={co}
                     variant="sent"
                     onOpenOffer={handleShowDetails}
+                    actionsDisabled={cancel.loadingId === co.counterOfferId}
+                    onCancel={async (id) => {
+                      await cancel.cancelStatus(id)
+                    }}
                   />
                 ))}
               </div>
@@ -263,7 +269,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                       variant="received"
                       onOpenOffer={handleShowDetails}
                       actionsDisabled={isBusy}
-                      onCancel={async (id) => {
+                      onDeny={async (id) => {
                         await update.updateStatus(id, CounterOfferStatus.Denied)
                       }}
                       onAccept={async (id) => {
