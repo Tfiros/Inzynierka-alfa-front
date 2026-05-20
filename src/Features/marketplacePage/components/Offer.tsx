@@ -52,8 +52,8 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   const isActive = offer.offerCoreDto.offerStatusId === 1
   const isFavourite = useAppStore(selectIsFavourite(offer.offerCoreDto.offerId))
-  const favouritesReady =
-    !isAuthenticated || useAppStore((s) => s.sessionChecked)
+  const sessionCheck = useAppStore((s) => s.sessionChecked)
+  const favouritesReady = !isAuthenticated || sessionCheck
   const { toggle, loading } = useToggleFavourite()
   return (
     <Card
