@@ -18,6 +18,10 @@ import {
   createAcceptOfferSlice,
   type AcceptOfferSlice,
 } from "./storeParts/AcceptOfferSlice"
+import {
+  createFavouriteSlice,
+  type FavouriteSlice,
+} from "./storeParts/FavouriteSlice"
 
 export type AppState = UiSlice &
   AuthSlice &
@@ -25,6 +29,7 @@ export type AppState = UiSlice &
   CounterOfferSlice &
   AcceptOfferSlice &
   ChatSlice &
+  FavouriteSlice &
   NotificationsSlice & {
     hardReset: () => Promise<void>
     hasHydrated: boolean
@@ -40,6 +45,7 @@ export const useAppStore = create<AppState>()(
       ...createCounterOfferSlice(set, get, api),
       ...createAcceptOfferSlice(set, get, api),
       ...createNotificationsSlice(set),
+      ...createFavouriteSlice(set),
       ...createChatSlice(set, get, api),
 
       hasHydrated: false,
@@ -59,6 +65,7 @@ export const useAppStore = create<AppState>()(
         }
 
         get().chat?.actions?.resetChat?.()
+        get().setFavouriteIds([])
 
         set({
           userLogin: null,
@@ -97,6 +104,9 @@ export const useAppStore = create<AppState>()(
 
 export const selectCounter = (id: string) => (s: AppState) =>
   s.counters[id] ?? 0
+
+export const selectIsFavourite = (offerId: number) => (s: AppState) =>
+  s.favouriteIds.has(offerId)
 
 export const selectAuth = (s: AppState) => ({
   isAuthenticated: s.isAuthenticated,
