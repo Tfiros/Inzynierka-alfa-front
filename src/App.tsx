@@ -25,10 +25,18 @@ import AcceptOfferInteractionHost from "./shared/views/OfferInteractionView/Acce
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
+  const syncSession = useAppStore((s) => s.syncSession)
+  const hasHydrated = useAppStore((s) => s.hasHydrated)
 
   useEffect(() => {
     initSecurity().catch(() => {})
   }, [initSecurity])
+
+  useEffect(() => {
+    if (hasHydrated) {
+      syncSession().catch(() => {})
+    }
+  }, [hasHydrated, syncSession])
 
   return (
     <TooltipProvider>
@@ -58,6 +66,7 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
+
         <OfferInteractionHost />
         <CounterOfferInteractionHost />
         <AcceptOfferInteractionHost />
