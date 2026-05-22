@@ -45,6 +45,9 @@ export class CounterOfferService {
       statusId,
     })
 
+  public static readonly cancel = async (counterOfferId: number) =>
+    post<CounterOfferDto>(`${this.base}/${counterOfferId}/cancel`)
+
   public static readonly getForOffer = async (offerId: number) =>
     get<CounterOfferListItemDto[]>(`${this.base}/offer/${offerId}`)
 }

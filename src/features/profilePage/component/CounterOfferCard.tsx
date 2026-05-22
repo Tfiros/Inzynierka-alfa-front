@@ -26,6 +26,7 @@ type Props = {
   onOpenOffer?: (offerId: number) => void
 
   onAccept?: (counterOfferId: number) => void | Promise<void>
+  onDeny?: (counterOfferId: number) => void | Promise<void>
   onCancel?: (counterOfferId: number) => void | Promise<void>
 
   actionsDisabled?: boolean
@@ -59,20 +60,21 @@ export default function CounterOfferCard({
   variant,
   onOpenOffer,
   onAccept,
+  onDeny,
   onCancel,
   actionsDisabled = false,
 }: Props) {
   const [accepting, setAccepting] = useState(false)
   const [denying, setDenying] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
 
   const itemsCount = data.items.reduce((acc, x) => acc + x.quantity, 0)
 
   const created = data.creationDate
 
   const isPending = data.statusId === CounterOfferStatus.Pending
-  const showActions = variant === "received" && isPending
 
-  const anyLoading = accepting || denying
+  const anyLoading = accepting || denying || cancelling
   const disabled = actionsDisabled || anyLoading
 
   const handleAccept = async () => {
@@ -86,12 +88,22 @@ export default function CounterOfferCard({
   }
 
   const handleDeny = async () => {
-    if (!onCancel) return
+    if (!onDeny) return
     setDenying(true)
+    try {
+      await onDeny(data.counterOfferId)
+    } finally {
+      setDenying(false)
+    }
+  }
+
+  const handleCancel = async () => {
+    if (!onCancel) return
+    setCancelling(true)
     try {
       await onCancel(data.counterOfferId)
     } finally {
-      setDenying(false)
+      setCancelling(false)
     }
   }
 
@@ -117,7 +129,8 @@ export default function CounterOfferCard({
 
           <div className="flex flex-col items-end gap-2">
             <Badge variant={statusVariant(data.statusId)}>
-              {data.statusName}
+              {data.statusName.charAt(0).toUpperCase() +
+                data.statusName.slice(1)}
             </Badge>
 
             <div className="text-sm">
@@ -185,78 +198,119 @@ export default function CounterOfferCard({
           </div>
         )}
 
-        {showActions && (
-          <div className="mt-4 flex gap-2 justify-end">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive" disabled={disabled}>
-                  Odrzuć
-                </Button>
-              </AlertDialogTrigger>
+        <div className="mt-4 flex gap-2 justify-end">
+          {variant === "received" && isPending ? (
+            <>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" disabled={disabled}>
+                    Odrzuć
+                  </Button>
+                </AlertDialogTrigger>
 
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Odrzucić kontrofertę?</AlertDialogTitle>
-                </AlertDialogHeader>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Odrzucić kontrofertę?</AlertDialogTitle>
+                  </AlertDialogHeader>
 
-                <AlertDialogFooter>
-                  <AlertDialogCancel disabled={disabled}>
-                    Wróć
-                  </AlertDialogCancel>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel disabled={disabled}>
+                      Wróć
+                    </AlertDialogCancel>
 
-                  <AlertDialogAction asChild>
-                    <Button
-                      variant="destructive"
-                      disabled={disabled}
-                      onClick={async (e) => {
-                        e.preventDefault()
-                        await handleDeny()
-                      }}
+                    <AlertDialogAction asChild>
+                      <Button
+                        variant="destructive"
+                        disabled={disabled}
+                        onClick={async (e) => {
+                          e.preventDefault()
+                          await handleDeny()
+                        }}
+                      >
+                        {denying ? "Odrzucam..." : "Tak, odrzuć"}
+                      </Button>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                    disabled={disabled}
+                  >
+                    Akceptuj
+                  </Button>
+                </AlertDialogTrigger>
+
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Akceptować kontrofertę?</AlertDialogTitle>
+                  </AlertDialogHeader>
+
+                  <AlertDialogFooter>
+                    <AlertDialogCancel disabled={disabled}>
+                      Wróć
+                    </AlertDialogCancel>
+
+                    <AlertDialogAction asChild>
+                      <Button
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                        disabled={disabled}
+                        onClick={async (e) => {
+                          e.preventDefault()
+                          await handleAccept()
+                        }}
+                      >
+                        {accepting ? "Akceptuję..." : "Tak, akceptuj"}
+                      </Button>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          ) : variant === "sent" && isPending ? (
+            <>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" disabled={disabled}>
+                    Anuluj
+                  </Button>
+                </AlertDialogTrigger>
+
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Anulować kontrofertę?</AlertDialogTitle>
+                  </AlertDialogHeader>
+
+                  <AlertDialogFooter>
+                    <AlertDialogCancel
+                      disabled={disabled || accepting || denying || cancelling}
                     >
-                      {denying ? "Odrzucam..." : "Tak, odrzuć"}
-                    </Button>
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                      Wróć
+                    </AlertDialogCancel>
 
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  className="bg-green-600 hover:bg-green-700 text-white"
-                  disabled={disabled}
-                >
-                  Akceptuj
-                </Button>
-              </AlertDialogTrigger>
-
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Akceptować kontrofertę?</AlertDialogTitle>
-                </AlertDialogHeader>
-
-                <AlertDialogFooter>
-                  <AlertDialogCancel disabled={disabled}>
-                    Wróć
-                  </AlertDialogCancel>
-
-                  <AlertDialogAction asChild>
-                    <Button
-                      className="bg-green-600 hover:bg-green-700 text-white"
-                      disabled={disabled}
-                      onClick={async (e) => {
-                        e.preventDefault()
-                        await handleAccept()
-                      }}
-                    >
-                      {accepting ? "Akceptuję..." : "Tak, akceptuj"}
-                    </Button>
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        )}
+                    <AlertDialogAction asChild>
+                      <Button
+                        variant="destructive"
+                        disabled={
+                          disabled || accepting || denying || cancelling
+                        }
+                        onClick={async (e) => {
+                          e.preventDefault()
+                          await handleCancel()
+                        }}
+                      >
+                        {cancelling ? "Anuluję..." : "Tak, anuluj"}
+                      </Button>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          ) : null}
+        </div>
       </CardContent>
     </Card>
   )
