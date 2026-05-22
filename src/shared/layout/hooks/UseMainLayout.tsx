@@ -27,12 +27,8 @@ const useMainLayout = () => {
     if (ranRef.current) return
     ranRef.current = true
 
-    void Promise.resolve(syncSession())
-      .catch(console.error)
-      .finally(() => {
-        refreshNavbarUserFromAuth().catch(console.error)
-      })
-  }, [hasHydrated, isLogged, syncSession, refreshNavbarUserFromAuth])
+    void Promise.resolve(syncSession()).catch(console.error)
+  }, [hasHydrated, isLogged, syncSession])
 
   useLayoutEffect(() => {
     if (!hasHydrated) return
