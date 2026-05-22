@@ -51,7 +51,7 @@ const OfferCounterOffersSection = ({ offerId, open }: Props) => {
             data={co}
             variant="received"
             actionsDisabled={isBusy}
-            onCancel={async (id) => {
+            onDeny={async (id) => {
               await update.updateStatus(id, CounterOfferStatus.Denied)
               await list.reload()
             }}

@@ -15,10 +15,11 @@ import {
   SquarePen,
   Trash2,
   Sparkles,
+  Loader2,
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
-import { useAppStore } from "@/shared/store/appStore"
+import { selectIsFavourite, useAppStore } from "@/shared/store/appStore"
 import { cn } from "@/shared/lib/Utils"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
 import {
@@ -29,6 +30,8 @@ import {
 import OfferItemCard from "./OfferItemCard"
 import OfferStatusPill from "./OfferStatusPill"
 import { formatRating, formatSuccessRating } from "@/shared/lib/formatters"
+import { useToggleFavourite } from "../../../shared/hooks/UseToggleFavourite"
+
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
@@ -48,6 +51,10 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   const isActive = offer.offerCoreDto.offerStatusId === 1
+  const isFavourite = useAppStore(selectIsFavourite(offer.offerCoreDto.offerId))
+  const sessionCheck = useAppStore((s) => s.sessionChecked)
+  const favouritesReady = !isAuthenticated || sessionCheck
+  const { toggle, loading } = useToggleFavourite()
   return (
     <Card
       className={cn(
@@ -81,8 +88,21 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
                 variant="outline"
                 className="cursor-pointer group"
                 type="button"
+                disabled={!isAuthenticated || isOwner || loading || !isActive}
+                onClick={() => toggle(offer.offerCoreDto.offerId)}
               >
-                <Heart className="group-hover:text-red-500 group-hover:fill-red-500 transition" />
+                {!favouritesReady ? (
+                  <Loader2 className="animate-spin text-muted-foreground" />
+                ) : (
+                  <Heart
+                    className={cn(
+                      "transition",
+                      isFavourite
+                        ? "text-red-500 fill-red-500"
+                        : "group-hover:text-red-500 group-hover:fill-red-500"
+                    )}
+                  />
+                )}
               </Button>
               {offer.offerCoreDto.isHighlighted && (
                 <Badge className="bg-yellow-400/20 text-yellow-900 border border-yellow-400/40">

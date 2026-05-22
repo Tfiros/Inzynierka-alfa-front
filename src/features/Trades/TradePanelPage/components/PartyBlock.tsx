@@ -1,10 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/shared/components/ui/tooltip"
 import type { InTradeUser } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import { User, Package } from "lucide-react"
+import PointsIcon from "@/shared/photos/PointsIcon.svg"
 
-type Props = { party?: InTradeUser | null; title: string }
+type Props = { party?: InTradeUser | null; title: string; tokens?: number }
 
-const PartyBlock = ({ party, title }: Props) => {
+const PartyBlock = ({ party, title, tokens }: Props) => {
   if (!party) {
     return (
       <div className="space-y-3">
@@ -52,6 +58,21 @@ const PartyBlock = ({ party, title }: Props) => {
               </div>
             </div>
           </div>
+          {tokens && tokens > 0 ? (
+            <span className="inline-flex w-fit items-center gap-1 text-sm font-medium text-amber-600">
+              + {tokens}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <img
+                    src={PointsIcon}
+                    alt="tokenów"
+                    className="h-4 w-4 object-contain"
+                  />
+                </TooltipTrigger>
+                <TooltipContent>tokenów</TooltipContent>
+              </Tooltip>
+            </span>
+          ) : null}
         </div>
       ) : (
         <div className="rounded-lg bg-muted/50 p-3 text-xs text-muted-foreground">

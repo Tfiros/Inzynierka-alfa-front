@@ -18,13 +18,20 @@ import {
   createAcceptOfferSlice,
   type AcceptOfferSlice,
 } from "./storeParts/AcceptOfferSlice"
+import {
+  createFavouriteSlice,
+  type FavouriteSlice,
+} from "./storeParts/FavouriteSlice"
 
+import { tokenRefreshScheduler } from "@/shared/lib/TokenRefreshScheduler"
+import { clearCsrfToken } from "@/shared/api/Api"
 export type AppState = UiSlice &
   AuthSlice &
   OfferSlice &
   CounterOfferSlice &
   AcceptOfferSlice &
   ChatSlice &
+  FavouriteSlice &
   NotificationsSlice & {
     hardReset: () => Promise<void>
     hasHydrated: boolean
@@ -40,12 +47,16 @@ export const useAppStore = create<AppState>()(
       ...createCounterOfferSlice(set, get, api),
       ...createAcceptOfferSlice(set, get, api),
       ...createNotificationsSlice(set),
+      ...createFavouriteSlice(set),
       ...createChatSlice(set, get, api),
 
       hasHydrated: false,
       setHasHydrated: (v) => set({ hasHydrated: v }),
 
       hardReset: async () => {
+        tokenRefreshScheduler.cancel()
+        clearCsrfToken()
+
         try {
           await chatHubClient.stop()
         } catch (e) {
@@ -59,6 +70,7 @@ export const useAppStore = create<AppState>()(
         }
 
         get().chat?.actions?.resetChat?.()
+        get().setFavouriteIds([])
 
         set({
           userLogin: null,
@@ -66,6 +78,7 @@ export const useAppStore = create<AppState>()(
           navbarUser: null,
           isAuthenticated: false,
           roles: [],
+          sessionChecked: true,
           counterOfferOpen: false,
           counterOfferOfferId: null,
           darkMode: false,
@@ -79,7 +92,7 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: "itemtrade-app",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         userLogin: state.userLogin,
         userId: state.userId,
@@ -97,6 +110,9 @@ export const useAppStore = create<AppState>()(
 
 export const selectCounter = (id: string) => (s: AppState) =>
   s.counters[id] ?? 0
+
+export const selectIsFavourite = (offerId: number) => (s: AppState) =>
+  s.favouriteIds.has(offerId)
 
 export const selectAuth = (s: AppState) => ({
   isAuthenticated: s.isAuthenticated,

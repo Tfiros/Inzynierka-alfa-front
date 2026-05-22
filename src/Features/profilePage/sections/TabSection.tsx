@@ -17,21 +17,29 @@ import CounterOfferCard from "../component/CounterOfferCard"
 import { CounterOfferStatus } from "@/shared/enums/counterOfferStatus"
 import { Button } from "@/shared/components/button"
 import { useAppStore } from "@/shared/store/appStore"
+import { useFavouriteOffers } from "../hooks/UseFavouriteOffers"
+import { useCancelCounterOffer } from "../hooks/UseCancelCounterOffer"
+type ProfileTabViews =
+  | "offers"
+  | "counterOffersSent"
+  | "counterOffersReceived"
+  | "favourites"
+  | "history"
 
 const TabSection = ({ profileId }: { profileId: number }) => {
-  const [tab, setTab] = useState<
-    "offers" | "counterOffersSent" | "counterOffersReceived" | "history"
-  >("offers")
+  const [tab, setTab] = useState<ProfileTabViews>("offers")
 
   const [activePage] = useState<number>(1)
   const [historyPage] = useState<number>(1)
   const [sentPage, setSentPage] = useState<number>(1)
   const [receivedPage, setReceivedPage] = useState<number>(1)
+  const [favouritesPage, setFavouritesPage] = useState<number>(1)
 
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
 
   const update = useUpdateCounterOfferStatus()
+  const cancel = useCancelCounterOffer()
   const acceptCounterOffer = UseAcceptCounterOffer()
   const pageSize = 10
   const currentUserId = useAppStore((s) => s.userId)
@@ -77,10 +85,18 @@ const TabSection = ({ profileId }: { profileId: number }) => {
     2
   )
 
+  const { favouriteOffers, favouriteLoading, favouriteError } =
+    useFavouriteOffers(
+      isOwnProfile && tab === "favourites",
+      favouritesPage,
+      pageSize
+    )
+
   const activeOffersList = activeOffers?.elements ?? []
   const historyOffersList = historyOffers?.elements ?? []
   const sentList = sent.data?.elements ?? []
   const receivedList = received.data?.elements ?? []
+  const favouritesList = favouriteOffers?.elements ?? []
 
   const requestCounterOffer = useAppStore((s) => s.counterOfferRequest)
 
@@ -89,16 +105,13 @@ const TabSection = ({ profileId }: { profileId: number }) => {
       <Tabs
         value={tab}
         onValueChange={(value) => {
-          const nextTab = value as
-            | "offers"
-            | "counterOffersSent"
-            | "counterOffersReceived"
-            | "history"
+          const nextTab = value as ProfileTabViews
 
           if (
             !isOwnProfile &&
             (nextTab === "counterOffersSent" ||
-              nextTab === "counterOffersReceived")
+              nextTab === "counterOffersReceived" ||
+              nextTab === "favourites")
           ) {
             setTab("offers")
             return
@@ -109,7 +122,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
         className="mt-6"
       >
         <TabsList
-          className={`w-full grid ${isOwnProfile ? "grid-cols-4" : "grid-cols-2"}`}
+          className={`w-full grid ${isOwnProfile ? "grid-cols-5" : "grid-cols-2"}`}
         >
           <TabsTrigger value="offers">
             {isOwnProfile ? "Moje Oferty" : "Oferty"}
@@ -124,6 +137,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
               <TabsTrigger value="counterOffersReceived">
                 Otrzymane Kontroferty
               </TabsTrigger>
+              <TabsTrigger value="favourites">Ulubione</TabsTrigger>
             </>
           )}
 
@@ -198,6 +212,10 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                     data={co}
                     variant="sent"
                     onOpenOffer={handleShowDetails}
+                    actionsDisabled={cancel.loadingId === co.counterOfferId}
+                    onCancel={async (id) => {
+                      await cancel.cancelStatus(id)
+                    }}
                   />
                 ))}
               </div>
@@ -263,7 +281,7 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                       variant="received"
                       onOpenOffer={handleShowDetails}
                       actionsDisabled={isBusy}
-                      onCancel={async (id) => {
+                      onDeny={async (id) => {
                         await update.updateStatus(id, CounterOfferStatus.Denied)
                       }}
                       onAccept={async (id) => {
@@ -295,6 +313,68 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                       received.loading
                     }
                     onClick={() => setReceivedPage((p) => p + 1)}
+                  >
+                    Następna
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </TabsContent>
+
+        <TabsContent value="favourites" className="mt-4">
+          {favouriteLoading || favouriteOffers == null ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-muted-foreground">
+                Ładowanie ulubionych ofert...
+              </CardContent>
+            </Card>
+          ) : favouriteError ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-red-500">
+                {favouriteError}
+              </CardContent>
+            </Card>
+          ) : favouritesList.length === 0 ? (
+            <Card>
+              <CardContent className="p-6 text-sm text-muted-foreground">
+                Brak ulubionych ofert.
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              <div className="text-sm text-muted-foreground mb-3">
+                Ulubione oferty
+              </div>
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                {favouritesList.map((f) => (
+                  <Offer
+                    key={f.offerCoreDto.offerId}
+                    offer={f}
+                    onShowDetails={handleShowDetails}
+                    onOpenCounterOffer={requestCounterOffer}
+                  />
+                ))}
+              </div>
+              {favouriteOffers.totalPages > 1 && (
+                <div className="mt-4 flex items-center justify-center gap-3">
+                  <Button
+                    variant="outline"
+                    disabled={favouritesPage <= 1 || favouriteLoading}
+                    onClick={() => setFavouritesPage((p) => Math.max(1, p - 1))}
+                  >
+                    Poprzednia
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    Strona {favouriteOffers.page} z {favouriteOffers.totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    disabled={
+                      favouritesPage >= favouriteOffers.totalPages ||
+                      favouriteLoading
+                    }
+                    onClick={() => setFavouritesPage((p) => p + 1)}
                   >
                     Następna
                   </Button>

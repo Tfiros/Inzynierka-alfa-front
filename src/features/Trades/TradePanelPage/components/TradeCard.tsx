@@ -57,23 +57,31 @@ const TradeCard = ({
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_60px_1fr] lg:items-center">
-          <PartyBlock title="Klient" party={trade.customer} />
+          <PartyBlock
+            title="Klient"
+            party={trade.customer}
+            tokens={trade.tokensWanted}
+          />
 
           <div className="hidden justify-center lg:flex">
             <ArrowLeftRight className="h-5 w-5 text-muted-foreground" />
           </div>
 
-          <PartyBlock title="Wystawiający" party={trade.postingUser} />
+          <PartyBlock
+            title="Wystawiający"
+            party={trade.postingUser}
+            tokens={trade.tokensOffered}
+          />
         </div>
 
         {tab === "available" && isMiddleman ? (
           <TradeActionsAvailable
             tokenCost={trade.tokenCost}
             onAssign={onAssign}
-            onCancleTrade={onCancleTrade}
           />
-        ) : tab === "mine" && isMiddleman ? (
+        ) : (tab === "mine" || tab == "failedReturns") && isMiddleman ? (
           <TradeActionsMyTrade
+            tab={tab}
             tokenCost={trade.tokenCost}
             onDetails={onDetails}
             onCanceleTrade={onCancleTrade}

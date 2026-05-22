@@ -36,7 +36,7 @@ export const UserNavbar = () => {
             <img
               src={CrossTradeLogo_dark}
               alt="CROSSTRADE"
-              className="h-15 w-15 object-contain dark:block"
+              className="h-15 w-15 object-contain hidden dark:block"
             />
             <span className="sr-only">CROSSTRADE</span>
           </Link>
@@ -85,8 +85,12 @@ export const UserNavbar = () => {
                       </span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      Oczekujące saldo - zostanie zwolnione po zakończeniu
-                      wymiany.
+                      Trzymane przy aktywnych ofertach, kontrofertach i
+                      trwających wymianach.
+                      <br />
+                      Wracają do salda, gdy wymiana się zakończy, anulujesz
+                      ofertę/kontrofertę lub twoja kontroferta zostanie
+                      odrzucona
                     </TooltipContent>
                   </Tooltip>
                 )}
