@@ -23,6 +23,8 @@ import {
   type FavouriteSlice,
 } from "./storeParts/FavouriteSlice"
 
+import { tokenRefreshScheduler } from "@/shared/lib/TokenRefreshScheduler"
+import { clearCsrfToken } from "@/shared/api/Api"
 export type AppState = UiSlice &
   AuthSlice &
   OfferSlice &
@@ -52,6 +54,9 @@ export const useAppStore = create<AppState>()(
       setHasHydrated: (v) => set({ hasHydrated: v }),
 
       hardReset: async () => {
+        tokenRefreshScheduler.cancel()
+        clearCsrfToken()
+
         try {
           await chatHubClient.stop()
         } catch (e) {
@@ -73,6 +78,7 @@ export const useAppStore = create<AppState>()(
           navbarUser: null,
           isAuthenticated: false,
           roles: [],
+          sessionChecked: true,
           counterOfferOpen: false,
           counterOfferOfferId: null,
           darkMode: false,
@@ -86,7 +92,7 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: "itemtrade-app",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         userLogin: state.userLogin,
         userId: state.userId,

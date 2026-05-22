@@ -4,6 +4,8 @@ import { AuthService } from "@/shared/api/services/AuthService"
 import { UserInfoService } from "@/shared/api/services/UserInfoService"
 import { FavouriteService } from "@/shared/api/services/FavouriteService"
 import type { FavouriteSlice } from "./FavouriteSlice"
+import { tokenRefreshScheduler } from "@/shared/lib/TokenRefreshScheduler"
+import { clearCsrfToken, setAuthFailureHandler } from "@/shared/api/Api"
 
 export type AuthMeDto = {
   isAuthenticated: boolean
@@ -20,8 +22,8 @@ export type AuthSlice = {
   roles: string[]
 
   sessionChecked: boolean
-
   csrfReady: boolean
+
   initSecurity: () => Promise<void>
   setNavbarUser: (info: UserNavbarInfoDto | null) => void
   syncSession: () => Promise<void>
@@ -42,12 +44,16 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
   get
 ) => {
   const clearAuthState = () => {
+    tokenRefreshScheduler.cancel()
+    clearCsrfToken()
+
     set({
       userLogin: null,
       isAuthenticated: false,
       roles: [],
       userId: null,
       navbarUser: null,
+      sessionChecked: true,
     })
     get().setFavouriteIds([])
   }
@@ -59,8 +65,12 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     }
 
     const navRes = await UserInfoService.getNavbarInfo(userId)
-    if (navRes.isSuccess && navRes.data) set({ navbarUser: navRes.data })
-    else set({ navbarUser: null })
+
+    if (navRes.isSuccess && navRes.data) {
+      set({ navbarUser: navRes.data })
+    } else {
+      set({ navbarUser: null })
+    }
   }
 
   const loadFavouriteOffers = async (userId: number | null) => {
@@ -76,6 +86,7 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
 
   const initSecurityOnce = async () => {
     if (get().csrfReady) return
+
     set({ csrfReady: true })
 
     try {
@@ -85,6 +96,20 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     }
   }
 
+  const scheduleRefreshIfPossible = (expiresIn?: number | null) => {
+    if (!expiresIn || expiresIn <= 0) return
+
+    tokenRefreshScheduler.scheduleRefresh(
+      expiresIn,
+      async () => {
+        await get().refresh()
+      },
+      async () => {
+        await get().hardReset()
+      }
+    )
+  }
+
   return {
     userLogin: null,
     userId: null,
@@ -92,11 +117,14 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     isAuthenticated: false,
     roles: [],
     csrfReady: false,
-
     sessionChecked: false,
 
     initSecurity: async () => {
       await initSecurityOnce()
+
+      setAuthFailureHandler(async () => {
+        await get().hardReset()
+      })
     },
 
     setNavbarUser: (info) => {
@@ -142,23 +170,39 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
         throw new Error(res.message || "Nieznany błąd podczas logowania.")
       }
 
-      set({ userId: (res.data as any).id ?? null, sessionChecked: false })
+      set({
+        userId: (res.data as any).id ?? null,
+        sessionChecked: false,
+      })
+
+      scheduleRefreshIfPossible((res.data as any).expiresIn)
 
       await get().syncSession()
     },
 
     refresh: async () => {
       const res = await AuthService.refresh()
+
       if (!res.isSuccess || !res.data) {
         throw new Error(res.message || "Nie udało się odświeżyć sesji.")
       }
 
-      set({ userId: (res.data as any).id ?? null, sessionChecked: false })
+      set({
+        userId: (res.data as any).id ?? null,
+        sessionChecked: false,
+      })
+
+      scheduleRefreshIfPossible((res.data as any).expiresIn)
+
       await get().syncSession()
     },
 
     logout: async () => {
+      tokenRefreshScheduler.cancel()
+      clearCsrfToken()
+
       await AuthService.logout().catch(() => {})
+
       await get().hardReset()
     },
   }

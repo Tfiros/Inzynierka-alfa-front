@@ -7,6 +7,12 @@ import type { ApiResult } from "./ApiResult"
 
 type ErrorBody = { message?: string; [k: string]: unknown }
 
+let onAuthFailure: (() => Promise<void>) | null = null
+
+export const setAuthFailureHandler = (handler: () => Promise<void>) => {
+  onAuthFailure = handler
+}
+
 export type ApiClientConfig = AxiosRequestConfig & {
   _retry?: boolean
   skipAuthRefresh?: boolean
@@ -29,18 +35,22 @@ export const clearCsrfToken = () => {
 export const hasCsrfToken = () => !!csrfToken
 
 const storeCsrfFromHeaders = (headers: any) => {
-  const t = headers?.["x-xsrf-token"]
-  if (typeof t === "string" && t.length > 0) csrfToken = t
+  const token = headers?.["x-xsrf-token"]
+
+  if (typeof token === "string" && token.length > 0) {
+    csrfToken = token
+  }
 }
+
 const isAuthEndpoint = (url?: string) => {
   const u = (url ?? "").toLowerCase()
+
   return (
     u.includes("/auth/login") ||
     u.includes("/auth/register") ||
     u.includes("/auth/forgot-password") ||
     u.includes("/auth/refresh") ||
     u.includes("/auth/logout") ||
-    u.includes("/auth/me") ||
     u.includes("/auth/csrf")
   )
 }
@@ -67,7 +77,9 @@ api.interceptors.response.use(
     return response
   },
   async (error) => {
-    if (error?.response?.headers) storeCsrfFromHeaders(error.response.headers)
+    if (error?.response?.headers) {
+      storeCsrfFromHeaders(error.response.headers)
+    }
 
     if (axios.isAxiosError<ErrorBody>(error)) {
       const status =
@@ -75,27 +87,33 @@ api.interceptors.response.use(
         HttpStatusCode.InternalServerError
 
       const originalRequest = (error.config ?? {}) as ApiClientConfig
+
       const shouldTryRefresh =
         status === HttpStatusCode.Unauthorized &&
         !originalRequest._retry &&
         !originalRequest.skipAuthRefresh &&
-        !isAuthEndpoint(originalRequest.url) &&
-        !!csrfToken
+        !isAuthEndpoint(originalRequest.url)
 
       if (shouldTryRefresh) {
         originalRequest._retry = true
+
         try {
           const refreshRes = await api.post("/Auth/refresh", {}, {
             skipAuthRefresh: true,
           } as ApiClientConfig)
+
           storeCsrfFromHeaders(refreshRes.headers)
 
           return api(originalRequest)
         } catch {
-          //clearCsrfToken()
-          //todo
+          clearCsrfToken()
+
+          if (onAuthFailure) {
+            await onAuthFailure()
+          }
         }
       }
+
       const data = error.response?.data as any
 
       if (
@@ -108,11 +126,13 @@ api.interceptors.response.use(
       }
 
       const raw = data as Partial<RawBodyResponse> | undefined
+
       if (raw?.message && raw?.details) {
         return Promise.reject({ status, ...raw })
       }
 
       const msg = error.message ?? "Request failed"
+
       return Promise.reject({
         status,
         message: msg,
@@ -121,6 +141,7 @@ api.interceptors.response.use(
     }
 
     const message = error instanceof Error ? error.message : "Unknown error"
+
     return Promise.reject<ApiResult<never>>({
       isSuccess: false,
       status: HttpStatusCode.InternalServerError,
