@@ -5,7 +5,7 @@ import type {
   CreateItemRequest,
   UpdateItemRequest,
 } from "@/shared/types/itemManagementTypes/RequestResponseTypes"
-import { del, get, post, put } from "../ApiClient"
+import { del, get, postForm, putForm } from "../ApiClient"
 export class ItemsService {
   private static readonly base = "/Items"
 
@@ -24,12 +24,39 @@ export class ItemsService {
   ) => get<DropdownResponse>(`${this.base}/dropdown`, { gameId, searchText })
 
   // POST /Items
-  public static readonly create = async (req: CreateItemRequest) =>
-    post<ItemDto>(this.base, req)
+  public static readonly create = async (req: CreateItemRequest) => {
+    const form = new FormData()
+    form.append("Name", req.name)
+    form.append("EstimatedTokenValue", String(req.estimatedTokenValue))
+    form.append("GameId", String(req.gameId))
+    form.append("ItemRarityId", String(req.itemRarityId))
+    if (req.image) {
+      form.append("Image", req.image)
+    }
+    return postForm<ItemDto>(this.base, form)
+  }
 
   // PUT /Items/{id}
-  public static readonly update = async (id: number, req: UpdateItemRequest) =>
-    put<ItemDto>(`${this.base}/${id}`, req)
+  public static readonly update = async (
+    id: number,
+    req: UpdateItemRequest
+  ) => {
+    const form = new FormData()
+    if (req.name !== undefined) {
+      form.append("Name", req.name)
+    }
+
+    if (req.estimatedTokenValue !== undefined) {
+      form.append("EstimatedTokenValue", String(req.estimatedTokenValue))
+    }
+    if (req.itemRarityId !== undefined) {
+      form.append("ItemRarityId", String(req.itemRarityId))
+    }
+    if (req.image) {
+      form.append("Image", req.image)
+    }
+    return putForm<ItemDto>(`${this.base}/${id}`, form)
+  }
 
   // DELETE /Items/{id}/delete
   public static readonly softDelete = async (id: number) =>

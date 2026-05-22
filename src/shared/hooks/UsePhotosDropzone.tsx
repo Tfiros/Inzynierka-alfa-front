@@ -1,44 +1,60 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
+import {
+  imageValidationMessage,
+  validateImageFIle,
+} from "../lib/ImageValidation"
 
 type UsePhotosDropzoneArgs = {
+  photos: File[]
+  onChange: (files: File[]) => void
   maxFiles: number
   disabled?: boolean
 }
 
 export const usePhotosDropzone = ({
+  photos,
+  onChange,
   maxFiles,
   disabled,
 }: UsePhotosDropzoneArgs) => {
-  const [files, setFiles] = useState<File[]>([])
   const [isOver, setIsOver] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const remaining = maxFiles - files.length
+  const remaining = Math.max(0, maxFiles - photos.length)
 
   const addFiles = useCallback(
     (incoming: FileList | File[]) => {
       if (disabled) return
 
-      const arr = Array.from(incoming).filter((f) =>
-        f.type.toLowerCase().startsWith("image/")
-      )
-      if (!arr.length) return
-
-      setFiles((prev) => {
-        if (prev.length >= maxFiles) return prev
-        const next = [...prev]
-        for (const f of arr) {
-          if (next.length >= maxFiles) break
-          next.push(f)
+      const acceptedPhotos: File[] = []
+      for (const f of Array.from(incoming)) {
+        const err = validateImageFIle(f)
+        if (err) {
+          setError(imageValidationMessage(err))
+          continue
         }
-        return next
-      })
+        acceptedPhotos.push(f)
+      }
+
+      if (!acceptedPhotos.length) return
+
+      const next =
+        maxFiles === 1
+          ? [acceptedPhotos[0]]
+          : [...photos, ...acceptedPhotos].slice(0, maxFiles)
+
+      onChange(next)
+      setError(null)
     },
-    [disabled, maxFiles]
+    [disabled, maxFiles, onChange, photos]
   )
 
-  const removeAt = useCallback((idx: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== idx))
-  }, [])
+  const removeAt = useCallback(
+    (idx: number) => {
+      onChange(photos.filter((_, i) => i !== idx))
+    },
+    [onChange, photos]
+  )
 
   const onDrop = useCallback(
     (e: React.DragEvent) => {
@@ -77,11 +93,11 @@ export const usePhotosDropzone = ({
   )
 
   const previews = useMemo(() => {
-    return files.map((file) => ({
+    return photos.map((file) => ({
       file,
       url: URL.createObjectURL(file),
     }))
-  }, [files])
+  }, [photos])
 
   useEffect(() => {
     return () => {
@@ -90,11 +106,11 @@ export const usePhotosDropzone = ({
   }, [previews])
 
   return {
-    files,
     previews,
     isOver,
     remaining,
-    actions: { addFiles, removeAt, setFiles },
+    error,
+    actions: { addFiles, removeAt },
     handlers: { onDrop, onDragOver, onDragLeave, onInputChange },
   }
 }

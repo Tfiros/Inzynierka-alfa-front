@@ -17,6 +17,7 @@ import ProfileCardSection from "./sections/ProfileCardSection"
 import ProfileDataSection from "./sections/ProfileDataSection"
 import ProfilePickerSection from "./sections/ProfilePickerSection"
 import ProfileSecurityDataSection from "./sections/ProfileSecurityDataSection"
+import AvatarChangeDialog from "./components/AvatarChangeDialog"
 
 const ProfileEdit = () => {
   const userId = useAppStore((s) => s.userId)
@@ -27,6 +28,8 @@ const ProfileEdit = () => {
   const [error, setError] = useState<string | null>(null)
   const [savingProfile, setSavingProfile] = useState(false)
   const [savingSecurity, setSavingSecurity] = useState(false)
+  const [avatarDialogOpen, setAvatarDialogOpen] = useState(false)
+  const [savingAvatar, setSavingAvatar] = useState(false)
 
   useEffect(() => {
     let alive = true
@@ -124,6 +127,29 @@ const ProfileEdit = () => {
     }
   }
 
+  const onChangeAvatar = async (file: File) => {
+    if (!profile) {
+      return
+    }
+    try {
+      setSavingAvatar(true)
+      setError(null)
+      const res = await ProfileInfoService.updateAvatar(file, userId)
+      if (!res.isSuccess) {
+        throw new Error(res.message ?? "Nie udało się zmienić avatara")
+      }
+      if (res.data) {
+        setProfile(mapBackendToProfile(res.data))
+      }
+      await refreshNavbar()
+      setAvatarDialogOpen(false)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Błąd zapisu avatara")
+    } finally {
+      setSavingAvatar(false)
+    }
+  }
+
   if (loading) return <div className="p-6">Ładowanie…</div>
   if (!profile) return <div className="p-6">Brak danych profilu</div>
 
@@ -134,7 +160,10 @@ const ProfileEdit = () => {
       </h1>
 
       <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-[320px_1fr]">
-        <ProfileCardSection profile={profile}></ProfileCardSection>
+        <ProfileCardSection
+          profile={profile}
+          onOpenAvatarDialog={() => setAvatarDialogOpen(true)}
+        />
 
         <Card className="p-4 md:p-6">
           {error && (
@@ -161,6 +190,12 @@ const ProfileEdit = () => {
             />
           </Tabs>
         </Card>
+        <AvatarChangeDialog
+          open={avatarDialogOpen}
+          saving={savingAvatar}
+          onOpenChange={setAvatarDialogOpen}
+          onSubmit={onChangeAvatar}
+        />
       </div>
     </div>
   )

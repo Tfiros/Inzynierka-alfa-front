@@ -1,5 +1,6 @@
 import { Layers, Trophy, Star, Percent } from "lucide-react"
 import StatBox from "../component/StatBox"
+import { formatSuccessRating } from "@/shared/lib/formatters"
 
 export type StatBoxSectionProps = {
   activeOffers: number
@@ -32,7 +33,7 @@ const StatBoxSection = ({ stats }: { stats: StatBoxSectionProps }) => {
         />
         <StatBox
           icon={<Percent className="h-5 w-5" />}
-          value={`${stats.successRatePct * 100}%`}
+          value={formatSuccessRating(stats.successRatePct)}
           label="Sukces wymian"
           highlighted
         />

@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/select"
+import PhotosDropzone from "@/shared/components/PhotosDropzone"
 
 type Props = {
   open: boolean
@@ -36,6 +37,8 @@ type Props = {
   onRaritySearchChange: (v: string) => void
 
   rarities: DropdownOption[]
+  image: File | null
+  onImageChange: (file: File | null) => void
   saving: boolean
   canSubmit: boolean
   onSubmit: () => void
@@ -105,6 +108,15 @@ const AddItemDialog = (p: Props) => {
                 )}
               </SelectContent>
             </Select>
+            <div className="space-y-2">
+              <div className="text-sm opacity-70">Zdjęcie</div>
+              <PhotosDropzone
+                photos={p.image ? [p.image] : []}
+                onChange={(fs) => p.onImageChange(fs[0] ?? null)}
+                maxFiles={1}
+                disabled={p.saving}
+              />
+            </div>
           </div>
         </div>
 

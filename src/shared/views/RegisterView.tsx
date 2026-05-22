@@ -41,6 +41,9 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
       return setError(
         "Hasło musi mieć co najmniej 8 znaków i zawierać przynajmniej trzy z następujących: małą literę, dużą literę, cyfrę, znak specjalny."
       )
+    if (!birthDate) {
+      return setError("Podaj datę urodzenia")
+    }
     if (!checked)
       return setError("Musisz zaakceptować regulamin i politykę prywatności.")
 
@@ -141,6 +144,7 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
             value={username}
             onChange={(e) => setUsername(e.currentTarget.value)}
             disabled={busy}
+            autoComplete="nickname"
           />
         </div>
 

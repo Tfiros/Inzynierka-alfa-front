@@ -9,6 +9,7 @@ export type UserNavbarInfoDto = {
   chatIds: number[]
   chatUnreadTotal: number
   notificationsUnreadTotal: number
+  imageUrl?: string | null
 }
 
 export type UserProfileInfoDto = {
@@ -18,6 +19,7 @@ export type UserProfileInfoDto = {
   registrationDate: string
   nickname: string
   description: string
+  imageUrl?: string | null
   activeOffersCount: number
   successTradesCount: number
   rating: number

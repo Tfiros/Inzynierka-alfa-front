@@ -1,4 +1,4 @@
-import { get, post, put } from "@/shared/api/ApiClient"
+import { get, post, postForm, put } from "@/shared/api/ApiClient"
 
 import type {
   AssignMiddlemanRequest,
@@ -117,4 +117,15 @@ export class TradeService {
 
   public static readonly getById = async (tradeId: number) =>
     get<TradeListItem>(`${this.base}/${tradeId}`)
+
+  public static readonly uploadTradePhoto = async (
+    tradeId: number,
+    image: File,
+    isBuyers: boolean
+  ) => {
+    const form = new FormData()
+    form.append("Image", image)
+    form.append("IsBuyers", String(isBuyers))
+    return postForm<string>(`${this.base}/${tradeId}/photos`, form)
+  }
 }

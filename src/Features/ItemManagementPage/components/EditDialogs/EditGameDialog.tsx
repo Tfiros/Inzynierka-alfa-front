@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/select"
+import PhotosDropzone from "@/shared/components/PhotosDropzone"
 
 const EditGameDialog = (props: {
   open: boolean
@@ -24,15 +25,21 @@ const EditGameDialog = (props: {
   initialName: string
   initialGenreId: number
   genres: DropdownOption[]
-  onSave: (payload: { name?: string; genreId?: number }) => Promise<void>
+  onSave: (payload: {
+    name?: string
+    genreId?: number
+    image?: File | null
+  }) => Promise<void>
 }) => {
   const [name, setName] = useState(props.initialName)
   const [genreId, setGenreId] = useState<number>(props.initialGenreId)
+  const [image, setImage] = useState<File | null>(null)
 
   useEffect(() => {
     if (props.open) {
       setName(props.initialName)
       setGenreId(props.initialGenreId)
+      setImage(null)
     }
   }, [props.open, props.initialName, props.initialGenreId])
 
@@ -68,6 +75,14 @@ const EditGameDialog = (props: {
                 ))}
               </SelectContent>
             </Select>
+            <div className="space-y-2">
+              <div className="text-sm opacity-70">Zdjęcie</div>
+              <PhotosDropzone
+                photos={image ? [image] : []}
+                onChange={(fs) => setImage(fs[0] ?? null)}
+                maxFiles={1}
+              />
+            </div>
           </div>
         </div>
 
@@ -75,7 +90,7 @@ const EditGameDialog = (props: {
           <Button variant="outline" onClick={() => props.onOpenChange(false)}>
             Anuluj
           </Button>
-          <Button onClick={() => props.onSave({ name, genreId })}>
+          <Button onClick={() => props.onSave({ name, genreId, image })}>
             Zapisz
           </Button>
         </DialogFooter>

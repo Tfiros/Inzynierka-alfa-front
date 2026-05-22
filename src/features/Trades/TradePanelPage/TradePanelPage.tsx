@@ -115,6 +115,7 @@ const TradePanelPage = () => {
         onOpenChange={(o) => {
           if (!o) details.actions.close()
         }}
+        onPhotoUpload={details.actions.refresh}
         onSaved={onDetailsSaved}
       />
 
