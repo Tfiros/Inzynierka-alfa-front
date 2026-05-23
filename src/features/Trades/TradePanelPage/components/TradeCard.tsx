@@ -11,6 +11,7 @@ import TradeStatusPill from "./TradeStatusPill"
 import TradeActionsAvailable from "./TradesActionsAvailable"
 import useTradeChats from "../hooks/UseTradeChats"
 import { Button } from "@/shared/components/button"
+import { useAppStore } from "@/shared/store/appStore"
 
 type Props = {
   tab: MiddlemanTab
@@ -31,15 +32,22 @@ const TradeCard = ({
   onCompleteClick,
   isMiddleman,
 }: Props) => {
+  const currentUserId = useAppStore((s) => s.userId)
+  const isInTrade =
+    currentUserId === trade.customer.userId ||
+    currentUserId === trade.postingUser.userId
+
+  const canUseMiddlemanActions = isMiddleman && !isInTrade
   const hasMiddleman = trade.middlemanUserId != null
   const { isLoadingChats, openBuyerChat, openSellerChat, openMyChat } =
     useTradeChats({
       tradeId: trade.tradeId,
       hasMiddleman,
-      isMiddleman,
+      isMiddleman: canUseMiddlemanActions,
       buyerUserId: trade.customer.userId,
       sellerUserId: trade.postingUser.userId,
     })
+
   return (
     <Card className="shadow-sm" data-trade-id={trade.tradeId}>
       <CardContent className="p-6">
@@ -74,12 +82,13 @@ const TradeCard = ({
           />
         </div>
 
-        {tab === "available" && isMiddleman ? (
+        {tab === "available" && canUseMiddlemanActions ? (
           <TradeActionsAvailable
             tokenCost={trade.tokenCost}
             onAssign={onAssign}
           />
-        ) : (tab === "mine" || tab == "failedReturns") && isMiddleman ? (
+        ) : (tab === "mine" || tab == "failedReturns") &&
+          canUseMiddlemanActions ? (
           <TradeActionsMyTrade
             tab={tab}
             tokenCost={trade.tokenCost}
@@ -89,7 +98,7 @@ const TradeCard = ({
           />
         ) : null}
         <div className="mt-3 flex flex-wrap gap-2 border-t pt-3">
-          {isMiddleman ? (
+          {canUseMiddlemanActions ? (
             <>
               <Button
                 variant="outline"
