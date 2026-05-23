@@ -47,6 +47,7 @@ export class TradeService {
       this.addParam(params, "sortBy", q.sortBy ?? null)
 
       this.addParam(params, "readyForCompletion", q.readyForCompletion ?? null)
+      this.addParam(params, "onlyMine", q.onlyMine ?? null)
     }
 
     const qs = params.toString()

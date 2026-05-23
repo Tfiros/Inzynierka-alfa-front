@@ -22,6 +22,7 @@ type State = {
 
   sortBy: TradeSortBy | null
   readyForCompletion: boolean | null
+  onlyMine: boolean
 }
 
 const DEFAULT_PAGE_SIZE = 10
@@ -55,6 +56,7 @@ const useUserTradesQuery = (initialTab: MiddlemanTab = "available") => {
 
     sortBy: null,
     readyForCompletion: null,
+    onlyMine: false,
   })
 
   const q = useMemo<TradesQuery>(() => {
@@ -72,6 +74,7 @@ const useUserTradesQuery = (initialTab: MiddlemanTab = "available") => {
 
       sortBy: state.sortBy ?? null,
       readyForCompletion: state.readyForCompletion ?? null,
+      onlyMine: state.onlyMine,
     }
   }, [state])
 
@@ -102,6 +105,9 @@ const useUserTradesQuery = (initialTab: MiddlemanTab = "available") => {
     setReadyForCompletion: (v: boolean | null) =>
       setState((s) => ({ ...s, readyForCompletion: v, page: 1 })),
 
+    setOnlyMine: (onlyMine: boolean) =>
+      setState((s) => ({ ...s, onlyMine, page: 1 })),
+
     reset: () =>
       setState((s) => ({
         ...s,
@@ -117,6 +123,7 @@ const useUserTradesQuery = (initialTab: MiddlemanTab = "available") => {
         createdTo: "",
         sortBy: null,
         readyForCompletion: null,
+        onlyMine: false,
       })),
   }
 

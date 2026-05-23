@@ -37,6 +37,7 @@ type State = {
 
   sortBy: TradeSortBy | null
   readyForCompletion: boolean | null
+  onlyMine: boolean
 }
 
 type Actions = {
@@ -49,6 +50,9 @@ type Actions = {
   setSortBy: (v: TradeSortBy | null) => void
   setReadyForCompletion: (v: boolean | null) => void
   setPageSize: (v: number) => void
+
+  setOnlyMine: (v: boolean) => void
+
   reset: () => void
 }
 
@@ -56,6 +60,7 @@ type Props = {
   tab: MiddlemanTab
   state: State
   actions: Actions
+  isMiddleman: boolean
 }
 
 const PAGE_SIZES = [10, 20, 50]
@@ -81,8 +86,9 @@ const SORT_OPTIONS: { value: TradeSortBy; label: string }[] = [
   { value: TradeSortByConst.TradeIdDesc, label: "TradeId ↓" },
 ]
 
-const FiltersSection = ({ tab, state, actions }: Props) => {
+const FiltersSection = ({ tab, state, actions, isMiddleman }: Props) => {
   const showReadyForCompletion = tab !== "available"
+  const showOnlyMine = isMiddleman && tab !== "available"
 
   return (
     <div className="mt-6 rounded-xl border bg-card p-4">
@@ -212,6 +218,19 @@ const FiltersSection = ({ tab, state, actions }: Props) => {
               <SelectItem value="false">Nie</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+      ) : null}
+      {showOnlyMine ? (
+        <div className="mt-3 flex items-center gap-3 text-sm">
+          <span className="text-muted-foreground">
+            Pokaż tylko moje trade’y:
+          </span>
+
+          <input
+            type="checkbox"
+            checked={state.onlyMine}
+            onChange={(e) => actions.setOnlyMine(e.target.checked)}
+          />
         </div>
       ) : null}
     </div>
