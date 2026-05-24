@@ -30,7 +30,7 @@ import {
 import OfferItemCard from "./OfferItemCard"
 import OfferStatusPill from "./OfferStatusPill"
 import { formatRating, formatSuccessRating } from "@/shared/lib/formatters"
-import { useToggleFavourite } from "../../../shared/hooks/UseToggleFavourite"
+import { useToggleFavourite } from "@/shared/hooks/UseToggleFavourite"
 
 type OfferProps = {
   offer: offerListingDtoResponse
@@ -52,8 +52,8 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
   const isActive = offer.offerCoreDto.offerStatusId === 1
   const isFavourite = useAppStore(selectIsFavourite(offer.offerCoreDto.offerId))
-  const sessionCheck = useAppStore((s) => s.sessionChecked)
-  const favouritesReady = !isAuthenticated || sessionCheck
+  const favouritesLoaded = useAppStore((s) => s.favouriteIdsLoaded)
+  const favouritesReady = !isAuthenticated || favouritesLoaded
   const { toggle, loading } = useToggleFavourite()
   return (
     <Card

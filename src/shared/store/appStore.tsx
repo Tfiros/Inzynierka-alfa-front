@@ -47,7 +47,7 @@ export const useAppStore = create<AppState>()(
       ...createCounterOfferSlice(set, get, api),
       ...createAcceptOfferSlice(set, get, api),
       ...createNotificationsSlice(set),
-      ...createFavouriteSlice(set),
+      ...createFavouriteSlice(set, get, api),
       ...createChatSlice(set, get, api),
 
       hasHydrated: false,
@@ -70,7 +70,6 @@ export const useAppStore = create<AppState>()(
         }
 
         get().chat?.actions?.resetChat?.()
-        get().setFavouriteIds([])
 
         set({
           userLogin: null,
@@ -85,6 +84,8 @@ export const useAppStore = create<AppState>()(
           notifications: [],
           acceptOfferOpen: false,
           acceptOfferOfferId: null,
+          favouriteIds: new Set(),
+          favouriteIdsLoaded: false,
         })
 
         await useAppStore.persist.clearStorage()

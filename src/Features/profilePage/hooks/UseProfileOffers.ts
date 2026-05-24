@@ -99,6 +99,7 @@ export const useUserOffers = (
     if (!userId || Number.isNaN(userId)) return
     void fetchActiveOffers()
     void fetchHistoryOffers()
+    void useAppStore.getState().loadFavouriteIds()
   }, [fetchActiveOffers, myOffersRefresh, fetchHistoryOffers])
   return {
     activeOffers,

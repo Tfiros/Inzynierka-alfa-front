@@ -34,6 +34,7 @@ export function useOffersListing() {
   const [error, setError] = useState<string | null>(null)
 
   const offersRefresh = useAppStore(selectCounter("offers:list"))
+  const isAuthenticated = useAppStore((s) => s.isAuthenticated)
 
   useEffect(() => {
     OfferService.getGames().then((res) => {
@@ -138,10 +139,11 @@ export function useOffersListing() {
       setPageSize(res.data.pageSize)
     }
     void load()
+    void useAppStore.getState().loadFavouriteIds()
     return () => {
       alive = false
     }
-  }, [query, offersRefresh])
+  }, [query, offersRefresh, isAuthenticated])
 
   return {
     offers,
