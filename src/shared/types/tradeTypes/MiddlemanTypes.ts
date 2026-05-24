@@ -45,6 +45,7 @@ export type TradesQuery = {
 
   sortBy?: TradeSortBy | null
   readyForCompletion?: boolean | null
+  onlyMine?: boolean
 }
 
 export type ItemInfo = {

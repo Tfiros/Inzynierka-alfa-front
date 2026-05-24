@@ -52,6 +52,7 @@ const TradePanelPage = () => {
           tab={query.state.tab}
           state={query.state}
           actions={query.actions}
+          isMiddleman={isMiddleman}
         />
 
         <TradesListSection
