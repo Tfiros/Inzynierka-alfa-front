@@ -88,7 +88,7 @@ const SORT_OPTIONS: { value: TradeSortBy; label: string }[] = [
 
 const FiltersSection = ({ tab, state, actions, isMiddleman }: Props) => {
   const showReadyForCompletion = tab !== "available"
-  const showOnlyMine = isMiddleman && tab !== "available"
+  const showOnlyMine = isMiddleman
 
   return (
     <div className="mt-6 rounded-xl border bg-card p-4">
