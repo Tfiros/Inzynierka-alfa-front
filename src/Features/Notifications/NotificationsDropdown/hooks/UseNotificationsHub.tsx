@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react"
 import { useAppStore } from "@/shared/store/AppStore"
 import { NotificationsHubClient } from "@/shared/api/hubs/NotificationsHubClient"
 import type { NotificationDto } from "@/shared/types/notificationsTypes/notificationsDtos"
+import { toast } from "sonner"
 
 type Props = {
   logErrors?: boolean
@@ -38,11 +39,10 @@ export const useNotificationsHub = (options?: Props) => {
         notificationCreated: (notification: NotificationDto) => {
           pushNotificationRef.current(notification)
 
-          window.dispatchEvent(
-            new CustomEvent("notification:created", {
-              detail: notification,
-            })
-          )
+          toast.info(notification.title, {
+            description: notification.message,
+            duration: 5000,
+          })
         },
       })
 
