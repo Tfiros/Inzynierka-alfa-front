@@ -88,7 +88,12 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
                 variant="outline"
                 className="cursor-pointer group"
                 type="button"
-                disabled={!isAuthenticated || isOwner || loading || !isActive}
+                disabled={
+                  !isAuthenticated ||
+                  isOwner ||
+                  loading ||
+                  (!isActive && !isFavourite)
+                }
                 onClick={() => toggle(offer.offerCoreDto.offerId)}
               >
                 {!favouritesReady ? (

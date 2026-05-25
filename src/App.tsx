@@ -22,6 +22,7 @@ import CounterOfferInteractionHost from "./shared/views/OfferInteractionView/Cou
 import { TooltipProvider } from "./shared/components/ui/tooltip"
 import MarketplacePage from "./features/marketplacePage/Marketplace"
 import AcceptOfferInteractionHost from "./shared/views/OfferInteractionView/AcceptOfferInteractionHost"
+import { Toaster } from "sonner"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
@@ -63,6 +64,7 @@ function App() {
         <OfferInteractionHost />
         <CounterOfferInteractionHost />
         <AcceptOfferInteractionHost />
+        <Toaster position="bottom-left" richColors />
       </BrowserRouter>
     </TooltipProvider>
   )
