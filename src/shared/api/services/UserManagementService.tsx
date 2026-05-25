@@ -3,6 +3,7 @@ import type {
   UserListQuery,
   UpdateUserRequestDto,
   DeleteUserRequestDto,
+  UserDetaulsDto,
 } from "@/shared/types/userTypes/UserManagementTypes"
 import { get, patch } from "../ApiClient"
 import type { ApiResult } from "../ApiResult"
@@ -16,7 +17,6 @@ function buildUserListQs(q: UserListQuery) {
 
   if (q.searchText?.trim()) p.set("SearchText", q.searchText.trim())
   if (q.orderBy !== undefined) p.set("OrderBy", String(q.orderBy))
-  if (q.role?.trim()) p.set("Role", q.role.trim())
 
   if (q.registeredFrom) p.set("RegisteredFrom", q.registeredFrom)
   if (q.registeredTo) p.set("RegisteredTo", q.registeredTo)
@@ -32,6 +32,11 @@ export class UserManagementService {
     get<UserListPagedResponse>(
       `${this.base}${buildUserListQs(query)}`
     ) as Promise<ApiResult<UserListPagedResponse>>
+
+  public static readonly getUserDetails = async (authZeroUserId: string) =>
+    get<UserDetaulsDto>(`${this.base}/${authZeroUserId}/details`) as Promise<
+      ApiResult<UserDetaulsDto>
+    >
 
   public static readonly updateUser = async (body: UpdateUserRequestDto) =>
     patch<string>(`${this.base}`, body)

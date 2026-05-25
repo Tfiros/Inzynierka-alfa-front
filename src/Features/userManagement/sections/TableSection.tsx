@@ -3,7 +3,6 @@ import { Button } from "@/shared/components/button"
 import { ArrowUpDown } from "lucide-react"
 import type { UserListItemDto } from "@/shared/types/userTypes/UserManagementTypes"
 import UserActionsMenu from "../components/UserActionsMenu"
-import RoleBadges from "../components/RoleBadges"
 
 import { Skeleton } from "@/shared/components/skeleton"
 import {
@@ -70,10 +69,6 @@ const TableSection = (props: Props) => {
                     </Button>
                     <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
                   </div>
-                </TableHead>
-
-                <TableHead className="w-[22%] text-center font-semibold">
-                  Role
                 </TableHead>
 
                 <TableHead className="w-[18%]">
@@ -147,12 +142,6 @@ const TableSection = (props: Props) => {
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {u.email}
-                    </TableCell>
-
-                    <TableCell className="text-center">
-                      <div className="flex justify-center">
-                        <RoleBadges roles={u.roles ?? []} />
-                      </div>
                     </TableCell>
 
                     <TableCell className="text-muted-foreground">

@@ -12,7 +12,6 @@ export type UserListQuery = {
   pageSize: number
   searchText?: string
   orderBy?: UserListOrderBy
-  role?: string
   registeredFrom?: string
   registeredTo?: string
 }
@@ -22,7 +21,6 @@ export type UserListItemDto = {
   email: string
   name: string | null
   registeredAt: string
-  roles: string[]
 }
 
 export type UserListPagedResponse = {
@@ -39,6 +37,7 @@ export type UserListPagedResponse = {
 export type UpdateUserRequestDto = {
   authZeroUserId: string
   email?: string | null
+  profileDescription?: string | null
   newPassword?: string | null
   roles?: string[] | null
   nickname?: string | null
@@ -46,4 +45,9 @@ export type UpdateUserRequestDto = {
 
 export type DeleteUserRequestDto = {
   authZeroUserId: string
+}
+
+export type UserDetaulsDto = {
+  profileDescription: string | null
+  roles: string[]
 }
