@@ -53,6 +53,7 @@ export function useFavouriteOffers(enabled: boolean, page = 1, pageSize = 10) {
       return
     }
     void fetchFavourites()
+    void useAppStore.getState().loadFavouriteIds()
   }, [enabled, fetchFavourites, refreshKey])
 
   return { favouriteOffers, favouriteLoading, favouriteError }

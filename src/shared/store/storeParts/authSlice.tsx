@@ -2,7 +2,6 @@ import type { StateCreator } from "zustand"
 import type { UserNavbarInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
 import { AuthService } from "@/shared/api/services/AuthService"
 import { UserInfoService } from "@/shared/api/services/UserInfoService"
-import { FavouriteService } from "@/shared/api/services/FavouriteService"
 import type { FavouriteSlice } from "./FavouriteSlice"
 import { tokenRefreshScheduler } from "@/shared/lib/TokenRefreshScheduler"
 import { clearCsrfToken, setAuthFailureHandler } from "@/shared/api/Api"
@@ -54,8 +53,9 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
       userId: null,
       navbarUser: null,
       sessionChecked: true,
+      favouriteIds: new Set(),
+      favouriteIdsLoaded: false,
     })
-    get().setFavouriteIds([])
   }
 
   const loadNavbarInfoIfPossible = async (userId: number | null) => {
@@ -71,17 +71,6 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     } else {
       set({ navbarUser: null })
     }
-  }
-
-  const loadFavouriteOffers = async (userId: number | null) => {
-    const setFavouriteIds = get().setFavouriteIds
-    if (!userId) {
-      setFavouriteIds([])
-      return
-    }
-
-    const favRes = await FavouriteService.getFavouriteIds()
-    setFavouriteIds(favRes.isSuccess && favRes.data ? favRes.data : [])
   }
 
   const initSecurityOnce = async () => {
@@ -154,7 +143,6 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
         })
 
         await loadNavbarInfoIfPossible(finalUserId)
-        await loadFavouriteOffers(finalUserId)
       } catch (e) {
         console.error("[syncSession] failed", e)
         clearAuthState()
