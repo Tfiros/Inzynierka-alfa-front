@@ -3,6 +3,7 @@ import type { AuthModalView } from "./ModalTypes"
 export const authTitles: Record<AuthModalView, string> = {
   login: "Zaloguj się do CrossTrade",
   register: "Zarejestruj się do CrossTrade",
+  "register-confirm-email": "Potwierdź swój adres email",
   "forgot-email": "Przypomnij hasło",
   "forgot-code": "Wprowadź kod",
   "forgot-reset": "Ustaw nowe hasło",
@@ -13,6 +14,8 @@ export const authDescriptions: Record<AuthModalView, string> = {
   login: "Zaloguj się, aby zacząć korzystać z wszystkich funkcji CrossTrade",
   register:
     "Utwórz konto, aby zacząć korzystać z wszystkich funkcji CrossTrade",
+  "register-confirm-email":
+    "Wysłaliśmy link z potwierdzeniem rejestracji na twoją skrzynkę pocztową.",
   "forgot-email": "Wprowadź swój email, aby otrzymać kod do zresetowania hasła",
   "forgot-code": "Wprowadź kod, który został wysłany na Twój email",
   "forgot-reset": "Ustaw nowe hasło do swojego konta",
