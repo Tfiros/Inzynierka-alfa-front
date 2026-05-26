@@ -10,15 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/components/dropdown-menu"
-import { Search, Filter, ArrowUpDown } from "lucide-react"
-import { useState } from "react"
-import { cn } from "@/shared/lib/Utils"
+import { Search, ArrowUpDown } from "lucide-react"
 import { UserListOrderBy } from "@/shared/types/userTypes/UserManagementTypes"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/shared/components/popover"
 
 type Props = {
   search: string
@@ -34,15 +27,6 @@ type Props = {
   onOrderByChange: (orderBy: UserListOrderBy) => void
 }
 
-const ROLE_OPTIONS = ["Admin", "Middleman"]
-
-const rolePillClass = (role: string) => {
-  const r = role.toLowerCase()
-  if (r === "admin") return "bg-blue-600 text-white"
-  if (r === "middleman") return "bg-amber-600 text-white"
-  return "bg-zinc-700 text-white"
-}
-
 const ToolbarSection = (props: Props) => {
   const {
     search,
@@ -50,18 +34,9 @@ const ToolbarSection = (props: Props) => {
     loading,
     shownTo,
     totalCount,
-    role,
-    onRoleChange,
     orderBy,
     onOrderByChange,
   } = props
-
-  const [roleOpen, setRoleOpen] = useState(false)
-
-  const handlePickRole = (r: string | null) => {
-    onRoleChange(r)
-    setRoleOpen(false)
-  }
 
   return (
     <div className="mt-6 space-y-3">

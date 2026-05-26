@@ -26,7 +26,6 @@ import { Toaster } from "sonner"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
-  const hasHydrated = useAppStore((s) => s.hasHydrated)
 
   useEffect(() => {
     initSecurity().catch(() => {})

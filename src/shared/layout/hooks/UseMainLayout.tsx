@@ -8,9 +8,6 @@ const useMainLayout = () => {
 
   const darkMode = useAppStore((s: any) => s.darkMode)
   const hasHydrated = useAppStore((s: any) => s.hasHydrated)
-  const refreshNavbarUserFromAuth = useAppStore(
-    (s: any) => s.refreshNavbarUserFromAuth
-  )
 
   const ranRef = useRef(false)
 
