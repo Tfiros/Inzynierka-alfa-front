@@ -10,7 +10,6 @@ type Props = {
   page: number
   pageSize: number
   searchText: string
-  role: string | null
   orderBy: UserListOrderBy
 }
 
@@ -32,7 +31,6 @@ const useUsersData = ({
   page,
   pageSize,
   searchText,
-  role,
   orderBy,
 }: Props): Result => {
   const [loading, setLoading] = useState(true)
@@ -50,7 +48,6 @@ const useUsersData = ({
         page,
         pageSize,
         searchText: s ? s : undefined,
-        role: role ?? undefined,
         orderBy,
       })
 
@@ -67,7 +64,7 @@ const useUsersData = ({
     } finally {
       setLoading(false)
     }
-  }, [page, pageSize, searchText, role, orderBy])
+  }, [page, pageSize, searchText, orderBy])
 
   useEffect(() => {
     void fetchUsers()
@@ -79,6 +76,7 @@ const useUsersData = ({
     const items = data?.elements ?? []
     const shownFrom = totalCount === 0 ? 0 : (page - 1) * pageSize + 1
     const shownTo = Math.min(page * pageSize, totalCount)
+
     return { totalCount, totalPages, items, shownFrom, shownTo }
   }, [data, page, pageSize])
 

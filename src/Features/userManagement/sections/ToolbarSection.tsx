@@ -125,52 +125,6 @@ const ToolbarSection = (props: Props) => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Popover open={roleOpen} onOpenChange={setRoleOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 self-start sm:self-auto"
-              >
-                <Filter className="h-4 w-4" />
-                {role ? `Rola: ${role}` : "Role"}
-              </Button>
-            </PopoverTrigger>
-
-            <PopoverContent align="start" className="w-56 p-3">
-              <div className="text-sm font-semibold">Filtruj po rolach</div>
-
-              <div className="mt-3 grid gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="justify-start"
-                  onClick={() => handlePickRole(null)}
-                >
-                  Wszystkie
-                </Button>
-
-                <div className="flex flex-wrap gap-2">
-                  {ROLE_OPTIONS.map((r) => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => handlePickRole(r)}
-                      className={cn(
-                        "rounded-md px-2.5 py-1 text-xs font-semibold shadow-sm",
-                        rolePillClass(r),
-                        role?.toLowerCase() === r.toLowerCase()
-                          ? "ring-2 ring-ring ring-offset-2 ring-offset-background"
-                          : ""
-                      )}
-                    >
-                      {r}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-
           <div className="relative w-full sm:max-w-md">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input

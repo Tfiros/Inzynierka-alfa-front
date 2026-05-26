@@ -5,6 +5,7 @@ import useRefetchWithRetry from "./UseRefetchWithRetry"
 import { UserListOrderBy } from "@/shared/types/userTypes/UserManagementTypes"
 import useUsersData from "./UseUsersData"
 import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
+
 type Props = {
   pageSize?: number
 }
@@ -23,7 +24,6 @@ const useUserManagementPage = ({ pageSize }: Props) => {
     page: query.page,
     pageSize: query.pageSize,
     searchText: searchDebounced,
-    role: query.role,
     orderBy: query.orderBy,
   })
 
