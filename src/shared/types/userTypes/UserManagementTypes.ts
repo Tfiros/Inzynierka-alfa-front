@@ -47,7 +47,7 @@ export type DeleteUserRequestDto = {
   authZeroUserId: string
 }
 
-export type UserDetaulsDto = {
+export type UserDetailsDto = {
   profileDescription: string | null
   roles: string[]
 }
