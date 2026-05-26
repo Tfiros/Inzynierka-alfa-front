@@ -178,8 +178,7 @@ const AddGameDialog = (props: {
               </div>
             ) : (
               <div className="text-xs opacity-60">
-                Dodaj przynajmniej jedną rarity (opcjonalnie możesz też zostawić
-                pustą listę, jeśli backend na to pozwala).
+                Dodaj przynajmniej jedną rarity.
               </div>
             )}
             <div className="space-y-2">

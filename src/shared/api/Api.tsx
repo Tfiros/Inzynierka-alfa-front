@@ -1,4 +1,9 @@
-import axios, { HttpStatusCode, type AxiosRequestConfig } from "axios"
+import axios, {
+  AxiosHeaders,
+  HttpStatusCode,
+  type AxiosRequestConfig,
+  type InternalAxiosRequestConfig,
+} from "axios"
 import type {
   RawBodyResponse,
   BodyDetailsResponseDto,
@@ -60,12 +65,12 @@ const isUnsafeMethod = (method?: string) => {
   return m === "post" || m === "put" || m === "patch" || m === "delete"
 }
 
-api.interceptors.request.use((config) => {
-  const cfg = config as ApiClientConfig
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const cfg = config as InternalAxiosRequestConfig & ApiClientConfig
 
   if (!cfg.skipCsrfAttach && isUnsafeMethod(cfg.method) && csrfToken) {
-    cfg.headers = cfg.headers ?? {}
-    cfg.headers["X-XSRF-TOKEN"] = csrfToken
+    cfg.headers = AxiosHeaders.from(cfg.headers)
+    cfg.headers.set("X-XSRF-TOKEN", csrfToken)
   }
 
   return cfg
