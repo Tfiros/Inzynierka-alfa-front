@@ -7,7 +7,7 @@ import EditUserDialog from "./components/EditUserDialog"
 import DeleteUserDialog from "./components/DeleteUserDialog"
 import AddUserDialog from "./components/AddUserDialog"
 
-import useUserManagementPage from "./hooks/useUserManagementPage"
+import useUserManagementPage from "./hooks/UseUserManagementPage"
 const UserManagementPage = () => {
   const ui = useUserManagementPage({ pageSize: 10 })
 
