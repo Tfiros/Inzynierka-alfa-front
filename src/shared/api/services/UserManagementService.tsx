@@ -3,7 +3,7 @@ import type {
   UserListQuery,
   UpdateUserRequestDto,
   DeleteUserRequestDto,
-  UserDetaulsDto,
+  UserDetailsDto,
 } from "@/shared/types/userTypes/UserManagementTypes"
 import { get, patch } from "../ApiClient"
 import type { ApiResult } from "../ApiResult"
@@ -34,8 +34,8 @@ export class UserManagementService {
     ) as Promise<ApiResult<UserListPagedResponse>>
 
   public static readonly getUserDetails = async (authZeroUserId: string) =>
-    get<UserDetaulsDto>(`${this.base}/${authZeroUserId}/details`) as Promise<
-      ApiResult<UserDetaulsDto>
+    get<UserDetailsDto>(`${this.base}/${authZeroUserId}/details`) as Promise<
+      ApiResult<UserDetailsDto>
     >
 
   public static readonly updateUser = async (body: UpdateUserRequestDto) =>
