@@ -1,11 +1,13 @@
-export enum UserListOrderBy {
-  NicknameAsc = 1,
-  NicknameDesc = 2,
-  EmailAsc = 3,
-  EmailDesc = 4,
-  RegisteredAtAsc = 5,
-  RegisteredAtDesc = 6,
-}
+export const UserListOrderBy = {
+  NicknameAsc: 1,
+  NicknameDesc: 2,
+  EmailAsc: 3,
+  EmailDesc: 4,
+  RegisteredAtAsc: 5,
+  RegisteredAtDesc: 6,
+} as const
+export type UserListOrderBy =
+  (typeof UserListOrderBy)[keyof typeof UserListOrderBy]
 
 export type UserListQuery = {
   page: number
