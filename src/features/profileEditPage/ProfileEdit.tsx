@@ -6,7 +6,7 @@ import {
 } from "./components/ProfileSecurityData"
 import { useEffect, useState } from "react"
 import { Tabs } from "@/shared/components/tabs"
-import { useAppStore } from "@/shared/store/AppStore"
+import { useAppStore } from "@/shared/store/appStore"
 import {
   ProfileInfoService,
   mapBackendToProfile,

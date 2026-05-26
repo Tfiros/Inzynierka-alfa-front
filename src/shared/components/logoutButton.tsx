@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useAppStore } from "../store/AppStore"
+import { useAppStore } from "../store/appStore"
 import { useNavigate } from "react-router-dom"
 import { LogOut } from "lucide-react"
 import type { Button } from "./button"

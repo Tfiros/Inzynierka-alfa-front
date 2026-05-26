@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
 import AuthModal from "@/shared/utilities/Auth/AuthModal"
-import { useAppStore } from "@/shared/store/AppStore"
+import { useAppStore } from "@/shared/store/appStore"
 
 const CurrencySection = () => {
   const navigate = useNavigate()

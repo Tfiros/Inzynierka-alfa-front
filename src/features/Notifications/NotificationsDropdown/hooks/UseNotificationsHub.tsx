@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { useAppStore } from "@/shared/store/AppStore"
+import { useAppStore } from "@/shared/store/appStore"
 import { NotificationsHubClient } from "@/shared/api/hubs/NotificationsHubClient"
 import type { NotificationDto } from "@/shared/types/notificationsTypes/notificationsDtos"
 import { toast } from "sonner"
