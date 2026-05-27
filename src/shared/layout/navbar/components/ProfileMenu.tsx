@@ -1,5 +1,5 @@
-import { useState, useMemo, useRef } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { useState, useMemo } from "react"
+import { Link } from "react-router-dom"
 import {
   DropdownMenu,
   DropdownMenuContent,

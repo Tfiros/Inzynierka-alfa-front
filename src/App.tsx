@@ -6,16 +6,16 @@ import BlankLayout from "./shared/layout/BlankLayout"
 import MainLayout from "./shared/layout/MainLayout"
 import ItemManagementPage from "./features/ItemManagementPage/ItemManagementPage"
 import TradePanelPage from "./features/Trades/TradePanelPage/TradePanelPage"
-import FaqsSite from "./features/faqsPage/FaqsSite"
+import FaqsSite from "./features/faqsPage/faqsSite"
 import LandingPage from "./features/landingPage/LandingPage"
-import NotFoundPage from "./features/notFoundPage/NotFoundPage"
-import PointShop from "./features/pointShop/PointShop"
+import NotFoundPage from "./features/NotFoundPage/NotFoundPage"
+import PointShop from "./features/pointShop/pointShop"
 import ProfileEdit from "./features/profileEditPage/ProfileEdit"
 import SettingsPage from "./features/settingsPage/SettingsPage"
-import StatutePage from "./features/statutePage/StatutePage"
+import StatutePage from "./features/statutePage/statutePage"
 import UserManagementPage from "./features/userManagement/UserManagementPage"
 import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
-import ProfilePage from "./features/profilePage/ProfilePage"
+import ProfilePage from "./features/profilePage/profilePage"
 import CounterOfferInteractionHost from "./shared/views/OfferInteractionView/CounterOfferInteractionHost"
 import { TooltipProvider } from "./shared/components/ui/tooltip"
 import MarketplacePage from "./features/marketplacePage/Marketplace"
@@ -25,7 +25,6 @@ import ContactPage from "./features/contactPage/contactPage"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
-  const hasHydrated = useAppStore((s) => s.hasHydrated)
 
   useEffect(() => {
     initSecurity().catch(() => {})

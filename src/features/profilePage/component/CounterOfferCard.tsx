@@ -18,7 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/shared/components/alert-dialog"
 import type { CounterOfferListItemDto } from "@/shared/types/counterOfferTypes/CounterOfferListItemDto"
-import { CounterOfferStatus } from "@/shared/enums/counterOfferStatus"
+import { CounterOfferStatus } from "@/shared/enums/CounterOfferStatus"
 
 type Props = {
   data: CounterOfferListItemDto

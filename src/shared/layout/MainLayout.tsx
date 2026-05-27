@@ -4,7 +4,8 @@ import { Footer } from "./Footer"
 import GuestNavbar from "./navbar/views/GuestNavbar"
 import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
 import useMainLayout from "./hooks/UseMainLayout"
-import ChatWindowHost from "@/Features/Chat/components/ChatWindowHost"
+import ChatWindowHost from "@/features/Chat/components/ChatWindowHost"
+
 const MainLayout = () => {
   const { isLogged, hasHydrated } = useMainLayout()
 

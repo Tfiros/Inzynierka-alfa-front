@@ -193,7 +193,7 @@ const EditOfferModalContent = ({
             items={offer.itemsHave}
             disabled={offer.isLoading || offer.quoteIsLoading}
             onSetQuantity={offer.setHaveQuantity}
-            onRemoveAll={offer.removeAllHaveItem}
+            onRemoveItem={offer.removeAllHaveItem}
           />
           <div className="mt-4">
             <label className="text-sm font-medium text-muted-foreground">
@@ -209,8 +209,6 @@ const EditOfferModalContent = ({
                 )
               }
               disabled={offer.isLoading || offer.quoteIsLoading}
-              onSetQuantity={offer.setHaveQuantity}
-              onRemoveItem={offer.removeAllHaveItem}
               className="mt-2 h-10 rounded-xl bg-muted/40 border-muted-foreground/20"
               placeholder="0"
             />
@@ -306,7 +304,7 @@ const EditOfferModalContent = ({
             items={offer.itemsWant}
             disabled={offer.isLoading || offer.quoteIsLoading}
             onSetQuantity={offer.setWantQuantity}
-            onRemoveAll={offer.removeAllWantItem}
+            onRemoveItem={offer.removeAllWantItem}
           />
           <div className="mt-4">
             <label className="text-sm font-medium text-muted-foreground">
@@ -322,8 +320,6 @@ const EditOfferModalContent = ({
                 )
               }
               disabled={offer.isLoading || offer.quoteIsLoading}
-              onSetQuantity={offer.setWantQuantity}
-              onRemoveItem={offer.removeAllWantItem}
               className="mt-2 h-10 rounded-xl bg-muted/40 border-muted-foreground/20"
               placeholder="0"
             />

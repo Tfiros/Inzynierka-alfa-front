@@ -1,4 +1,4 @@
-import type { RawBodyResponse } from "./types/authTypes/AuthErrorTypes"
+import type { RawBodyResponse } from "@/shared/types/authTypes/AuthErrorTypes"
 
 export function mapAuthError(e: any): { title: string; desc?: string } {
   const r = e as Partial<RawBodyResponse>

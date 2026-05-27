@@ -4,7 +4,7 @@ import { Input } from "@/shared/components/input"
 import type { ModalViewPropsTypes } from "../utilities/Auth/ModalTypes"
 import PasswordInput from "../components/PasswordInput"
 import { Label } from "../components/label"
-import { useAppStore } from "../store/AppStore"
+import { useAppStore } from "../store/appStore"
 
 const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
   const [email, setEmail] = useState("")

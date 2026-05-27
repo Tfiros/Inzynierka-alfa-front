@@ -12,8 +12,8 @@ import {
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip"
 import { useAppStore } from "@/shared/store/appStore"
-import NavbarChatDropdown from "@/Features/Chat/components/NavbarChatDropdown"
-import { NotificationsDropdown } from "@/Features/Notifications/NotificationsDropdown/components/NotificationsDropdown"
+import { NotificationsDropdown } from "@/features/Notifications/NotificationsDropdown/components/NotificationsDropdown"
+import NavbarChatDropdown from "@/features/Chat/components/NavbarChatDropdown"
 
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)

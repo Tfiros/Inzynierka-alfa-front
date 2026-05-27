@@ -30,7 +30,7 @@ const StatsSection = ({ loading, stats }: Props) => {
       />
       <StatCard
         title="Dostępne"
-        value={val(stats?.available ?? 0)}
+        value={val(stats?.created ?? 0)}
         icon={<Sparkles className="h-4 w-4" />}
       />
     </div>

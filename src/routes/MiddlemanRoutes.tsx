@@ -1,4 +1,4 @@
-import { useAppStore } from "@/shared/store/AppStore"
+import { useAppStore } from "@/shared/store/appStore"
 import { Navigate, Outlet } from "react-router-dom"
 
 const MiddlemanRoute = () => {
