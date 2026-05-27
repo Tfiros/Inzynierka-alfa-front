@@ -79,13 +79,6 @@ export const ProfileMenu = () => {
         )}
 
         <DropdownMenuItem asChild>
-          <Link to="/dashboard" className="flex items-center gap-2">
-            <Trophy className="h-4 w-4" />
-            <span>Panel Klienta</span>
-          </Link>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem asChild>
           <Link to="/settings" className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
             <span>Ustawienia</span>

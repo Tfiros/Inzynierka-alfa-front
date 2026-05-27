@@ -6,13 +6,11 @@ import BlankLayout from "./shared/layout/BlankLayout"
 import MainLayout from "./shared/layout/MainLayout"
 import ItemManagementPage from "./features/ItemManagementPage/ItemManagementPage"
 import TradePanelPage from "./features/Trades/TradePanelPage/TradePanelPage"
-import ContactPage from "./features/contactPage/contactPage"
 import FaqsSite from "./features/faqsPage/faqsSite"
 import LandingPage from "./features/landingPage/LandingPage"
 import NotFoundPage from "./features/NotFoundPage/NotFoundPage"
 import PointShop from "./features/pointShop/pointShop"
 import ProfileEdit from "./features/profileEditPage/ProfileEdit"
-import MainDashboard from "./features/profilePanelPage/views/MainDashboard"
 import SettingsPage from "./features/settingsPage/SettingsPage"
 import StatutePage from "./features/statutePage/statutePage"
 import UserManagementPage from "./features/userManagement/UserManagementPage"
@@ -23,6 +21,7 @@ import { TooltipProvider } from "./shared/components/ui/tooltip"
 import MarketplacePage from "./features/marketplacePage/Marketplace"
 import AcceptOfferInteractionHost from "./shared/views/OfferInteractionView/AcceptOfferInteractionHost"
 import { Toaster } from "sonner"
+import ContactPage from "./features/contactPage/contactPage"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
@@ -37,7 +36,6 @@ function App() {
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/dashboard" element={<MainDashboard />} />
             <Route path="oferty" element={<div>Oferty</div>} />
             <Route path="faqs" element={<FaqsSite />} />
             <Route path="profile/:id" element={<ProfilePage />} />
