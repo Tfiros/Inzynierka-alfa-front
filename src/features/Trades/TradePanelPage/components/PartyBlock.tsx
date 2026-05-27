@@ -7,6 +7,7 @@ import {
 import type { InTradeUser } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import { User, Package } from "lucide-react"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
+import { Link } from "react-router-dom"
 
 type Props = { party?: InTradeUser | null; title: string; tokens?: number }
 
@@ -27,16 +28,18 @@ const PartyBlock = ({ party, title, tokens }: Props) => {
       <div className="text-xs text-muted-foreground">{title}</div>
 
       <div className="flex items-center gap-3">
-        <Avatar>
-          <AvatarImage
-            src={party.imageUrl ?? undefined}
-            alt={party.nickname}
-            className="rounded-md object-cover"
-          />
-          <AvatarFallback>
-            <User className="h-4 w-4 text-muted-foreground" />
-          </AvatarFallback>
-        </Avatar>
+        <Link to={`/profile/${party.userId}`}>
+          <Avatar>
+            <AvatarImage
+              src={party.imageUrl ?? undefined}
+              alt={party.nickname}
+              className="rounded-md object-cover"
+            />
+            <AvatarFallback>
+              <User className="h-4 w-4 text-muted-foreground" />
+            </AvatarFallback>
+          </Avatar>
+        </Link>
         <div>
           <div className="text-sm font-medium">{party.nickname}</div>
           <div className="text-xs text-muted-foreground">{party.email}</div>

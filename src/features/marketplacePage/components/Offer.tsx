@@ -31,6 +31,7 @@ import OfferItemCard from "./OfferItemCard"
 import OfferStatusPill from "./OfferStatusPill"
 import { formatRating, formatSuccessRating } from "@/shared/lib/formatters"
 import { useToggleFavourite } from "@/shared/hooks/UseToggleFavourite"
+import { Link } from "react-router-dom"
 
 type OfferProps = {
   offer: offerListingDtoResponse
@@ -195,17 +196,17 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
 
       <CardFooter className="mt-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full">
         <div className="flex flex-row items-center">
-          <Avatar>
-            <AvatarImage
-              src={
-                offer.offerUserDto.imageUrl ?? "https://github.com/shadcn.png"
-              }
-              alt={offer.offerUserDto.nickname}
-            />
-            <AvatarFallback>
-              {offer.offerUserDto.nickname.slice(0, 2).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <Link to={`/profile/${offer.offerUserDto.userId}`}>
+            <Avatar>
+              <AvatarImage
+                src={offer.offerUserDto.imageUrl ?? undefined}
+                alt={offer.offerUserDto.nickname}
+              />
+              <AvatarFallback>
+                {offer.offerUserDto.nickname.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </Link>
           <div className="flex flex-col items-start pl-4">
             <span className="font-medium text-foreground">
               {offer.offerUserDto.nickname}
