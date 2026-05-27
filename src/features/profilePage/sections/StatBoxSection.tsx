@@ -1,6 +1,6 @@
 import { Layers, Trophy, Star, Percent } from "lucide-react"
-import StatBox from "../component/StatBox"
 import { formatSuccessRating } from "@/shared/lib/formatters"
+import StatCard from "@/shared/components/StatCard"
 
 export type StatBoxSectionProps = {
   activeOffers: number
@@ -13,29 +13,33 @@ const StatBoxSection = ({ stats }: { stats: StatBoxSectionProps }) => {
   return (
     <section>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
-        <StatBox
-          icon={<Layers className="h-5 w-5" />}
+        <StatCard
+          title={"Aktywne oferty"}
           value={stats.activeOffers}
-          label="Aktywne oferty"
-          highlighted
+          icon={<Layers className="h-5 w-5" />}
+          iconVariant={"plain"}
+          size={"sm"}
         />
-        <StatBox
-          icon={<Trophy className="h-5 w-5" />}
+        <StatCard
+          title={"Udane wymiany"}
           value={stats.successfulTrades}
-          label="Udane wymiany"
-          highlighted
+          icon={<Trophy className="h-5 w-5" />}
+          iconVariant={"plain"}
+          size={"sm"}
         />
-        <StatBox
+        <StatCard
+          title={"Średnia ocen"}
+          value={stats.successfulTrades}
           icon={<Star className="h-5 w-5" />}
-          value={stats.avgRating}
-          label="Średnia ocen"
-          highlighted
+          iconVariant={"plain"}
+          size={"sm"}
         />
-        <StatBox
-          icon={<Percent className="h-5 w-5" />}
+        <StatCard
+          title={"Sukces wymian"}
           value={formatSuccessRating(stats.successRatePct)}
-          label="Sukces wymian"
-          highlighted
+          icon={<Percent className="h-5 w-5" />}
+          iconVariant={"plain"}
+          size={"sm"}
         />
       </div>
     </section>
