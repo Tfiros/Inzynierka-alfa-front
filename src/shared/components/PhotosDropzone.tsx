@@ -1,5 +1,5 @@
 import { UploadCloud, X } from "lucide-react"
-import { cn } from "@/shared/lib/Utils"
+import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/components/button"
 import { usePhotosDropzone } from "../hooks/UsePhotosDropzone"
 import { Input } from "@/shared/components/input"

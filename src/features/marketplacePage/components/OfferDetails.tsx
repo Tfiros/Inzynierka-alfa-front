@@ -11,7 +11,7 @@ import { Button } from "@/shared/components/button"
 import { Plus, SquarePen, Trash2 } from "lucide-react"
 import type { offerDetailsDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { useAppStore } from "@/shared/store/appStore"
-import { cn } from "@/shared/lib/Utils"
+import { cn } from "@/shared/lib/utils"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
 import {
   Tooltip,

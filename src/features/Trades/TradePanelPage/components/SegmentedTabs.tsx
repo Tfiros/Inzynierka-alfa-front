@@ -1,4 +1,4 @@
-import { cn } from "@/shared/lib/Utils"
+import { cn } from "@/shared/lib/utils"
 
 type Tab<T extends string> = { value: T; label: string }
 

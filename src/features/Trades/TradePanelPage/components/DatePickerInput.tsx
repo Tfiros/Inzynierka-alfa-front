@@ -10,7 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/shared/components/popover"
-import { cn } from "@/shared/lib/Utils"
+import { cn } from "@/shared/lib/utils"
 
 type Mode = "from" | "to"
 

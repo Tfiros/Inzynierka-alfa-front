@@ -7,7 +7,7 @@ import { Checkbox } from "@/shared/components/checkbox"
 import { Calendar } from "@/shared/components/calendar"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
-import { cn } from "@/shared/lib/Utils"
+import { cn } from "@/shared/lib/utils"
 import type { ModalViewPropsTypes } from "../utilities/Auth/ModalTypes"
 import {
   Popover,
