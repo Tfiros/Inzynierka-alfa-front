@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { mapApiList, mapPagedMeta } from "./MapApiList"
 import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
 
-type Args<T> = {
+type Args = {
   pageSize?: number
   searchDelayMs?: number
   search: string
@@ -18,7 +18,7 @@ const usePagedQuery = <T,>({
   deps = [],
   enabled = true,
   load,
-}: Args<T>) => {
+}: Args) => {
   const [page, setPage] = useState(1)
   const q = useDebounceValue(search, searchDelayMs)
 

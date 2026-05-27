@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/dropdown-menu"
 import { Button } from "@/shared/components/button"
-import { User as UserIcon, Trophy, Settings, Moon } from "lucide-react"
+import { User as UserIcon, Settings, Moon } from "lucide-react"
 import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
 import LogoutButton from "@/shared/components/logoutButton"
 import { useAppStore } from "@/shared/store/appStore"

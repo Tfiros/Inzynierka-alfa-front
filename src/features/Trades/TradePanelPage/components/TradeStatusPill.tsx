@@ -1,4 +1,4 @@
-import { cn } from "@/shared/lib/Utils"
+import { cn } from "@/shared/lib/utils"
 
 type Props = { tradeStatusId: number }
 

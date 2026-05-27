@@ -20,7 +20,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { selectIsFavourite, useAppStore } from "@/shared/store/appStore"
-import { cn } from "@/shared/lib/Utils"
+import { cn } from "@/shared/lib/utils"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
 import {
   Tooltip,

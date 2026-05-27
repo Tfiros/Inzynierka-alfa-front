@@ -1,6 +1,6 @@
 import type { NotificationDto } from "@/shared/types/notificationsTypes/notificationsDtos"
 import { X } from "lucide-react"
-import { cn } from "@/shared/lib/Utils"
+import { cn } from "@/shared/lib/utils"
 import { formatNotificationDate } from "@/shared/utilities/Notifications/dateFormat"
 
 type Props = {
