@@ -7,7 +7,7 @@ type Props = {
 }
 
 const Thumb = ({ src = null, alt, size = "md" }: Props) => {
-  const dim = size === "sm" ? "h-7 w-7" : "h-9 w-9"
+  const dim = size === "sm" ? "h-7 w-7" : "h-10 w-10"
   return (
     <div
       className={cn(
@@ -19,7 +19,7 @@ const Thumb = ({ src = null, alt, size = "md" }: Props) => {
         <img
           src={src}
           alt={alt}
-          className="block h-full w-full object-cover"
+          className="block h-full w-full object-contain"
           loading="lazy"
         />
       ) : null}

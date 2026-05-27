@@ -114,6 +114,7 @@ const CreateOfferModalContent = ({
               haveSuggestions.setQuery("")
             }}
             disabled={offer.isLoading}
+            pending={haveSuggestions.pending}
           />
 
           <div className="mt-4 flex items-center gap-3">
@@ -169,6 +170,7 @@ const CreateOfferModalContent = ({
                   setHaveLockedItem(null)
                   haveDropdown.setQuery("")
                 }}
+                pending={haveDropdown.itemsPending}
               />
             </div>
 
@@ -226,6 +228,7 @@ const CreateOfferModalContent = ({
               wantSuggestions.setQuery("")
             }}
             disabled={offer.isLoading}
+            pending={wantSuggestions.pending}
           />
 
           <div className="mt-4 flex items-center gap-3">
@@ -281,6 +284,7 @@ const CreateOfferModalContent = ({
                   setWantLockedItem(null)
                   wantDropdown.setQuery("")
                 }}
+                pending={wantDropdown.itemsPending}
               />
             </div>
 

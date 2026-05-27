@@ -5,11 +5,12 @@ import {
   PopoverContent,
   PopoverAnchor,
 } from "@/shared/components/popover"
-import { CommandEmpty, CommandGroup, CommandItem, CommandList } from "cmdk"
+import { CommandGroup, CommandItem, CommandList } from "cmdk"
 import { Search, X } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import type { ItemOfferDto } from "@/shared/types/offerTypes/RequestResponseTypes"
 import Thumb from "./Thumb"
+import { Skeleton } from "@/shared/components/skeleton"
 
 type Props = {
   value: string
@@ -21,6 +22,7 @@ type Props = {
   disabled: boolean
   lockedItem?: ItemOfferDto | null
   onUnlock?: () => void
+  pending?: boolean
 }
 
 type Group = {
@@ -40,18 +42,32 @@ const SearchSuggest = ({
   disabled,
   lockedItem,
   onUnlock,
+  pending = false,
 }: Props) => {
   const [open, setOpen] = useState(false)
   const query = value.trim()
-  const canShow = query.length >= 3
+  const canShow = query.length >= 1
+  const canSearch = query.length >= 3
+  const isSearching = pending || loading
+  const closeTimer = useRef<number | null>(null)
 
   const groups = useMemo(() => groupBy(suggestions), [suggestions])
 
   useEffect(() => {
-    if (!canShow) {
-      setOpen(false)
-    } else {
+    if (canShow) {
+      if (closeTimer.current) {
+        window.clearTimeout(closeTimer.current)
+        closeTimer.current = null
+      }
       setOpen(true)
+    } else {
+      closeTimer.current = window.setTimeout(() => setOpen(false), 200)
+    }
+
+    return () => {
+      if (closeTimer.current) {
+        window.clearTimeout(closeTimer.current)
+      }
     }
   }, [canShow])
   if (lockedItem) {
@@ -80,7 +96,7 @@ const SearchSuggest = ({
               onChange(e.target.value)
             }}
             placeholder="Wpisz nazwę przedmiotu..."
-            className="h-10 rounded-xl pl-12 bg-white border-muted-foreground/20 w"
+            className="h-10 rounded-xl pl-12 bg-white border-muted-foreground/20"
             disabled={disabled}
           />
         </div>
@@ -97,57 +113,78 @@ const SearchSuggest = ({
               className="max-h-[320px] overflow-auto"
               onWheelCapture={(e) => e.stopPropagation()}
             >
-              {loading && (
+              {!canSearch && (
+                <div className="px-3 py-4 text-sm text-muted-foreground">
+                  Wpisz min. 3 znaki aby wyszukać...
+                </div>
+              )}
+              {canSearch && isSearching && (
                 <CommandGroup heading="Szukam...">
-                  <div className="px-3 py-3 text-sm text-muted-foreground">
-                    Ładowanie wyników...
-                  </div>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center gap-3 px-2 py-3">
+                      <Skeleton className="h-8 w-8 rounded" />
+                      <Skeleton className="h-4 w-40 rounded" />
+                    </div>
+                  ))}
                 </CommandGroup>
               )}
-              {!loading && error && (
+              {canSearch && !isSearching && error && (
                 <CommandGroup heading="Błąd">
                   <div className="px-3 py-3 text-sm text-red-500">{error}</div>
                 </CommandGroup>
               )}
-              {!loading && !error && suggestions.length === 0 && (
-                <CommandEmpty>Brak wyników dla "{query}".</CommandEmpty>
-              )}
+              {canSearch &&
+                !isSearching &&
+                !error &&
+                suggestions.length === 0 && (
+                  <div className="px-3 py-4 text-sm text-muted-foreground">
+                    Brak wyników dla "{query}".
+                  </div>
+                )}
 
-              {!loading && !error && suggestions.length > 0 && (
-                <>
-                  {groups.map((game) => (
-                    <CommandGroup key={game.gameId}>
-                      <CommandItem
-                        disabled
-                        className="pointer-events-none select-none bg-muted/40 border-b border-muted-foreground/10 py-3"
+              {canSearch &&
+                !isSearching &&
+                !error &&
+                suggestions.length > 0 && (
+                  <>
+                    {groups.map((game) => (
+                      <CommandGroup
+                        key={game.gameId}
+                        className="border-t border-border first:border-t-0 py-2"
                       >
-                        <div className="flex items-center gap-3">
-                          <Thumb
-                            src={game.gamePhotoUrl}
-                            alt={game.gameName}
-                            size="sm"
-                          />
-                          <span>{game.gameName}</span>
-                        </div>
-                      </CommandItem>
-                      {game.items.map((s) => (
                         <CommandItem
-                          key={s.id}
-                          value={s.name}
-                          onSelect={() => {
-                            onPickSuggestion(s)
-                            setOpen(false)
-                          }}
-                          className="py-5 flex items-center gap-3"
+                          disabled
+                          className="pointer-events-none select-none bg-muted py-2"
                         >
-                          <Thumb src={s.photoUrl} alt={s.name} size="md" />
-                          <span>{s.name}</span>
+                          <div className="flex items-center gap-3">
+                            <Thumb
+                              src={game.gamePhotoUrl}
+                              alt={game.gameName}
+                              size="sm"
+                            />
+                            <span className="font-semibold text-xs uppercase tracking-wide text-muted-foreground">
+                              {game.gameName}
+                            </span>
+                          </div>
                         </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  ))}
-                </>
-              )}
+                        {game.items.map((s) => (
+                          <CommandItem
+                            key={s.id}
+                            value={s.name}
+                            onSelect={() => {
+                              onPickSuggestion(s)
+                              setOpen(false)
+                            }}
+                            className="py-3 pl-6 flex items-center gap-3"
+                          >
+                            <Thumb src={s.photoUrl} alt={s.name} size="md" />
+                            <span>{s.name}</span>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    ))}
+                  </>
+                )}
             </CommandList>
           </Command>
         </PopoverContent>
