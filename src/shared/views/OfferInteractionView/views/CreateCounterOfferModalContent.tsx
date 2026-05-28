@@ -120,6 +120,7 @@ export default function CreateCounterOfferModalContent({
               suggestions.setQuery("")
             }}
             disabled={submitting}
+            pending={suggestions.pending}
           />
 
           <div className="mt-4 flex items-center gap-3">
@@ -171,6 +172,7 @@ export default function CreateCounterOfferModalContent({
                   addItem(item)
                   itemDropdown.reset()
                 }}
+                pending={itemDropdown.itemsPending}
               />
             </div>
           </div>

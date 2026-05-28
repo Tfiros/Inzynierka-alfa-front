@@ -40,8 +40,13 @@ const PointShop = () => {
             </div>
           </div>
         </div>
-        <div className="mt-10 flex justify-center">
-          <Button className="rounded-xl px-8 h-11">Przejdź do płatności</Button>
+        <div className="mt-10 flex flex-col items-center gap-2">
+          <Button disabled className="rounded-xl px-8 h-11">
+            Przejdź do płatności
+          </Button>
+          <p className="text-sm text-muted-foreground">
+            Płatności będą dostępne wkrótce
+          </p>
         </div>
       </div>
     </div>

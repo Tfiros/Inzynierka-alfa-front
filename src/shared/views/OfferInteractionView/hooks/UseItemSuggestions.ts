@@ -7,13 +7,16 @@ export const useItemSuggestions = () => {
   const [query, setQuery] = useState("")
 
   const minChars = 3
-  const debounceQuery = useDebounceValue(query)
+  const debounceQuery = useDebounceValue(query, 400)
 
   const [suggestions, setSuggestions] = useState<ItemOfferDto[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const reqIdRef = useRef(0)
+
+  const pending =
+    query.trim().length >= minChars && query.trim() !== debounceQuery.trim()
 
   const fetchSuggestions = useCallback(async (qRaw: string) => {
     const q = qRaw.trim()
@@ -58,5 +61,6 @@ export const useItemSuggestions = () => {
     suggestions,
     loading,
     error,
+    pending,
   }
 }

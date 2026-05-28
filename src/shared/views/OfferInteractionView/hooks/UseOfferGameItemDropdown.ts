@@ -13,11 +13,16 @@ export const useOfferGameItemDropdown = () => {
   const [gamesError, setGamesError] = useState<string | null>(null)
   const [gameId, setGameId] = useState<number | null>(null)
   const [query, setQuery] = useState("")
-  const debounced = useDebounceValue(query)
+  const debounced = useDebounceValue(query, 400)
   const [items, setItems] = useState<ItemOfferDto[]>([])
   const [itemsLoading, setItemsLoading] = useState(false)
   const [itemsError, setItemsError] = useState<string | null>(null)
   const reqIdRef = useRef(0)
+
+  const itemsPending =
+    query.trim().length >= minChars &&
+    gameId !== null &&
+    query.trim() !== debounced.trim()
 
   const setGame = useCallback((id: number | null) => {
     setGameId(id)
@@ -133,5 +138,6 @@ export const useOfferGameItemDropdown = () => {
     itemsLoading,
     itemsError,
     reset,
+    itemsPending,
   }
 }
