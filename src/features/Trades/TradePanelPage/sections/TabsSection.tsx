@@ -9,22 +9,16 @@ type Props = {
   completedCount: number
 }
 
-const TabsSection = ({
-  value,
-  onChange,
-  availableCount,
-  mineCount,
-  completedCount,
-}: Props) => {
+const TabsSection = ({ value, onChange }: Props) => {
   return (
     <div className="mt-6">
       <SegmentedTabs
         value={value}
         onChange={onChange}
         tabs={[
-          { value: "available", label: `Dostępne (${availableCount})` },
-          { value: "mine", label: `W realizacji (${mineCount})` },
-          { value: "completed", label: `Zakończone (${completedCount})` },
+          { value: "available", label: `Dostępne` },
+          { value: "mine", label: `W realizacji` },
+          { value: "completed", label: `Zakończone` },
           { value: "failedReturns", label: `Zwroty do realizacji ` },
         ]}
       />
