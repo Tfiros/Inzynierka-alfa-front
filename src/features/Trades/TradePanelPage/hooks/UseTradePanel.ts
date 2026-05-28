@@ -14,7 +14,9 @@ const useTradePanel = () => {
   const { state, q, actions } = useUserTradesQuery("available")
   const debouncedSearchText = useDebounceValue(state.searchText, 350)
   const roles = useAppStore((s) => s.roles)
-  const isMiddleman = roles.some((r) => r.toLowerCase() === "middleman")
+  const isMiddleman =
+    roles.some((r) => r.toLowerCase() === "middleman") ||
+    roles.some((r) => r.toLowerCase() === "admin")
 
   const effectiveQuery = useMemo(() => {
     const st = debouncedSearchText.trim()
