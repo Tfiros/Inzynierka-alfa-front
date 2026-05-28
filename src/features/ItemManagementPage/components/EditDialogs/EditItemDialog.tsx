@@ -9,7 +9,6 @@ import {
 import { Button } from "@/shared/components/button"
 import { Input } from "@/shared/components/input"
 
-import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import {
   Select,
   SelectContent,
@@ -17,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/select"
-import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
+import { useRaritiesDropdown } from "@/features/ItemManagementPage/hooks/UseRaritiesDropdown"
 import PhotosDropzone from "@/shared/components/PhotosDropzone"
 
 type EditItemPayload = {
@@ -43,41 +42,21 @@ const EditItemDialog = (props: {
     String(props.initialEstimatedTokenValue ?? "")
   )
 
-  const [rarities, setRarities] = useState<DropdownOption[]>([])
   const [rarityId, setRarityId] = useState<number | null>(
     props.initialRarityItemId
   )
 
   const [raritiesOpen, setRaritiesOpen] = useState(false)
   const [raritySearch, setRaritySearch] = useState("")
-  const [raritiesLoading, setRaritiesLoading] = useState(false)
+
+  const {
+    rarities,
+    loading: raritiesLoading,
+    refresh,
+  } = useRaritiesDropdown(props.initialGameId, raritySearch, raritiesOpen)
   const [image, setImage] = useState<File | null>(null)
 
-  const extractDropdownItems = (res: any): DropdownOption[] => {
-    const d = res?.data
-    if (!d) return []
-    return ((d?.items ?? d?.elements ?? d) as DropdownOption[]) ?? []
-  }
-
-  const loadRaritiesDropdown = async () => {
-    setRaritiesLoading(true)
-    try {
-      const res = await ItemRaritiesService.dropdown(
-        props.initialGameId,
-        raritySearch.trim() || ""
-      )
-
-      if (!res?.isSuccess) {
-        setRarities([])
-        return
-      }
-
-      const list = extractDropdownItems(res)
-      setRarities(list)
-    } finally {
-      setRaritiesLoading(false)
-    }
-  }
+  // rarities, raritiesLoading and refresh are provided by hook
 
   useEffect(() => {
     if (!props.open) return
@@ -85,7 +64,6 @@ const EditItemDialog = (props: {
     setEstimatedTokenValue(String(props.initialEstimatedTokenValue ?? ""))
     setRarityId(props.initialRarityItemId)
     setRaritySearch("")
-    setRarities([])
     setRaritiesOpen(false)
     setImage(null)
   }, [
@@ -97,17 +75,12 @@ const EditItemDialog = (props: {
 
   useEffect(() => {
     if (!props.open) return
-    void loadRaritiesDropdown()
-  }, [props.open, props.initialGameId])
-
-  useEffect(() => {
-    if (!props.open) return
     if (!raritiesOpen) return
     const t = setTimeout(() => {
-      void loadRaritiesDropdown()
+      void refresh()
     }, 250)
     return () => clearTimeout(t)
-  }, [raritySearch, raritiesOpen, props.open])
+  }, [raritySearch, raritiesOpen, props.open, refresh])
 
   const isTokenOk = (() => {
     const v = estimatedTokenValue.trim()
