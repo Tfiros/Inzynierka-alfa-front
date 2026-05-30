@@ -1,34 +1,69 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from "react"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { useAppStore } from "./shared/store/appStore"
+import AdminRoute from "./routes/AdminRoutes"
+import BlankLayout from "./shared/layout/BlankLayout"
+import MainLayout from "./shared/layout/MainLayout"
+import ItemManagementPage from "./features/ItemManagementPage/ItemManagementPage"
+import TradePanelPage from "./features/Trades/TradePanelPage/TradePanelPage"
+import FaqsSite from "./features/faqsPage/faqsSite"
+import LandingPage from "./features/landingPage/LandingPage"
+import NotFoundPage from "./features/NotFoundPage/NotFoundPage"
+import PointShop from "./features/pointShop/pointShop"
+import ProfileEdit from "./features/profileEditPage/ProfileEdit"
+import SettingsPage from "./features/settingsPage/SettingsPage"
+import StatutePage from "./features/statutePage/statutePage"
+import UserManagementPage from "./features/userManagement/UserManagementPage"
+import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
+import ProfilePage from "./features/profilePage/profilePage"
+import CounterOfferInteractionHost from "./shared/views/OfferInteractionView/CounterOfferInteractionHost"
+import { TooltipProvider } from "./shared/components/ui/tooltip"
+import MarketplacePage from "./features/marketplacePage/Marketplace"
+import AcceptOfferInteractionHost from "./shared/views/OfferInteractionView/AcceptOfferInteractionHost"
+import { Toaster } from "sonner"
+import ContactPage from "./features/contactPage/contactPage"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const initSecurity = useAppStore((s) => s.initSecurity)
+
+  useEffect(() => {
+    initSecurity().catch(() => {})
+  }, [initSecurity])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <TooltipProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="oferty" element={<div>Oferty</div>} />
+            <Route path="faqs" element={<FaqsSite />} />
+            <Route path="profile/:id" element={<ProfilePage />} />
+            <Route path="statute" element={<StatutePage />} />
+            <Route path="shop" element={<PointShop />} />
+            <Route path="profileEdit" element={<ProfileEdit />} />
+            <Route path="marketplace" element={<MarketplacePage />} />
+            <Route path="contact" element={<ContactPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="tradePanel" element={<TradePanelPage />} />
+
+            <Route element={<AdminRoute />}>
+              <Route path="userManagement" element={<UserManagementPage />} />
+              <Route path="itemManagement" element={<ItemManagementPage />} />
+            </Route>
+          </Route>
+
+          <Route element={<BlankLayout />}>
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+
+        <OfferInteractionHost />
+        <CounterOfferInteractionHost />
+        <AcceptOfferInteractionHost />
+        <Toaster position="bottom-left" richColors />
+      </BrowserRouter>
+    </TooltipProvider>
   )
 }
 
