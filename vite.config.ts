@@ -4,18 +4,26 @@ import tailwindcss from "@tailwindcss/vite"
 import fs from "fs"
 import path from "path"
 
+const localhostKeyPath = "./certs/localhost-key.pem"
+const localhostCertPath = "./certs/localhost.pem"
+
+const hasLocalCerts =
+  fs.existsSync(localhostKeyPath) && fs.existsSync(localhostCertPath)
+
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     host: "localhost",
     port: 5173,
     strictPort: true,
-    https: {
-      key: fs.readFileSync("./certs/localhost-key.pem"),
-      cert: fs.readFileSync("./certs/localhost.pem"),
-    },
+    https: hasLocalCerts
+      ? {
+          key: fs.readFileSync(localhostKeyPath),
+          cert: fs.readFileSync(localhostCertPath),
+        }
+      : undefined,
     hmr: {
-      protocol: "wss",
+      protocol: hasLocalCerts ? "wss" : "ws",
       host: "localhost",
       clientPort: 5173,
     },
