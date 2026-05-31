@@ -1,5 +1,5 @@
 import { Card } from "@/shared/components/card"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Tabs } from "@/shared/components/tabs"
 import useProfileEdit from "./hooks/UseProfileEdit"
 import ProfileCardSection from "./sections/ProfileCardSection"
@@ -24,12 +24,6 @@ const ProfileEdit = () => {
     setSecurity,
   } = useProfileEdit()
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false)
-
-  useEffect(() => {
-    // hook already fetches profile on mount
-  }, [])
-
-  // handlers provided by hook: onSaveProfile, onSaveSecurity, onChangeAvatar
 
   if (loading) return <div className="p-6">Ładowanie…</div>
   if (!profile) return <div className="p-6">Brak danych profilu</div>
