@@ -15,14 +15,15 @@ const Thumb = ({ src = null, alt, size = "md" }: Props) => {
         "shrink-0 overflow-hidden rounded-md bg-muted flex items-center justify-center"
       )}
     >
-      {src ? (
-        <img
-          src={src}
-          alt={alt}
-          className="block h-full w-full object-contain"
-          loading="lazy"
-        />
-      ) : null}
+      <img
+        src={src?.trim() || "/placeholder.png"}
+        alt={alt}
+        className="block h-full w-full object-contain"
+        loading="lazy"
+        onError={(e) => {
+          e.currentTarget.src = "/placeholder.png"
+        }}
+      />
     </div>
   )
 }
