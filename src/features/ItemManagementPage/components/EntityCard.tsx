@@ -13,13 +13,14 @@ const EntityCard = (props: {
     <Card className="rounded-2xl">
       <CardContent className="p-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
-          {props.thumbnailUrl ? (
-            <img
-              src={props.thumbnailUrl}
-              alt={props.title}
-              className="h-12 w-12 rounded-md shrink-0 object-cover"
-            />
-          ) : null}
+          <img
+            src={props.thumbnailUrl?.trim() || "/placeholder.png"}
+            alt={props.title}
+            className="h-12 w-12 rounded-md shrink-0 object-cover bg-muted"
+            onError={(e) => {
+              e.currentTarget.src = "/placeholder.png"
+            }}
+          />
           <div className="min-w-0">
             <div className="font-semibold">{props.title}</div>
             {props.subtitle && (
