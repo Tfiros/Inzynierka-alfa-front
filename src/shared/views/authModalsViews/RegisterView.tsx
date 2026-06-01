@@ -15,6 +15,7 @@ import {
 } from "@/shared/components/popover"
 import { Label } from "../../components/label"
 import { useRegister } from "./hooks/UseRegister"
+import { Link } from "react-router-dom"
 
 const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
   const {
@@ -131,15 +132,18 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
             disabled={busy}
           />
           <Label htmlFor="terms" className="text-sm">
-            Akceptuję{" "}
-            <a href="#" className="underline">
-              Regulamin
-            </a>{" "}
-            oraz
-            <a href="#" className="underline">
-              Politykę Prywatności
-            </a>
-            .
+            <span>
+              Akceptuję{" "}
+              <Link
+                to={"/statute"}
+                className="underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Regulamin i Polityka Prywatności
+              </Link>
+              .
+            </span>
           </Label>
         </div>
 
