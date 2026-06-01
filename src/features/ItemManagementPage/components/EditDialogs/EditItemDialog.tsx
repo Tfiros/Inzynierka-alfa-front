@@ -9,7 +9,6 @@ import {
 import { Button } from "@/shared/components/button"
 import { Input } from "@/shared/components/input"
 
-import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import {
   Select,
   SelectContent,
@@ -17,12 +16,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/select"
-import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
 import PhotosDropzone from "@/shared/components/PhotosDropzone"
+import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
+import { GamesService } from "@/shared/api/services/GamesService"
+import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
+import useDropdownQuery from "../../hooks/UseDropdownQuery"
 
 type EditItemPayload = {
   name: string
   estimatedTokenValue: number
+  gameId: number
   itemRarityId: number
   image?: File | null
 }
@@ -43,71 +46,66 @@ const EditItemDialog = (props: {
     String(props.initialEstimatedTokenValue ?? "")
   )
 
-  const [rarities, setRarities] = useState<DropdownOption[]>([])
+  const [gameId, setGameIdState] = useState<number | null>(props.initialGameId)
+  const [gamesOpen, setGamesOpen] = useState(false)
+  const [gameSearch, setGameSearch] = useState("")
+
   const [rarityId, setRarityId] = useState<number | null>(
     props.initialRarityItemId
   )
-
   const [raritiesOpen, setRaritiesOpen] = useState(false)
   const [raritySearch, setRaritySearch] = useState("")
-  const [raritiesLoading, setRaritiesLoading] = useState(false)
+
   const [image, setImage] = useState<File | null>(null)
 
-  const extractDropdownItems = (res: any): DropdownOption[] => {
-    const d = res?.data
-    if (!d) return []
-    return ((d?.items ?? d?.elements ?? d) as DropdownOption[]) ?? []
+  const gamesDd = useDropdownQuery({
+    enabled: props.open,
+    open: gamesOpen,
+    search: gameSearch,
+    load: (q) => GamesService.dropdown(q),
+    selectedId: gameId,
+    setSelectedId: setGameIdState,
+    loadOnMount: true,
+  })
+
+  const setGameId = (id: number | null) => {
+    setGameIdState(id)
+    setRarityId(null)
+    setRaritySearch("")
+    setRaritiesOpen(false)
   }
 
-  const loadRaritiesDropdown = async () => {
-    setRaritiesLoading(true)
-    try {
-      const res = await ItemRaritiesService.dropdown(
-        props.initialGameId,
-        raritySearch.trim() || ""
-      )
-
-      if (!res?.isSuccess) {
-        setRarities([])
-        return
-      }
-
-      const list = extractDropdownItems(res)
-      setRarities(list)
-    } finally {
-      setRaritiesLoading(false)
-    }
-  }
+  const raritiesDd = useDropdownQuery({
+    enabled: !!gameId && props.open,
+    open: raritiesOpen,
+    search: raritySearch,
+    load: (q) => ItemRaritiesService.dropdown(gameId!, q),
+    selectedId: rarityId,
+    setSelectedId: setRarityId,
+  })
 
   useEffect(() => {
     if (!props.open) return
+
     setName(props.initialName)
     setEstimatedTokenValue(String(props.initialEstimatedTokenValue ?? ""))
+
+    setGameIdState(props.initialGameId)
+    setGamesOpen(false)
+    setGameSearch("")
+
     setRarityId(props.initialRarityItemId)
-    setRaritySearch("")
-    setRarities([])
     setRaritiesOpen(false)
+    setRaritySearch("")
+
     setImage(null)
   }, [
     props.open,
     props.initialName,
     props.initialEstimatedTokenValue,
+    props.initialGameId,
     props.initialRarityItemId,
   ])
-
-  useEffect(() => {
-    if (!props.open) return
-    void loadRaritiesDropdown()
-  }, [props.open, props.initialGameId])
-
-  useEffect(() => {
-    if (!props.open) return
-    if (!raritiesOpen) return
-    const t = setTimeout(() => {
-      void loadRaritiesDropdown()
-    }, 250)
-    return () => clearTimeout(t)
-  }, [raritySearch, raritiesOpen, props.open])
 
   const isTokenOk = (() => {
     const v = estimatedTokenValue.trim()
@@ -118,11 +116,12 @@ const EditItemDialog = (props: {
 
   const submit = async () => {
     const trimmed = name.trim()
-    if (!trimmed || !rarityId || !isTokenOk) return
+    if (!trimmed || !gameId || !rarityId || !isTokenOk) return
 
     await props.onSave({
       name: trimmed,
       estimatedTokenValue: Number(estimatedTokenValue),
+      gameId,
       itemRarityId: rarityId,
       image,
     })
@@ -136,6 +135,48 @@ const EditItemDialog = (props: {
         </DialogHeader>
 
         <div className="space-y-4">
+          <div className="space-y-2">
+            <div className="text-sm opacity-70">Gra</div>
+            <Select
+              value={String(gameId ?? "")}
+              onValueChange={(v) => setGameId(Number(v))}
+              open={gamesOpen}
+              onOpenChange={setGamesOpen}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Wybierz grę..." />
+              </SelectTrigger>
+
+              <SelectContent>
+                <div className="p-2">
+                  <Input
+                    value={gameSearch}
+                    onChange={(e) => setGameSearch(e.target.value)}
+                    placeholder="Szukaj gry..."
+                    onKeyDown={(e) => e.stopPropagation()}
+                    onPointerDown={(e) => e.stopPropagation()}
+                  />
+                </div>
+
+                {gamesDd.loading ? (
+                  <div className="px-3 pb-2 text-sm opacity-70">
+                    Ładowanie...
+                  </div>
+                ) : gamesDd.items.length === 0 ? (
+                  <div className="px-3 pb-2 text-sm opacity-70">
+                    Brak wyników
+                  </div>
+                ) : (
+                  (gamesDd.items as DropdownOption[]).map((g) => (
+                    <SelectItem key={g.id} value={String(g.id)}>
+                      {g.name}
+                    </SelectItem>
+                  ))
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <div className="text-sm opacity-70">Nazwa</div>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
@@ -157,6 +198,7 @@ const EditItemDialog = (props: {
               onValueChange={(v) => setRarityId(Number(v))}
               open={raritiesOpen}
               onOpenChange={setRaritiesOpen}
+              disabled={!gameId}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Wybierz rarity..." />
@@ -173,16 +215,20 @@ const EditItemDialog = (props: {
                   />
                 </div>
 
-                {raritiesLoading ? (
+                {!gameId ? (
+                  <div className="px-3 pb-2 text-sm opacity-70">
+                    Najpierw wybierz grę
+                  </div>
+                ) : raritiesDd.loading ? (
                   <div className="px-3 pb-2 text-sm opacity-70">
                     Ładowanie...
                   </div>
-                ) : rarities.length === 0 ? (
+                ) : raritiesDd.items.length === 0 ? (
                   <div className="px-3 pb-2 text-sm opacity-70">
                     Brak wyników
                   </div>
                 ) : (
-                  rarities.map((r) => (
+                  (raritiesDd.items as DropdownOption[]).map((r) => (
                     <SelectItem key={r.id} value={String(r.id)}>
                       {r.name}
                     </SelectItem>
@@ -190,14 +236,15 @@ const EditItemDialog = (props: {
                 )}
               </SelectContent>
             </Select>
-            <div className="space-y-2">
-              <div className="text-sm opacity-70">Zdjęcie</div>
-              <PhotosDropzone
-                photos={image ? [image] : []}
-                onChange={(fs) => setImage(fs[0] ?? null)}
-                maxFiles={1}
-              />
-            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="text-sm opacity-70">Zdjęcie</div>
+            <PhotosDropzone
+              photos={image ? [image] : []}
+              onChange={(fs) => setImage(fs[0] ?? null)}
+              maxFiles={1}
+            />
           </div>
         </div>
 
@@ -207,7 +254,7 @@ const EditItemDialog = (props: {
           </Button>
           <Button
             onClick={submit}
-            disabled={!name.trim() || !rarityId || !isTokenOk}
+            disabled={!name.trim() || !gameId || !rarityId || !isTokenOk}
           >
             Zapisz
           </Button>

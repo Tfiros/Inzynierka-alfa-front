@@ -28,6 +28,8 @@ const useEditUser = ({
   const [newPassword, setNewPassword] = useState("")
   const [roles, setRoles] = useState<string[]>([])
   const [initialRoles, setInitialRoles] = useState<string[]>([])
+  const [tokens, setTokens] = useState("")
+  const [initialTokens, setInitialTokens] = useState<number | null>(null)
   const [localError, setLocalError] = useState<string | null>(null)
 
   const { loadingDetails, detailsError, fetchUserDetails, resetDetailsState } =
@@ -50,6 +52,8 @@ const useEditUser = ({
       setNewPassword("")
       setRoles([])
       setInitialRoles([])
+      setTokens("")
+      setInitialTokens(null)
 
       const details = await fetchUserDetails(user.auth0UserId)
 
@@ -57,12 +61,16 @@ const useEditUser = ({
 
       const fetchedRoles = details?.roles ?? []
       const fetchedDescription = details?.profileDescription ?? ""
+      const fetchedTokens = details?.tokens ?? 0
 
       setRoles(fetchedRoles)
       setInitialRoles(fetchedRoles)
 
       setProfileDescription(fetchedDescription)
       setInitialProfileDescription(fetchedDescription)
+
+      setTokens(String(fetchedTokens))
+      setInitialTokens(fetchedTokens)
     }
 
     void load()
@@ -81,6 +89,8 @@ const useEditUser = ({
       setInitialProfileDescription("")
       setRoles([])
       setInitialRoles([])
+      setTokens("")
+      setInitialTokens(null)
     }
   }, [open, resetRequestState, resetDetailsState])
 
@@ -119,6 +129,14 @@ const useEditUser = ({
     const originalNick = norm(user.name ?? "")
     const originalDescription = initialProfileDescription.trim()
 
+    const parsedTokens = tokens.trim() === "" ? null : Number(tokens)
+
+    const tokensChanged =
+      parsedTokens !== null &&
+      Number.isFinite(parsedTokens) &&
+      parsedTokens >= 0 &&
+      parsedTokens !== initialTokens
+
     const emailChanged =
       nextEmail.length > 0 && normLower(nextEmail) !== normLower(originalEmail)
 
@@ -132,6 +150,7 @@ const useEditUser = ({
       email: emailChanged ? nextEmail : null,
       profileDescription: descriptionChanged ? nextDescription : null,
       newPassword: nextPwd ? nextPwd : null,
+      tokens: tokensChanged ? parsedTokens : null,
       roles: rolesChanged ? roles : null,
     }
   }, [
@@ -141,6 +160,8 @@ const useEditUser = ({
     profileDescription,
     initialProfileDescription,
     newPassword,
+    tokens,
+    initialTokens,
     roles,
     rolesChanged,
   ])
@@ -153,6 +174,7 @@ const useEditUser = ({
       Boolean(body.email) ||
       body.profileDescription !== null ||
       Boolean(body.newPassword) ||
+      body.tokens !== null ||
       body.roles !== null
     )
   }, [body, loadingDetails])
@@ -171,6 +193,9 @@ const useEditUser = ({
 
     newPassword,
     setNewPassword,
+
+    tokens,
+    setTokens,
 
     roles,
     toggleRole,

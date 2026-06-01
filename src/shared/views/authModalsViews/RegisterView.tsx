@@ -1,5 +1,4 @@
 import PasswordInput from "@/shared/components/PasswordInput"
-import { useState } from "react"
 
 import { Button } from "@/shared/components/button"
 import { Input } from "@/shared/components/input"
@@ -8,90 +7,39 @@ import { Calendar } from "@/shared/components/calendar"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { cn } from "@/shared/lib/utils"
-import type { ModalViewPropsTypes } from "../utilities/Auth/ModalTypes"
+import type { ModalViewPropsTypes } from "../../utilities/Auth/ModalTypes"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/shared/components/popover"
-import { Label } from "../components/label"
-import { AuthService } from "../api/services/AuthService"
+import { Label } from "../../components/label"
+import { useRegister } from "./hooks/UseRegister"
+import { Link } from "react-router-dom"
 
 const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
-  const [checked, setChecked] = useState(false)
-  const [email, setEmail] = useState("")
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirm, setConfirm] = useState("")
-  const [birthDate, setBirthDate] = useState<Date>()
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [okMsg, setOkMsg] = useState<string | null>(null)
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (busy) return
-
-    setError(null)
-    setOkMsg(null)
-
-    if (!email.trim()) return setError("Podaj email.")
-    if (!password) return setError("Podaj hasło.")
-    if (!validatePassword(password))
-      return setError(
-        "Hasło musi mieć co najmniej 8 znaków i zawierać przynajmniej trzy z następujących: małą literę, dużą literę, cyfrę, znak specjalny."
-      )
-    if (!birthDate) {
-      return setError("Podaj datę urodzenia")
-    }
-    if (!checked)
-      return setError("Musisz zaakceptować regulamin i politykę prywatności.")
-
-    setBusy(true)
-    try {
-      const res = await AuthService.register({
-        email,
-        password,
-        username,
-        birthDate,
-      })
-
-      setOkMsg(res?.message ?? "Konto zostało utworzone.")
-      setTimeout(() => onSwitch("register-confirm-email"), 500)
-    } catch (err: any) {
-      const msg =
-        err?.message ??
-        err?.details?.error_description ??
-        err?.details?.error ??
-        "Rejestracja nie powiodła się."
-      setError(msg)
-    } finally {
-      setBusy(false)
-    }
-  }
-  const validatePassword = (password: string): boolean => {
-    if (password.length < 8) return false
-    if (password !== confirm) return false
-
-    const hasLower = /[a-z]/.test(password)
-    const hasUpper = /[A-Z]/.test(password)
-    const hasDigit = /[0-9]/.test(password)
-    const hasSpecial = /[^A-Za-z0-9]/.test(password)
-
-    const typesCount = [hasLower, hasUpper, hasDigit, hasSpecial].filter(
-      Boolean
-    ).length
-
-    if (typesCount < 3) {
-      return false
-    }
-
-    return true
-  }
+  const {
+    email,
+    setEmail,
+    username,
+    setUsername,
+    password,
+    setPassword,
+    confirm,
+    setConfirm,
+    birthDate,
+    setBirthDate,
+    checked,
+    setChecked,
+    busy,
+    error,
+    okMsg,
+    submit,
+  } = useRegister(onSwitch)
 
   return (
     <>
-      <form className="gap-y-4 flex flex-col mt-4" onSubmit={onSubmit}>
+      <form className="gap-y-4 flex flex-col mt-4" onSubmit={submit}>
         <div className="gap-y-1 flex flex-col">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -184,15 +132,18 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
             disabled={busy}
           />
           <Label htmlFor="terms" className="text-sm">
-            Akceptuję{" "}
-            <a href="#" className="underline">
-              Regulamin
-            </a>{" "}
-            oraz
-            <a href="#" className="underline">
-              Politykę Prywatności
-            </a>
-            .
+            <span>
+              Akceptuję{" "}
+              <Link
+                to={"/statute"}
+                className="underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Regulamin i Politykę Prywatności
+              </Link>
+              .
+            </span>
           </Label>
         </div>
 

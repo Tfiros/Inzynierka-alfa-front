@@ -46,15 +46,36 @@ const useItemsTab = () => {
   const [addEstimatedTokenValue, setAddEstimatedTokenValue] = useState("")
   const [addImage, setAddImage] = useState<File | null>(null)
 
+  const [addGamesOpen, setAddGamesOpen] = useState(false)
+  const [addGameSearch, setAddGameSearch] = useState("")
+  const [addGameId, setAddGameIdState] = useState<number | null>(null)
+
   const [raritiesOpen, setRaritiesOpen] = useState(false)
   const [raritySearch, setRaritySearch] = useState("")
   const [rarityId, setRarityId] = useState<number | null>(null)
 
+  const addGamesDd = useDropdownQuery({
+    enabled: addOpen,
+    open: addGamesOpen,
+    search: addGameSearch,
+    load: (q) => GamesService.dropdown(q),
+    selectedId: addGameId,
+    setSelectedId: setAddGameIdState,
+    loadOnMount: true,
+  })
+
+  const setAddGameId = (id: number | null) => {
+    setAddGameIdState(id)
+    setRarityId(null)
+    setRaritySearch("")
+    setRaritiesOpen(false)
+  }
+
   const raritiesDd = useDropdownQuery({
-    enabled: !!gameId && addOpen,
+    enabled: !!addGameId && addOpen,
     open: raritiesOpen,
     search: raritySearch,
-    load: (q) => ItemRaritiesService.dropdown(gameId!, q),
+    load: (q) => ItemRaritiesService.dropdown(addGameId!, q),
     selectedId: rarityId,
     setSelectedId: setRarityId,
   })
@@ -62,10 +83,15 @@ const useItemsTab = () => {
   const resetAdd = () => {
     setAddName("")
     setAddEstimatedTokenValue("")
+    setAddImage(null)
+
+    setAddGameIdState(gameId)
+    setAddGameSearch("")
+    setAddGamesOpen(false)
+
     setRaritySearch("")
     setRarityId(null)
     setRaritiesOpen(false)
-    setAddImage(null)
   }
 
   const isAddTokenOk = useMemo(() => {
@@ -94,6 +120,7 @@ const useItemsTab = () => {
     saveEdit: async (payload: {
       name: string
       estimatedTokenValue: number
+      gameId: number
       itemRarityId: number
       image?: File | null
     }) => {
@@ -106,6 +133,7 @@ const useItemsTab = () => {
       }
 
       setEditOpen(false)
+      setSelected(null)
       await list.fetch()
     },
 
@@ -125,7 +153,7 @@ const useItemsTab = () => {
 
     create: async () => {
       const name = addName.trim()
-      if (!name || !gameId || !rarityId) return
+      if (!name || !addGameId || !rarityId) return
 
       const token = Number(addEstimatedTokenValue)
       if (!Number.isFinite(token) || token < 0) return
@@ -137,7 +165,7 @@ const useItemsTab = () => {
         const res = await ItemsService.create({
           name,
           estimatedTokenValue: token,
-          gameId,
+          gameId: addGameId,
           itemRarityId: rarityId,
           image: addImage,
         })
@@ -176,6 +204,18 @@ const useItemsTab = () => {
       open: addOpen,
       setOpen: setAddOpen,
       saving: addSaving,
+
+      game: {
+        id: addGameId,
+        setId: setAddGameId,
+        open: addGamesOpen,
+        setOpen: setAddGamesOpen,
+        search: addGameSearch,
+        setSearch: setAddGameSearch,
+        items: addGamesDd.items as DropdownOption[],
+        loading: addGamesDd.loading,
+      },
+
       name: addName,
       setName: setAddName,
       token: addEstimatedTokenValue,
@@ -183,6 +223,7 @@ const useItemsTab = () => {
       isTokenOk: isAddTokenOk,
       image: addImage,
       setImage: setAddImage,
+
       rarity: {
         id: rarityId,
         setId: setRarityId,
@@ -198,4 +239,5 @@ const useItemsTab = () => {
     actions,
   }
 }
+
 export default useItemsTab

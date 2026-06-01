@@ -21,6 +21,17 @@ type Props = {
   open: boolean
   onOpenChange: (v: boolean) => void
 
+  gameId: number | null
+  onGameChange: (v: number) => void
+
+  gamesOpen: boolean
+  onGamesOpenChange: (v: boolean) => void
+
+  gameSearch: string
+  onGameSearchChange: (v: string) => void
+
+  games: DropdownOption[]
+
   name: string
   onNameChange: (v: string) => void
 
@@ -37,8 +48,10 @@ type Props = {
   onRaritySearchChange: (v: string) => void
 
   rarities: DropdownOption[]
+
   image: File | null
   onImageChange: (file: File | null) => void
+
   saving: boolean
   canSubmit: boolean
   onSubmit: () => void
@@ -53,6 +66,44 @@ const AddItemDialog = (p: Props) => {
         </DialogHeader>
 
         <div className="space-y-4">
+          <div className="space-y-2">
+            <div className="text-sm opacity-70">Gra</div>
+            <Select
+              value={String(p.gameId ?? "")}
+              onValueChange={(v) => p.onGameChange(Number(v))}
+              open={p.gamesOpen}
+              onOpenChange={p.onGamesOpenChange}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Wybierz grę..." />
+              </SelectTrigger>
+
+              <SelectContent>
+                <div className="p-2">
+                  <Input
+                    value={p.gameSearch}
+                    onChange={(e) => p.onGameSearchChange(e.target.value)}
+                    placeholder="Szukaj gry..."
+                    onKeyDown={(e) => e.stopPropagation()}
+                    onPointerDown={(e) => e.stopPropagation()}
+                  />
+                </div>
+
+                {p.games.length === 0 ? (
+                  <div className="px-3 pb-2 text-sm opacity-70">
+                    Brak wyników
+                  </div>
+                ) : (
+                  p.games.map((g) => (
+                    <SelectItem key={g.id} value={String(g.id)}>
+                      {g.name}
+                    </SelectItem>
+                  ))
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <div className="text-sm opacity-70">Nazwa</div>
             <Input
@@ -79,6 +130,7 @@ const AddItemDialog = (p: Props) => {
               onValueChange={(v) => p.onRarityChange(Number(v))}
               open={p.raritiesOpen}
               onOpenChange={p.onRaritiesOpenChange}
+              disabled={!p.gameId}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Wybierz rarity..." />
@@ -95,7 +147,11 @@ const AddItemDialog = (p: Props) => {
                   />
                 </div>
 
-                {p.rarities.length === 0 ? (
+                {!p.gameId ? (
+                  <div className="px-3 pb-2 text-sm opacity-70">
+                    Najpierw wybierz grę
+                  </div>
+                ) : p.rarities.length === 0 ? (
                   <div className="px-3 pb-2 text-sm opacity-70">
                     Brak wyników
                   </div>
@@ -108,15 +164,16 @@ const AddItemDialog = (p: Props) => {
                 )}
               </SelectContent>
             </Select>
-            <div className="space-y-2">
-              <div className="text-sm opacity-70">Zdjęcie</div>
-              <PhotosDropzone
-                photos={p.image ? [p.image] : []}
-                onChange={(fs) => p.onImageChange(fs[0] ?? null)}
-                maxFiles={1}
-                disabled={p.saving}
-              />
-            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="text-sm opacity-70">Zdjęcie</div>
+            <PhotosDropzone
+              photos={p.image ? [p.image] : []}
+              onChange={(fs) => p.onImageChange(fs[0] ?? null)}
+              maxFiles={1}
+              disabled={p.saving}
+            />
           </div>
         </div>
 

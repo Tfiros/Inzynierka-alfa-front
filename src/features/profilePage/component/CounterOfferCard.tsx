@@ -166,16 +166,15 @@ export default function CounterOfferCard({
                 key={`${data.counterOfferId}-${it.itemId}`}
                 className="flex items-center gap-2 rounded-md border p-2"
               >
-                {it.photoUrl ? (
-                  <img
-                    src={it.photoUrl}
-                    alt={it.name}
-                    className="h-10 w-10 rounded object-cover"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="h-10 w-10 rounded bg-muted" />
-                )}
+                <img
+                  src={it.photoUrl?.trim() || "/placeholder.png"}
+                  alt={it.name}
+                  className="h-10 w-10 rounded object-cover bg-muted"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.png"
+                  }}
+                />
 
                 <div className="min-w-0">
                   <div className="text-sm truncate">{it.name}</div>

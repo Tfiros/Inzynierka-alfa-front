@@ -54,9 +54,7 @@ const ItemsTab = () => {
       </Select>
 
       <div className="flex items-center justify-end">
-        <Button onClick={vm.actions.openAdd} disabled={!vm.game.id}>
-          Dodaj itemek
-        </Button>
+        <Button onClick={vm.actions.openAdd}>Dodaj itemek</Button>
       </div>
 
       <SearchInput
@@ -72,25 +70,38 @@ const ItemsTab = () => {
         <div className="text-sm opacity-70">Ładowanie...</div>
       )}
 
-      <div className="space-y-3">
-        {vm.list.items.map((i) => (
-          <EntityCard
-            key={i.id}
-            title={i.name}
-            metaLeft={`Gra: ${i.gameName}`}
-            id={i.id}
-            thumbnailUrl={i.photo_URL || undefined}
-            onEdit={() => vm.actions.openEdit(i)}
-            onDelete={() => vm.actions.openDelete(i)}
-          />
-        ))}
-      </div>
+      {!vm.game.id ? (
+        <div className="text-sm opacity-70">
+          Wybierz grę, aby zobaczyć itemki.
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {vm.list.items.map((i) => (
+            <EntityCard
+              key={i.id}
+              title={i.name}
+              metaLeft={`Gra: ${i.gameName}`}
+              id={i.id}
+              thumbnailUrl={i.photo_URL || undefined}
+              onEdit={() => vm.actions.openEdit(i)}
+              onDelete={() => vm.actions.openDelete(i)}
+            />
+          ))}
+        </div>
+      )}
 
       <Paginator {...vm.list.paginator} />
 
       <AddItemDialog
         open={vm.add.open}
         onOpenChange={vm.add.setOpen}
+        gameId={vm.add.game.id}
+        onGameChange={(v) => vm.add.game.setId(v)}
+        gamesOpen={vm.add.game.open}
+        onGamesOpenChange={vm.add.game.setOpen}
+        gameSearch={vm.add.game.search}
+        onGameSearchChange={vm.add.game.setSearch}
+        games={vm.add.game.items}
         name={vm.add.name}
         onNameChange={vm.add.setName}
         token={vm.add.token}
@@ -106,7 +117,7 @@ const ItemsTab = () => {
         image={vm.add.image}
         onImageChange={vm.add.setImage}
         canSubmit={
-          !!vm.game.id &&
+          !!vm.add.game.id &&
           !!vm.add.name.trim() &&
           !!vm.add.rarity.id &&
           vm.add.isTokenOk

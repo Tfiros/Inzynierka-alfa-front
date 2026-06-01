@@ -6,11 +6,11 @@ import {
 } from "@/shared/components/dialog"
 import type { AuthModalPropsTypes } from "./ModalTypes"
 import { authDescriptions, authTitles } from "./AuthConstants"
-import LoginModalView from "../../views/LoginView"
-import RegisterModalView from "../../views/RegisterView"
-import RecoveryEmailView from "../../views/RecoveryEmailView"
-import SuccessChangeView from "../../views/SuccessChangeView"
-import RegisterConfirmEmailView from "@/shared/views/RegisterConfirmEmailView"
+import LoginModalView from "../../views/authModalsViews/LoginView"
+import RegisterModalView from "../../views/authModalsViews/RegisterView"
+import RecoveryEmailView from "../../views/authModalsViews/RecoveryEmailView"
+import SuccessChangeView from "../../views/authModalsViews/SuccessChangeView"
+import RegisterConfirmEmailView from "@/shared/views/authModalsViews/RegisterConfirmEmailView"
 
 const AuthModal = ({
   open,

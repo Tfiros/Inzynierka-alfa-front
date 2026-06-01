@@ -38,11 +38,12 @@ export type UserListPagedResponse = {
 
 export type UpdateUserRequestDto = {
   authZeroUserId: string
+  nickname?: string | null
   email?: string | null
   profileDescription?: string | null
   newPassword?: string | null
+  tokens?: number | null
   roles?: string[] | null
-  nickname?: string | null
 }
 
 export type DeleteUserRequestDto = {
@@ -50,6 +51,7 @@ export type DeleteUserRequestDto = {
 }
 
 export type UserDetailsDto = {
-  profileDescription: string | null
+  profileDescription: string
+  tokens: number
   roles: string[]
 }

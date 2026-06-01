@@ -83,10 +83,24 @@ const EditUserDialog = ({ open, user, onOpenChange, onSaved }: Props) => {
             disabled={submitting || form.loadingDetails}
           />
           <p className="text-xs text-muted-foreground">
-            Opis zostanie zapisany tylko w lokalnym profilu użytkownika.
+            Opis zostanie zapisany w lokalnym profilu użytkownika.
           </p>
         </div>
-
+        <div className="space-y-2">
+          <Label htmlFor="tokens">Tokeny</Label>
+          <Input
+            id="tokens"
+            type="number"
+            min={0}
+            value={form.tokens}
+            onChange={(e) => form.setTokens(e.target.value)}
+            placeholder="Liczba tokenów"
+            disabled={submitting || form.loadingDetails}
+          />
+          <p className="text-xs text-muted-foreground">
+            Tokeny zostaną zapisane tylko jeśli zmienisz wartość.
+          </p>
+        </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -97,7 +111,7 @@ const EditUserDialog = ({ open, user, onOpenChange, onSaved }: Props) => {
             disabled={submitting}
           />
           <p className="text-xs text-muted-foreground">
-            Email poleci do API tylko jeśli go faktycznie zmienisz.
+            Email zostanie zaktualizowany tylko jeśli go faktycznie zmienisz.
           </p>
         </div>
 
