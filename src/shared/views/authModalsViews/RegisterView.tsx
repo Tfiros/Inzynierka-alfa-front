@@ -140,7 +140,7 @@ const RegisterView = ({ onSwitch }: ModalViewPropsTypes) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Regulamin i Polityka Prywatności
+                Regulamin i Politykę Prywatności
               </Link>
               .
             </span>
