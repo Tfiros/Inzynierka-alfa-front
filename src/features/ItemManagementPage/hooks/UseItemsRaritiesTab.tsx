@@ -5,7 +5,11 @@ import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
 import useDropdownQuery from "./UseDropdownQuery"
 import usePagedQuery from "./UsePagedQuery"
 
-type RarityDto = { id: number; name: string }
+type RarityDto = {
+  id: number
+  name: string
+  gameId?: number | null
+}
 
 const useItemRaritiesTab = () => {
   const pageSize = 10
@@ -13,6 +17,15 @@ const useItemRaritiesTab = () => {
   const [gamesOpen, setGamesOpen] = useState(false)
   const [gameSearch, setGameSearch] = useState("")
   const [gameId, setGameId] = useState<number | null>(null)
+
+  const [addOpen, setAddOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [selected, setSelected] = useState<RarityDto | null>(null)
+
+  const [dialogGamesOpen, setDialogGamesOpen] = useState(false)
+  const [dialogGameSearch, setDialogGameSearch] = useState("")
+  const [dialogGameId, setDialogGameId] = useState<number | null>(null)
 
   const gamesDd = useDropdownQuery({
     open: gamesOpen,
@@ -23,7 +36,18 @@ const useItemRaritiesTab = () => {
     loadOnMount: true,
   })
 
+  const dialogGamesDd = useDropdownQuery({
+    enabled: addOpen || editOpen,
+    open: dialogGamesOpen,
+    search: dialogGameSearch,
+    load: (q) => GamesService.dropdown(q),
+    selectedId: dialogGameId,
+    setSelectedId: setDialogGameId,
+    loadOnMount: true,
+  })
+
   const [search, setSearch] = useState("")
+
   const list = usePagedQuery<RarityDto>({
     pageSize,
     search,
@@ -43,37 +67,48 @@ const useItemRaritiesTab = () => {
   const fetchWithSeq = async (p: number) => {
     const my = ++loadSeq.current
     const ok = await list.fetch(p)
+
     if (my !== loadSeq.current) return { ok: false, ignored: true }
+
     return { ok, ignored: false }
   }
 
   const reloadAfterMutation = async () => {
     if (!gameId) return
+
     const first = await fetchWithSeq(list.paginator.page)
+
     if (first.ok || first.ignored) return
 
     if (list.paginator.page > 1) {
       const newPage = list.paginator.page - 1
+
       list.paginator.setPage(newPage)
+
       await fetchWithSeq(newPage)
     }
   }
-
-  const [addOpen, setAddOpen] = useState(false)
-  const [editOpen, setEditOpen] = useState(false)
-  const [deleteOpen, setDeleteOpen] = useState(false)
-  const [selected, setSelected] = useState<RarityDto | null>(null)
 
   const selectedGameName = useMemo(
     () => gamesDd.selectedName,
     [gamesDd.selectedName]
   )
 
+  const resetDialogGame = (id: number | null) => {
+    setDialogGameId(id)
+    setDialogGameSearch("")
+    setDialogGamesOpen(false)
+  }
+
   const actions = {
-    openAdd: () => setAddOpen(true),
+    openAdd: () => {
+      resetDialogGame(gameId)
+      setAddOpen(true)
+    },
 
     openEdit: (r: RarityDto) => {
       setSelected(r)
+      resetDialogGame(r.gameId ?? gameId)
       setEditOpen(true)
     },
 
@@ -82,43 +117,52 @@ const useItemRaritiesTab = () => {
       setDeleteOpen(true)
     },
 
-    create: async (payload: { name: string }) => {
-      if (!gameId) return
+    create: async (payload: { name: string; gameId: number }) => {
       const res = await ItemRaritiesService.create({
-        gameId,
+        gameId: payload.gameId,
         rarityName: payload.name,
       })
+
       if (!res.isSuccess) {
         list.setError(res.message ?? "Nie udało się dodać rzadkości.")
         return
       }
+
       setAddOpen(false)
       await reloadAfterMutation()
     },
 
-    saveEdit: async (payload: { name: string }) => {
+    saveEdit: async (payload: { name: string; gameId: number }) => {
       if (!selected) return
+
       const res = await ItemRaritiesService.update(selected.id, {
         rarityName: payload.name,
       })
+
       if (!res.isSuccess) {
         list.setError(res.message ?? "Nie udało się zapisać.")
         return
       }
+
       setEditOpen(false)
       setSelected(null)
+
       await reloadAfterMutation()
     },
 
     confirmDelete: async () => {
       if (!selected) return
+
       const res = await ItemRaritiesService.softDelete(selected.id)
+
       if (!res.isSuccess) {
         list.setError(res.message ?? "Nie udało się usunąć.")
         return
       }
+
       setDeleteOpen(false)
       setSelected(null)
+
       await reloadAfterMutation()
     },
   }
@@ -134,7 +178,20 @@ const useItemRaritiesTab = () => {
       items: gamesDd.items as DropdownOption[],
       selectedName: selectedGameName,
     },
+
+    dialogGame: {
+      id: dialogGameId,
+      setId: setDialogGameId,
+      open: dialogGamesOpen,
+      setOpen: setDialogGamesOpen,
+      search: dialogGameSearch,
+      setSearch: setDialogGameSearch,
+      items: dialogGamesDd.items as DropdownOption[],
+      selectedName: dialogGamesDd.selectedName,
+    },
+
     list: { search, setSearch, ...list },
+
     ui: {
       addOpen,
       setAddOpen,
@@ -144,7 +201,9 @@ const useItemRaritiesTab = () => {
       setDeleteOpen,
       selected,
     },
+
     actions,
   }
 }
+
 export default useItemRaritiesTab

@@ -55,11 +55,9 @@ const ItemRaritiesTab = () => {
 
       <div className="flex items-center justify-between gap-3">
         <div className="text-sm opacity-70">
-          {vm.game.id ? `Gra: ${vm.game.selectedName}` : "Wybierz grę"}
+          {vm.game.id ? `Filtr gry: ${vm.game.selectedName}` : "Wybierz grę"}
         </div>
-        <Button onClick={vm.actions.openAdd} disabled={!vm.game.id}>
-          Dodaj rzadkość
-        </Button>
+        <Button onClick={vm.actions.openAdd}>Dodaj rzadkość</Button>
       </div>
 
       <SearchInput
@@ -99,6 +97,14 @@ const ItemRaritiesTab = () => {
       <AddItemRarityDialog
         open={vm.ui.addOpen}
         onOpenChange={vm.ui.setAddOpen}
+        initialGameId={vm.game.id}
+        gameId={vm.dialogGame.id}
+        onGameChange={vm.dialogGame.setId}
+        gamesOpen={vm.dialogGame.open}
+        onGamesOpenChange={vm.dialogGame.setOpen}
+        gameSearch={vm.dialogGame.search}
+        onGameSearchChange={vm.dialogGame.setSearch}
+        games={vm.dialogGame.items}
         onSave={vm.actions.create}
       />
 
@@ -108,6 +114,14 @@ const ItemRaritiesTab = () => {
             open={vm.ui.editOpen}
             onOpenChange={vm.ui.setEditOpen}
             initialName={vm.ui.selected.name}
+            initialGameId={vm.ui.selected.gameId ?? vm.game.id}
+            gameId={vm.dialogGame.id}
+            onGameChange={vm.dialogGame.setId}
+            gamesOpen={vm.dialogGame.open}
+            onGamesOpenChange={vm.dialogGame.setOpen}
+            gameSearch={vm.dialogGame.search}
+            onGameSearchChange={vm.dialogGame.setSearch}
+            games={vm.dialogGame.items}
             onSave={vm.actions.saveEdit}
           />
 
