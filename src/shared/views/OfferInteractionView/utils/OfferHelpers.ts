@@ -53,7 +53,9 @@ export const validateOfferDraft = (
   title: string,
   description: string,
   itemsHave: OfferLine[],
-  itemsWant: OfferLine[]
+  itemsWant: OfferLine[],
+  tokensOffered: number,
+  tokensWanted: number
 ): string | null => {
   if (!title.trim()) {
     return "Podaj tytuł"
@@ -61,11 +63,14 @@ export const validateOfferDraft = (
   if (!description.trim()) {
     return "Podaj opis"
   }
-  if (itemsHave.length === 0) {
-    return "Wymagane przedmioty w 'Co oferujesz'"
+  if (itemsHave.length === 0 && itemsWant.length === 0) {
+    return "Przynajmniej jedna strona musi zawierać przedmioty"
   }
-  if (itemsWant.length === 0) {
-    return "Wymagane przedmioty w 'Czego szukasz'"
+  if (itemsHave.length === 0 && tokensOffered <= 0) {
+    return "Dodaj przedmioty lub tokeny w 'Co oferujesz'"
+  }
+  if (itemsWant.length === 0 && tokensWanted <= 0) {
+    return "Dodaj przedmioty lub tokeny w 'Czego szukasz'"
   }
   return null
 }

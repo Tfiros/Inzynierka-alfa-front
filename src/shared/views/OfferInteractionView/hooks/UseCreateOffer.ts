@@ -116,7 +116,14 @@ export const useCreateOffer = () => {
   }, [])
 
   const getServerQuote = useCallback(async (): Promise<number | null> => {
-    const err = validateOfferDraft(title, description, itemsHave, itemsWant)
+    const err = validateOfferDraft(
+      title,
+      description,
+      itemsHave,
+      itemsWant,
+      tokensOffered,
+      tokensWanted
+    )
     if (err) {
       setQuoteError(err)
       return null
@@ -147,7 +154,14 @@ export const useCreateOffer = () => {
       return false
     }
 
-    const err = validateOfferDraft(title, description, itemsHave, itemsWant)
+    const err = validateOfferDraft(
+      title,
+      description,
+      itemsHave,
+      itemsWant,
+      tokensOffered,
+      tokensWanted
+    )
     if (err) {
       setError(err)
       return false

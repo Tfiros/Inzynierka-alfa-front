@@ -160,7 +160,14 @@ export const useEditOffer = (offerId: number | null) => {
   const getServerQuote =
     useCallback(async (): Promise<offerUpdateQuoteResponse | null> => {
       if (!offerId) return null
-      const err = validateOfferDraft(title, description, itemsHave, itemsWant)
+      const err = validateOfferDraft(
+        title,
+        description,
+        itemsHave,
+        itemsWant,
+        tokensOffered,
+        tokensWanted
+      )
       if (err) {
         setQuoteError(err)
         return null
@@ -215,7 +222,14 @@ export const useEditOffer = (offerId: number | null) => {
   const updateOffer = useCallback(async () => {
     if (!offerId) return false
 
-    const err = validateOfferDraft(title, description, itemsHave, itemsWant)
+    const err = validateOfferDraft(
+      title,
+      description,
+      itemsHave,
+      itemsWant,
+      tokensOffered,
+      tokensWanted
+    )
     if (err) {
       setError(err)
       return false
@@ -247,8 +261,9 @@ export const useEditOffer = (offerId: number | null) => {
     !quoteIsLoading &&
     title.trim().length > 0 &&
     description.trim().length > 0 &&
-    itemsHave.length > 0 &&
-    itemsWant.length > 0
+    !(itemsHave.length === 0 && itemsWant.length === 0) &&
+    !(itemsHave.length === 0 && tokensOffered <= 0) &&
+    !(itemsWant.length === 0 && tokensWanted <= 0)
 
   return {
     isLoading,

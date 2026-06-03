@@ -385,9 +385,10 @@ const CreateOfferModalContent = ({
             disabled={
               offer.isLoading ||
               offer.quoteIsLoading ||
-              offer.itemsHave.length == 0 ||
-              offer.itemsWant.length === 0 ||
-              offer.title.trim().length === 0
+              offer.title.trim().length === 0 ||
+              (offer.itemsHave.length === 0 && offer.itemsWant.length === 0) ||
+              (offer.itemsHave.length === 0 && offer.tokensOffered <= 0) ||
+              (offer.itemsWant.length === 0 && offer.tokensWanted <= 0)
             }
             onClick={() => void handleOpenConfirm()}
           >
