@@ -10,6 +10,8 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   addOfferLine,
   extractBackendMessage,
+  MIN_DESCRIPTION_LEN,
+  MIN_TITLE_LEN,
   removeOfferLine,
   setOfferLineQuantity,
   toOfferItemDto,
@@ -29,6 +31,7 @@ export const useEditOffer = (offerId: number | null) => {
   const [originalTokenCost, setOriginalTokenCost] = useState<number | null>(
     null
   )
+  const [originalTokensOffered, setOriginalTokensOffered] = useState(0)
   const [itemsHave, setItemsHave] = useState<OfferLine[]>([])
   const [itemsWant, setItemsWant] = useState<OfferLine[]>([])
   const [quoteIsLoading, setQuoteIsLoading] = useState(false)
@@ -49,6 +52,7 @@ export const useEditOffer = (offerId: number | null) => {
     setQuoteError(null)
     setTokensOffered(0)
     setTokensWanted(0)
+    setOriginalTokensOffered(0)
     setOriginalTokenCost(null)
   }, [])
   useEffect(() => {
@@ -91,6 +95,7 @@ export const useEditOffer = (offerId: number | null) => {
         setItemsWant(data.wantedItems.map(toOfferLine))
         setTokensOffered(data.offerCoreDto.tokensOffered)
         setTokensWanted(data.offerCoreDto.tokensWanted)
+        setOriginalTokensOffered(data.offerCoreDto.tokensOffered)
         setQuote(null)
         setQuoteError(null)
       } catch {
@@ -219,6 +224,11 @@ export const useEditOffer = (offerId: number | null) => {
     return Math.max(10, newTotalPreview - originalTokenCost)
   }, [newTotalPreview, originalTokenCost])
 
+  const navbarUser = useAppStore((s) => s.navbarUser)
+  const requiredBalance =
+    (updateFeePreview ?? 0) + Math.max(0, tokensOffered - originalTokensOffered)
+  const canAfford = navbarUser === null || navbarUser.tokens >= requiredBalance
+
   const updateOffer = useCallback(async () => {
     if (!offerId) return false
 
@@ -259,11 +269,12 @@ export const useEditOffer = (offerId: number | null) => {
   const canSubmit =
     !isLoading &&
     !quoteIsLoading &&
-    title.trim().length > 0 &&
-    description.trim().length > 0 &&
+    title.trim().length >= MIN_TITLE_LEN &&
+    description.trim().length >= MIN_DESCRIPTION_LEN &&
     !(itemsHave.length === 0 && itemsWant.length === 0) &&
     !(itemsHave.length === 0 && tokensOffered <= 0) &&
-    !(itemsWant.length === 0 && tokensWanted <= 0)
+    !(itemsWant.length === 0 && tokensWanted <= 0) &&
+    canAfford
 
   return {
     isLoading,
@@ -295,6 +306,8 @@ export const useEditOffer = (offerId: number | null) => {
     setTokensOffered,
     tokensWanted,
     setTokensWanted,
+    requiredBalance,
+    canAfford,
     reset,
   }
 }

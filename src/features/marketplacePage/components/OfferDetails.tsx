@@ -59,6 +59,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
 
   const acceptOffer = useAcceptOffer({
     offerId: offer.offerCoreDto.offerId,
+    tokensWanted: offer.offerCoreDto.tokensWanted,
     onSuccess: handleAcceptSuccess,
   })
 
@@ -247,6 +248,11 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                   {acceptOffer.submitError}
                 </div>
               )}
+              {!acceptOffer.canAfford && (
+                <div className="mt-2 text-sm text-red-500">
+                  Za mało tokenów. Wymagane: {offer.offerCoreDto.tokensWanted}
+                </div>
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -254,7 +260,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
               Wróć
             </AlertDialogCancel>
             <AlertDialogAction
-              disabled={acceptOffer.submitting}
+              disabled={acceptOffer.submitting || !acceptOffer.canAfford}
               onClick={(e) => {
                 e.preventDefault()
                 void acceptOffer.submit()

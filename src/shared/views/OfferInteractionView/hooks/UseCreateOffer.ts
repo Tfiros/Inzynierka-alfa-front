@@ -102,6 +102,10 @@ export const useCreateOffer = () => {
     tokensWanted,
   ])
 
+  const navbarUser = useAppStore((s) => s.navbarUser)
+  const requiredBalance = offerCost + tokensOffered
+  const canAfford = navbarUser === null || navbarUser.tokens >= requiredBalance
+
   const reset = useCallback(() => {
     setItemsHave([])
     setItemsWant([])
@@ -226,5 +230,7 @@ export const useCreateOffer = () => {
     setTokensOffered,
     tokensWanted,
     setTokensWanted,
+    requiredBalance,
+    canAfford,
   }
 }
