@@ -24,7 +24,6 @@ export function useOfferDetails(offerId: number | null, enabled: boolean) {
         setOfferDetails(null)
         return
       }
-      console.log("userOfferDetails:", res.data)
       setOfferDetails(res.data)
     }
     void load()

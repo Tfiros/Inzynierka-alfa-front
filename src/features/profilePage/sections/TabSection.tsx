@@ -26,7 +26,13 @@ type ProfileTabViews =
   | "favourites"
   | "history"
 
-const TabSection = ({ profileId }: { profileId: number }) => {
+const TabSection = ({
+  profileId,
+  isOwnProfile,
+}: {
+  profileId: number
+  isOwnProfile: boolean
+}) => {
   const [tab, setTab] = useState<ProfileTabViews>("offers")
 
   const [activePage] = useState<number>(1)
@@ -42,8 +48,6 @@ const TabSection = ({ profileId }: { profileId: number }) => {
   const cancel = useCancelCounterOffer()
   const acceptCounterOffer = UseAcceptCounterOffer()
   const pageSize = 10
-  const currentUserId = useAppStore((s) => s.userId)
-  const isOwnProfile = currentUserId === profileId
 
   const { offerDetails: detailsOffer } = useOfferDetails(
     selectedOfferId,

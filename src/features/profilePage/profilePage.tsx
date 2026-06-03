@@ -20,7 +20,7 @@ const ProfilePage = () => {
     <div>
       <HeaderSection profile={profileInfo} canEdit={isOwnProfile} />
       <StatBoxSection stats={stats} />
-      <TabSection profileId={profileId} />
+      <TabSection profileId={profileId} isOwnProfile={isOwnProfile} />
     </div>
   )
 }

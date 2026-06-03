@@ -31,6 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogAction,
 } from "@/shared/components/alert-dialog"
+import { useOfferPermissions } from "@/shared/hooks/UseOfferPermissions"
 import { useRequestOfferEdit } from "@/shared/hooks/UseRequestOfferEdit"
 
 type OfferDetailsProps = {
@@ -40,17 +41,16 @@ type OfferDetailsProps = {
 }
 
 const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
-  const currentUserId = useAppStore((s) => s.userId)
-  const isAuthenticated = useAppStore((s) => s.isAuthenticated)
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
   const requestCounterOffer = useAppStore((s) => s.counterOfferRequest)
   const { requestEdit, isChecking } = useRequestOfferEdit()
 
+  const { isOwner, isActive, isAuthenticated } = useOfferPermissions(
+    offer.offerCoreDto.offerStatusId,
+    offer.offerUserDto.userId
+  )
   const [acceptConfirmOpen, setAcceptConfirmOpen] = useState(false)
   const [counterOffersOpen, setCounterOffersOpen] = useState(false)
-
-  const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
-  const isActive = offer.offerCoreDto.offerStatusId === 1
 
   const handleAcceptSuccess = () => {
     setAcceptConfirmOpen(false)

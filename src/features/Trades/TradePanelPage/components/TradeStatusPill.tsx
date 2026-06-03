@@ -1,12 +1,17 @@
+import { TradeStatus } from "@/shared/enums/TradeStatus"
 import { cn } from "@/shared/lib/utils"
 
 type Props = { tradeStatusId: number }
 
 const mapStatus = (id: number) => {
-  if (id === 1) return { label: "Nowa", cls: "bg-muted text-foreground" }
-  if (id === 2) return { label: "W realizacji", cls: "bg-blue-600 text-white" }
-  if (id === 3) return { label: "Zakończona", cls: "bg-emerald-600 text-white" }
-  if (id === 4) return { label: "Nieudana", cls: "bg-red-600 text-white" }
+  if (id === TradeStatus.New)
+    return { label: "Nowa", cls: "bg-muted text-foreground" }
+  if (id === TradeStatus.InRealization)
+    return { label: "W realizacji", cls: "bg-blue-600 text-white" }
+  if (id === TradeStatus.SuccesfulRealization)
+    return { label: "Zakończona", cls: "bg-emerald-600 text-white" }
+  if (id === TradeStatus.Failed)
+    return { label: "Nieudana", cls: "bg-red-600 text-white" }
   return { label: `Status ${id}`, cls: "bg-muted text-foreground" }
 }
 
