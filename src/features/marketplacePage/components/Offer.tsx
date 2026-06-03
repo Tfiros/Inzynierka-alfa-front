@@ -32,6 +32,7 @@ import OfferStatusPill from "./OfferStatusPill"
 import { formatRating, formatSuccessRating } from "@/shared/lib/formatters"
 import { useToggleFavourite } from "@/shared/hooks/UseToggleFavourite"
 import { Link } from "react-router-dom"
+import { useRequestOfferEdit } from "@/shared/hooks/UseRequestOfferEdit"
 
 type OfferProps = {
   offer: offerListingDtoResponse
@@ -43,7 +44,6 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   const remainingOffered =
     offer.offeredItemsTotalCount - offer.offeredItems.length
   const remainingWanted = offer.wantedItemsTotalCount - offer.wantedItems.length
-  const requestEdit = useAppStore((s) => s.offerRequestEdit)
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
   const requestAcceptOffer = useAppStore((s) => s.acceptOfferRequest)
   const successRate = formatSuccessRating(offer.offerUserDto.successRate)
@@ -56,6 +56,7 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   const favouritesLoaded = useAppStore((s) => s.favouriteIdsLoaded)
   const favouritesReady = !isAuthenticated || favouritesLoaded
   const { toggle, loading } = useToggleFavourite()
+  const { requestEdit, isChecking } = useRequestOfferEdit()
   return (
     <Card
       className={cn(
@@ -236,9 +237,10 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
                 variant="outline"
                 className="text-xs cursor-pointer w-full sm:w-auto"
                 onClick={() => requestEdit(offer.offerCoreDto.offerId)}
-                disabled={!isActive || !requestEdit || !isOwner}
+                disabled={!isActive || !isOwner || isChecking}
               >
-                <SquarePen className="mr-1 h-4 w-4" /> Edytuj
+                <SquarePen className="mr-1 h-4 w-4" />{" "}
+                {isChecking ? "Sprawdzanie..." : "Edytuj"}
               </Button>
 
               <Button

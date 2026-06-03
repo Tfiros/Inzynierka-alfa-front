@@ -9,6 +9,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   addOfferLine,
+  extractBackendMessage,
   removeOfferLine,
   setOfferLineQuantity,
   toOfferItemDto,
@@ -177,8 +178,10 @@ export const useEditOffer = (offerId: number | null) => {
         }
         setQuote(res.data)
         return res.data
-      } catch {
-        setQuoteError("Wystąpił błąd podczas pobierania wyceny z serwera.")
+      } catch (e) {
+        setQuoteError(
+          `Wystąpił błąd podczas pobierania wyceny: ${extractBackendMessage(e)}`
+        )
         return null
       } finally {
         setQuoteIsLoading(false)
@@ -230,8 +233,10 @@ export const useEditOffer = (offerId: number | null) => {
       inc("offers:my")
       void refreshNavbar()
       return true
-    } catch {
-      setError("Wystąpił błąd podczas aktualizacji oferty")
+    } catch (e) {
+      setError(
+        `Wystąpił błąd podczas aktualizacji oferty: ${extractBackendMessage(e)}`
+      )
       return false
     } finally {
       setIsLoading(false)

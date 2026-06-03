@@ -31,6 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogAction,
 } from "@/shared/components/alert-dialog"
+import { useRequestOfferEdit } from "@/shared/hooks/UseRequestOfferEdit"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
@@ -41,9 +42,9 @@ type OfferDetailsProps = {
 const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
   const currentUserId = useAppStore((s) => s.userId)
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
-  const requestEdit = useAppStore((s) => s.offerRequestEdit)
   const requestDelete = useAppStore((s) => s.offerRequestDelete)
   const requestCounterOffer = useAppStore((s) => s.counterOfferRequest)
+  const { requestEdit, isChecking } = useRequestOfferEdit()
 
   const [acceptConfirmOpen, setAcceptConfirmOpen] = useState(false)
   const [counterOffersOpen, setCounterOffersOpen] = useState(false)
@@ -85,9 +86,10 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
                   onClick={() => requestEdit(offer.offerCoreDto.offerId)}
-                  disabled={!isActive || !isOwner}
+                  disabled={!isActive || !isOwner || isChecking}
                 >
-                  <SquarePen className="mr-1 h-4 w-4" /> Edytuj
+                  <SquarePen className="mr-1 h-4 w-4" />{" "}
+                  {isChecking ? "Sprawdzanie..." : "Edytuj"}
                 </Button>
 
                 <Button

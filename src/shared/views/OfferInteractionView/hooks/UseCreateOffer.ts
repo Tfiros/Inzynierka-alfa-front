@@ -7,6 +7,7 @@ import type {
 import { useCallback, useMemo, useState } from "react"
 import {
   addOfferLine,
+  extractBackendMessage,
   removeOfferLine,
   setOfferLineQuantity,
   toOfferItemDto,
@@ -130,8 +131,10 @@ export const useCreateOffer = () => {
         return null
       }
       return res.data.finalCost
-    } catch {
-      setQuoteError("Wystąpił błąd podczas pobierania wyceny z serwera.")
+    } catch (e) {
+      setQuoteError(
+        `Wystąpił błąd podczas pobierania wyceny: ${extractBackendMessage(e)}`
+      )
       return null
     } finally {
       setQuoteIsLoading(false)
@@ -162,8 +165,10 @@ export const useCreateOffer = () => {
       inc("offers:my")
       void refreshNavbar()
       return true
-    } catch {
-      setError("Wystąpił błąd podczas tworzenia oferty.")
+    } catch (e) {
+      setError(
+        `Wystąpił błąd podczas tworzenia oferty: ${extractBackendMessage(e)}`
+      )
       return false
     } finally {
       setIsLoading(false)
