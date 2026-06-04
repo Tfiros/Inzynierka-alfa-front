@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/shared/components/select"
 import SearchInput from "../components/SearchInput"
-import Paginator from "../components/Paginator"
+import { SimplePagination } from "@/shared/components/Pagination"
 import EntityCard from "../components/EntityCard"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
 import EditItemDialog from "../components/EditDialogs/EditItemDialog"
@@ -90,7 +90,7 @@ const ItemsTab = () => {
         </div>
       )}
 
-      <Paginator {...vm.list.paginator} />
+      <SimplePagination {...vm.list.paginator} />
 
       <AddItemDialog
         open={vm.add.open}

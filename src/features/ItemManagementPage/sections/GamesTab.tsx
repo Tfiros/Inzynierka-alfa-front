@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/shared/components/select"
 import SearchInput from "../components/SearchInput"
-import Paginator from "../components/Paginator"
+import { SimplePagination } from "@/shared/components/Pagination"
 import EntityCard from "../components/EntityCard"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
 import EditGameDialog from "../components/EditDialogs/EditGameDialog"
@@ -93,7 +93,7 @@ const GamesTab = () => {
         ))}
       </div>
 
-      <Paginator {...vm.list.paginator} />
+      <SimplePagination {...vm.list.paginator} />
 
       <AddGameDialog
         open={vm.ui.addOpen}

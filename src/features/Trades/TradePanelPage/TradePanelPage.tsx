@@ -2,7 +2,7 @@ import TradeDetailsDialog from "./components/TradeDetailsDialog"
 import useTradePanel from "./hooks/UseTradePanel"
 import FiltersSection from "./sections/FiltersSection"
 import HeaderSection from "./sections/HeaderSection"
-import PaginationSection from "./sections/PaginationSection"
+import { UniversalPagination } from "@/shared/components/Pagination"
 import StatsSection from "./sections/StatsSection"
 import TabsSection from "./sections/TabsSection"
 import TradesListSection from "./sections/TradesListSection"
@@ -73,7 +73,7 @@ const TradePanelPage = () => {
           isMiddleman={isMiddleman}
         />
 
-        <PaginationSection
+        <UniversalPagination
           page={query.state.page}
           pageSize={query.state.pageSize}
           totalCount={list.totalCount}
