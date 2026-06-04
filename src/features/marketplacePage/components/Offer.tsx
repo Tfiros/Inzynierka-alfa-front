@@ -32,6 +32,7 @@ import OfferStatusPill from "./OfferStatusPill"
 import { formatRating, formatSuccessRating } from "@/shared/lib/formatters"
 import { useToggleFavourite } from "@/shared/hooks/UseToggleFavourite"
 import { Link } from "react-router-dom"
+import { useOfferPermissions } from "@/shared/hooks/UseOfferPermissions"
 import { useRequestOfferEdit } from "@/shared/hooks/UseRequestOfferEdit"
 
 type OfferProps = {
@@ -48,10 +49,10 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   const requestAcceptOffer = useAppStore((s) => s.acceptOfferRequest)
   const successRate = formatSuccessRating(offer.offerUserDto.successRate)
   const rating = formatRating(offer.offerUserDto.rating)
-  const currentUserId = useAppStore((s) => s.userId)
-  const isAuthenticated = useAppStore((s) => s.isAuthenticated)
-  const isOwner = isAuthenticated && currentUserId === offer.offerUserDto.userId
-  const isActive = offer.offerCoreDto.offerStatusId === 1
+  const { isOwner, isActive, isAuthenticated } = useOfferPermissions(
+    offer.offerCoreDto.offerStatusId,
+    offer.offerUserDto.userId
+  )
   const isFavourite = useAppStore(selectIsFavourite(offer.offerCoreDto.offerId))
   const favouritesLoaded = useAppStore((s) => s.favouriteIdsLoaded)
   const favouritesReady = !isAuthenticated || favouritesLoaded

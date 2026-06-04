@@ -1,11 +1,15 @@
+import { OfferStatus } from "@/shared/enums/OfferStatus"
 import { cn } from "@/shared/lib/utils"
 
 type Props = { offerStatusId: number }
 
 const mapStatus = (id: number) => {
-  if (id === 2) return { label: "Wygasła", cls: "bg-muted text-foreground" }
-  if (id === 4) return { label: "Zakończona", cls: "bg-emerald-600 text-white" }
-  if (id === 5) return { label: "Anulowana", cls: "bg-red-600 text-white" }
+  if (id === OfferStatus.Expired)
+    return { label: "Wygasła", cls: "bg-muted text-foreground" }
+  if (id === OfferStatus.Completed)
+    return { label: "Zakończona", cls: "bg-emerald-600 text-white" }
+  if (id === OfferStatus.Canceled)
+    return { label: "Anulowana", cls: "bg-red-600 text-white" }
   return { label: `Status ${id}`, cls: "bg-muted text-foreground" }
 }
 

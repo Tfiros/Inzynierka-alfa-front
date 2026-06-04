@@ -10,6 +10,7 @@ import type {
   TradeListItem,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import TradeCard from "./TradeCard"
+import { TradeStatus } from "@/shared/enums/TradeStatus"
 
 type Props = {
   open: boolean
@@ -25,10 +26,10 @@ type Props = {
 }
 
 const tabByTradeStatus = (statusId: number): MiddlemanTab | null => {
-  if (statusId === 1) return "available"
-  if (statusId === 2) return "mine"
-  if (statusId === 3) return "completed"
-  if (statusId === 4) return "failedReturns"
+  if (statusId === TradeStatus.New) return "available"
+  if (statusId === TradeStatus.InRealization) return "mine"
+  if (statusId === TradeStatus.SuccesfulRealization) return "completed"
+  if (statusId === TradeStatus.Failed) return "failedReturns"
   return null
 }
 
