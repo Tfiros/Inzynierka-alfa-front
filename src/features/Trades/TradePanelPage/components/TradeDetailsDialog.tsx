@@ -134,7 +134,9 @@ const TradeDetailsDialog = ({
 
         {trade ? (
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary">Token cost: {trade.tokenCost}</Badge>
+            <Badge variant="secondary">
+              Koszt oferty: {trade.creationCost}
+            </Badge>
             <TradeStatusPill tradeStatusId={trade.tradeStatusId} />
           </div>
         ) : null}

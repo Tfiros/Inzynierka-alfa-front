@@ -84,14 +84,14 @@ const TradeCard = ({
 
         {tab === "available" && canUseMiddlemanActions ? (
           <TradeActionsAvailable
-            tokenCost={trade.tokenCost}
+            tokenCost={trade.creationCost}
             onAssign={onAssign}
           />
         ) : (tab === "mine" || tab == "failedReturns") &&
           canUseMiddlemanActions ? (
           <TradeActionsMyTrade
             tab={tab}
-            tokenCost={trade.tokenCost}
+            tokenCost={trade.creationCost}
             onDetails={onDetails}
             onCanceleTrade={onCancleTrade}
             onCompleteClick={onCompleteClick}
