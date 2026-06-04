@@ -50,4 +50,7 @@ export class CounterOfferService {
 
   public static readonly getForOffer = async (offerId: number) =>
     get<CounterOfferListItemDto[]>(`${this.base}/offer/${offerId}`)
+
+  public static readonly hasPendingOffer = async (offerId: number) =>
+    get<boolean>(`${this.base}/offer/${offerId}/has-pending`)
 }

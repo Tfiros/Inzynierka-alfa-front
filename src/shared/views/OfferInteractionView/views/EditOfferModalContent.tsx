@@ -375,8 +375,16 @@ const EditOfferModalContent = ({
             </div>
           </div>
         </div>
+        {!offer.canAfford && (
+          <div className="mt-2 text-sm text-red-500">
+            Za mało tokenów. Wymagane: {offer.requiredBalance}
+          </div>
+        )}
         {offer.error && (
           <div className="mt-2 text-sm text-red-500">{offer.error}</div>
+        )}
+        {offer.quoteError && (
+          <div className="mt-2 text-sm text-red-500">{offer.quoteError}</div>
         )}
         <div className="mt-10 border-t pt-4 flex items-center gap-3">
           <div className="text-sm text-muted-foreground">

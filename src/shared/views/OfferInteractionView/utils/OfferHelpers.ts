@@ -1,6 +1,9 @@
 import type { offerItemDto } from "@/shared/types/offerTypes/OfferTypes"
 import type { ItemOfferDto } from "@/shared/types/offerTypes/RequestResponseTypes"
 
+export const MIN_TITLE_LEN = 3
+export const MIN_DESCRIPTION_LEN = 3
+
 export type OfferLine = { item: ItemOfferDto; quantity: number }
 
 export const toOfferItemDto = (lines: OfferLine[]): offerItemDto[] => {
@@ -53,19 +56,29 @@ export const validateOfferDraft = (
   title: string,
   description: string,
   itemsHave: OfferLine[],
-  itemsWant: OfferLine[]
+  itemsWant: OfferLine[],
+  tokensOffered: number,
+  tokensWanted: number
 ): string | null => {
-  if (!title.trim()) {
-    return "Podaj tytuł"
+  if (title.trim().length < MIN_TITLE_LEN) {
+    return `Tytuł musi mieć co najmniej ${MIN_TITLE_LEN} znaki`
   }
-  if (!description.trim()) {
-    return "Podaj opis"
+  if (description.trim().length < MIN_DESCRIPTION_LEN) {
+    return `Opis musi mieć co najmniej ${MIN_DESCRIPTION_LEN} znaki`
   }
-  if (itemsHave.length === 0) {
-    return "Wymagane przedmioty w 'Co oferujesz'"
+  if (itemsHave.length === 0 && itemsWant.length === 0) {
+    return "Przynajmniej jedna strona musi zawierać przedmioty"
   }
-  if (itemsWant.length === 0) {
-    return "Wymagane przedmioty w 'Czego szukasz'"
+  if (itemsHave.length === 0 && tokensOffered <= 0) {
+    return "Dodaj przedmioty lub tokeny w 'Co oferujesz'"
+  }
+  if (itemsWant.length === 0 && tokensWanted <= 0) {
+    return "Dodaj przedmioty lub tokeny w 'Czego szukasz'"
   }
   return null
 }
+
+export const extractBackendMessage = (e: unknown): string =>
+  typeof e === "object" && e !== null && "message" in e
+    ? String((e as { message?: unknown }).message ?? "unknown")
+    : "unknown"

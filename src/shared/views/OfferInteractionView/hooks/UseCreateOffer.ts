@@ -7,6 +7,7 @@ import type {
 import { useCallback, useMemo, useState } from "react"
 import {
   addOfferLine,
+  extractBackendMessage,
   removeOfferLine,
   setOfferLineQuantity,
   toOfferItemDto,
@@ -101,6 +102,10 @@ export const useCreateOffer = () => {
     tokensWanted,
   ])
 
+  const navbarUser = useAppStore((s) => s.navbarUser)
+  const requiredBalance = offerCost + tokensOffered
+  const canAfford = navbarUser === null || navbarUser.tokens >= requiredBalance
+
   const reset = useCallback(() => {
     setItemsHave([])
     setItemsWant([])
@@ -115,7 +120,14 @@ export const useCreateOffer = () => {
   }, [])
 
   const getServerQuote = useCallback(async (): Promise<number | null> => {
-    const err = validateOfferDraft(title, description, itemsHave, itemsWant)
+    const err = validateOfferDraft(
+      title,
+      description,
+      itemsHave,
+      itemsWant,
+      tokensOffered,
+      tokensWanted
+    )
     if (err) {
       setQuoteError(err)
       return null
@@ -130,8 +142,10 @@ export const useCreateOffer = () => {
         return null
       }
       return res.data.finalCost
-    } catch {
-      setQuoteError("Wystąpił błąd podczas pobierania wyceny z serwera.")
+    } catch (e) {
+      setQuoteError(
+        `Wystąpił błąd podczas pobierania wyceny: ${extractBackendMessage(e)}`
+      )
       return null
     } finally {
       setQuoteIsLoading(false)
@@ -144,7 +158,14 @@ export const useCreateOffer = () => {
       return false
     }
 
-    const err = validateOfferDraft(title, description, itemsHave, itemsWant)
+    const err = validateOfferDraft(
+      title,
+      description,
+      itemsHave,
+      itemsWant,
+      tokensOffered,
+      tokensWanted
+    )
     if (err) {
       setError(err)
       return false
@@ -162,8 +183,10 @@ export const useCreateOffer = () => {
       inc("offers:my")
       void refreshNavbar()
       return true
-    } catch {
-      setError("Wystąpił błąd podczas tworzenia oferty.")
+    } catch (e) {
+      setError(
+        `Wystąpił błąd podczas tworzenia oferty: ${extractBackendMessage(e)}`
+      )
       return false
     } finally {
       setIsLoading(false)
@@ -207,5 +230,7 @@ export const useCreateOffer = () => {
     setTokensOffered,
     tokensWanted,
     setTokensWanted,
+    requiredBalance,
+    canAfford,
   }
 }
