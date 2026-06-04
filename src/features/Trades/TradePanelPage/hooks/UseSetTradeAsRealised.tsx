@@ -121,6 +121,13 @@ const useSetTradeAsRealised = (opts?: Props) => {
           safePayload
         )) as ApiResult<number>
 
+        if (res && res.status && res.status !== 200) {
+          toast.error(res.message ?? "Wystąpił błąd serwera.")
+          opts?.onError?.(res)
+          setIsLoading(false)
+          return
+        }
+
         if (!res?.isSuccess) {
           throw new Error(res?.message || "Request failed")
         }

@@ -1,5 +1,5 @@
 import SearchInput from "../components/SearchInput"
-import Paginator from "../components/Paginator"
+import { SimplePagination } from "@/shared/components/Pagination"
 import { DeleteEntityDialog } from "../components/DeleteEntityDialog"
 import EditGenreDialog from "../components/EditDialogs/EditGenreDialog"
 import EntityCard from "../components/EntityCard"
@@ -48,7 +48,7 @@ export const GenresTab = () => {
         onSave={vm.actions.create}
       />
 
-      <Paginator {...vm.list.paginator} />
+      <SimplePagination {...vm.list.paginator} />
 
       {vm.ui.selected && (
         <>
