@@ -169,12 +169,19 @@ const FiltersSection = ({ tab, state, actions, isMiddleman }: Props) => {
 
       <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-4">
         <Input
+          type="number"
+          min={0}
+          step={1}
           value={state.minTokenCost}
           onChange={(e) => actions.setMinTokenCost(e.target.value)}
           placeholder="Min token cost"
           inputMode="numeric"
         />
+
         <Input
+          type="number"
+          min={0}
+          step={1}
           value={state.maxTokenCost}
           onChange={(e) => actions.setMaxTokenCost(e.target.value)}
           placeholder="Max token cost"

@@ -20,9 +20,13 @@ const useTradePanel = () => {
 
   const effectiveQuery = useMemo(() => {
     const st = debouncedSearchText.trim()
-    return { ...q, searchText: st.length ? st : null }
-  }, [q, debouncedSearchText])
 
+    return {
+      ...q,
+      searchText: st.length >= 2 ? st : null,
+      searchBy: st.length >= 2 ? q.searchBy : null,
+    }
+  }, [q, debouncedSearchText])
   const stats = useUserStats()
 
   const list = useUserTradesList({
