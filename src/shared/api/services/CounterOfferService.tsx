@@ -13,6 +13,7 @@ export type CounterOfferType = "sent" | "received"
 
 export class CounterOfferService {
   private static readonly base = "/CounterOffers"
+  private static readonly userInfoBase = "/UserInfo"
 
   public static readonly quote = async (
     offerId: number,
@@ -32,7 +33,7 @@ export class CounterOfferService {
     query: CounterOfferListingsQueryType
   ) => {
     return get<PagedResponse<CounterOfferListItemDto>>(
-      `${this.base}/${type}`,
+      `${this.userInfoBase}/counteroffers/${type}`,
       query
     )
   }

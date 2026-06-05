@@ -35,8 +35,8 @@ const TabSection = ({
 }) => {
   const [tab, setTab] = useState<ProfileTabViews>("offers")
 
-  const [activePage] = useState<number>(1)
-  const [historyPage] = useState<number>(1)
+  const [activePage, setActivePage] = useState<number>(1)
+  const [historyPage, setHistoryPage] = useState<number>(1)
   const [sentPage, setSentPage] = useState<number>(1)
   const [receivedPage, setReceivedPage] = useState<number>(1)
   const [favouritesPage, setFavouritesPage] = useState<number>(1)
@@ -184,6 +184,32 @@ const TabSection = ({
                   />
                 ))}
               </div>
+
+              {activeOffers && activeOffers.totalPages > 1 && (
+                <div className="mt-4 flex items-center justify-center gap-3">
+                  <Button
+                    variant="outline"
+                    disabled={activePage <= 1 || loadingActive}
+                    onClick={() => setActivePage((p) => Math.max(1, p - 1))}
+                  >
+                    Poprzednia
+                  </Button>
+
+                  <span className="text-sm text-muted-foreground">
+                    Strona {activeOffers.page} z {activeOffers.totalPages}
+                  </span>
+
+                  <Button
+                    variant="outline"
+                    disabled={
+                      activePage >= activeOffers.totalPages || loadingActive
+                    }
+                    onClick={() => setActivePage((p) => p + 1)}
+                  >
+                    Następna
+                  </Button>
+                </div>
+              )}
             </>
           )}
         </TabsContent>
@@ -422,6 +448,32 @@ const TabSection = ({
                   />
                 ))}
               </div>
+
+              {historyOffers && historyOffers.totalPages > 1 && (
+                <div className="mt-4 flex items-center justify-center gap-3">
+                  <Button
+                    variant="outline"
+                    disabled={historyPage <= 1 || loadingHistory}
+                    onClick={() => setHistoryPage((p) => Math.max(1, p - 1))}
+                  >
+                    Poprzednia
+                  </Button>
+
+                  <span className="text-sm text-muted-foreground">
+                    Strona {historyOffers.page} z {historyOffers.totalPages}
+                  </span>
+
+                  <Button
+                    variant="outline"
+                    disabled={
+                      historyPage >= historyOffers.totalPages || loadingHistory
+                    }
+                    onClick={() => setHistoryPage((p) => p + 1)}
+                  >
+                    Następna
+                  </Button>
+                </div>
+              )}
             </>
           )}
         </TabsContent>
