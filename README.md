@@ -25,12 +25,12 @@ W aplikcacji mozemy wyroznić 3 główne typu uzytkowników:
 
 ### Zwykły Użytkownik
 
-Ten typ uzytkownika posiada dostęp do większośći funkcji systemu. Moze dokonywać wymian, składać kontr oferty komunikować się z opiekunem wymiany za
+Ten typ uzytkownika posiada dostęp do większości funkcji systemu. Moze dokonywać wymian, składać kontroferty, komunikować się z opiekunem wymiany za
 pomocą chatu jak i równiez przeglądać wszystkie umowy. Jest to najliczniej występujący rodzaj uzytkownika aplikacji. W głównej mierze będą to zapaleni fani gier mający na celu powiększenie swojej kolekcji wirtualnych przedmitów w swojej ulubionej grze.
 
 ### Pośrednik
 
-Pośrednik odpowiada za przebieg całej wymiany. Przy jakichkolwiek problemach to on odgrywa rolę sędziego. Jest to uzytkownik zatrudniony przez właściciela platformy. Posiada on dostęp do wszystkich funkcji jakie zapewnia rola zwykłego uzytkownika jak i moze brać przypisywać siebie do wymiany co sprawia, ze staję sie opiekunem wymiany.
+Pośrednik odpowiada za przebieg całej wymiany. Przy jakichkolwiek problemach to on odgrywa rolę sędziego. Jest to uzytkownik zatrudniony przez właściciela platformy. Posiada on dostęp do wszystkich funkcji jakie zapewnia rola zwykłego uzytkownika jak i moze przypisywać siebie do wymiany co sprawia, ze staję sie opiekunem wymiany.
 
 ### Administrator
 
@@ -72,18 +72,18 @@ Dzięki takiemu podziałowi komponenty nie zawierają bezpośredniej logiki komu
 
 Przykładowe moduły aplikacji:
 
-- `Chat` - czat
+- `chat` - czat
 - `contactPage` - formularz kontaktowy,
 - `faqsPage` - strona z najczęściej zadawanymi pytaniami,
-- `ItemManagementPage` - zarządzanie przedmiotami,
+- `itemManagementPage` - zarządzanie przedmiotami,
 - `landingPage` - strona startowa ,
 - `marketplacePage` - przeglądanie ofert,
-- `Notifications` - pwoiadomienia,
+- `notifications` - pwoiadomienia,
 - `pointShop` - sklep z tokenami,
 - `profilePage` - panel profilu użytkownika,
 - `profileEditPage` - panel edycji profilu użytkownika,
 - `settingsPage` - ustawienia konta,
-- `Trades/TradePanelPage` - panel wymian,
+- `trades/tradePanelPage` - panel wymian,
 - `userManagement` - zarządzanie użytkownikami.
 
 ## Część współdzielona
@@ -113,7 +113,7 @@ Komunikacja z backendem odbywa się przez wydzieloną warstwę API znajdującą 
 
 ## Autoryzacja
 
-Aplikacja korzysta z usługi Auth0 do obsługi logowania i autoryzacji użytkowników. Po zalogowaniu uzytkownik otrzymuje token który jest wykorzystywany do wywoływania zabepieczonych końcówe backendowych.
+Aplikacja korzysta z usługi Auth0 do obsługi logowania i autoryzacji użytkowników. Po zalogowaniu uzytkownik otrzymuje token który jest wykorzystywany do wywoływania zabepieczonych końcówek backendowych.
 
 ## Routing
 
@@ -136,6 +136,12 @@ Po pobraniu projektu należy zainstalować wszystkie zależności:
 npm install
 ```
 
+Przed pierwszym lokalnym uruchomieniem naley wygenerować ceryfikat HTTPS:
+
+```bash
+dotnet dev-certs https --trust
+```
+
 Następnie można uruchomić aplikację
 
 ```bash
@@ -146,8 +152,9 @@ npm run dev
 
 Podczas projektowania warstyw frontendowej przyjęto ponizsze założenia:
 
-- kod powinien został podzielony według funkcjonalności,
-- logika musi być rozdzielona z warstwą UI,
-- elementy reuzywalne znajdują się w folderze `shared`
+- kod został podzielony według funkcjonalności
+- logika musi być rozdzielona z warstwą UI
+- elementy używane przez wiele modułów aplikacji powinny znajdują się w folderze `shared`
+- folder `shared` zawiera współdzielone zasoby aplikacji, takie jak na przykład komponenty, typy lub hooki
 
 Takie podejście pozwala na stosunkowo prosty rozwój aplikacji o nowe funckjonalności oraz zapobiega zbędnej duplikacji kodu.
