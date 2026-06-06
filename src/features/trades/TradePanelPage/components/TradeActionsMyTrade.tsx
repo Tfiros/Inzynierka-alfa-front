@@ -24,8 +24,7 @@ const TradeActionsMyTrade = ({
   return (
     <div className="mt-6 border-t pt-4">
       <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>Koszt tokenów:</span>
-        <span className="text-foreground">{tokenCost}</span>
+        <span>Koszt oferty: {tokenCost}</span>
       </div>
 
       <Button
