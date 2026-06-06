@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react"
+import { toast } from "sonner"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import { GamesService } from "@/shared/api/services/GamesService"
 import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
@@ -100,6 +101,17 @@ const useItemRaritiesTab = () => {
     setDialogGamesOpen(false)
   }
 
+  const handleError = (error: unknown, fallback: string) => {
+    const errorMsg =
+      error instanceof Error
+        ? error.message
+        : typeof error === "string"
+          ? error
+          : fallback
+
+    toast.error(errorMsg)
+  }
+
   const actions = {
     openAdd: () => {
       resetDialogGame(gameId)
@@ -118,52 +130,62 @@ const useItemRaritiesTab = () => {
     },
 
     create: async (payload: { name: string; gameId: number }) => {
-      const res = await ItemRaritiesService.create({
-        gameId: payload.gameId,
-        rarityName: payload.name,
-      })
+      try {
+        const res = await ItemRaritiesService.create({
+          gameId: payload.gameId,
+          rarityName: payload.name,
+        })
 
-      if (!res.isSuccess) {
-        list.setError(res.message ?? "Nie udało się dodać rzadkości.")
-        return
+        if (!res?.isSuccess) {
+          throw new Error(res?.message ?? "Błąd żądania")
+        }
+
+        setAddOpen(false)
+        await reloadAfterMutation()
+      } catch (error) {
+        handleError(error, "Błąd żądania")
       }
-
-      setAddOpen(false)
-      await reloadAfterMutation()
     },
 
     saveEdit: async (payload: { name: string; gameId: number }) => {
       if (!selected) return
 
-      const res = await ItemRaritiesService.update(selected.id, {
-        rarityName: payload.name,
-      })
+      try {
+        const res = await ItemRaritiesService.update(selected.id, {
+          rarityName: payload.name,
+        })
 
-      if (!res.isSuccess) {
-        list.setError(res.message ?? "Nie udało się zapisać.")
-        return
+        if (!res?.isSuccess) {
+          throw new Error(res?.message ?? "Błąd żądania")
+        }
+
+        setEditOpen(false)
+        setSelected(null)
+
+        await reloadAfterMutation()
+      } catch (error) {
+        handleError(error, "Błąd żądania")
       }
-
-      setEditOpen(false)
-      setSelected(null)
-
-      await reloadAfterMutation()
     },
 
     confirmDelete: async () => {
       if (!selected) return
 
-      const res = await ItemRaritiesService.softDelete(selected.id)
+      try {
+        const res = await ItemRaritiesService.softDelete(selected.id)
 
-      if (!res.isSuccess) {
-        list.setError(res.message ?? "Nie udało się usunąć.")
-        return
+        if (res?.isSuccess === false) {
+          throw new Error(res.message ?? "Błąd żądania")
+        }
+
+        setDeleteOpen(false)
+        setSelected(null)
+
+        await reloadAfterMutation()
+      } catch (error) {
+        console.log("the err0r", error)
+        handleError(error, "Błąd żądania")
       }
-
-      setDeleteOpen(false)
-      setSelected(null)
-
-      await reloadAfterMutation()
     },
   }
 

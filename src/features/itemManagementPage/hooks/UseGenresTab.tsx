@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { toast } from "sonner"
 import type { GenreDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 import { GenresService } from "@/shared/api/services/GenresService"
 import usePagedQuery from "./UsePagedQuery"
@@ -21,6 +22,18 @@ const useGenresTab = () => {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [selected, setSelected] = useState<GenreDto | null>(null)
 
+  const handleError = (error: unknown, fallback: string) => {
+    const errorMsg =
+      error instanceof Error
+        ? error.message
+        : typeof error === "string"
+          ? error
+          : fallback
+
+    list.setError(errorMsg)
+    toast.error(errorMsg)
+  }
+
   const actions = {
     openAdd: () => setAddOpen(true),
 
@@ -35,40 +48,50 @@ const useGenresTab = () => {
     },
 
     create: async (payload: { name: string }) => {
-      const res = await GenresService.create(payload)
-      if (!res.isSuccess) {
-        list.setError(res.message ?? "Nie udało się dodać gatunku.")
-        return
+      try {
+        const res = await GenresService.create(payload)
+        if (!res?.isSuccess) {
+          throw new Error(res?.message ?? "Błąd żądania")
+        }
+
+        setAddOpen(false)
+        await list.fetch()
+      } catch (error) {
+        handleError(error, "Błąd żądania")
       }
-      setAddOpen(false)
-      await list.fetch()
     },
 
     saveEdit: async (name: string) => {
       if (!selected) return
 
-      const res = await GenresService.update(selected.id, { name })
-      if (!res.isSuccess) {
-        list.setError(res.message ?? "Nie udało się zapisać.")
-        return
-      }
+      try {
+        const res = await GenresService.update(selected.id, { name })
+        if (!res?.isSuccess) {
+          throw new Error(res?.message ?? "Błąd żądania")
+        }
 
-      setEditOpen(false)
-      await list.fetch()
+        setEditOpen(false)
+        await list.fetch()
+      } catch (error) {
+        handleError(error, "Błąd żądania")
+      }
     },
 
     confirmDelete: async () => {
       if (!selected) return
-      const res = await GenresService.softDelete(selected.id)
 
-      if ((res as any)?.isSuccess === false) {
-        list.setError((res as any).message ?? "Nie udało się usunąć.")
-        return
+      try {
+        const res = await GenresService.softDelete(selected.id)
+        if ((res as any)?.isSuccess === false) {
+          throw new Error((res as any).message ?? "Błąd żądania")
+        }
+
+        setDeleteOpen(false)
+        setSelected(null)
+        await list.fetch()
+      } catch (error) {
+        handleError(error, "Błąd żądania")
       }
-
-      setDeleteOpen(false)
-      setSelected(null)
-      await list.fetch()
     },
   }
 

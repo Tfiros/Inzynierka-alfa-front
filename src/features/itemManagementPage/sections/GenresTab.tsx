@@ -36,6 +36,7 @@ export const GenresTab = () => {
             key={g.id}
             title={g.name}
             id={g.id}
+            isItemOrGame={false}
             onEdit={() => vm.actions.openEdit(g)}
             onDelete={() => vm.actions.openDelete(g)}
           />

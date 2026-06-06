@@ -1,7 +1,6 @@
 import { Settings } from "lucide-react"
 import ProfileEditSettingsCard from "./components/ProfileEditSettingsCard"
 import AppApperanceCard from "./components/AppApperanceCard"
-import AccountCard from "./components/AccountCard"
 
 const SettingsPage = () => {
   return (
@@ -20,7 +19,6 @@ const SettingsPage = () => {
         <div className="space-y-6">
           <ProfileEditSettingsCard />
           <AppApperanceCard />
-          <AccountCard />
         </div>
       </div>
     </div>

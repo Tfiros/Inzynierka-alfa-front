@@ -82,6 +82,7 @@ const ItemsTab = () => {
               title={i.name}
               metaLeft={`Gra: ${i.gameName}`}
               id={i.id}
+              isItemOrGame={true}
               thumbnailUrl={i.photo_URL || undefined}
               onEdit={() => vm.actions.openEdit(i)}
               onDelete={() => vm.actions.openDelete(i)}
