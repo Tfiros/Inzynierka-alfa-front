@@ -36,7 +36,6 @@ function App() {
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<LandingPage />} />
-            <Route path="oferty" element={<div>Oferty</div>} />
             <Route path="faqs" element={<FaqsSite />} />
             <Route path="profile/:id" element={<ProfilePage />} />
             <Route path="statute" element={<StatutePage />} />

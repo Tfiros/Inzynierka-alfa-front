@@ -11,7 +11,7 @@ const TradeActionsAvailable = ({ tokenCost, onAssign, disabled }: Props) => {
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>Koszt tokenów:</span>
+        <span>Koszt oferty:</span>
         <span className="text-foreground">{tokenCost}</span>
       </div>
 

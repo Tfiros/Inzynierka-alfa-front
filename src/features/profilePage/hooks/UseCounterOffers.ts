@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
+import { UserInfoService } from "@/shared/api/services/UserInfoService"
 import type { CounterOfferListItemDto } from "@/shared/types/counterOfferTypes/CounterOfferListItemDto"
 import type { PagedResponse } from "@/shared/types/PagedType"
 import { selectCounter, useAppStore } from "@/shared/store/appStore"
@@ -21,20 +21,20 @@ export function useCounterOffers(
 
   const refreshKey = useAppStore(selectCounter(`counterOffers:${type}`))
 
-  const emptyPage: PagedResponse<CounterOfferListItemDto> = {
-    page,
-    pageSize,
-    totalCount: 0,
-    totalPages: 1,
-    elements: [],
-  }
-
   const fetch = useCallback(async () => {
+    const emptyPage: PagedResponse<CounterOfferListItemDto> = {
+      page,
+      pageSize,
+      totalCount: 0,
+      totalPages: 1,
+      elements: [],
+    }
+
     setLoading(true)
     setError(null)
 
     try {
-      const res = await CounterOfferService.getByType(type, {
+      const res = await UserInfoService.getByType(type, {
         page,
         pageSize,
         orderBy,

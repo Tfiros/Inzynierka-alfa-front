@@ -12,12 +12,10 @@ export type UpdateTradeByMiddlemanRequest = {
 }
 
 export const TradeSortBy = {
-  CreationDateAsc: 1,
-  CreationDateDesc: 2,
-  TokenCostAsc: 3,
-  TokenCostDesc: 4,
-  TradeIdAsc: 5,
-  TradeIdDesc: 6,
+  CreationDateDesc: 1,
+  CreationDateAsc: 2,
+  TradeIdDesc: 5,
+  TradeIdAsc: 6,
 } as const
 
 export type TradeSortBy = (typeof TradeSortBy)[keyof typeof TradeSortBy]
@@ -64,9 +62,9 @@ export type InTradeUser = {
 export type TradeListItem = {
   tradeId: number
   offerId: number
-  tokenCost: number
   tradeStatusId: number
   creationDate: string
+  creationCost: number
   customer: InTradeUser
   postingUser: InTradeUser
   middlemanUserId?: number | null
