@@ -1,14 +1,6 @@
 import { Plus } from "lucide-react"
 import { Button } from "@/shared/components/button"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/shared/components/ui/pagination"
+import { UniversalPagination } from "@/shared/components/Pagination"
 import { useAppStore } from "@/shared/store/appStore"
 import { useState } from "react"
 import FilterBar from "./components/FilterBar"
@@ -23,6 +15,7 @@ const MarketplacePage = () => {
     totalCount,
     totalPages,
     page,
+    pageSize,
     setPage,
     loading,
     error,
@@ -39,6 +32,7 @@ const MarketplacePage = () => {
     games,
     genres,
     rarities,
+    refreshOffers,
   } = useOffersListing()
 
   const [selectedOfferId, setSelectedOffer] = useState<number | null>(null)
@@ -78,23 +72,15 @@ const MarketplacePage = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 md:self-end">
+          <div className="flex flex-col items-end gap-3 md:self-end">
             <div className="text-sm text-muted-foreground md:text-right md:self-end">
               <p>{totalCount} znalezionych ofert</p>
             </div>
-
-            <Button
-              type="button"
-              className="fixed bottom-6 right-6 z-50 rounded-full shadow-lg"
-              size="lg"
-              onClick={() => {
-                requestCreate()
-              }}
-              disabled={!isAuthenticated}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Dodaj ofertę
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button type="button" variant="outline" onClick={refreshOffers}>
+                Odśwież
+              </Button>
+            </div>
           </div>
         </header>
         <FilterBar
@@ -125,54 +111,13 @@ const MarketplacePage = () => {
         />
 
         {!loading && totalCount > 0 && totalPages > 1 && (
-          <Pagination className="mt-6">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setPage(Math.max(1, page - 1))
-                  }}
-                  className={page === 1 ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-
-              {getPageItems(page, totalPages).map((p, idx) =>
-                p === "..." ? (
-                  <PaginationItem key={`dots-${idx}`}>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                ) : (
-                  <PaginationItem key={p}>
-                    <PaginationLink
-                      href="#"
-                      isActive={p === page}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setPage(p)
-                      }}
-                    >
-                      {p}
-                    </PaginationLink>
-                  </PaginationItem>
-                )
-              )}
-
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setPage(Math.min(totalPages, page + 1))
-                  }}
-                  className={
-                    page === totalPages ? "pointer-events-none opacity-50" : ""
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          <UniversalPagination
+            page={page}
+            pageSize={pageSize}
+            totalCount={totalCount}
+            onPageChange={setPage}
+            loading={loading}
+          />
         )}
 
         {detailsOffer && (
@@ -183,23 +128,20 @@ const MarketplacePage = () => {
           />
         )}
       </div>
+      <Button
+        type="button"
+        className="fixed bottom-6 right-6 z-50 rounded-full shadow-lg"
+        size="lg"
+        onClick={() => {
+          requestCreate()
+        }}
+        disabled={!isAuthenticated}
+      >
+        <Plus className="mr-2 h-4 w-4" />
+        Dodaj ofertę
+      </Button>
     </>
   )
 }
 
 export default MarketplacePage
-
-function getPageItems(current: number, total: number): Array<number | "..."> {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
-
-  const items: Array<number | "..."> = [1]
-  const left = Math.max(2, current - 1)
-  const right = Math.min(total - 1, current + 1)
-
-  if (left > 2) items.push("...")
-  for (let p = left; p <= right; p++) items.push(p)
-  if (right < total - 1) items.push("...")
-
-  items.push(total)
-  return items
-}
