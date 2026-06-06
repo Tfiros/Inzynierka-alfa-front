@@ -161,7 +161,7 @@ const FiltersSection = ({ tab, state, actions, isMiddleman }: Props) => {
         <div className="flex justify-end">
           <Button variant="outline" className="gap-2" onClick={actions.reset}>
             <RotateCcw className="h-4 w-4" />
-            Reset
+            Odśwież
           </Button>
         </div>
       </div>
