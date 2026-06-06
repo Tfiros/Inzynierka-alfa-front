@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react"
+import { Plus, RotateCcw } from "lucide-react"
 import { Button } from "@/shared/components/button"
 import { UniversalPagination } from "@/shared/components/Pagination"
 import { useAppStore } from "@/shared/store/appStore"
@@ -78,6 +78,7 @@ const MarketplacePage = () => {
             </div>
             <div className="flex items-center gap-2">
               <Button type="button" variant="outline" onClick={refreshOffers}>
+                <RotateCcw className="h-4 w-4" />
                 Odśwież
               </Button>
             </div>
