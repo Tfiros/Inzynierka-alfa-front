@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect } from "react"
 import useUserTradesQuery from "./UseUserTradesQuery"
 import useUserStats from "./UseUserStats"
 import useUserTradesList from "./UseUserTradesList"
@@ -6,34 +6,22 @@ import useAssignMiddleman from "./UseAssignMiddleman"
 import useTradeDetailsDialog from "./UseTradeDetailsDialog"
 import { useAppStore } from "@/shared/store/appStore"
 import useDeleteTrade from "./UseDeleteTrade"
-import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
 import { useSearchParams } from "react-router-dom"
 import useLinkedTradeDialog from "./UseLinkedTradeDialog"
 
 const useTradePanel = () => {
   const { state, q, actions } = useUserTradesQuery("available")
-  const debouncedSearchText = useDebounceValue(state.searchText, 350)
   const roles = useAppStore((s) => s.roles)
   const isMiddleman =
     roles.some((r) => r.toLowerCase() === "middleman") ||
     roles.some((r) => r.toLowerCase() === "admin")
-
-  const effectiveQuery = useMemo(() => {
-    const st = debouncedSearchText.trim()
-
-    return {
-      ...q,
-      searchText: st.length >= 2 ? st : null,
-      searchBy: st.length >= 2 ? q.searchBy : null,
-    }
-  }, [q, debouncedSearchText])
   const stats = useUserStats()
 
   const list = useUserTradesList({
     tab: state.tab,
     page: state.page,
     pageSize: state.pageSize,
-    query: effectiveQuery,
+    query: q,
     clearOnLoad: false,
     isMiddleman: isMiddleman,
   })
@@ -80,7 +68,7 @@ const useTradePanel = () => {
   }, [linkTradeId, linkedTrade.openForId])
 
   return {
-    query: { state, actions, effectiveQuery },
+    query: { state, actions, q },
     stats,
     list,
     assign,
