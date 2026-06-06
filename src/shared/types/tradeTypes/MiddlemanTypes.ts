@@ -12,12 +12,10 @@ export type UpdateTradeByMiddlemanRequest = {
 }
 
 export const TradeSortBy = {
-  CreationDateAsc: 1,
-  CreationDateDesc: 2,
-  CreationCostAsc: 3,
-  CreationCostDesc: 4,
-  TradeIdAsc: 5,
-  TradeIdDesc: 6,
+  CreationDateDesc: 1,
+  CreationDateAsc: 2,
+  TradeIdDesc: 5,
+  TradeIdAsc: 6,
 } as const
 
 export type TradeSortBy = (typeof TradeSortBy)[keyof typeof TradeSortBy]

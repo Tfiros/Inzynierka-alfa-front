@@ -60,11 +60,12 @@ const useUserTradesQuery = (initialTab: MiddlemanTab = "available") => {
   })
 
   const q = useMemo<TradesQuery>(() => {
+    const searchText = state.searchText.trim()
+    const shouldSearch = searchText.length >= 2
+
     return {
-      searchText: state.searchText.trim().length
-        ? state.searchText.trim()
-        : null,
-      searchBy: state.searchBy ?? null,
+      searchText: shouldSearch ? searchText : null,
+      searchBy: shouldSearch ? state.searchBy : null,
 
       minTokenCost: toNumOrNull(state.minTokenCost),
       maxTokenCost: toNumOrNull(state.maxTokenCost),
