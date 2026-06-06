@@ -79,6 +79,8 @@ const SEARCH_BY_OPTIONS: { value: TradeSearchBy; label: string }[] = [
 const SORT_OPTIONS: { value: TradeSortBy; label: string }[] = [
   { value: TradeSortByConst.CreationDateAsc, label: "Data ↑" },
   { value: TradeSortByConst.CreationDateDesc, label: "Data ↓" },
+  { value: TradeSortByConst.CreationCostAsc, label: "Koszt oferty ↑" },
+  { value: TradeSortByConst.CreationCostDesc, label: "Koszt oferty ↓" },
   { value: TradeSortByConst.TradeIdAsc, label: "TradeId ↑" },
   { value: TradeSortByConst.TradeIdDesc, label: "TradeId ↓" },
 ]

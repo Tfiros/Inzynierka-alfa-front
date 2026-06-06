@@ -14,6 +14,8 @@ export type UpdateTradeByMiddlemanRequest = {
 export const TradeSortBy = {
   CreationDateDesc: 1,
   CreationDateAsc: 2,
+  CreationCostAsc: 3,
+  CreationCostDesc: 4,
   TradeIdDesc: 5,
   TradeIdAsc: 6,
 } as const
