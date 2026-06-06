@@ -6,14 +6,11 @@ import { get, post, patch } from "../ApiClient"
 import type { CounterOfferCostResponse } from "@/shared/types/counterOfferTypes/CounterOfferCostResponse"
 import type { AcceptedOfferResponseType } from "@/shared/types/counterOfferTypes/AcceptedOfferResponseType"
 import type { CounterOfferListItemDto } from "@/shared/types/counterOfferTypes/CounterOfferListItemDto"
-import type { CounterOfferListingsQueryType } from "@/shared/types/counterOfferTypes/CounterOfferListingQueryType"
-import type { PagedResponse } from "@/shared/types/PagedType"
 
 export type CounterOfferType = "sent" | "received"
 
 export class CounterOfferService {
   private static readonly base = "/CounterOffers"
-  private static readonly userInfoBase = "/UserInfo"
 
   public static readonly quote = async (
     offerId: number,
@@ -27,16 +24,6 @@ export class CounterOfferService {
 
   public static readonly accept = async (counterOfferId: number) =>
     post<AcceptedOfferResponseType>(`${this.base}/${counterOfferId}/accept`)
-
-  public static readonly getByType = async (
-    type: CounterOfferType,
-    query: CounterOfferListingsQueryType
-  ) => {
-    return get<PagedResponse<CounterOfferListItemDto>>(
-      `${this.userInfoBase}/counteroffers/${type}`,
-      query
-    )
-  }
 
   public static readonly updateStatus = async (
     counterOfferId: number,

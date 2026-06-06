@@ -6,6 +6,9 @@ import type {
 import { get, put } from "../ApiClient"
 import type { PagedResponse } from "@/shared/types/PagedType"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
+import type { CounterOfferType } from "@/shared/types/counterOfferTypes/CounterOfferType"
+import type { CounterOfferListingsQueryType } from "@/shared/types/counterOfferTypes/CounterOfferListingQueryType"
+import type { CounterOfferListItemDto } from "@/shared/types/counterOfferTypes/CounterOfferListItemDto"
 
 export class UserInfoService {
   private static readonly base = "/UserInfo"
@@ -39,4 +42,14 @@ export class UserInfoService {
   // PUT /profileInfo
   public static readonly updateProfileInfo = async (userId: number) =>
     put<UserProfileInfoUpdateDto>(`${this.base}/profileInfo/${userId}`)
+
+  public static readonly getByType = async (
+    type: CounterOfferType,
+    query: CounterOfferListingsQueryType
+  ) => {
+    return get<PagedResponse<CounterOfferListItemDto>>(
+      `${this.base}/counteroffers/${type}`,
+      query
+    )
+  }
 }
