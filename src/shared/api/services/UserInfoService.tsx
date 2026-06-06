@@ -48,7 +48,7 @@ export class UserInfoService {
     query: CounterOfferListingsQueryType
   ) => {
     return get<PagedResponse<CounterOfferListItemDto>>(
-      `${this.base}/counteroffers/${type}`,
+      `${this.base}/profileInfo/counteroffers/${type}`,
       query
     )
   }
