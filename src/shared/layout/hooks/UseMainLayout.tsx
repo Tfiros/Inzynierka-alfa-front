@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from "react"
 import { useAppStore } from "../../store/appStore"
-import { useNotificationsHub } from "@/features/Notifications/NotificationsDropdown/hooks/UseNotificationsHub"
+import { useNotificationsHub } from "@/features/notifications/NotificationsDropdown/hooks/UseNotificationsHub"
 
 const useMainLayout = () => {
   const isLogged = useAppStore((s: any) => s.isAuthenticated)

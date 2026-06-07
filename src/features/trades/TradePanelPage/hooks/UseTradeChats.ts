@@ -1,4 +1,4 @@
-import useOpenThread from "@/features/Chat/hooks/UseOpenThread"
+import useOpenThread from "@/features/chat/hooks/UseOpenThread"
 import { ChatService } from "@/shared/api/services/ChatService"
 import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
 import { chatThreadTitle } from "@/shared/utilities/Chat/chatThreadTitle"
