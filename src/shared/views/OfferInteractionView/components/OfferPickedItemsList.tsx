@@ -24,7 +24,7 @@ const OfferPickedItemsList = ({
         return (
           <div
             key={line.item.id}
-            className="flex items-center gap-3 rounded-2xl border bg-white px-3 py-2 shadow-sm"
+            className="flex items-center gap-3 rounded-2xl border border-border bg-card px-3 py-2 text-card-foreground shadow-sm"
           >
             <div className="h-10 w-10 overflow-hidden rounded-xl bg-muted/30 shrink-0">
               <img
