@@ -53,6 +53,9 @@ const TradePanelPage = () => {
           state={query.state}
           actions={query.actions}
           isMiddleman={isMiddleman}
+          onRefresh={() => {
+            void list.refetchList()
+          }}
         />
 
         <TradesListSection

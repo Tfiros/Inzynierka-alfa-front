@@ -60,6 +60,7 @@ type Props = {
   state: State
   actions: Actions
   isMiddleman: boolean
+  onRefresh: () => void
 }
 
 const PAGE_SIZES = [10, 20, 50]
@@ -85,7 +86,13 @@ const SORT_OPTIONS: { value: TradeSortBy; label: string }[] = [
   { value: TradeSortByConst.TradeIdDesc, label: "TradeId ↓" },
 ]
 
-const FiltersSection = ({ tab, state, actions, isMiddleman }: Props) => {
+const FiltersSection = ({
+  tab,
+  state,
+  actions,
+  isMiddleman,
+  onRefresh,
+}: Props) => {
   const showReadyForCompletion = tab !== "available"
   const showOnlyMine = isMiddleman
 
@@ -159,7 +166,7 @@ const FiltersSection = ({ tab, state, actions, isMiddleman }: Props) => {
         </Select>
 
         <div className="flex justify-end">
-          <Button variant="outline" className="gap-2" onClick={actions.reset}>
+          <Button variant="outline" className="gap-2" onClick={onRefresh}>
             <RotateCcw className="h-4 w-4" />
             Odśwież
           </Button>

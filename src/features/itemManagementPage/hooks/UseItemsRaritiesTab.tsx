@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from "react"
-import { toast } from "sonner"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import { GamesService } from "@/shared/api/services/GamesService"
 import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
@@ -173,7 +172,6 @@ const useItemRaritiesTab = () => {
 
         await reloadAfterMutation()
       } catch (error) {
-        console.log("the err0r", error)
         handleError(error, "Błąd żądania")
       }
     },

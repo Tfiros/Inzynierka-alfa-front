@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { toast } from "sonner"
 import type { GenreDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 import { GenresService } from "@/shared/api/services/GenresService"
 import usePagedQuery from "./UsePagedQuery"
@@ -40,7 +39,7 @@ const useGenresTab = () => {
       try {
         const res = await GenresService.create(payload)
         if (!res?.isSuccess) {
-          throw new Error(res?.message ?? "Błąd żądania")
+          throw res
         }
 
         setAddOpen(false)

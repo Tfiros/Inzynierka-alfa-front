@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react"
-import { toast } from "sonner"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import type { GameDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 import { GenresService } from "@/shared/api/services/GenresService"
@@ -72,10 +71,13 @@ const useGamesTab = () => {
     },
 
     create: async (payload: AddGamePayload) => {
+      console.log("CREATE CLICKED", payload)
+
       try {
         const res = await GamesService.create(payload)
+
         if (!res?.isSuccess) {
-          throw new Error(res?.message ?? "Błąd żądania")
+          throw res
         }
 
         setAddOpen(false)
