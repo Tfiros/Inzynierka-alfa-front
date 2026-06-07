@@ -15,10 +15,10 @@ import { useUpdateCounterOfferStatus } from "../hooks/UseUpdateCounterOfferStatu
 import { UseAcceptCounterOffer } from "../hooks/UseAcceptCounterOffer"
 import CounterOfferCard from "../component/CounterOfferCard"
 import { CounterOfferStatus } from "@/shared/enums/CounterOfferStatus"
-import { Button } from "@/shared/components/button"
 import { useAppStore } from "@/shared/store/appStore"
 import { useFavouriteOffers } from "../hooks/UseFavouriteOffers"
 import { useCancelCounterOffer } from "../hooks/UseCancelCounterOffer"
+import { UniversalPagination } from "@/shared/components/Pagination"
 type ProfileTabViews =
   | "offers"
   | "counterOffersSent"
@@ -26,11 +26,17 @@ type ProfileTabViews =
   | "favourites"
   | "history"
 
-const TabSection = ({ profileId }: { profileId: number }) => {
+const TabSection = ({
+  profileId,
+  isOwnProfile,
+}: {
+  profileId: number
+  isOwnProfile: boolean
+}) => {
   const [tab, setTab] = useState<ProfileTabViews>("offers")
 
-  const [activePage] = useState<number>(1)
-  const [historyPage] = useState<number>(1)
+  const [activePage, setActivePage] = useState<number>(1)
+  const [historyPage, setHistoryPage] = useState<number>(1)
   const [sentPage, setSentPage] = useState<number>(1)
   const [receivedPage, setReceivedPage] = useState<number>(1)
   const [favouritesPage, setFavouritesPage] = useState<number>(1)
@@ -42,8 +48,6 @@ const TabSection = ({ profileId }: { profileId: number }) => {
   const cancel = useCancelCounterOffer()
   const acceptCounterOffer = UseAcceptCounterOffer()
   const pageSize = 10
-  const currentUserId = useAppStore((s) => s.userId)
-  const isOwnProfile = currentUserId === profileId
 
   const { offerDetails: detailsOffer } = useOfferDetails(
     selectedOfferId,
@@ -180,6 +184,16 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                   />
                 ))}
               </div>
+
+              {activeOffers && activeOffers.totalPages > 1 && (
+                <UniversalPagination
+                  page={activeOffers.page}
+                  pageSize={pageSize}
+                  totalCount={activeOffers.totalCount}
+                  loading={loadingActive}
+                  onPageChange={setActivePage}
+                />
+              )}
             </>
           )}
         </TabsContent>
@@ -219,29 +233,14 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                   />
                 ))}
               </div>
-
               {sent.data && sent.data.totalPages > 1 && (
-                <div className="mt-4 flex items-center justify-center gap-3">
-                  <Button
-                    variant="outline"
-                    disabled={sentPage <= 1 || sent.loading}
-                    onClick={() => setSentPage((p) => Math.max(1, p - 1))}
-                  >
-                    Poprzednia
-                  </Button>
-
-                  <span className="text-sm text-muted-foreground">
-                    Strona {sent.data.page} z {sent.data.totalPages}
-                  </span>
-
-                  <Button
-                    variant="outline"
-                    disabled={sentPage >= sent.data.totalPages || sent.loading}
-                    onClick={() => setSentPage((p) => p + 1)}
-                  >
-                    Następna
-                  </Button>
-                </div>
+                <UniversalPagination
+                  page={sent.data.page}
+                  pageSize={pageSize}
+                  totalCount={sent.data.totalCount}
+                  loading={sent.loading}
+                  onPageChange={setSentPage}
+                />
               )}
             </>
           )}
@@ -291,32 +290,14 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                   )
                 })}
               </div>
-
-              {received.data.totalPages > 1 && (
-                <div className="mt-4 flex items-center justify-center gap-3">
-                  <Button
-                    variant="outline"
-                    disabled={receivedPage <= 1 || received.loading}
-                    onClick={() => setReceivedPage((p) => Math.max(1, p - 1))}
-                  >
-                    Poprzednia
-                  </Button>
-
-                  <span className="text-sm text-muted-foreground">
-                    Strona {received.data.page} z {received.data.totalPages}
-                  </span>
-
-                  <Button
-                    variant="outline"
-                    disabled={
-                      receivedPage >= received.data.totalPages ||
-                      received.loading
-                    }
-                    onClick={() => setReceivedPage((p) => p + 1)}
-                  >
-                    Następna
-                  </Button>
-                </div>
+              {received.data && received.data.totalPages > 1 && (
+                <UniversalPagination
+                  page={received.data.page}
+                  pageSize={pageSize}
+                  totalCount={received.data.totalCount}
+                  loading={received.loading}
+                  onPageChange={setReceivedPage}
+                />
               )}
             </>
           )}
@@ -356,29 +337,14 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                   />
                 ))}
               </div>
-              {favouriteOffers.totalPages > 1 && (
-                <div className="mt-4 flex items-center justify-center gap-3">
-                  <Button
-                    variant="outline"
-                    disabled={favouritesPage <= 1 || favouriteLoading}
-                    onClick={() => setFavouritesPage((p) => Math.max(1, p - 1))}
-                  >
-                    Poprzednia
-                  </Button>
-                  <span className="text-sm text-muted-foreground">
-                    Strona {favouriteOffers.page} z {favouriteOffers.totalPages}
-                  </span>
-                  <Button
-                    variant="outline"
-                    disabled={
-                      favouritesPage >= favouriteOffers.totalPages ||
-                      favouriteLoading
-                    }
-                    onClick={() => setFavouritesPage((p) => p + 1)}
-                  >
-                    Następna
-                  </Button>
-                </div>
+              {favouriteOffers && favouriteOffers.totalPages > 1 && (
+                <UniversalPagination
+                  page={favouriteOffers.page}
+                  pageSize={pageSize}
+                  totalCount={favouriteOffers.totalCount}
+                  loading={favouriteLoading}
+                  onPageChange={setFavouritesPage}
+                />
               )}
             </>
           )}
@@ -418,6 +384,16 @@ const TabSection = ({ profileId }: { profileId: number }) => {
                   />
                 ))}
               </div>
+
+              {historyOffers && historyOffers.totalPages > 1 && (
+                <UniversalPagination
+                  page={historyOffers.page}
+                  pageSize={pageSize}
+                  totalCount={historyOffers.totalCount}
+                  loading={loadingHistory}
+                  onPageChange={setHistoryPage}
+                />
+              )}
             </>
           )}
         </TabsContent>

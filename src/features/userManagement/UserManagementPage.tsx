@@ -2,7 +2,7 @@ import HeaderSection from "./sections/HeaderSection"
 import StatsSection from "./sections/StatsSection"
 import ToolbarSection from "./sections/ToolbarSection"
 import TableSection from "./sections/TableSection"
-import PaginationSection from "./sections/PaginationSection"
+import { DetailedPagination } from "@/shared/components/Pagination"
 import EditUserDialog from "./components/EditUserDialog"
 import DeleteUserDialog from "./components/DeleteUserDialog"
 import AddUserDialog from "./components/AddUserDialog"
@@ -18,7 +18,7 @@ const UserManagementPage = () => {
         <StatsSection {...ui.statsProps} />
         <ToolbarSection {...ui.toolbarProps} />
         <TableSection {...ui.tableProps} />
-        <PaginationSection {...ui.paginationProps} />
+        <DetailedPagination {...ui.paginationProps} />
       </div>
 
       <EditUserDialog {...ui.dialogsProps.edit} />

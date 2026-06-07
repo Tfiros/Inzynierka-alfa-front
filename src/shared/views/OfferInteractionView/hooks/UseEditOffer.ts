@@ -9,6 +9,9 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   addOfferLine,
+  extractBackendMessage,
+  MIN_DESCRIPTION_LEN,
+  MIN_TITLE_LEN,
   removeOfferLine,
   setOfferLineQuantity,
   toOfferItemDto,
@@ -28,6 +31,7 @@ export const useEditOffer = (offerId: number | null) => {
   const [originalTokenCost, setOriginalTokenCost] = useState<number | null>(
     null
   )
+  const [originalTokensOffered, setOriginalTokensOffered] = useState(0)
   const [itemsHave, setItemsHave] = useState<OfferLine[]>([])
   const [itemsWant, setItemsWant] = useState<OfferLine[]>([])
   const [quoteIsLoading, setQuoteIsLoading] = useState(false)
@@ -48,6 +52,7 @@ export const useEditOffer = (offerId: number | null) => {
     setQuoteError(null)
     setTokensOffered(0)
     setTokensWanted(0)
+    setOriginalTokensOffered(0)
     setOriginalTokenCost(null)
   }, [])
   useEffect(() => {
@@ -90,6 +95,7 @@ export const useEditOffer = (offerId: number | null) => {
         setItemsWant(data.wantedItems.map(toOfferLine))
         setTokensOffered(data.offerCoreDto.tokensOffered)
         setTokensWanted(data.offerCoreDto.tokensWanted)
+        setOriginalTokensOffered(data.offerCoreDto.tokensOffered)
         setQuote(null)
         setQuoteError(null)
       } catch {
@@ -159,7 +165,14 @@ export const useEditOffer = (offerId: number | null) => {
   const getServerQuote =
     useCallback(async (): Promise<offerUpdateQuoteResponse | null> => {
       if (!offerId) return null
-      const err = validateOfferDraft(title, description, itemsHave, itemsWant)
+      const err = validateOfferDraft(
+        title,
+        description,
+        itemsHave,
+        itemsWant,
+        tokensOffered,
+        tokensWanted
+      )
       if (err) {
         setQuoteError(err)
         return null
@@ -177,8 +190,10 @@ export const useEditOffer = (offerId: number | null) => {
         }
         setQuote(res.data)
         return res.data
-      } catch {
-        setQuoteError("Wystąpił błąd podczas pobierania wyceny z serwera.")
+      } catch (e) {
+        setQuoteError(
+          `Wystąpił błąd podczas pobierania wyceny: ${extractBackendMessage(e)}`
+        )
         return null
       } finally {
         setQuoteIsLoading(false)
@@ -209,10 +224,22 @@ export const useEditOffer = (offerId: number | null) => {
     return Math.max(10, newTotalPreview - originalTokenCost)
   }, [newTotalPreview, originalTokenCost])
 
+  const navbarUser = useAppStore((s) => s.navbarUser)
+  const requiredBalance =
+    (updateFeePreview ?? 0) + Math.max(0, tokensOffered - originalTokensOffered)
+  const canAfford = navbarUser === null || navbarUser.tokens >= requiredBalance
+
   const updateOffer = useCallback(async () => {
     if (!offerId) return false
 
-    const err = validateOfferDraft(title, description, itemsHave, itemsWant)
+    const err = validateOfferDraft(
+      title,
+      description,
+      itemsHave,
+      itemsWant,
+      tokensOffered,
+      tokensWanted
+    )
     if (err) {
       setError(err)
       return false
@@ -230,8 +257,10 @@ export const useEditOffer = (offerId: number | null) => {
       inc("offers:my")
       void refreshNavbar()
       return true
-    } catch {
-      setError("Wystąpił błąd podczas aktualizacji oferty")
+    } catch (e) {
+      setError(
+        `Wystąpił błąd podczas aktualizacji oferty: ${extractBackendMessage(e)}`
+      )
       return false
     } finally {
       setIsLoading(false)
@@ -240,10 +269,12 @@ export const useEditOffer = (offerId: number | null) => {
   const canSubmit =
     !isLoading &&
     !quoteIsLoading &&
-    title.trim().length > 0 &&
-    description.trim().length > 0 &&
-    itemsHave.length > 0 &&
-    itemsWant.length > 0
+    title.trim().length >= MIN_TITLE_LEN &&
+    description.trim().length >= MIN_DESCRIPTION_LEN &&
+    !(itemsHave.length === 0 && itemsWant.length === 0) &&
+    !(itemsHave.length === 0 && tokensOffered <= 0) &&
+    !(itemsWant.length === 0 && tokensWanted <= 0) &&
+    canAfford
 
   return {
     isLoading,
@@ -275,6 +306,8 @@ export const useEditOffer = (offerId: number | null) => {
     setTokensOffered,
     tokensWanted,
     setTokensWanted,
+    requiredBalance,
+    canAfford,
     reset,
   }
 }

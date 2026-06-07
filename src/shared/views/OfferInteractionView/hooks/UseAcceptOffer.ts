@@ -1,15 +1,23 @@
 import { useState } from "react"
 import { OfferService } from "@/shared/api/services/OfferService"
 import { useAppStore } from "@/shared/store/appStore"
+import { extractBackendMessage } from "../utils/OfferHelpers"
 
 type UseAcceptOfferArgs = {
   offerId: number | null
+  tokensWanted?: number
   onSuccess?: () => void
 }
 
-export function useAcceptOffer({ offerId, onSuccess }: UseAcceptOfferArgs) {
+export function useAcceptOffer({
+  offerId,
+  tokensWanted = 0,
+  onSuccess,
+}: UseAcceptOfferArgs) {
   const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
   const inc = useAppStore((s) => s.inc)
+  const navbarUser = useAppStore((s) => s.navbarUser)
+  const canAfford = navbarUser === null || navbarUser.tokens >= tokensWanted
 
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -36,8 +44,10 @@ export function useAcceptOffer({ offerId, onSuccess }: UseAcceptOfferArgs) {
       inc("counterOffers:received")
       void refreshNavbar()
       onSuccess?.()
-    } catch {
-      setSubmitError("Nie udało się zaakceptować oferty.")
+    } catch (e) {
+      setSubmitError(
+        `Nie udało się zaakceptować oferty: ${extractBackendMessage(e)}`
+      )
     } finally {
       setSubmitting(false)
     }
@@ -46,6 +56,7 @@ export function useAcceptOffer({ offerId, onSuccess }: UseAcceptOfferArgs) {
   return {
     submitting,
     submitError,
+    canAfford,
     submit,
     reset,
   }

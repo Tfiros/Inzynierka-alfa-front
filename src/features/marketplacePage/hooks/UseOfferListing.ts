@@ -35,6 +35,11 @@ export function useOffersListing() {
 
   const offersRefresh = useAppStore(selectCounter("offers:list"))
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
+  const incOffersList = useAppStore((s) => s.inc)
+
+  const refreshOffers = useCallback(() => {
+    incOffersList("offers:list")
+  }, [incOffersList])
 
   useEffect(() => {
     OfferService.getGames().then((res) => {
@@ -150,6 +155,7 @@ export function useOffersListing() {
     totalCount,
     totalPages,
     page,
+    pageSize,
     setPage,
     searchText,
     setSearchText,
@@ -166,5 +172,6 @@ export function useOffersListing() {
     rarities,
     loading,
     error,
+    refreshOffers,
   }
 }

@@ -274,7 +274,8 @@ const CreateOfferModalContent = ({
                   offer.isLoading ||
                   offer.quoteIsLoading ||
                   wantDropdown.gameId == null ||
-                  wantDropdown.gamesLoading
+                  wantDropdown.gamesLoading ||
+                  !offer.canAfford
                 }
                 onPickSuggestion={(item) => {
                   setWantLockedItem(item)
@@ -369,8 +370,16 @@ const CreateOfferModalContent = ({
             </div>
           </div>
         </div>
+        {!offer.canAfford && (
+          <div className="mt-2 text-sm text-red-500">
+            Za mało tokenów. Wymagane: {offer.requiredBalance}
+          </div>
+        )}
         {offer.error && (
           <div className="mt-2 text-sm text-red-500">{offer.error}</div>
+        )}
+        {offer.quoteError && (
+          <div className="mt-2 text-sm text-red-500">{offer.quoteError}</div>
         )}
         <div className="mt-10 border-t pt-4 flex items-center gap-3">
           <div className="text-sm text-muted-foreground">
@@ -382,9 +391,11 @@ const CreateOfferModalContent = ({
             disabled={
               offer.isLoading ||
               offer.quoteIsLoading ||
-              offer.itemsHave.length == 0 ||
-              offer.itemsWant.length === 0 ||
-              offer.title.trim().length === 0
+              offer.title.trim().length === 0 ||
+              (offer.itemsHave.length === 0 && offer.itemsWant.length === 0) ||
+              (offer.itemsHave.length === 0 && offer.tokensOffered <= 0) ||
+              (offer.itemsWant.length === 0 && offer.tokensWanted <= 0) ||
+              !offer.canAfford
             }
             onClick={() => void handleOpenConfirm()}
           >

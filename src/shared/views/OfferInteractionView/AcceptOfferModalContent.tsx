@@ -33,8 +33,9 @@ export default function AcceptOfferModalContent({ offerId, onCancel }: Props) {
   const { baseOffer, baseOfferLoading, baseOfferError } =
     useAcceptOfferModal(offerId)
 
-  const { submitting, submitError, submit } = useAcceptOffer({
+  const { submitting, submitError, canAfford, submit } = useAcceptOffer({
     offerId,
+    tokensWanted: baseOffer?.offerCoreDto.tokensWanted,
     onSuccess: () => {
       setSuccessOpen(true)
     },
@@ -135,6 +136,12 @@ export default function AcceptOfferModalContent({ offerId, onCancel }: Props) {
           </div>
         )}
 
+        {baseOffer && !canAfford && (
+          <div className="mt-4 text-sm text-red-500">
+            Za mało tokenów. Wymagane: {baseOffer.offerCoreDto.tokensWanted}
+          </div>
+        )}
+
         {submitError && (
           <div className="mt-4 text-sm text-red-500">{submitError}</div>
         )}
@@ -142,7 +149,9 @@ export default function AcceptOfferModalContent({ offerId, onCancel }: Props) {
         <div className="mt-10 border-t pt-4 flex items-center gap-3">
           <Button
             className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
-            disabled={!baseOffer || baseOfferLoading || submitting}
+            disabled={
+              !baseOffer || baseOfferLoading || submitting || !canAfford
+            }
             onClick={() => {
               void submit()
             }}
