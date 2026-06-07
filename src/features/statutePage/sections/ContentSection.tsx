@@ -19,10 +19,11 @@ const ContentSection = () => {
               <em>Aleksander Radoliński, Piotr Wójcik, Igor Tarasiuk</em> .
             </li>
             <li>
-              Serwis działa pod adresem: <em>https://crosstrade.pl</em> .
+              Serwis działa pod adresem:{" "}
+              <em>https://crossitemtrade.duckdns.org</em> .
             </li>
             <li>
-              Kontakt: <em>"Podać Maila"</em>.
+              Kontakt: <em>"inzynierka.crosstrade.concept@gmail.com"</em>.
             </li>
             <li>
               Korzystanie z Serwisu oznacza akceptację niniejszego Regulaminu w
