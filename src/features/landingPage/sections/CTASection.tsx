@@ -1,7 +1,18 @@
+import { useState } from "react"
 import { Button } from "@/shared/components/button"
 import { Link } from "react-router-dom"
+import AuthModal from "@/shared/utilities/Auth/AuthModal"
+import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
 
 const CTASection = () => {
+  const [authOpen, setAuthOpen] = useState(false)
+  const [authView, setAuthView] = useState<AuthModalView>("register")
+
+  const openRegisterModal = () => {
+    setAuthView("register")
+    setAuthOpen(true)
+  }
+
   return (
     <section className="container mx-auto px-4 pb-12">
       <div className="mt-10 rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-sm sm:p-10">
@@ -15,10 +26,13 @@ const CTASection = () => {
         </p>
 
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <Button size="lg" asChild className="cursor-pointer">
-            <Link to="/app" aria-label="Zarejestruj się teraz">
-              Zarejestruj się teraz
-            </Link>
+          <Button
+            size="lg"
+            className="cursor-pointer"
+            onClick={openRegisterModal}
+            aria-label="Zarejestruj się teraz"
+          >
+            Zarejestruj się teraz
           </Button>
 
           <Button
@@ -33,6 +47,13 @@ const CTASection = () => {
           </Button>
         </div>
       </div>
+
+      <AuthModal
+        open={authOpen}
+        onOpenChange={setAuthOpen}
+        view={authView}
+        onViewChange={setAuthView}
+      />
     </section>
   )
 }
