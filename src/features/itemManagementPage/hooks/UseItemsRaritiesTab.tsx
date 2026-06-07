@@ -140,7 +140,6 @@ const useItemRaritiesTab = () => {
       if (!selected) return
 
       try {
-        alert("Edytuj rzadkość - funkcja tymczasowo wyłączona")
         const res = await ItemRaritiesService.update(selected.id, {
           rarityName: payload.name,
         })
