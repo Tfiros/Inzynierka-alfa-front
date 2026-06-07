@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
+import { toast } from "sonner"
 import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
 import { useAppStore } from "@/shared/store/appStore"
 import type { CounterOfferDraftRequest } from "@/shared/types/counterOfferTypes/RequestResponseTypes"
@@ -52,7 +53,9 @@ export const useCreateCounterOffer = ({
 
   const canConfirm =
     (items.length > 0 || tokens > 0) && tokens >= 0 && !submitting
+
   const COUNTER_OFFER_CREATION_FEE = 20
+
   const estimatedCost = useMemo(() => COUNTER_OFFER_CREATION_FEE, [])
 
   const buildRequest = (): CounterOfferDraftRequest => ({
@@ -102,9 +105,12 @@ export const useCreateCounterOffer = ({
         return false
       }
 
+      toast.success("Kontroferta została wysłana.")
+
       inc("counterOffers:sent")
       void refreshNavbar()
       onSuccess()
+
       return true
     } catch {
       setSubmitError("Nie udało się wysłać kontroferty.")
@@ -121,6 +127,7 @@ export const useCreateCounterOffer = ({
 
   return {
     items,
+    tokens,
     setTokens,
     submitError,
     submitting,

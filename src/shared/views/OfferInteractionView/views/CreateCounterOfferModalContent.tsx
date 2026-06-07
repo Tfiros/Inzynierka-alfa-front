@@ -27,6 +27,7 @@ import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
 import OfferPickedItemsList from "../components/OfferPickedItemsList"
 import { useCreateCounterOffer } from "@/features/profilePage/hooks/UseCreateCounterOffer"
 import { useCounterOfferModal } from "@/features/marketplacePage/hooks/UseCounterOfferModal"
+import { useAppStore } from "@/shared/store/appStore"
 
 type Props = {
   offerId: number | null
@@ -38,8 +39,11 @@ export default function CreateCounterOfferModalContent({
 }: Props) {
   const { baseOffer, baseOfferLoading, baseOfferError } =
     useCounterOfferModal(offerId)
+
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [tokensInput, setTokensInput] = useState("0")
+
+  const userTokens = useAppStore((s) => s.navbarUser?.tokens ?? 0)
 
   const suggestions = useItemSuggestions()
   const itemDropdown = useOfferGameItemDropdown()
@@ -68,6 +72,20 @@ export default function CreateCounterOfferModalContent({
     },
   })
 
+  const counterOfferTokens = tokensInput === "" ? 0 : Number(tokensInput)
+  const offerTokenCost = serverCost ?? estimatedCost ?? 0
+  const totalTokensNeeded = offerTokenCost + counterOfferTokens
+
+  const hasNotEnoughTokens = totalTokensNeeded > userTokens
+
+  const baseOfferTokens = baseOffer?.offerCoreDto.tokensOffered ?? 0
+
+  const isIllegalTokenForTokenCounterOffer =
+    baseOffer != null &&
+    baseOffer.offeredItems.length === 0 &&
+    baseOfferTokens > 0 &&
+    items.length === 0 &&
+    counterOfferTokens > 0
   return (
     <>
       <DialogHeader className="flex flex-col items-center gap-y-2">
@@ -87,21 +105,33 @@ export default function CreateCounterOfferModalContent({
           )}
 
           {!baseOfferLoading && !baseOfferError && baseOffer && (
-            <div className="flex items-center justify-between gap-4">
-              <p className="min-w-0 text-sm font-medium text-foreground line-clamp-1">
-                {baseOffer.offeredItems
-                  .slice(0, 2)
-                  .map((x) => {
-                    const itemName = x.itemDto.name
-                    const gameName = x.itemDto.game.name
-                    return gameName ? `${itemName} · ${gameName}` : itemName
-                  })
-                  .join(", ")}
-                {baseOffer.offeredItems.length > 3 ? "..." : ""}
-              </p>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-4">
+                <p className="min-w-0 text-sm font-medium text-foreground line-clamp-1">
+                  {baseOffer.offeredItems.length > 0
+                    ? baseOffer.offeredItems
+                        .slice(0, 2)
+                        .map((x) => {
+                          const itemName = x.itemDto.name
+                          const gameName = x.itemDto.game.name
+                          return gameName
+                            ? `${itemName} · ${gameName}`
+                            : itemName
+                        })
+                        .join(", ")
+                    : "Brak itemów po stronie właściciela oferty"}
+                  {baseOffer.offeredItems.length > 3 ? "..." : ""}
+                </p>
 
-              <div className="shrink-0 text-xs text-muted-foreground">
-                {baseOffer.offeredItems.length} szt.
+                <div className="shrink-0 text-xs text-muted-foreground">
+                  {baseOffer.offeredItems.length} szt.
+                </div>
+              </div>
+              <div className="grid gap-2 text-sm">
+                <div className="rounded-xl border border-border bg-background px-3 py-2">
+                  <span className="text-muted-foreground">Ilość tokenów:</span>{" "}
+                  <span className="font-semibold">{baseOfferTokens}</span>
+                </div>
               </div>
             </div>
           )}
@@ -214,6 +244,20 @@ export default function CreateCounterOfferModalContent({
           </div>
         </div>
 
+        {hasNotEnoughTokens && (
+          <div className="mt-4 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            Nie masz wystarczającej liczby tokenów, aby złożyć tę kontrofertę.
+            Wymagane: {totalTokensNeeded}, posiadane: {userTokens}.
+          </div>
+        )}
+
+        {isIllegalTokenForTokenCounterOffer && (
+          <div className="mt-4 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            Nie można złożyć kontroferty, która prowadziłaby do wymiany tokenów
+            za tokeny.
+          </div>
+        )}
+
         {submitError && (
           <div className="mt-4 text-sm text-red-500">{submitError}</div>
         )}
@@ -225,7 +269,12 @@ export default function CreateCounterOfferModalContent({
 
           <Button
             className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
-            disabled={!canConfirm || quoteLoading}
+            disabled={
+              !canConfirm ||
+              quoteLoading ||
+              hasNotEnoughTokens ||
+              isIllegalTokenForTokenCounterOffer
+            }
             onClick={async () => {
               const ok = await openConfirm()
               if (ok) {
@@ -276,7 +325,12 @@ export default function CreateCounterOfferModalContent({
               Wróć
             </AlertDialogCancel>
             <AlertDialogAction
-              disabled={submitting || quoteLoading}
+              disabled={
+                submitting ||
+                quoteLoading ||
+                hasNotEnoughTokens ||
+                isIllegalTokenForTokenCounterOffer
+              }
               onClick={(e) => {
                 e.preventDefault()
                 void submit()
