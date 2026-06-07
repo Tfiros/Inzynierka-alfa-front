@@ -83,6 +83,7 @@ const ItemRaritiesTab = () => {
             <EntityCard
               key={r.id}
               title={r.name}
+              isItemOrGame={false}
               metaLeft={`Gra: ${vm.game.selectedName}`}
               id={r.id}
               onEdit={() => vm.actions.openEdit(r)}

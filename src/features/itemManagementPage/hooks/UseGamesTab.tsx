@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react"
+import { toast } from "sonner"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
 import type { GameDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 import { GenresService } from "@/shared/api/services/GenresService"
 import { GamesService } from "@/shared/api/services/GamesService"
 import useDropdownQuery from "./UseDropdownQuery"
 import usePagedQuery from "./UsePagedQuery"
+import { handleError } from "@/shared/utilities/errorHandlers"
 
 export type AddGamePayload = {
   name: string
@@ -70,13 +72,17 @@ const useGamesTab = () => {
     },
 
     create: async (payload: AddGamePayload) => {
-      const res = await GamesService.create(payload)
-      if (!res.isSuccess) {
-        list.setError(res.message ?? "Nie udało się dodać gry.")
-        return
+      try {
+        const res = await GamesService.create(payload)
+        if (!res?.isSuccess) {
+          throw new Error(res?.message ?? "Błąd żądania")
+        }
+
+        setAddOpen(false)
+        await list.fetch()
+      } catch (error) {
+        handleError(error, "Błąd żądania")
       }
-      setAddOpen(false)
-      await list.fetch()
     },
 
     saveEdit: async (payload: {
@@ -86,28 +92,34 @@ const useGamesTab = () => {
     }) => {
       if (!selected) return
 
-      const res = await GamesService.update(selected.id, payload)
-      if (!res.isSuccess) {
-        list.setError(res.message ?? "Nie udało się zapisać.")
-        return
-      }
+      try {
+        const res = await GamesService.update(selected.id, payload)
+        if (!res?.isSuccess) {
+          throw new Error(res?.message ?? "Błąd żądania")
+        }
 
-      setEditOpen(false)
-      await list.fetch()
+        setEditOpen(false)
+        await list.fetch()
+      } catch (error) {
+        handleError(error, "Błąd żądania")
+      }
     },
 
     confirmDelete: async () => {
       if (!selected) return
 
-      const res = await GamesService.softDelete(selected.id)
-      if ((res as any)?.isSuccess === false) {
-        list.setError((res as any).message ?? "Nie udało się usunąć.")
-        return
-      }
+      try {
+        const res = await GamesService.softDelete(selected.id)
+        if ((res as any)?.isSuccess === false) {
+          throw new Error((res as any).message ?? "Błąd żądania")
+        }
 
-      setDeleteOpen(false)
-      setSelected(null)
-      await list.fetch()
+        setDeleteOpen(false)
+        setSelected(null)
+        await list.fetch()
+      } catch (error) {
+        handleError(error, "Błąd żądania")
+      }
     },
   }
 
