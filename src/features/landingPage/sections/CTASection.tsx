@@ -1,7 +1,11 @@
 import { Button } from "@/shared/components/button"
 import { Link } from "react-router-dom"
 
-const CTASection = () => {
+type Props = {
+  onRegisterClick: () => void
+}
+
+const CTASection = ({ onRegisterClick }: Props) => {
   return (
     <section className="container mx-auto px-4 pb-12">
       <div className="mt-10 rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-sm sm:p-10">
@@ -15,10 +19,13 @@ const CTASection = () => {
         </p>
 
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <Button size="lg" asChild className="cursor-pointer">
-            <Link to="/app" aria-label="Zarejestruj się teraz">
-              Zarejestruj się teraz
-            </Link>
+          <Button
+            size="lg"
+            className="cursor-pointer"
+            onClick={onRegisterClick}
+            aria-label="Zarejestruj się teraz"
+          >
+            Zarejestruj się teraz
           </Button>
 
           <Button
