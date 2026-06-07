@@ -21,11 +21,11 @@ const OfferItemCard = ({
         <p className="font-medium line-clamp-2 text-sm text-left min-h-[2.5rem]">
           {listingItemDto.quantity}x {listingItemDto.itemDto.name}
         </p>
-        <div className="flex items-center gap-2 text-xs">
-          <Badge className="w-fit bg-white text-black rounded-full pl-0">
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <Badge className="inline-flex h-6 items-center justify-center rounded-full bg-white px-2.5 text-black leading-none">
             {listingItemDto.itemDto.game.name}
           </Badge>
-          <Badge className=" w-fit bg-gray-100 text-gray-900 rounded-full">
+          <Badge className="inline-flex h-6 items-center justify-center rounded-full bg-gray-100 px-2.5 text-gray-900 leading-none">
             {listingItemDto.rarityName}
           </Badge>
         </div>
