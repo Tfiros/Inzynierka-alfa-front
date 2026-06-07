@@ -140,12 +140,13 @@ const useItemRaritiesTab = () => {
       if (!selected) return
 
       try {
+        alert("Edytuj rzadkość - funkcja tymczasowo wyłączona")
         const res = await ItemRaritiesService.update(selected.id, {
           rarityName: payload.name,
         })
 
-        if (!res?.isSuccess) {
-          throw new Error(res?.message ?? "Błąd żądania")
+        if (res && res.isSuccess === false) {
+          throw new Error(res.message ?? "Błąd żądania")
         }
 
         setEditOpen(false)
