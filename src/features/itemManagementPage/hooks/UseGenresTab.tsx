@@ -3,6 +3,7 @@ import { toast } from "sonner"
 import type { GenreDto } from "@/shared/types/itemManagementTypes/EntityDtos"
 import { GenresService } from "@/shared/api/services/GenresService"
 import usePagedQuery from "./UsePagedQuery"
+import { handleError } from "@/shared/utilities/errorHandlers"
 
 const useGenresTab = () => {
   const [search, setSearch] = useState("")
@@ -21,18 +22,6 @@ const useGenresTab = () => {
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [selected, setSelected] = useState<GenreDto | null>(null)
-
-  const handleError = (error: unknown, fallback: string) => {
-    const errorMsg =
-      error instanceof Error
-        ? error.message
-        : typeof error === "string"
-          ? error
-          : fallback
-
-    list.setError(errorMsg)
-    toast.error(errorMsg)
-  }
 
   const actions = {
     openAdd: () => setAddOpen(true),

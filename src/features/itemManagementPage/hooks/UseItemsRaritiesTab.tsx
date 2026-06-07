@@ -5,6 +5,7 @@ import { GamesService } from "@/shared/api/services/GamesService"
 import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
 import useDropdownQuery from "./UseDropdownQuery"
 import usePagedQuery from "./UsePagedQuery"
+import { handleError } from "@/shared/utilities/errorHandlers"
 
 type RarityDto = {
   id: number
@@ -99,17 +100,6 @@ const useItemRaritiesTab = () => {
     setDialogGameId(id)
     setDialogGameSearch("")
     setDialogGamesOpen(false)
-  }
-
-  const handleError = (error: unknown, fallback: string) => {
-    const errorMsg =
-      error instanceof Error
-        ? error.message
-        : typeof error === "string"
-          ? error
-          : fallback
-
-    toast.error(errorMsg)
   }
 
   const actions = {

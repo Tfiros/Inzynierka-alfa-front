@@ -7,6 +7,7 @@ import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
 import { ItemsService } from "@/shared/api/services/ItemsService"
 import useDropdownQuery from "./UseDropdownQuery"
 import usePagedQuery from "./UsePagedQuery"
+import { handleError } from "@/shared/utilities/errorHandlers"
 
 const useItemsTab = () => {
   const [gamesOpen, setGamesOpen] = useState(false)
@@ -101,18 +102,6 @@ const useItemsTab = () => {
     const n = Number(v)
     return Number.isFinite(n) && n >= 0
   }, [addEstimatedTokenValue])
-
-  const handleError = (error: unknown, fallback: string) => {
-    const errorMsg =
-      error instanceof Error
-        ? error.message
-        : typeof error === "string"
-          ? error
-          : fallback
-
-    list.setError(errorMsg)
-    toast.error(errorMsg)
-  }
 
   const actions = {
     openAdd: () => {

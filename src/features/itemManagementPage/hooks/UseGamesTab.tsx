@@ -6,6 +6,7 @@ import { GenresService } from "@/shared/api/services/GenresService"
 import { GamesService } from "@/shared/api/services/GamesService"
 import useDropdownQuery from "./UseDropdownQuery"
 import usePagedQuery from "./UsePagedQuery"
+import { handleError } from "@/shared/utilities/errorHandlers"
 
 export type AddGamePayload = {
   name: string
@@ -54,18 +55,6 @@ const useGamesTab = () => {
   const [selected, setSelected] = useState<
     (GameDto & { genreId: number }) | null
   >(null)
-
-  const handleError = (error: unknown, fallback: string) => {
-    const errorMsg =
-      error instanceof Error
-        ? error.message
-        : typeof error === "string"
-          ? error
-          : fallback
-
-    list.setError(errorMsg)
-    toast.error(errorMsg)
-  }
 
   const actions = {
     openAdd: () => setAddOpen(true),
