@@ -78,7 +78,7 @@ const UseMarkDialog = ({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="rounded-xl border p-4">
-            <div className="text-xs text-muted-foreground">Kupujący</div>
+            <div className="text-xs text-muted-foreground">Odbierający</div>
             <div className="mt-1 text-sm font-medium">
               {buyer?.nickname ?? "—"}
             </div>

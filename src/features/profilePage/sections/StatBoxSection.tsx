@@ -1,5 +1,5 @@
 import { Layers, Trophy, Star, Percent } from "lucide-react"
-import { formatSuccessRating } from "@/shared/lib/formatters"
+import { formatRating, formatSuccessRating } from "@/shared/lib/formatters"
 import StatCard from "@/shared/components/StatCard"
 
 export type StatBoxSectionProps = {
@@ -29,7 +29,7 @@ const StatBoxSection = ({ stats }: { stats: StatBoxSectionProps }) => {
         />
         <StatCard
           title={"Średnia ocen"}
-          value={stats.successfulTrades}
+          value={`${formatRating(stats.avgRating)}/10`}
           icon={<Star className="h-5 w-5" />}
           iconVariant={"plain"}
           size={"sm"}

@@ -3,7 +3,7 @@ import type {
   UserProfileInfoDto,
   UserProfileInfoUpdateDto,
 } from "@/shared/types/userTypes/UserInfoTypes"
-import { get, put } from "../ApiClient"
+import { get, put, putForm } from "../ApiClient"
 import type { PagedResponse } from "@/shared/types/PagedType"
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
 import type { CounterOfferType } from "@/shared/types/counterOfferTypes/CounterOfferType"
@@ -39,9 +39,20 @@ export class UserInfoService {
       `${this.base}/profileInfo/${args.userId}/offers/history`
     )
 
-  // PUT /profileInfo
-  public static readonly updateProfileInfo = async (userId: number) =>
-    put<UserProfileInfoUpdateDto>(`${this.base}/profileInfo/${userId}`)
+  // PUT /profileInfo/{id:int}
+  public static readonly updateProfileInfo = async (
+    body: UserProfileInfoUpdateDto,
+    userId: number
+  ) => put<UserProfileInfoDto>(`${this.base}/profileInfo/${userId}`, body)
+
+  static updateAvatar(image: File, id: number | null) {
+    const form = new FormData()
+    form.append("Image", image)
+    return putForm<UserProfileInfoDto>(
+      `${this.base}/profileInfo/${id}/avatar`,
+      form
+    )
+  }
 
   public static readonly getByType = async (
     type: CounterOfferType,

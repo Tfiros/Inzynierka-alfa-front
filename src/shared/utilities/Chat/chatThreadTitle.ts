@@ -3,7 +3,7 @@ import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
 export const chatThreadTitle = (chat: ChatThreadListItemDto) => {
   const role =
     chat.otherUserTradeRole === "Buyer"
-      ? "Kupujący"
+      ? "Odbierający"
       : chat.otherUserTradeRole === "Seller"
         ? "Sprzedający"
         : chat.otherUserTradeRole === "Middleman"

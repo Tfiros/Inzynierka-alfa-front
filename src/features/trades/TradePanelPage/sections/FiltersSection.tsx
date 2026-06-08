@@ -68,8 +68,8 @@ const PAGE_SIZES = [10, 20, 50]
 const SEARCH_BY_OPTIONS: { value: TradeSearchBy; label: string }[] = [
   { value: TradeSearchByConst.TradeId, label: "TradeId" },
   { value: TradeSearchByConst.OfferId, label: "OfferId" },
-  { value: TradeSearchByConst.CustomerNickname, label: "Nick klienta" },
-  { value: TradeSearchByConst.CustomerEmail, label: "Email klienta" },
+  { value: TradeSearchByConst.CustomerNickname, label: "Nick odbierającego" },
+  { value: TradeSearchByConst.CustomerEmail, label: "Email odbierającego" },
   {
     value: TradeSearchByConst.PostingUserNickname,
     label: "Nick wystawiającego",

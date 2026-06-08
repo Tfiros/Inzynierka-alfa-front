@@ -144,7 +144,7 @@ const TradeDetailsDialog = ({
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="rounded-xl border p-4">
             <div className="text-xs text-muted-foreground">
-              Kupujący (customer)
+              Odbierający (customer)
             </div>
             <div className="mt-1 text-sm font-medium">
               {trade?.customer?.nickname ?? "—"}
@@ -182,7 +182,7 @@ const TradeDetailsDialog = ({
                   <>
                     <Flag
                       ok={!!details?.hasBuyersItems}
-                      label="Kupujący ma przedmioty"
+                      label="Odbierający ma przedmioty"
                     />
                     <Flag
                       ok={!!details?.hasSellersItems}
@@ -232,7 +232,7 @@ const TradeDetailsDialog = ({
                 <CheckboxRow
                   checked={hasBuyersItems}
                   onChange={setHasBuyersItems}
-                  title="Kupujący ma przedmioty"
+                  title="Odbierający ma przedmioty"
                   description="Ustaw na podstawie weryfikacji przedmiotów kupującego."
                   disabled={saving}
                 />
@@ -252,7 +252,7 @@ const TradeDetailsDialog = ({
                 value={side}
                 onChange={setSide}
                 tabs={[
-                  { value: "buyer", label: "Kupujący" },
+                  { value: "buyer", label: "Odbierający" },
                   { value: "seller", label: "Wystawiający" },
                 ]}
               />

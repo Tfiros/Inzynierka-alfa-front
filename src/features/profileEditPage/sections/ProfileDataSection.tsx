@@ -3,8 +3,8 @@ import { Button } from "@/shared/components/button"
 import type { Dispatch } from "react"
 import { Textarea } from "@/shared/components/textarea"
 import { TabsContent } from "@/shared/components/tabs"
-import type { Profile } from "@/shared/api/services/ProfileInfoService"
 import { Label } from "@/shared/components/label"
+import type { Profile } from "../utils/ProfileMapper"
 
 type Props = {
   profile: Profile

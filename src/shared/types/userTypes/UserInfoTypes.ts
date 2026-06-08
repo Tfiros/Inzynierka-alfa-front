@@ -14,7 +14,6 @@ export type UserNavbarInfoDto = {
 
 export type UserProfileInfoDto = {
   id: number
-  experience: number
   level: number
   registrationDate: string
   nickname: string
