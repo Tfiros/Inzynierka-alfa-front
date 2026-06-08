@@ -1,6 +1,6 @@
 import { Input } from "@/shared/components/input"
 import { Button } from "@/shared/components/button"
-import type { SecurityFields } from "../components/ProfileSecurityData"
+import type { SecurityFields } from "../utils/ProfileSecurityData"
 import { TabsContent } from "@/shared/components/tabs"
 import { Label } from "@/shared/components/label"
 
