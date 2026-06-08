@@ -138,8 +138,16 @@ npm install
 
 Przed pierwszym lokalnym uruchomieniem naley wygenerować ceryfikat HTTPS:
 
+Najpierw nalezy zaintsalować narzędzie mkcert
+
 ```bash
-dotnet dev-certs https --trust
+mkcert -install
+```
+
+W katalogu projektu nalezy wygenerować certyfikat dla lokalnego środowiska:
+
+```bash
+mkcert localhost 127.0.0.1 ::1
 ```
 
 Następnie można uruchomić aplikację
