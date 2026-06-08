@@ -66,7 +66,7 @@ const TradeCard = ({
 
         <div className="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_60px_1fr] lg:items-center">
           <PartyBlock
-            title="Klient"
+            title="Odbierający"
             party={trade.customer}
             tokens={trade.tokensWanted}
           />
@@ -107,7 +107,7 @@ const TradeCard = ({
                 onClick={() => void openBuyerChat()}
               >
                 <MessageCircle className="h-4 w-4" />
-                Czat z kupującym
+                Czat z odbiorcą
               </Button>
               <Button
                 variant="outline"
