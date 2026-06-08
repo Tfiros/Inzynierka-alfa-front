@@ -8,7 +8,7 @@ import { UserSettingsService } from "@/shared/api/services/UserSettingsService"
 import {
   mapSecurityBackendToFields,
   mapSecurityToUpdateRequest,
-} from "../components/ProfileSecurityData"
+} from "../utils/ProfileSecurityData"
 import { useAppStore } from "@/shared/store/appStore"
 
 export const useProfileEdit = () => {
