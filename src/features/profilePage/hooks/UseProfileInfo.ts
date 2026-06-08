@@ -30,8 +30,7 @@ export const useProfileInfo = (profileId: number) => {
       try {
         setLoading(true)
         setError(null)
-        const res: ApiResult<UserProfileInfoDto> =
-          await UserInfoService.getProfileInfo(profileId)
+        const res = await UserInfoService.getProfileInfo(profileId)
         if (!res.isSuccess || !res.data) {
           setError(res.message ?? "Nie udało się załadować profilu.")
           return
