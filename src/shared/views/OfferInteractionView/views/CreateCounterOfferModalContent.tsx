@@ -27,7 +27,6 @@ import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
 import OfferPickedItemsList from "../components/OfferPickedItemsList"
 import { useCreateCounterOffer } from "@/features/profilePage/hooks/UseCreateCounterOffer"
 import { useCounterOfferModal } from "@/features/marketplacePage/hooks/UseCounterOfferModal"
-import { useAppStore } from "@/shared/store/appStore"
 
 type Props = {
   offerId: number | null
@@ -42,8 +41,6 @@ export default function CreateCounterOfferModalContent({
 
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [tokensInput, setTokensInput] = useState("0")
-
-  const userTokens = useAppStore((s) => s.navbarUser?.tokens ?? 0)
 
   const suggestions = useItemSuggestions()
   const itemDropdown = useOfferGameItemDropdown()
@@ -64,28 +61,20 @@ export default function CreateCounterOfferModalContent({
     removeItem,
     openConfirm,
     submit,
+    userTokens,
+    baseOfferTokens,
+    totalTokensNeeded,
+    hasNotEnoughTokens,
+    isIllegalTokenForTokenCounterOffer,
   } = useCreateCounterOffer({
     offerId,
+    baseOffer,
     onSuccess: () => {
       setConfirmOpen(false)
       onCancel()
     },
   })
 
-  const counterOfferTokens = tokensInput === "" ? 0 : Number(tokensInput)
-  const offerTokenCost = serverCost ?? estimatedCost ?? 0
-  const totalTokensNeeded = offerTokenCost + counterOfferTokens
-
-  const hasNotEnoughTokens = totalTokensNeeded > userTokens
-
-  const baseOfferTokens = baseOffer?.offerCoreDto.tokensOffered ?? 0
-
-  const isIllegalTokenForTokenCounterOffer =
-    baseOffer != null &&
-    baseOffer.offeredItems.length === 0 &&
-    baseOfferTokens > 0 &&
-    items.length === 0 &&
-    counterOfferTokens > 0
   return (
     <>
       <DialogHeader className="flex flex-col items-center gap-y-2">
