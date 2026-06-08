@@ -14,7 +14,6 @@ import useChatThreads from "../hooks/UseChatThreads"
 import useOpenThread from "../hooks/UseOpenThread"
 import { useAppStore, chatSelectors } from "@/shared/store/appStore"
 import { useChatAutoSubscribe } from "../hooks/UseThreadsSubscriptions"
-import type { AppState } from "@auth0/auth0-react"
 import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
 import { chatThreadTitle } from "@/shared/utilities/Chat/chatThreadTitle"
 import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
@@ -33,11 +32,9 @@ const NavbarChatDropdown = () => {
   const actions = useAppStore(chatSelectors.chatActions)
   const totalUnread = useAppStore(chatSelectors.totalUnread)
 
-  const isAuthenticated = useAppStore((s: AppState) => s.isAuthenticated)
-  const clearUnreadChatsLocal = useAppStore(
-    (s: AppState) => s.clearUnreadChatsLocal
-  )
-  const markChatReadLocal = useAppStore((s: AppState) => s.markChatReadLocal)
+  const isAuthenticated = useAppStore((s) => s.isAuthenticated)
+  const clearUnreadChatsLocal = useAppStore((s) => s.clearUnreadChatsLocal)
+  const markChatReadLocal = useAppStore((s) => s.markChatReadLocal)
 
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebounceValue(search, 360)
