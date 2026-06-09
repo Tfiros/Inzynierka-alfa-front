@@ -7,7 +7,6 @@ import {
 } from "./storeParts/NotificationSlice"
 import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
 import { createChatSlice, type ChatSlice } from "./storeParts/ChatSlice"
-import { chatHubClient } from "@/shared/api/hubs/ChatHub"
 import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
 import {
   createCounterOfferSlice,
@@ -58,6 +57,7 @@ export const useAppStore = create<AppState>()(
         clearCsrfToken()
 
         try {
+          const { chatHubClient } = await import("@/shared/api/hubs/ChatHub")
           await chatHubClient.stop()
         } catch (e) {
           console.error("chatHub stop failed", e)

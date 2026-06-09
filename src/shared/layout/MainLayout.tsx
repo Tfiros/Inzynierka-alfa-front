@@ -4,9 +4,12 @@ import { Footer } from "./Footer"
 import GuestNavbar from "./navbar/views/GuestNavbar"
 import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
 import useMainLayout from "./hooks/UseMainLayout"
-import ChatWindowHost from "@/features/chat/components/ChatWindowHost"
-import { Suspense } from "react"
+import { lazy, Suspense } from "react"
 import PageFallback from "./PageFallback"
+
+const ChatWindowHost = lazy(
+  () => import("@/features/chat/components/ChatWindowHost")
+)
 
 const MainLayout = () => {
   const { isLogged, hasHydrated } = useMainLayout()
@@ -27,7 +30,11 @@ const MainLayout = () => {
           <Outlet />
         </Suspense>
       </main>
-      {isLogged && <ChatWindowHost />}
+      {isLogged && (
+        <Suspense fallback={null}>
+          <ChatWindowHost />
+        </Suspense>
+      )}
 
       <Footer />
     </div>
