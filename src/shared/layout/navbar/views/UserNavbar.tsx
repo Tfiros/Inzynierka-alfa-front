@@ -13,10 +13,16 @@ import {
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip"
 import { useAppStore } from "@/shared/store/appStore"
-import { NotificationsDropdown } from "@/features/notifications/NotificationsDropdown/components/NotificationsDropdown"
+
 const NavbarChatDropdown = lazy(
   () => import("@/features/chat/components/NavbarChatDropdown")
 )
+
+const NotificationsDropdown = lazy(
+  () =>
+    import("@/features/notifications/NotificationsDropdown/components/NotificationsDropdown")
+)
+
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
   const roles = useAppStore((s) => s.roles)
@@ -102,9 +108,8 @@ export const UserNavbar = () => {
             <span className="text-sm font-semibold">{level}</span>
             <span className="ml-1 text-xs text-muted-foreground">Poziom</span>
 
-            <NotificationsDropdown />
-
             <Suspense fallback={null}>
+              <NotificationsDropdown />
               <NavbarChatDropdown />
             </Suspense>
 

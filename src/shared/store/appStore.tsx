@@ -12,7 +12,6 @@ import {
   createCounterOfferSlice,
   type CounterOfferSlice,
 } from "./storeParts/CounterOfferSlice"
-import { NotificationsHubClient } from "../api/hubs/NotificationsHubClient"
 import {
   createAcceptOfferSlice,
   type AcceptOfferSlice,
@@ -64,6 +63,8 @@ export const useAppStore = create<AppState>()(
         }
 
         try {
+          const { NotificationsHubClient } =
+            await import("@/shared/api/hubs/NotificationsHubClient")
           await NotificationsHubClient.stop()
         } catch (e) {
           console.error("notificationsHub stop failed", e)

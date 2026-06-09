@@ -7,6 +7,10 @@ import useMainLayout from "./hooks/UseMainLayout"
 import { lazy, Suspense } from "react"
 import PageFallback from "./PageFallback"
 
+const NotificationsHubConnector = lazy(
+  () => import("@/features/notifications/NotificationsHubConnector")
+)
+
 const ChatWindowHost = lazy(
   () => import("@/features/chat/components/ChatWindowHost")
 )
@@ -32,6 +36,7 @@ const MainLayout = () => {
       </main>
       {isLogged && (
         <Suspense fallback={null}>
+          <NotificationsHubConnector />
           <ChatWindowHost />
         </Suspense>
       )}
