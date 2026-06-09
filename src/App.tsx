@@ -8,6 +8,7 @@ import LandingPage from "./features/landingPage/LandingPage"
 import NotFoundPage from "./features/notFoundPage/NotFoundPage"
 import { TooltipProvider } from "./shared/components/ui/tooltip"
 import { Toaster } from "sonner"
+import InteractionHostFallback from "./shared/views/OfferInteractionView/components/InteractionHostFallback"
 
 const FaqsSite = lazy(() => import("./features/faqsPage/faqsSite"))
 const ItemManagementPage = lazy(
@@ -74,7 +75,7 @@ function App() {
           </Route>
         </Routes>
         {anyInteractionToMount && (
-          <Suspense fallback={null}>
+          <Suspense fallback={<InteractionHostFallback />}>
             <InteractionHosts />
           </Suspense>
         )}

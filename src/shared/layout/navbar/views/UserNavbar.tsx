@@ -111,6 +111,8 @@ export const UserNavbar = () => {
 
             <Suspense fallback={<NavbarFallback />}>
               <NotificationsDropdown />
+            </Suspense>
+            <Suspense fallback={<NavbarFallback />}>
               <NavbarChatDropdown />
             </Suspense>
 
