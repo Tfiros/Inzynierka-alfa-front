@@ -28,12 +28,12 @@ const OfferPickedItemsList = ({
           >
             <div className="h-10 w-10 overflow-hidden rounded-xl bg-muted/30 shrink-0">
               <img
-                src={line.item.photoUrl?.trim() || "/placeholder.png"}
+                src={line.item.photoUrl?.trim() || "/placeholder.webp"}
                 alt={line.item.name}
                 className="h-12 w-12 object-cover border"
                 loading="lazy"
                 onError={(e) => {
-                  e.currentTarget.src = "/placeholder.png"
+                  e.currentTarget.src = "/placeholder.webp"
                 }}
               />
             </div>

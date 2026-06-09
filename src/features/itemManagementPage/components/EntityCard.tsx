@@ -16,11 +16,11 @@ const EntityCard = (props: {
         <div className="flex items-center gap-3 min-w-0">
           {props.isItemOrGame && (
             <img
-              src={props.thumbnailUrl?.trim() || "/placeholder.png"}
+              src={props.thumbnailUrl?.trim() || "/placeholder.webp"}
               alt={props.title}
               className="h-12 w-12 rounded-md shrink-0 object-cover bg-muted"
               onError={(e) => {
-                e.currentTarget.src = "/placeholder.png"
+                e.currentTarget.src = "/placeholder.webp"
               }}
             />
           )}

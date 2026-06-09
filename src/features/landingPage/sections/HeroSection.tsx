@@ -1,5 +1,5 @@
 import { Button } from "@/shared/components/button"
-import LPPhoto from "@/shared/photos/LandingPageGamesPhoto.jpg"
+import LPPhoto from "@/shared/photos/LandingPageGamesPhoto.webp"
 import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"

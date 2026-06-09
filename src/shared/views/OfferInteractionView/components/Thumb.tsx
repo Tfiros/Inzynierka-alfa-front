@@ -16,12 +16,12 @@ const Thumb = ({ src = null, alt, size = "md" }: Props) => {
       )}
     >
       <img
-        src={src?.trim() || "/placeholder.png"}
+        src={src?.trim() || "/placeholde.webp"}
         alt={alt}
         className="block h-full w-full object-contain"
         loading="lazy"
         onError={(e) => {
-          e.currentTarget.src = "/placeholder.png"
+          e.currentTarget.src = "/placeholder.webp"
         }}
       />
     </div>
