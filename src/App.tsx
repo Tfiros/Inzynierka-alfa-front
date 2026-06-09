@@ -1,4 +1,4 @@
-import { lazy, useEffect } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { useAppStore } from "./shared/store/appStore"
 import AdminRoute from "./routes/AdminRoutes"
@@ -6,10 +6,7 @@ import BlankLayout from "./shared/layout/BlankLayout"
 import MainLayout from "./shared/layout/MainLayout"
 import LandingPage from "./features/landingPage/LandingPage"
 import NotFoundPage from "./features/notFoundPage/NotFoundPage"
-import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
-import CounterOfferInteractionHost from "./shared/views/OfferInteractionView/CounterOfferInteractionHost"
 import { TooltipProvider } from "./shared/components/ui/tooltip"
-import AcceptOfferInteractionHost from "./shared/views/OfferInteractionView/AcceptOfferInteractionHost"
 import { Toaster } from "sonner"
 
 const FaqsSite = lazy(() => import("./features/faqsPage/faqsSite"))
@@ -31,9 +28,20 @@ const MarketplacePage = lazy(
   () => import("./features/marketplacePage/Marketplace")
 )
 const ContactPage = lazy(() => import("./features/contactPage/contactPage"))
+const InteractionHosts = lazy(
+  () => import("./shared/views/OfferInteractionView/InteractionHosts")
+)
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
+
+  const anyInteractionToMount = useAppStore(
+    (s) =>
+      s.offerInteractionOpen ||
+      s.offerDeleteConfirmOpen ||
+      s.counterOfferOpen ||
+      s.acceptOfferOpen
+  )
 
   useEffect(() => {
     initSecurity().catch(() => {})
@@ -65,10 +73,11 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
-
-        <OfferInteractionHost />
-        <CounterOfferInteractionHost />
-        <AcceptOfferInteractionHost />
+        {anyInteractionToMount && (
+          <Suspense fallback={null}>
+            <InteractionHosts />
+          </Suspense>
+        )}
         <Toaster position="bottom-left" richColors />
       </BrowserRouter>
     </TooltipProvider>
