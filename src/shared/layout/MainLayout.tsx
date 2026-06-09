@@ -5,6 +5,8 @@ import GuestNavbar from "./navbar/views/GuestNavbar"
 import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
 import useMainLayout from "./hooks/UseMainLayout"
 import ChatWindowHost from "@/features/chat/components/ChatWindowHost"
+import { Suspense } from "react"
+import PageFallback from "./PageFallback"
 
 const MainLayout = () => {
   const { isLogged, hasHydrated } = useMainLayout()
@@ -21,7 +23,9 @@ const MainLayout = () => {
 
       {isLogged ? <UserNavbar /> : <GuestNavbar />}
       <main className="flex-1 mx-auto w-full px-4 pt-6 pb-12">
-        <Outlet />
+        <Suspense fallback={<PageFallback />}>
+          <Outlet />
+        </Suspense>
       </main>
       {isLogged && <ChatWindowHost />}
 
