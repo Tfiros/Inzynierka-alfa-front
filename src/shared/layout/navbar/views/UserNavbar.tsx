@@ -13,6 +13,7 @@ import {
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip"
 import { useAppStore } from "@/shared/store/appStore"
+import NavbarFallback from "../components/NavbarFallback"
 
 const NavbarChatDropdown = lazy(
   () => import("@/features/chat/components/NavbarChatDropdown")
@@ -108,7 +109,7 @@ export const UserNavbar = () => {
             <span className="text-sm font-semibold">{level}</span>
             <span className="ml-1 text-xs text-muted-foreground">Poziom</span>
 
-            <Suspense fallback={null}>
+            <Suspense fallback={<NavbarFallback />}>
               <NotificationsDropdown />
               <NavbarChatDropdown />
             </Suspense>
