@@ -5,6 +5,7 @@ import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
 import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
+import { lazy, Suspense } from "react"
 
 import {
   Tooltip,
@@ -12,8 +13,17 @@ import {
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip"
 import { useAppStore } from "@/shared/store/appStore"
-import { NotificationsDropdown } from "@/features/notifications/NotificationsDropdown/components/NotificationsDropdown"
-import NavbarChatDropdown from "@/features/chat/components/NavbarChatDropdown"
+import NavbarFallback from "../components/NavbarFallback"
+import ErrorBoundary from "@/shared/components/ErrorBoundary"
+
+const NavbarChatDropdown = lazy(
+  () => import("@/features/chat/components/NavbarChatDropdown")
+)
+
+const NotificationsDropdown = lazy(
+  () =>
+    import("@/features/notifications/NotificationsDropdown/components/NotificationsDropdown")
+)
 
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
@@ -100,8 +110,16 @@ export const UserNavbar = () => {
             <span className="text-sm font-semibold">{level}</span>
             <span className="ml-1 text-xs text-muted-foreground">Poziom</span>
 
-            <NotificationsDropdown />
-            <NavbarChatDropdown />
+            <ErrorBoundary fallback={<NavbarFallback />}>
+              <Suspense fallback={<NavbarFallback />}>
+                <NotificationsDropdown />
+              </Suspense>
+            </ErrorBoundary>
+            <ErrorBoundary fallback={<NavbarFallback />}>
+              <Suspense fallback={<NavbarFallback />}>
+                <NavbarChatDropdown />
+              </Suspense>
+            </ErrorBoundary>
 
             <ProfileMenu />
           </div>

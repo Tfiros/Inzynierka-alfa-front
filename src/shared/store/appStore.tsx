@@ -7,13 +7,11 @@ import {
 } from "./storeParts/NotificationSlice"
 import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
 import { createChatSlice, type ChatSlice } from "./storeParts/ChatSlice"
-import { chatHubClient } from "@/shared/api/hubs/ChatHub"
 import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
 import {
   createCounterOfferSlice,
   type CounterOfferSlice,
 } from "./storeParts/CounterOfferSlice"
-import { NotificationsHubClient } from "../api/hubs/NotificationsHubClient"
 import {
   createAcceptOfferSlice,
   type AcceptOfferSlice,
@@ -58,12 +56,15 @@ export const useAppStore = create<AppState>()(
         clearCsrfToken()
 
         try {
+          const { chatHubClient } = await import("@/shared/api/hubs/ChatHub")
           await chatHubClient.stop()
         } catch (e) {
           console.error("chatHub stop failed", e)
         }
 
         try {
+          const { NotificationsHubClient } =
+            await import("@/shared/api/hubs/NotificationsHubClient")
           await NotificationsHubClient.stop()
         } catch (e) {
           console.error("notificationsHub stop failed", e)

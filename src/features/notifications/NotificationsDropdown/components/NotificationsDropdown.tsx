@@ -10,7 +10,7 @@ import NoifyIcon_Dark from "@/shared/photos/NotificationIcon_Dark.svg"
 import { NotificationItem } from "./NotificationItem"
 import { useNotificationsDropdown } from "../hooks/UseNotificationsDropdown"
 
-export const NotificationsDropdown = () => {
+const NotificationsDropdown = () => {
   const [open, setOpen] = useState(false)
 
   const {
@@ -119,3 +119,4 @@ export const NotificationsDropdown = () => {
     </DropdownMenu>
   )
 }
+export default NotificationsDropdown
