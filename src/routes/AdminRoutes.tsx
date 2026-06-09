@@ -7,8 +7,7 @@ const AdminRoute = () => {
 
   const isAdmin = roles.some((r) => r.toLowerCase() === "admin")
 
-  if (!isAuthenticated) return <Navigate to="/login" replace />
-  if (!isAdmin) return <Navigate to="/" replace />
+  if (!isAuthenticated || !isAdmin) return <Navigate to="/" replace />
 
   return <Outlet />
 }
