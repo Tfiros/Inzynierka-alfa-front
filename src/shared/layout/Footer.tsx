@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom"
 import { Button } from "@/shared/components/button"
 import { Facebook, Instagram, Twitter } from "lucide-react"
-import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.png"
-import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.png"
+import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.webp"
+import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.webp"
 
 export const Footer = () => {
   const year = new Date().getFullYear()

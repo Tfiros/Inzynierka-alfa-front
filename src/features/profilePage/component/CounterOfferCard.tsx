@@ -167,12 +167,12 @@ export default function CounterOfferCard({
                 className="flex items-center gap-2 rounded-md border p-2"
               >
                 <img
-                  src={it.photoUrl?.trim() || "/placeholder.png"}
+                  src={it.photoUrl?.trim() || "/placeholder.webp"}
                   alt={it.name}
                   className="h-10 w-10 rounded object-cover bg-muted"
                   loading="lazy"
                   onError={(e) => {
-                    e.currentTarget.src = "/placeholder.png"
+                    e.currentTarget.src = "/placeholder.webp"
                   }}
                 />
 
