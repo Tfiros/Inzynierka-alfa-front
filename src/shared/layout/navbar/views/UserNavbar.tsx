@@ -110,12 +110,18 @@ export const UserNavbar = () => {
             <span className="text-sm font-semibold">{level}</span>
             <span className="ml-1 text-xs text-muted-foreground">Poziom</span>
 
-            <ErrorBoundary fallback={<NavbarFallback />}>
+            <ErrorBoundary
+              fallback={<NavbarFallback />}
+              errorMessage="Nie udało się załadować powiadomień. Odśwież stronę"
+            >
               <Suspense fallback={<NavbarFallback />}>
                 <NotificationsDropdown />
               </Suspense>
             </ErrorBoundary>
-            <ErrorBoundary fallback={<NavbarFallback />}>
+            <ErrorBoundary
+              fallback={<NavbarFallback />}
+              errorMessage="Nie udało się załadować chatu. Odśwież stronę"
+            >
               <Suspense fallback={<NavbarFallback />}>
                 <NavbarChatDropdown />
               </Suspense>

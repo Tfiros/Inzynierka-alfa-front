@@ -16,10 +16,10 @@ class ErrorBoundary extends Component<Props, { failed: boolean }> {
   }
 
   componentDidCatch(): void {
-    if (!this.props.fallback) {
+    if (!this.props.fallback || this.props.errorMessage) {
       toast.error(
         this.props.errorMessage ??
-          "Część interfejsu nie została wczytana. Odśwież strone"
+          "Część interfejsu nie została wczytana. Odśwież stronę"
       )
     }
   }
