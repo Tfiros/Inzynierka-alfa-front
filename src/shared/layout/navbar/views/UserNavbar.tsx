@@ -14,6 +14,7 @@ import {
 } from "@/shared/components/ui/tooltip"
 import { useAppStore } from "@/shared/store/appStore"
 import NavbarFallback from "../components/NavbarFallback"
+import ErrorBoundary from "@/shared/components/ErrorBoundary"
 
 const NavbarChatDropdown = lazy(
   () => import("@/features/chat/components/NavbarChatDropdown")
@@ -109,12 +110,16 @@ export const UserNavbar = () => {
             <span className="text-sm font-semibold">{level}</span>
             <span className="ml-1 text-xs text-muted-foreground">Poziom</span>
 
-            <Suspense fallback={<NavbarFallback />}>
-              <NotificationsDropdown />
-            </Suspense>
-            <Suspense fallback={<NavbarFallback />}>
-              <NavbarChatDropdown />
-            </Suspense>
+            <ErrorBoundary fallback={<NavbarFallback />}>
+              <Suspense fallback={<NavbarFallback />}>
+                <NotificationsDropdown />
+              </Suspense>
+            </ErrorBoundary>
+            <ErrorBoundary fallback={<NavbarFallback />}>
+              <Suspense fallback={<NavbarFallback />}>
+                <NavbarChatDropdown />
+              </Suspense>
+            </ErrorBoundary>
 
             <ProfileMenu />
           </div>
