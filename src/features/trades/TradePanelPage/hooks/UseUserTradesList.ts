@@ -7,6 +7,30 @@ import type {
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import type { PagedResponse } from "@/shared/types/PagedType"
 
+const toNumber = (value: unknown) => {
+  if (value === "" || value === null || value === undefined) {
+    return undefined
+  }
+
+  const parsed = Number(value)
+
+  return Number.isFinite(parsed) ? parsed : undefined
+}
+
+const cleanTrade = (query: TradesQuery): TradesQuery => {
+  const cleaned = {
+    ...query,
+    minTokenCost: toNumber(query.minTokenCost),
+    maxTokenCost: toNumber(query.maxTokenCost),
+    onlyMine: query.onlyMine === true ? true : undefined,
+    readyForCompletion: query.readyForCompletion === true ? true : undefined,
+  }
+
+  return Object.fromEntries(
+    Object.entries(cleaned).filter(([, value]) => value !== undefined)
+  ) as TradesQuery
+}
+
 type State = {
   itemsTab: MiddlemanTab
   items: TradeListItem[]
@@ -63,7 +87,9 @@ const useUserTradesList = ({
             : TradeService.getMyFailedWithItemsToReturn
 
     try {
-      const res = await call(page, pageSize, query)
+      const cleanedQuery = cleanTrade(query)
+
+      const res = await call(page, pageSize, cleanedQuery)
       if (seq !== reqSeq.current) return
 
       if (!res.isSuccess || !res.data) {
@@ -95,7 +121,7 @@ const useUserTradesList = ({
         errorList: e?.message ?? "Nie udało się pobrać danych.",
       }))
     }
-  }, [tab, page, pageSize, query, clearOnLoad, isMiddleman])
+  }, [tab, page, pageSize, query, clearOnLoad])
 
   useEffect(() => {
     void fetchList()
