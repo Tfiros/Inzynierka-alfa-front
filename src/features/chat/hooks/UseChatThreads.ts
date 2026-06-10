@@ -9,15 +9,17 @@ import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
 
 type Params = {
   enabled?: boolean
-  page?: number
+  initialPage?: number
   pageSize?: number
   search?: string | null
 }
 
+const DEFAULT_PAGE_SIZE = 15
+
 const useChatThreads = ({
   enabled = true,
-  page = 1,
-  pageSize = 50,
+  initialPage = 1,
+  pageSize = DEFAULT_PAGE_SIZE,
   search = null,
 }: Params) => {
   const actions = useAppStore(chatSelectors.chatActions)
@@ -27,7 +29,54 @@ const useChatThreads = ({
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [page, setPage] = useState(initialPage)
+  const [hasMore, setHasMore] = useState(true)
+
   const refreshKey = useAppStore(selectCounter("chat:threads"))
+
+  const reqSeq = { current: 0 }
+
+  const fetchPage = async (p: number, append = false) => {
+    const seq = ++reqSeq.current
+    setLoading(true)
+    setError(null)
+
+    try {
+      const res = await ChatService.getThreads({ page: p, pageSize, search })
+      if (seq !== reqSeq.current) return
+
+      const items = res.data ?? []
+
+      if (append) {
+        const prev = useAppStore.getState().chat.threads ?? []
+        const existingIds = new Set(
+          prev.map((t) => Number(t.chatConversationId))
+        )
+        const unique = items.filter(
+          (t: ChatThreadListItemDto) =>
+            !existingIds.has(Number(t.chatConversationId))
+        )
+        actions.setThreads([...prev, ...unique])
+      } else {
+        actions.setThreads(items)
+      }
+
+      const ids = useAppStore
+        .getState()
+        .chat.threads.map((t: ChatThreadListItemDto) =>
+          Number(t.chatConversationId)
+        )
+        .filter((x: number) => Number.isFinite(x) && x > 0)
+
+      setChatThreadIds?.(ids)
+
+      setHasMore(items.length === pageSize)
+    } catch (e: any) {
+      setError(e?.message ?? "threads_load_failed")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (!enabled) return
@@ -36,33 +85,32 @@ const useChatThreads = ({
 
     ;(async () => {
       try {
-        setLoading(true)
-        setError(null)
-
-        const res = await ChatService.getThreads({ page, pageSize, search })
-        if (cancelled) return
-
-        const items = res.data ?? []
-        actions.setThreads(items)
-
-        const ids = items
-          .map((t: ChatThreadListItemDto) => Number(t.chatConversationId))
-          .filter((x: number) => Number.isFinite(x) && x > 0)
-
-        setChatThreadIds?.(ids)
-      } catch (e: any) {
-        if (!cancelled) setError(e?.message ?? "threads_load_failed")
-      } finally {
-        if (!cancelled) setLoading(false)
+        setPage(initialPage)
+        await fetchPage(initialPage, false)
+      } catch (e) {
+        if (!cancelled) setError((e as any)?.message ?? "threads_load_failed")
       }
     })()
 
     return () => {
       cancelled = true
     }
-  }, [enabled, page, pageSize, search, refreshKey, actions, setChatThreadIds])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled, search, refreshKey])
 
-  return { loading, error }
+  const loadMore = async () => {
+    if (loading || !hasMore || !enabled) return
+    const next = page + 1
+    setPage(next)
+    await fetchPage(next, true)
+  }
+
+  const refresh = async () => {
+    setPage(initialPage)
+    await fetchPage(initialPage, false)
+  }
+
+  return { loading, error, loadMore, hasMore, refresh }
 }
 
 export default useChatThreads
