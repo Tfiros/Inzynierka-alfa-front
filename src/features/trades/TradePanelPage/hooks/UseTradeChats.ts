@@ -48,7 +48,10 @@ const useTradeChats = ({
           chat.chatConversationId,
           chat.tradeId,
           chat.closedAtUtc,
-          chatThreadTitle(chat)
+          chatThreadTitle(chat),
+
+          chat.otherUserAuth0UserId,
+          chat.isOnline
         )
       } catch (e) {
         console.error("openTradeChat failed", e)

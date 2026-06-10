@@ -22,6 +22,13 @@ import { Input } from "@/shared/components/input"
 const threadId = (t: ChatThreadListItemDto) => Number(t.chatConversationId)
 const threadPreview = (t: ChatThreadListItemDto) => t.lastMessageText ?? ""
 const threadUnread = (t: ChatThreadListItemDto) => t.unreadCount ?? 0
+const threadOnline = (
+  t: ChatThreadListItemDto,
+  onlineMap: Record<string, boolean>
+): boolean | null =>
+  t.otherUserAuth0UserId
+    ? (onlineMap[t.otherUserAuth0UserId] ?? t.isOnline ?? false)
+    : null
 
 const NavbarChatDropdown = () => {
   const openThread = useOpenThread()
@@ -38,6 +45,7 @@ const NavbarChatDropdown = () => {
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebounceValue(search, 360)
   const trimmedSearch = debouncedSearch.trim()
+  const onlineMap = useAppStore(chatSelectors.onlineMap)
 
   useChatHub(isAuthenticated)
 
@@ -59,7 +67,14 @@ const NavbarChatDropdown = () => {
     markChatReadLocal(id)
 
     actions.closePopover()
-    await openThread(id, t.tradeId, t.closedAtUtc, chatThreadTitle(t))
+    await openThread(
+      id,
+      t.tradeId,
+      t.closedAtUtc,
+      chatThreadTitle(t),
+      t.otherUserAuth0UserId,
+      t.isOnline
+    )
   }
 
   return (
@@ -123,6 +138,7 @@ const NavbarChatDropdown = () => {
             {threads.map((t: ChatThreadListItemDto) => {
               const id = threadId(t)
               const isClosed = !!t.closedAtUtc
+              const online = threadOnline(t, onlineMap)
               if (!Number.isFinite(id) || id <= 0) return null
 
               return (
@@ -135,6 +151,12 @@ const NavbarChatDropdown = () => {
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
+                        {online !== null && (
+                          <span
+                            title={online ? "Online" : "Offline"}
+                            className={`h-2 w-2 shrink-0 rounded-full ${online ? "bg-green-500" : "bg-muted-foreground/30"}`}
+                          ></span>
+                        )}
                         <div className="truncate text-sm font-medium">
                           {chatThreadTitle(t)}
                         </div>
