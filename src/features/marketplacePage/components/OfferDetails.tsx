@@ -86,7 +86,12 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                   type="button"
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => requestEdit(offer.offerCoreDto.offerId)}
+                  onClick={async () => {
+                    const opened = await requestEdit(offer.offerCoreDto.offerId)
+                    if (opened) {
+                      onOpenChange(false)
+                    }
+                  }}
                   disabled={!isActive || !isOwner || isChecking}
                 >
                   <SquarePen className="mr-1 h-4 w-4" />{" "}
@@ -97,7 +102,10 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                   type="button"
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => requestDelete(offer.offerCoreDto.offerId)}
+                  onClick={() => {
+                    onOpenChange(false)
+                    requestDelete(offer.offerCoreDto.offerId)
+                  }}
                   disabled={!isActive || !isOwner}
                 >
                   <Trash2 className="mr-1 h-4 w-4" /> Usuń

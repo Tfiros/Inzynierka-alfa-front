@@ -12,6 +12,7 @@ import { useEffect, useState } from "react"
 type Props = {
   open: boolean
   saving: boolean
+  error?: string | null
   onOpenChange: (open: boolean) => void
   onSubmit: (file: File) => Promise<void>
 }
@@ -19,6 +20,7 @@ type Props = {
 const AvatarChangeDialog = ({
   open,
   saving,
+  error,
   onOpenChange,
   onSubmit,
 }: Props) => {
@@ -49,6 +51,7 @@ const AvatarChangeDialog = ({
           maxFiles={1}
           disabled={saving}
         />
+        {error && <p className="text-sm text-destructive">{error}</p>}
         <DialogFooter>
           <Button
             variant="outline"
