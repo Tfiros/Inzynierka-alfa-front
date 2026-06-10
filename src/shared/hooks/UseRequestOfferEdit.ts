@@ -21,9 +21,10 @@ export const useRequestOfferEdit = () => {
       }
       if (hasPending) {
         toast.error("Musisz odpowiedzieć na kontroferty przed edycją oferty.")
-        return
+        return false
       }
       openEdit(offerId)
+      return true
     },
     [openEdit]
   )
