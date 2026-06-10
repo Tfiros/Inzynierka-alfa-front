@@ -121,7 +121,7 @@ const useUserTradesList = ({
         errorList: e?.message ?? "Nie udało się pobrać danych.",
       }))
     }
-  }, [tab, page, pageSize, query, clearOnLoad])
+  }, [tab, page, pageSize, query, clearOnLoad, isMiddleman])
 
   useEffect(() => {
     void fetchList()
