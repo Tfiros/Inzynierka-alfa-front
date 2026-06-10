@@ -42,10 +42,12 @@ const NavbarChatDropdown = () => {
 
   useChatHub(isAuthenticated)
 
-  useChatThreads({
+  const {
+    loadMore,
+    hasMore,
+    loading: threadsLoading,
+  } = useChatThreads({
     enabled: isPopoverOpen || isWindowOpen,
-    page: 1,
-    pageSize: 50,
     search: trimmedSearch.length ? trimmedSearch : null,
   })
 
@@ -114,7 +116,15 @@ const NavbarChatDropdown = () => {
 
           <DropdownMenuSeparator />
 
-          <div className="max-h-[320px] overflow-auto p-2">
+          <div
+            className="max-h-[320px] overflow-auto p-2"
+            onScroll={(e) => {
+              const el = e.currentTarget as HTMLDivElement
+              if (el.scrollTop + el.clientHeight >= el.scrollHeight - 40) {
+                void loadMore()
+              }
+            }}
+          >
             {threads.map((t: ChatThreadListItemDto) => {
               const id = threadId(t)
               const isClosed = !!t.closedAtUtc
@@ -157,6 +167,12 @@ const NavbarChatDropdown = () => {
             {!threads.length && (
               <div className="px-3 py-8 text-center text-sm text-muted-foreground">
                 {trimmedSearch ? "Brak wyników" : "Brak konwersacji"}
+              </div>
+            )}
+
+            {threadsLoading && (
+              <div className="px-3 py-2 text-center text-xs text-muted-foreground">
+                Ładowanie...
               </div>
             )}
           </div>
