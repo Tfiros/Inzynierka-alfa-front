@@ -19,6 +19,7 @@ export const useProfileEdit = () => {
   const [savingProfile, setSavingProfile] = useState(false)
   const [savingSecurity, setSavingSecurity] = useState(false)
   const [savingAvatar, setSavingAvatar] = useState(false)
+  const [avatarError, setAvatarError] = useState<string | null>(null)
 
   const fetchProfileData = useCallback(async () => {
     let alive = true
@@ -120,10 +121,10 @@ export const useProfileEdit = () => {
 
   const onChangeAvatar = useCallback(
     async (file: File) => {
-      if (!profile || userId === null) return
+      if (!profile || userId === null) return false
       try {
         setSavingAvatar(true)
-        setError(null)
+        setAvatarError(null)
         const res = await UserInfoService.updateAvatar(file, userId)
         if (!res.isSuccess) {
           throw new Error(res.message ?? "Nie udało się zmienić avatara")
@@ -132,8 +133,10 @@ export const useProfileEdit = () => {
           setProfile(mapBackendToProfile(res.data))
         }
         await refreshNavbar()
+        return true
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Błąd zapisu avatara")
+        setAvatarError(e instanceof Error ? e.message : "Błąd zapisu avatara")
+        return false
       } finally {
         setSavingAvatar(false)
       }
@@ -146,6 +149,7 @@ export const useProfileEdit = () => {
     security,
     loading,
     error,
+    avatarError,
     savingProfile,
     savingSecurity,
     savingAvatar,
@@ -156,6 +160,7 @@ export const useProfileEdit = () => {
     setProfile,
     setSecurity,
     setError,
+    setAvatarError,
   }
 }
 
