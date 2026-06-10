@@ -182,11 +182,11 @@ const TradeDetailsDialog = ({
                   <>
                     <Flag
                       ok={!!details?.hasBuyersItems}
-                      label="Odbierający otrzymał przedmioty"
+                      label="Otrzymano przedmioty odbierającego"
                     />
                     <Flag
                       ok={!!details?.hasSellersItems}
-                      label="Wystawiający otrzymał przedmioty"
+                      label="Otrzymano przedmioty wystawiającego"
                     />
                   </>
                 )}
@@ -233,7 +233,7 @@ const TradeDetailsDialog = ({
                   checked={hasBuyersItems}
                   onChange={setHasBuyersItems}
                   title="Odbierający ma przedmioty"
-                  description="Zaznacz, jezeli odbierający otrzymał przedmioty."
+                  description="Zaznacz, jeśli otrzymałeś przedmioty od odbierającego."
                   disabled={saving}
                 />
 
@@ -241,7 +241,7 @@ const TradeDetailsDialog = ({
                   checked={hasSellersItems}
                   onChange={setHasSellersItems}
                   title="Wystawiający ma przedmioty"
-                  description="Zaznacz, jezeli wystawiający otrzymał przedmioty."
+                  description="Zaznacz, jeśli otrzymałeś przedmioty od wystawiającego"
                   disabled={saving}
                 />
               </div>
