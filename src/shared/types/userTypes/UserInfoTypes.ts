@@ -7,7 +7,7 @@ export type UserNavbarInfoDto = {
   experience: number
   level: number
   chatIds: number[]
-  chatUnreadTotal: number
+  chatUnreadIds: number[]
   notificationsUnreadTotal: number
   imageUrl?: string | null
 }
