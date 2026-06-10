@@ -22,6 +22,7 @@ import MarketplacePage from "./features/marketplacePage/Marketplace"
 import AcceptOfferInteractionHost from "./shared/views/OfferInteractionView/AcceptOfferInteractionHost"
 import { Toaster } from "sonner"
 import ContactPage from "./features/contactPage/contactPage"
+import AuthModalHost from "./shared/utilities/Auth/AuthModalHost"
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
@@ -56,6 +57,8 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
+
+        <AuthModalHost />
 
         <OfferInteractionHost />
         <CounterOfferInteractionHost />

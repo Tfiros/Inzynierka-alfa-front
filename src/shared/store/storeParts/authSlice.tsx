@@ -6,6 +6,7 @@ import type { FavouriteSlice } from "./FavouriteSlice"
 import { tokenRefreshScheduler } from "@/shared/lib/TokenRefreshScheduler"
 import { clearCsrfToken, setAuthFailureHandler } from "@/shared/api/Api"
 import type { UiSlice } from "./uiSlice"
+import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
 
 export type AuthMeDto = {
   isAuthenticated: boolean
@@ -20,6 +21,14 @@ export type AuthSlice = {
   navbarUser: UserNavbarInfoDto | null
   isAuthenticated: boolean
   roles: string[]
+
+  authModalOpen: boolean
+  authModalView: AuthModalView
+
+  setAuthModalOpen: (open: boolean) => void
+  setAuthModalView: (view: AuthModalView) => void
+  authRequestLogin: () => void
+  authRequestRegister: () => void
 
   sessionChecked: boolean
   csrfReady: boolean
@@ -110,6 +119,29 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     csrfReady: false,
     sessionChecked: false,
 
+    authModalOpen: false,
+    authModalView: "login",
+
+    authRequestLogin: () => {
+      set({ authModalOpen: true, authModalView: "login" })
+    },
+
+    authRequestRegister: () => {
+      set({ authModalOpen: true, authModalView: "register" })
+    },
+
+    setAuthModalOpen: (open) => {
+      set(
+        open
+          ? { authModalOpen: true }
+          : { authModalOpen: false, authModalView: "login" }
+      )
+    },
+
+    setAuthModalView: (view) => {
+      set({ authModalView: view })
+    },
+
     initSecurity: async () => {
       await initSecurityOnce()
 
@@ -175,6 +207,9 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
       scheduleRefreshIfPossible((res.data as any).expiresIn)
 
       await get().syncSession()
+      if (get().isAuthenticated) {
+        set({ authModalOpen: false, authModalView: "login" })
+      }
     },
 
     refresh: async () => {

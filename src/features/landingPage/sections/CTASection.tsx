@@ -1,17 +1,9 @@
-import { useState } from "react"
 import { Button } from "@/shared/components/button"
+import { useAppStore } from "@/shared/store/appStore"
 import { Link } from "react-router-dom"
-import AuthModal from "@/shared/utilities/Auth/AuthModal"
-import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
 
 const CTASection = () => {
-  const [authOpen, setAuthOpen] = useState(false)
-  const [authView, setAuthView] = useState<AuthModalView>("register")
-
-  const openRegisterModal = () => {
-    setAuthView("register")
-    setAuthOpen(true)
-  }
+  const authRequestRegister = useAppStore((s) => s.authRequestRegister)
 
   return (
     <section className="container mx-auto px-4 pb-12">
@@ -29,7 +21,7 @@ const CTASection = () => {
           <Button
             size="lg"
             className="cursor-pointer"
-            onClick={openRegisterModal}
+            onClick={authRequestRegister}
             aria-label="Zarejestruj się teraz"
           >
             Zarejestruj się teraz
@@ -47,13 +39,6 @@ const CTASection = () => {
           </Button>
         </div>
       </div>
-
-      <AuthModal
-        open={authOpen}
-        onOpenChange={setAuthOpen}
-        view={authView}
-        onViewChange={setAuthView}
-      />
     </section>
   )
 }
