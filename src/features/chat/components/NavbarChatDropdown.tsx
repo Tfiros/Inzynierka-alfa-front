@@ -70,7 +70,14 @@ const NavbarChatDropdown = () => {
     markChatReadLocal(id)
 
     actions.closePopover()
-    await openThread(id, t.tradeId, t.closedAtUtc, chatThreadTitle(t))
+    await openThread(
+      id,
+      t.tradeId,
+      t.closedAtUtc,
+      chatThreadTitle(t),
+      t.otherUserAuth0UserId,
+      t.isOnline
+    )
   }
 
   return (

@@ -133,6 +133,9 @@ export const chatSelectors = {
   activeChatTitle: (s: AppState) => s.chat.activeChatTitle,
   activeChatTradeId: (s: AppState) => s.chat.activeChatTradeId,
   activeChatClosedAt: (s: AppState) => s.chat.activeChatClosedAt,
+  activeChatOtherAuth0UserId: (s: AppState) =>
+    s.chat.activeChatOtherAuth0UserId,
+  activeChatOtherIsOnline: (s: AppState) => s.chat.activeChatOtherIsOnline,
 
   threads: (s: AppState) => s.chat.threads,
   messagesByChatId: (s: AppState) => s.chat.messagesByChatId,
