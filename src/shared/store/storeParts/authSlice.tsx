@@ -5,6 +5,7 @@ import { UserInfoService } from "@/shared/api/services/UserInfoService"
 import type { FavouriteSlice } from "./FavouriteSlice"
 import { tokenRefreshScheduler } from "@/shared/lib/TokenRefreshScheduler"
 import { clearCsrfToken, setAuthFailureHandler } from "@/shared/api/Api"
+import type { UiSlice } from "./uiSlice"
 
 export type AuthMeDto = {
   isAuthenticated: boolean
@@ -36,6 +37,7 @@ type HasHardReset = { hardReset: () => Promise<void> }
 type StoreState = AuthSlice &
   HasHardReset &
   FavouriteSlice &
+  UiSlice &
   Record<string, unknown>
 
 export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
@@ -46,12 +48,12 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     tokenRefreshScheduler.cancel()
     clearCsrfToken()
 
+    get().setNavbarUser(null)
+
     set({
       userLogin: null,
       isAuthenticated: false,
       roles: [],
-      userId: null,
-      navbarUser: null,
       sessionChecked: true,
       favouriteIds: new Set(),
       favouriteIdsLoaded: false,
@@ -60,14 +62,14 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
 
   const loadNavbarInfoIfPossible = async (userId: number | null) => {
     if (!userId) {
-      set({ navbarUser: null })
+      get().setNavbarUser(null)
       return
     }
 
     const navRes = await UserInfoService.getNavbarInfo(userId)
 
     if (navRes.isSuccess && navRes.data) {
-      set({ navbarUser: navRes.data })
+      get().setNavbarUser(navRes.data)
     } else {
       set({ navbarUser: null })
     }
@@ -117,10 +119,17 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     },
 
     setNavbarUser: (info) => {
+      var ids = (info?.chatUnreadIds ?? [])
+        .map((x) => Number(x))
+        .filter((x) => Number.isFinite(x) && x > 0)
+      const unreadIds = new Set<number>(ids)
       set({
         navbarUser: info,
         userId: info?.id ?? null,
+        chatUnreadTotal: unreadIds.size,
+        unreadChatsLocal: unreadIds,
       })
+      get().setChatThreadIds(info?.chatIds ?? [])
     },
 
     syncSession: async () => {

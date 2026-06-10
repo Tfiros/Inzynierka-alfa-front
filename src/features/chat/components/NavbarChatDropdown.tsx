@@ -33,7 +33,6 @@ const NavbarChatDropdown = () => {
   const totalUnread = useAppStore(chatSelectors.totalUnread)
 
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
-  const clearUnreadChatsLocal = useAppStore((s) => s.clearUnreadChatsLocal)
   const markChatReadLocal = useAppStore((s) => s.markChatReadLocal)
 
   const [search, setSearch] = useState("")
@@ -50,10 +49,6 @@ const NavbarChatDropdown = () => {
   })
 
   useChatAutoSubscribe()
-
-  useEffect(() => {
-    if (isPopoverOpen) clearUnreadChatsLocal()
-  }, [isPopoverOpen, clearUnreadChatsLocal])
 
   const handleOpen = async (t: ChatThreadListItemDto) => {
     const id = threadId(t)

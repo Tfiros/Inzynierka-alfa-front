@@ -1,7 +1,6 @@
 import { UserInfoService } from "@/shared/api/services/UserInfoService"
 import type { UserNavbarInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
 import type { StateCreator } from "zustand"
-const unreadChatsLocal = new Set<number>()
 
 export type UiSlice = {
   counters: Record<string, number>
@@ -15,11 +14,13 @@ export type UiSlice = {
   chatThreadIds: number[]
   setChatThreadIds: (ids: number[]) => void
 
+  chatUnreadTotal: number
+  unreadChatsLocal: Set<number>
+
   setCounter: (id: string, value: number) => void
 
   markChatUnreadLocal: (chatId: number) => void
   markChatReadLocal: (chatId: number) => void
-  clearUnreadChatsLocal: () => void
 }
 
 type StoreState = UiSlice & {
@@ -51,6 +52,9 @@ export const createUiSlice: StateCreator<StoreState, [], [], UiSlice> = (
     darkMode: false,
     setDarkMode: (value) => set({ darkMode: value }),
 
+    chatUnreadTotal: 0,
+    unreadChatsLocal: new Set(),
+
     chatThreadIds: [],
     setChatThreadIds: (ids) => set({ chatThreadIds: uniqPosInts(ids) }),
 
@@ -78,63 +82,44 @@ export const createUiSlice: StateCreator<StoreState, [], [], UiSlice> = (
     markChatUnreadLocal: (chatId) => {
       const id = Number(chatId)
       if (!Number.isFinite(id) || id <= 0) return
-      if (unreadChatsLocal.has(id)) return
+      set((s) => {
+        if (s.unreadChatsLocal.has(id)) return s
 
-      unreadChatsLocal.add(id)
-
-      set((s) => ({
-        counters: {
-          ...s.counters,
-          chat_unread_total: (s.counters.chat_unread_total ?? 0) + 1,
-        },
-      }))
+        const next = new Set(s.unreadChatsLocal)
+        next.add(id)
+        return {
+          unreadChatsLocal: next,
+          chatUnreadTotal: s.chatUnreadTotal + 1,
+        }
+      })
     },
 
     markChatReadLocal: (chatId) => {
       const id = Number(chatId)
       if (!Number.isFinite(id) || id <= 0) return
-      if (!unreadChatsLocal.has(id)) return
 
-      unreadChatsLocal.delete(id)
+      set((s) => {
+        if (!s.unreadChatsLocal.has(id)) return s
 
-      set((s) => ({
-        counters: {
-          ...s.counters,
-          chat_unread_total: Math.max(
-            0,
-            (s.counters.chat_unread_total ?? 0) - 1
-          ),
-        },
-      }))
-    },
-
-    clearUnreadChatsLocal: () => {
-      unreadChatsLocal.clear()
-      set((s) => ({
-        counters: { ...s.counters, chat_unread_total: 0 },
-      }))
+        const next = new Set(s.unreadChatsLocal)
+        next.delete(id)
+        return {
+          unreadChatsLocal: next,
+          chatUnreadTotal: Math.max(0, s.chatUnreadTotal - 1),
+        }
+      })
     },
 
     refreshNavbarUserFromAuth: async () => {
       const userId = get().userId ?? null
       if (!userId) {
         get().setNavbarUser?.(null)
-        get().setChatThreadIds([])
-        unreadChatsLocal.clear()
-        set((s) => ({ counters: { ...s.counters, chat_unread_total: 0 } }))
         return
       }
 
       const navRes = await UserInfoService.getNavbarInfo(userId)
       if (navRes.isSuccess && navRes.data) {
         get().setNavbarUser?.(navRes.data)
-        get().setChatThreadIds(navRes.data.chatIds ?? [])
-        unreadChatsLocal.clear()
-
-        const total = normalizeNonNegInt(navRes.data.chatUnreadTotal)
-        set((s) => ({
-          counters: { ...s.counters, chat_unread_total: total },
-        }))
       }
     },
   }
