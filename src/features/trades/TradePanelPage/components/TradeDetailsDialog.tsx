@@ -182,11 +182,11 @@ const TradeDetailsDialog = ({
                   <>
                     <Flag
                       ok={!!details?.hasBuyersItems}
-                      label="Odbierający ma przedmioty"
+                      label="Odbierający otrzymał przedmioty"
                     />
                     <Flag
                       ok={!!details?.hasSellersItems}
-                      label="Wystawiający ma przedmioty"
+                      label="Wystawiający otrzymał przedmioty"
                     />
                   </>
                 )}
@@ -226,14 +226,14 @@ const TradeDetailsDialog = ({
         ) : (
           <div className="mt-4 space-y-4">
             <div className="rounded-xl border p-4">
-              <div className="text-sm font-medium">Edycja flag</div>
+              <div className="text-sm font-medium">Edycja statusu odbioru</div>
 
               <div className="mt-3 space-y-3">
                 <CheckboxRow
                   checked={hasBuyersItems}
                   onChange={setHasBuyersItems}
                   title="Odbierający ma przedmioty"
-                  description="Ustaw na podstawie weryfikacji przedmiotów kupującego."
+                  description="Zaznacz, jezeli odbierający otrzymał przedmioty."
                   disabled={saving}
                 />
 
@@ -241,7 +241,7 @@ const TradeDetailsDialog = ({
                   checked={hasSellersItems}
                   onChange={setHasSellersItems}
                   title="Wystawiający ma przedmioty"
-                  description="Ustaw na podstawie weryfikacji przedmiotów wystawiającego."
+                  description="Zaznacz, jezeli wystawiający otrzymał przedmioty."
                   disabled={saving}
                 />
               </div>
