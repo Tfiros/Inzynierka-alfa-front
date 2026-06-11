@@ -59,7 +59,7 @@ export const NotificationsDropdown = () => {
       <DropdownMenuContent
         align="end"
         sideOffset={8}
-        className="w-[380px] overflow-hidden rounded-xl border bg-background p-0 shadow-xl"
+        className="w-[min(380px,calc(100vw-1rem))] overflow-hidden rounded-xl border bg-background p-0 shadow-xl"
       >
         <div className="flex items-center justify-between border-b px-4 py-3">
           <div>

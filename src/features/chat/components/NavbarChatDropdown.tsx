@@ -102,7 +102,10 @@ const NavbarChatDropdown = () => {
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" className="w-[360px] p-0">
+        <DropdownMenuContent
+          align="end"
+          className="w-[min(360px,calc(100vw-1rem))] p-0"
+        >
           <div className="flex items-center justify-between px-4 py-3">
             <DropdownMenuLabel className="p-0">Wiadomości</DropdownMenuLabel>
             <div className="text-xs text-muted-foreground">
