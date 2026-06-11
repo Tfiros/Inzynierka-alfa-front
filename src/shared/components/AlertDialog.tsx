@@ -59,7 +59,11 @@ const ConfirmDeleteTradeDialog = ({
               void handleConfirm()
             }}
             disabled={loading}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className={
+              loading
+                ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                : "cursor-pointer bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            }
           >
             {loading ? "Anulowanie..." : confirmText}
           </AlertDialogAction>

@@ -16,7 +16,11 @@ const TradeActionsAvailable = ({ tokenCost, onAssign, disabled }: Props) => {
       </div>
 
       <Button
-        className="mt-3 w-full gap-2 bg-black text-white hover:bg-black/90"
+        className={
+          disabled
+            ? "mt-3 w-full gap-2 bg-black text-white hover:bg-black/90"
+            : "mt-3 w-full cursor-pointer gap-2 bg-black text-white hover:bg-black/90"
+        }
         onClick={onAssign}
         disabled={disabled}
       >

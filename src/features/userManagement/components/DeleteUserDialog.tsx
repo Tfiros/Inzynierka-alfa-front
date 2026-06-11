@@ -64,7 +64,11 @@ const DeleteUserDialog = (props: Props) => {
               void handleDelete()
             }}
             disabled={submitting || !user}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className={
+              submitting || !user
+                ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                : "cursor-pointer bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            }
           >
             {submitting ? "Usuwanie..." : "Usuń"}
           </AlertDialogAction>

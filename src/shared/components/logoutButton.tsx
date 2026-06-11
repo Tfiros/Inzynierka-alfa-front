@@ -35,7 +35,11 @@ function LogoutButton({}: LogoutButtonProps) {
         void handleLogout()
       }}
       disabled={busy}
-      className="flex w-full items-center px-2 py-1.5 text-left text-red-600 disabled:opacity-60"
+      className={
+        busy
+          ? "flex w-full items-center px-2 py-1.5 text-left text-red-600 disabled:opacity-60"
+          : "flex w-full cursor-pointer items-center px-2 py-1.5 text-left text-red-600 disabled:opacity-60"
+      }
     >
       <LogOut className="mr-2 h-4 w-4" />
       <span>{busy ? "Wylogowywanie…" : "Wyloguj się"}</span>

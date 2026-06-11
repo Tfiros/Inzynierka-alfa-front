@@ -44,7 +44,7 @@ const PackageCard = ({ item, selected, onSelect }: CardProps) => {
         }}
         className={cn(
           "relative h-full rounded-2xl border bg-card text-card-foreground shadow-sm flex flex-col cursor-pointer transition",
-          "hover:border-primary/40",
+          "hover:border-primary/40 cursor-pointer",
           selected && "border-primary ring-2 ring-primary/20"
         )}
       >
@@ -55,8 +55,7 @@ const PackageCard = ({ item, selected, onSelect }: CardProps) => {
                 checked={selected}
                 onClick={(e) => e.stopPropagation()}
                 className={cn(
-                  "h-5 w-5 rounded-md border-2 transition-colors",
-                  // tokenowo: border-input + bg-background, a dla selected primary
+                  "h-5 w-5 cursor-pointer rounded-md border-2 transition-colors",
                   selected
                     ? "border-primary bg-primary text-primary-foreground"
                     : "border-input bg-background"

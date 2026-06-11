@@ -145,7 +145,7 @@ const NavbarChatDropdown = () => {
                 <button
                   key={id}
                   type="button"
-                  className="w-full rounded-lg px-3 py-2 text-left hover:bg-accent"
+                  className="w-full rounded-lg px-3 py-2 text-left hover:bg-accent cursor-pointer"
                   onClick={() => handleOpen(t)}
                 >
                   <div className="flex items-center justify-between gap-3">

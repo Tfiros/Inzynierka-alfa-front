@@ -392,7 +392,11 @@ const EditOfferModalContent = ({
           </div>
           <Button
             type="button"
-            className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
+            className={
+              !offer.canSubmit
+                ? "h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
+                : "h-10 flex-1 cursor-pointer rounded-xl text-base font-semibold bg-black text-white border-black"
+            }
             disabled={!offer.canSubmit}
             onClick={() => {
               void handleOpenConfirm()
@@ -405,7 +409,11 @@ const EditOfferModalContent = ({
           <Button
             type="button"
             variant="outline"
-            className="h-10 rounded-xl px-8 text-base"
+            className={
+              offer.isLoading
+                ? "h-10 rounded-xl px-8 text-base"
+                : "h-10 cursor-pointer rounded-xl px-8 text-base"
+            }
             onClick={onCancel}
             disabled={offer.isLoading}
           >
@@ -440,6 +448,9 @@ const EditOfferModalContent = ({
             </AlertDialogCancel>
             <AlertDialogAction
               disabled={offer.isLoading || offer.quoteIsLoading}
+              className={
+                offer.isLoading || offer.quoteIsLoading ? "" : "cursor-pointer"
+              }
               onClick={(e) => {
                 e.preventDefault()
                 void handleConfirmUpdate()

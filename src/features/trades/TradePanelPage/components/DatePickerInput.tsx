@@ -94,7 +94,7 @@ const DatePickerInput = ({
                 e.stopPropagation()
                 onChange("")
               }}
-              className="ml-3 inline-flex h-7 w-7 items-center justify-center rounded-md hover:bg-muted"
+              className="ml-3 inline-flex h-7 w-7 items-center justify-center rounded-md hover:bg-muted cursor-pointer"
               title="Wyczyść"
             >
               <X className="h-4 w-4" />

@@ -78,7 +78,7 @@ const SearchSuggest = ({
         <button
           type="button"
           onClick={onUnlock}
-          className="text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground cursor-pointer"
         >
           <X className="h-4 w-4" />
         </button>

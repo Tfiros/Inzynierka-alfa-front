@@ -21,7 +21,11 @@ const HeaderSection = (props: Props) => {
       </div>
 
       <div className="flex items-center gap-3">
-        <Button onClick={onAddUser} disabled={loading}>
+        <Button
+          onClick={onAddUser}
+          disabled={loading}
+          className="cursor-pointer"
+        >
           <UserPlus className="h-4 w-4" />
           Dodaj użytkownika
         </Button>

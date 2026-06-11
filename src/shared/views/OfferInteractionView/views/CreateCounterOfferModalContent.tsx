@@ -257,7 +257,14 @@ export default function CreateCounterOfferModalContent({
           </div>
 
           <Button
-            className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
+            className={
+              !canConfirm ||
+              quoteLoading ||
+              hasNotEnoughTokens ||
+              isIllegalTokenForTokenCounterOffer
+                ? "h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
+                : "h-10 flex-1 cursor-pointer rounded-xl text-base font-semibold bg-black text-white border-black"
+            }
             disabled={
               !canConfirm ||
               quoteLoading ||
@@ -277,7 +284,11 @@ export default function CreateCounterOfferModalContent({
 
           <Button
             variant="outline"
-            className="h-10 rounded-xl px-8 text-base"
+            className={
+              submitting || quoteLoading
+                ? "h-10 rounded-xl px-8 text-base"
+                : "h-10 cursor-pointer rounded-xl px-8 text-base"
+            }
             onClick={onCancel}
             disabled={submitting || quoteLoading}
           >
@@ -319,6 +330,14 @@ export default function CreateCounterOfferModalContent({
                 quoteLoading ||
                 hasNotEnoughTokens ||
                 isIllegalTokenForTokenCounterOffer
+              }
+              className={
+                submitting ||
+                quoteLoading ||
+                hasNotEnoughTokens ||
+                isIllegalTokenForTokenCounterOffer
+                  ? ""
+                  : "cursor-pointer"
               }
               onClick={(e) => {
                 e.preventDefault()

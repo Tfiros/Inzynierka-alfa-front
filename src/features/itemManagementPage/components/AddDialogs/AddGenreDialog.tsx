@@ -54,10 +54,16 @@ const AddGenreDialog = (props: {
             variant="outline"
             onClick={() => props.onOpenChange(false)}
             disabled={saving}
+            className={saving ? "" : "cursor-pointer"}
           >
             Anuluj
           </Button>
-          <Button onClick={submit} disabled={saving || !name.trim()}>
+
+          <Button
+            onClick={submit}
+            disabled={saving || !name.trim()}
+            className={saving || !name.trim() ? "" : "cursor-pointer"}
+          >
             Dodaj
           </Button>
         </DialogFooter>
