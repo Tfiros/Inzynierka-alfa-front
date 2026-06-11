@@ -1,7 +1,7 @@
 import { useState } from "react"
 import SectionTitle from "../components/SectionTitle"
 import DurationCard from "../components/DurationCard"
-import { Switch } from "@/shared/components/ui/switch"
+import { Switch } from "@/shared/components/switch"
 import { Button } from "@/shared/components/button"
 import { Plus } from "lucide-react"
 import { DialogHeader, DialogTitle } from "@/shared/components/dialog"

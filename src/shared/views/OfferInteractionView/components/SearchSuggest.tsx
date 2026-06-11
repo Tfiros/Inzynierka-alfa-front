@@ -1,4 +1,4 @@
-import { Command } from "@/shared/components/ui/command"
+import { Command } from "@/shared/components/command"
 import { Input } from "@/shared/components/input"
 import {
   Popover,

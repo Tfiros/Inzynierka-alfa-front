@@ -26,7 +26,7 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@/shared/components/ui/tooltip"
+} from "@/shared/components/tooltip"
 import OfferItemCard from "./OfferItemCard"
 import OfferStatusPill from "./OfferStatusPill"
 import { formatRating, formatSuccessRating } from "@/shared/lib/formatters"

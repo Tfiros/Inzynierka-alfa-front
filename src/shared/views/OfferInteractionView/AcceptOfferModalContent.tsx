@@ -18,7 +18,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/shared/components/ui/tooltip"
+} from "@/shared/components/tooltip"
 import { useAcceptOffer } from "./hooks/UseAcceptOffer"
 import { useAcceptOfferModal } from "./hooks/UseAcceptOfferModal"
 
