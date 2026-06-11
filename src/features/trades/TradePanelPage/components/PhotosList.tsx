@@ -1,3 +1,5 @@
+import React, { memo } from "react"
+
 type PhotosListProps = {
   photos: string[]
 }
@@ -28,5 +30,13 @@ const PhotosList = ({ photos }: PhotosListProps) => {
   )
 }
 
-export default PhotosList
+const photosEqual = (p: PhotosListProps, n: PhotosListProps) => {
+  if (p.photos.length !== n.photos.length) return false
+  for (let i = 0; i < p.photos.length; i++) {
+    if (p.photos[i] !== n.photos[i]) return false
+  }
+  return true
+}
+
+export default memo(PhotosList, photosEqual)
 export type { PhotosListProps }

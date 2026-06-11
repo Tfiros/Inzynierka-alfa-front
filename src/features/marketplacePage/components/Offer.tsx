@@ -1,3 +1,4 @@
+import React from "react"
 import { Badge } from "@/shared/components/badge"
 import { Button } from "@/shared/components/button"
 import {
@@ -282,4 +283,25 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   )
 }
 
-export default Offer
+const areEqual = (p: OfferProps, n: OfferProps) => {
+  const a = p.offer
+  const b = n.offer
+  if (a.offerCoreDto.offerId !== b.offerCoreDto.offerId) return false
+  if (a.offerCoreDto.isHighlighted !== b.offerCoreDto.isHighlighted)
+    return false
+  if (a.offerCoreDto.title !== b.offerCoreDto.title) return false
+  if (a.offerCoreDto.description !== b.offerCoreDto.description) return false
+  if (a.offeredItems.length !== b.offeredItems.length) return false
+  if (a.wantedItems.length !== b.wantedItems.length) return false
+  if ((a.offerUserDto.imageUrl ?? "") !== (b.offerUserDto.imageUrl ?? ""))
+    return false
+  if ((a.offerUserDto.nickname ?? "") !== (b.offerUserDto.nickname ?? ""))
+    return false
+  if (a.offerCoreDto.tokensOffered !== b.offerCoreDto.tokensOffered)
+    return false
+  if (a.offerCoreDto.tokensWanted !== b.offerCoreDto.tokensWanted) return false
+  // assume handlers stable; do not compare them to allow parent changes to re-render if needed
+  return true
+}
+
+export default React.memo(Offer, areEqual)

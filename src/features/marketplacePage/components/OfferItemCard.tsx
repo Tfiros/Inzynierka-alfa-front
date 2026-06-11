@@ -1,3 +1,4 @@
+import React, { memo } from "react"
 import { AspectRatio } from "@radix-ui/react-aspect-ratio"
 import { Badge } from "@/shared/components/badge"
 import type { offerListingItemDto } from "@/shared/types/offerTypes/OfferTypes"
@@ -34,4 +35,18 @@ const OfferItemCard = ({
   )
 }
 
-export default OfferItemCard
+const areEqual = (
+  p: { listingItemDto: offerListingItemDto },
+  n: { listingItemDto: offerListingItemDto }
+) => {
+  const a = p.listingItemDto
+  const b = n.listingItemDto
+  return (
+    a.itemDto.id === b.itemDto.id &&
+    a.quantity === b.quantity &&
+    (a.rarityName ?? "") === (b.rarityName ?? "") &&
+    (a.itemDto.photoUrl ?? "") === (b.itemDto.photoUrl ?? "")
+  )
+}
+
+export default memo(OfferItemCard, areEqual)

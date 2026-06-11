@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import React, { useCallback, useRef, useState, memo } from "react"
 import { Button } from "@/shared/components/button"
 import { Input } from "@/shared/components/input"
 import {
@@ -26,6 +26,7 @@ import { useInfiniteChatMessages } from "../hooks/UseInfiniteChatMessages"
 import { useChatAutoScroll } from "../hooks/UseChatAutoScroll"
 import { useChatMessageActions } from "../hooks/UseChatMessagesActions"
 import useChatMembership from "../hooks/UseChatMembership"
+import useChatMessages from "../hooks/UseChatMessages"
 import { Link } from "react-router-dom"
 import { isMessageEditExpired } from "@/shared/utilities/Chat/isMessageEditExpired"
 
@@ -44,40 +45,22 @@ const ChatWindow = ({
   title,
   tradeId,
   closedAt,
-  otherAuth0UserId,
   otherIsOnline,
 }: Props) => {
-  const displayTitle =
-    title ?? (tradeId ? `Wymiana #${tradeId}` : `Chat #${chatId}`)
-  const isClosed = !!closedAt
   const actions = useAppStore(chatSelectors.chatActions)
-  const userId = useAppStore((s: any) => s.userId as number | null)
-  const liveInMap = useAppStore((s) =>
-    otherAuth0UserId ? s.chat.onlineMap[otherAuth0UserId] : null
-  )
-  const online = otherAuth0UserId ? (liveInMap ?? otherIsOnline ?? false) : null
+  const userId = useAppStore((state) => state.userId)
+  const messagesByChatId = useAppStore(chatSelectors.messagesByChatId)
+  const messages = messagesByChatId[chatId] ?? EMPTY_MESSAGES
+  const isClosed = Boolean(closedAt)
+  const displayTitle = title ?? "Czat"
+  const online = otherIsOnline
 
   useChatMembership(chatId, true)
-
-  const messages: ChatMessage[] = useAppStore(
-    (s: any) => s.chat.messagesByChatId?.[chatId] ?? EMPTY_MESSAGES
-  )
+  useChatMessages(!!chatId, chatId)
 
   const bottomRef = useRef<HTMLDivElement | null>(null)
-  const listRef = useRef<HTMLDivElement | null>(null)
-
-  const {
-    listRef: infiniteListRef,
-    onScroll,
-    loadingMore,
-    hasMore,
-    didPrependRef,
-  } = useInfiniteChatMessages(chatId, messages)
-
-  const setListRef = (el: HTMLDivElement | null) => {
-    listRef.current = el
-    ;(infiniteListRef as any).current = el
-  }
+  const { listRef, onScroll, loadingMore, hasMore, didPrependRef } =
+    useInfiniteChatMessages(chatId, messages)
 
   useChatAutoScroll({
     chatId,
@@ -87,20 +70,6 @@ const ChatWindow = ({
     didPrependRef,
   })
 
-  const didInitialScrollRef = useRef(false)
-  useEffect(() => {
-    didInitialScrollRef.current = false
-  }, [chatId])
-
-  useEffect(() => {
-    if (didInitialScrollRef.current) return
-    if (!messages.length) return
-    queueMicrotask(() => {
-      bottomRef.current?.scrollIntoView({ block: "end" })
-      didInitialScrollRef.current = true
-    })
-  }, [chatId, messages.length])
-
   const {
     editingId,
     editText,
@@ -108,8 +77,8 @@ const ChatWindow = ({
     isBusy,
     canEditOrDelete,
     startEdit,
-    cancelEdit,
     saveEdit,
+    cancelEdit,
     deleteMessage,
   } = useChatMessageActions({
     chatId,
@@ -123,31 +92,34 @@ const ChatWindow = ({
   const [text, setText] = useState("")
   const [sending, setSending] = useState(false)
 
-  const close = () => actions.closeWindow()
+  const close = useCallback(() => {
+    actions.closeWindow()
+  }, [actions])
 
-  const send = async () => {
-    const msg = text.trim()
-    if (!msg) return
-    if (sending || isClosed) return
+  const send = useCallback(async () => {
+    if (isClosed || sending) return
+    const trimmed = text.trim()
+    if (!trimmed) return
 
     setSending(true)
     try {
-      await chatHubClient.sendMessage(chatId, msg)
+      await chatHubClient.sendMessage(chatId, trimmed)
       setText("")
-    } catch (e) {
-      console.error("sendMessage failed", e)
+    } catch (error) {
+      console.error("Chat send failed", error)
     } finally {
       setSending(false)
     }
-  }
+  }, [chatId, isClosed, sending, text])
 
-  const onKeyDownSend = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") return
-    if (e.shiftKey) return
-    e.preventDefault()
-    e.stopPropagation()
-    send()
-  }
+  const onKeyDownSend = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key !== "Enter") return
+      e.preventDefault()
+      void send()
+    },
+    [send]
+  )
 
   const isDeleted = (m: ChatMessage) =>
     !!m.deletedAt || m.message === "[deleted]"
@@ -194,7 +166,7 @@ const ChatWindow = ({
       </div>
 
       <div
-        ref={setListRef}
+        ref={listRef}
         onScroll={onScroll}
         className="h-[320px] overflow-auto px-3 py-3 text-sm"
       >
@@ -206,100 +178,23 @@ const ChatWindow = ({
             const editExpired = isMessageEditExpired(m.createdAt)
 
             return (
-              <div
+              <MessageRow
                 key={m.id}
-                className={`flex ${mine ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-[78%] ${mine ? "text-right" : "text-left"}`}
-                >
-                  <div className="mb-1 text-[11px] text-muted-foreground">
-                    {mine ? "Ty" : displayTitle} •{" "}
-                    {new Date(m.createdAt).toLocaleString()}
-                    {m.editedAt ? " (edyt.)" : ""}
-                  </div>
-
-                  <div className="group flex items-start gap-2">
-                    <div className="pt-1">
-                      {canEditOrDelete(m) && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button
-                              type="button"
-                              disabled={busy || deleted}
-                              className="rounded-md p-1 hover:bg-accent opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <MoreVertical className="h-4 w-4" />
-                            </button>
-                          </DropdownMenuTrigger>
-
-                          <DropdownMenuContent align="start">
-                            <DropdownMenuItem
-                              onClick={() => startEdit(m)}
-                              disabled={busy || deleted || editExpired}
-                            >
-                              <Pencil className="mr-2 h-4 w-4" />
-                              {editExpired ? "Edycja wygasła" : "Edytuj"}
-                            </DropdownMenuItem>
-
-                            <DropdownMenuItem
-                              className="text-destructive"
-                              onClick={() => deleteMessage(m.id)}
-                              disabled={busy || deleted}
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Usuń
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
-                    </div>
-
-                    <div
-                      className={[
-                        "inline-block rounded-2xl px-3 py-2 leading-snug shadow-sm border",
-                        mine
-                          ? "bg-primary text-primary-foreground border-primary/30 rounded-br-sm"
-                          : "bg-muted text-foreground border-border rounded-bl-sm",
-                        deleted ? "opacity-70 italic" : "",
-                      ].join(" ")}
-                    >
-                      {editingId === m.id ? (
-                        <div className="flex items-center gap-2">
-                          <Input
-                            value={editText}
-                            onChange={(e) => setEditText(e.target.value)}
-                            onKeyDown={(e) =>
-                              e.key === "Enter" && saveEdit(m.id)
-                            }
-                            disabled={busy}
-                          />
-
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => saveEdit(m.id)}
-                            disabled={busy}
-                          >
-                            <Check className="h-4 w-4" />
-                          </Button>
-
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={cancelEdit}
-                            disabled={busy}
-                          >
-                            <XIcon className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ) : (
-                        m.message
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                m={m}
+                mine={mine}
+                busy={busy}
+                deleted={deleted}
+                editExpired={editExpired}
+                displayTitle={displayTitle}
+                editingId={editingId}
+                editText={editText}
+                setEditText={setEditText}
+                canEditOrDelete={canEditOrDelete}
+                startEdit={startEdit}
+                saveEdit={saveEdit}
+                cancelEdit={cancelEdit}
+                deleteMessage={deleteMessage}
+              />
             )
           })}
 
@@ -331,3 +226,143 @@ const ChatWindow = ({
 }
 
 export default ChatWindow
+
+const MessageRow = memo(
+  ({
+    m,
+    mine,
+    busy,
+    deleted,
+    editExpired,
+    displayTitle,
+    editingId,
+    editText,
+    setEditText,
+    canEditOrDelete,
+    startEdit,
+    saveEdit,
+    cancelEdit,
+    deleteMessage,
+  }: {
+    m: ChatMessage
+    mine: boolean
+    busy: boolean
+    deleted: boolean
+    editExpired: boolean
+    displayTitle: string
+    editingId: number | null
+    editText: string
+    setEditText: (v: string) => void
+    canEditOrDelete: (m: ChatMessage) => boolean
+    startEdit: (m: ChatMessage) => void
+    saveEdit: (id: number) => void
+    cancelEdit: () => void
+    deleteMessage: (id: number) => void
+  }) => {
+    return (
+      <div
+        key={m.id}
+        className={`flex ${mine ? "justify-end" : "justify-start"}`}
+      >
+        <div className={`max-w-[78%] ${mine ? "text-right" : "text-left"}`}>
+          <div className="mb-1 text-[11px] text-muted-foreground">
+            {mine ? "Ty" : displayTitle} •{" "}
+            {new Date(m.createdAt).toLocaleString()}
+            {m.editedAt ? " (edyt.)" : ""}
+          </div>
+
+          <div className="group flex items-start gap-2">
+            <div className="pt-1">
+              {canEditOrDelete(m) && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      disabled={busy || deleted}
+                      className="rounded-md p-1 hover:bg-accent opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="start">
+                    <DropdownMenuItem
+                      onClick={() => startEdit(m)}
+                      disabled={busy || deleted || editExpired}
+                    >
+                      <Pencil className="mr-2 h-4 w-4" />
+                      {editExpired ? "Edycja wygasła" : "Edytuj"}
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => deleteMessage(m.id)}
+                      disabled={busy || deleted}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Usuń
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
+
+            <div
+              className={[
+                "inline-block rounded-2xl px-3 py-2 leading-snug shadow-sm border",
+                mine
+                  ? "bg-primary text-primary-foreground border-primary/30 rounded-br-sm"
+                  : "bg-muted text-foreground border-border rounded-bl-sm",
+                deleted ? "opacity-70 italic" : "",
+              ].join(" ")}
+            >
+              {editingId === m.id ? (
+                <div className="flex items-center gap-2">
+                  <Input
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && saveEdit(m.id)}
+                    disabled={busy}
+                  />
+
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => saveEdit(m.id)}
+                    disabled={busy}
+                  >
+                    <Check className="h-4 w-4" />
+                  </Button>
+
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={cancelEdit}
+                    disabled={busy}
+                  >
+                    <XIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                m.message
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  },
+  (p, n) => {
+    const ma = p.m
+    const mb = n.m
+    return (
+      ma.id === mb.id &&
+      ma.message === mb.message &&
+      ma.editedAt === mb.editedAt &&
+      ma.deletedAt === mb.deletedAt &&
+      p.mine === n.mine &&
+      p.busy === n.busy &&
+      p.editingId === n.editingId
+    )
+  }
+)

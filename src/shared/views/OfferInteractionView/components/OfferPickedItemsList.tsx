@@ -1,3 +1,4 @@
+import React, { memo } from "react"
 import { Button } from "@/shared/components/button"
 import type { ItemOfferDto } from "@/shared/types/offerTypes/RequestResponseTypes"
 import { Minus, Plus, X } from "lucide-react"
@@ -88,4 +89,15 @@ const OfferPickedItemsList = ({
   )
 }
 
-export default OfferPickedItemsList
+const itemsEqual = (p: Props, n: Props) => {
+  if (p.disabled !== n.disabled) return false
+  if (p.items.length !== n.items.length) return false
+  for (let i = 0; i < p.items.length; i++) {
+    const a = p.items[i]
+    const b = n.items[i]
+    if (a.item.id !== b.item.id || a.quantity !== b.quantity) return false
+  }
+  return true
+}
+
+export default memo(OfferPickedItemsList, itemsEqual)

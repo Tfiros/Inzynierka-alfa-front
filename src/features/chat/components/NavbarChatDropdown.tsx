@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState, memo } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -77,6 +77,71 @@ const NavbarChatDropdown = () => {
     )
   }
 
+  const ThreadItem = memo(
+    ({
+      t,
+      online,
+      onClick,
+    }: {
+      t: ChatThreadListItemDto
+      online: boolean | null
+      onClick: () => void
+    }) => {
+      const id = threadId(t)
+      const isClosed = !!t.closedAtUtc
+
+      return (
+        <button
+          key={id}
+          type="button"
+          className="w-full rounded-lg px-3 py-2 text-left hover:bg-accent"
+          onClick={onClick}
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                {online !== null && (
+                  <span
+                    title={online ? "Online" : "Offline"}
+                    className={`h-2 w-2 shrink-0 rounded-full ${online ? "bg-green-500" : "bg-muted-foreground/30"}`}
+                  ></span>
+                )}
+                <div className="truncate text-sm font-medium">
+                  {chatThreadTitle(t)}
+                </div>
+                {isClosed && (
+                  <span className="shrink-0 rounded-full border px-2 py-0.5 text-[11px] text-muted-foreground">
+                    Zamknięty
+                  </span>
+                )}
+              </div>
+              <div className="truncate text-xs text-muted-foreground">
+                {isClosed ? "Czat zamknięty" : threadPreview(t)}
+              </div>
+            </div>
+
+            {threadUnread(t) > 0 && (
+              <div className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                {threadUnread(t)}
+              </div>
+            )}
+          </div>
+        </button>
+      )
+    },
+    (prev, next) => {
+      const a = prev.t
+      const b = next.t
+      return (
+        a.chatConversationId === b.chatConversationId &&
+        (a.lastMessageText ?? "") === (b.lastMessageText ?? "") &&
+        (a.unreadCount ?? 0) === (b.unreadCount ?? 0) &&
+        a.closedAtUtc === b.closedAtUtc &&
+        prev.online === next.online
+      )
+    }
+  )
+
   return (
     <>
       <DropdownMenu
@@ -137,47 +202,16 @@ const NavbarChatDropdown = () => {
           >
             {threads.map((t: ChatThreadListItemDto) => {
               const id = threadId(t)
-              const isClosed = !!t.closedAtUtc
               const online = threadOnline(t, onlineMap)
               if (!Number.isFinite(id) || id <= 0) return null
 
               return (
-                <button
+                <ThreadItem
                   key={id}
-                  type="button"
-                  className="w-full rounded-lg px-3 py-2 text-left hover:bg-accent"
+                  t={t}
+                  online={online}
                   onClick={() => handleOpen(t)}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        {online !== null && (
-                          <span
-                            title={online ? "Online" : "Offline"}
-                            className={`h-2 w-2 shrink-0 rounded-full ${online ? "bg-green-500" : "bg-muted-foreground/30"}`}
-                          ></span>
-                        )}
-                        <div className="truncate text-sm font-medium">
-                          {chatThreadTitle(t)}
-                        </div>
-                        {isClosed && (
-                          <span className="shrink-0 rounded-full border px-2 py-0.5 text-[11px] text-muted-foreground">
-                            Zamknięty
-                          </span>
-                        )}
-                      </div>
-                      <div className="truncate text-xs text-muted-foreground">
-                        {isClosed ? "Czat zamknięty" : threadPreview(t)}
-                      </div>
-                    </div>
-
-                    {threadUnread(t) > 0 && (
-                      <div className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-                        {threadUnread(t)}
-                      </div>
-                    )}
-                  </div>
-                </button>
+                />
               )
             })}
 

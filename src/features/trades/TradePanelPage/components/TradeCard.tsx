@@ -12,6 +12,7 @@ import TradeActionsAvailable from "./TradesActionsAvailable"
 import useTradeChats from "../hooks/UseTradeChats"
 import { Button } from "@/shared/components/button"
 import { useAppStore } from "@/shared/store/appStore"
+import React, { memo } from "react"
 
 type Props = {
   tab: MiddlemanTab
@@ -136,4 +137,14 @@ const TradeCard = ({
   )
 }
 
-export default TradeCard
+const areEqual = (p: Props, n: Props) => {
+  return (
+    p.tab === n.tab &&
+    p.isMiddleman === n.isMiddleman &&
+    p.trade.tradeId === n.trade.tradeId &&
+    p.trade.tradeStatusId === n.trade.tradeStatusId &&
+    p.trade.middlemanUserId === n.trade.middlemanUserId
+  )
+}
+
+export default memo(TradeCard, areEqual)
