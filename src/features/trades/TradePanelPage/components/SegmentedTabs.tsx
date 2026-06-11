@@ -15,12 +15,7 @@ const SegmentedTabs = <T extends string>({
 }: Props<T>) => {
   return (
     <div className="rounded-xl bg-muted p-1">
-      <div
-        className="grid gap-1"
-        style={{
-          gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`,
-        }}
-      >
+      <div className="grid grid-cols-2 gap-1 md:grid-cols-4">
         {tabs.map((t) => {
           const active = t.value === value
           return (

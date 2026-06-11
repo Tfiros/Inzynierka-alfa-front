@@ -6,7 +6,7 @@ const TabsSection = (props: {
 }) => {
   return (
     <Tabs value={props.value} onValueChange={props.onChange}>
-      <TabsList className="w-full grid grid-cols-4">
+      <TabsList className="h-auto w-full flex flex-wrap gap-1 md:grid grid-cols-4">
         <TabsTrigger value="genres">Gatunki</TabsTrigger>
         <TabsTrigger value="games">Gry</TabsTrigger>
         <TabsTrigger value="items">Itemki</TabsTrigger>
