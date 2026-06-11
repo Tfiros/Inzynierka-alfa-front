@@ -32,9 +32,6 @@ const TradePanelPage = () => {
   })
 
   const listError = list.errorList ?? assign.assignError ?? null
-  const refreshTradePanel = async () => {
-    await Promise.all([stats.refetchStats(), list.refetchList()])
-  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -71,9 +68,8 @@ const TradePanelPage = () => {
             void details.actions.openFor(trade)
           }}
           onCancleTrade={(tradeId) => {
-            void refreshTradePanel().finally(() => {
-              cancelation.actions.openFor(tradeId)
-            })
+            linkedTrade.close()
+            cancelation.actions.openFor(tradeId)
           }}
           onCompleteClick={(trade) => {
             realised.actions.openFor(trade)
@@ -106,10 +102,7 @@ const TradePanelPage = () => {
           void details.actions.openFor(trade)
         }}
         onCancelTrade={(tradeId) => {
-          linkedTrade.close()
-          void refreshTradePanel().finally(() => {
-            cancelation.actions.openFor(tradeId)
-          })
+          cancelation.actions.openFor(tradeId)
         }}
         onCompleteClick={(trade) => {
           linkedTrade.close()
@@ -134,16 +127,7 @@ const TradePanelPage = () => {
         open={cancelation.open}
         onOpenChange={cancelation.setOpen}
         loading={cancelation.loading}
-        onConfirm={async () => {
-          const ok = await cancelation.actions.deleteTrade()
-
-          if (!ok) {
-            return false
-          }
-
-          await refreshTradePanel()
-          return true
-        }}
+        onConfirm={cancelation.actions.deleteTrade}
         onClosedReset={cancelation.actions.reset}
       />
 
