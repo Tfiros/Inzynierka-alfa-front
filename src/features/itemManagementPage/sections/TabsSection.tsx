@@ -7,10 +7,18 @@ const TabsSection = (props: {
   return (
     <Tabs value={props.value} onValueChange={props.onChange}>
       <TabsList className="h-auto w-full flex flex-wrap gap-1 md:grid grid-cols-4">
-        <TabsTrigger value="genres">Gatunki</TabsTrigger>
-        <TabsTrigger value="games">Gry</TabsTrigger>
-        <TabsTrigger value="items">Itemki</TabsTrigger>
-        <TabsTrigger value="itemRarities">Rzadkości Itemów</TabsTrigger>
+        <TabsTrigger className="cursor-pointer" value="genres">
+          Gatunki
+        </TabsTrigger>
+        <TabsTrigger className="cursor-pointer" value="games">
+          Gry
+        </TabsTrigger>
+        <TabsTrigger className="cursor-pointer" value="items">
+          Itemki
+        </TabsTrigger>
+        <TabsTrigger className="cursor-pointer" value="itemRarities">
+          Rzadkości Itemów
+        </TabsTrigger>
       </TabsList>
     </Tabs>
   )
