@@ -19,9 +19,9 @@ const StatCard = ({
   size,
 }: StatCardProps) => {
   return (
-    <Card className="shadow-sm">
-      <CardContent className={cn(size === "sm" ? "p-4" : "p-6")}>
-        <div className="flex items-start justify-between gap-4">
+    <Card className="shadow-sm py-4 sm:py-6">
+      <CardContent className={cn("px-4", size === "sm" ? "sm:p-4" : "sm:p-6")}>
+        <div className="flex items-start justify-between gap-2 sm:gap-4">
           <div className="space-y-2">
             <div className="text-sm font-medium text-muted-foreground">
               {title}
@@ -29,7 +29,7 @@ const StatCard = ({
             <div
               className={cn(
                 "font-semibold tracking-tight",
-                size === "sm" ? "text-2xl" : "text-3xl"
+                size === "sm" ? "text-xl sm:text-2xl" : "text-2xl sm:text-3xl"
               )}
             >
               {value}
