@@ -84,7 +84,7 @@ const TradeDetailsDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
-          <div className="flex flex-col gap-3 text-left sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex flex-col gap-3 text-left sm:mr-12 sm:flex-row sm:items-start sm:justify-between">
             <DialogTitle className="pr-8 sm:pr-0">
               Szczegóły wymiany{" "}
               {trade ? (
@@ -98,7 +98,7 @@ const TradeDetailsDialog = ({
               <Button
                 type="button"
                 variant="outline"
-                className="gap-2"
+                className="gap-2 cursor-pointer"
                 onClick={() => setMode("edit")}
                 disabled={!trade}
               >
@@ -109,7 +109,7 @@ const TradeDetailsDialog = ({
               <Button
                 type="button"
                 variant="outline"
-                className="gap-2"
+                className="gap-2 cursor-pointer"
                 onClick={() => setMode("view")}
                 disabled={saving}
               >
