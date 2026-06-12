@@ -49,7 +49,11 @@ const useTradePanel = () => {
     all: stats.stats?.all ?? 0,
   }
 
-  const cancelation = useDeleteTrade()
+  const cancelation = useDeleteTrade({
+    onSuccess: () => {
+      void Promise.all([stats.refetchStats(), list.refetchList()])
+    },
+  })
   const [searchParams, setSearchParams] = useSearchParams()
   const linkTradeId = Number(searchParams.get("tradeId"))
   const linkedTrade = useLinkedTradeDialog()
