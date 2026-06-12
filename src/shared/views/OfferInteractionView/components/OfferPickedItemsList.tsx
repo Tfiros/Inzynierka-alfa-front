@@ -55,11 +55,9 @@ const OfferPickedItemsList = ({
               <Button
                 type="button"
                 variant="outline"
-                className={
-                  decreaseDisabled
-                    ? "h-9 w-9 rounded-xl p-0"
-                    : "h-9 w-9 cursor-pointer rounded-xl p-0"
-                }
+                className={`h-9 w-9 rounded-xl p-0 ${
+                  decreaseDisabled ? "" : "cursor-pointer"
+                }`}
                 disabled={decreaseDisabled}
                 onClick={() => onSetQuantity(line.item, line.quantity - 1)}
                 aria-label="Zmniejsz ilość"
@@ -74,11 +72,9 @@ const OfferPickedItemsList = ({
               <Button
                 type="button"
                 variant="outline"
-                className={
-                  increaseDisabled
-                    ? "h-9 w-9 rounded-xl p-0"
-                    : "h-9 w-9 cursor-pointer rounded-xl p-0"
-                }
+                className={`h-9 w-9 rounded-xl p-0 ${
+                  increaseDisabled ? "" : "cursor-pointer"
+                }`}
                 disabled={increaseDisabled}
                 onClick={() => onSetQuantity(line.item, line.quantity + 1)}
                 aria-label="Zwiększ ilość"
@@ -89,11 +85,9 @@ const OfferPickedItemsList = ({
               <Button
                 type="button"
                 variant="outline"
-                className={
-                  removeDisabled
-                    ? "h-9 w-9 rounded-xl p-0"
-                    : "h-9 w-9 cursor-pointer rounded-xl p-0"
-                }
+                className={`h-9 w-9 rounded-xl p-0 ${
+                  removeDisabled ? "" : "cursor-pointer"
+                }`}
                 disabled={removeDisabled}
                 onClick={() => onRemoveAll(line.item.id)}
                 aria-label="Usuń wszystkie"

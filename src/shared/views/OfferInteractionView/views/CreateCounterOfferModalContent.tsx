@@ -75,6 +75,20 @@ export default function CreateCounterOfferModalContent({
     },
   })
 
+  const submitDisabled =
+    !canConfirm ||
+    quoteLoading ||
+    hasNotEnoughTokens ||
+    isIllegalTokenForTokenCounterOffer
+
+  const cancelDisabled = submitting || quoteLoading
+
+  const confirmDisabled =
+    submitting ||
+    quoteLoading ||
+    hasNotEnoughTokens ||
+    isIllegalTokenForTokenCounterOffer
+
   return (
     <>
       <DialogHeader className="flex flex-col items-center gap-y-2">
@@ -257,20 +271,10 @@ export default function CreateCounterOfferModalContent({
           </div>
 
           <Button
-            className={
-              !canConfirm ||
-              quoteLoading ||
-              hasNotEnoughTokens ||
-              isIllegalTokenForTokenCounterOffer
-                ? "h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
-                : "h-10 flex-1 cursor-pointer rounded-xl text-base font-semibold bg-black text-white border-black"
-            }
-            disabled={
-              !canConfirm ||
-              quoteLoading ||
-              hasNotEnoughTokens ||
-              isIllegalTokenForTokenCounterOffer
-            }
+            className={`h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black ${
+              submitDisabled ? "" : "cursor-pointer"
+            }`}
+            disabled={submitDisabled}
             onClick={async () => {
               const ok = await openConfirm()
               if (ok) {
@@ -284,13 +288,11 @@ export default function CreateCounterOfferModalContent({
 
           <Button
             variant="outline"
-            className={
-              submitting || quoteLoading
-                ? "h-10 rounded-xl px-8 text-base"
-                : "h-10 cursor-pointer rounded-xl px-8 text-base"
-            }
+            className={`h-10 rounded-xl px-8 text-base ${
+              cancelDisabled ? "" : "cursor-pointer"
+            }`}
             onClick={onCancel}
-            disabled={submitting || quoteLoading}
+            disabled={cancelDisabled}
           >
             Anuluj
           </Button>
@@ -321,24 +323,16 @@ export default function CreateCounterOfferModalContent({
           )}
 
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={submitting || quoteLoading}>
+            <AlertDialogCancel
+              disabled={cancelDisabled}
+              className={cancelDisabled ? "" : "cursor-pointer"}
+            >
               Wróć
             </AlertDialogCancel>
+
             <AlertDialogAction
-              disabled={
-                submitting ||
-                quoteLoading ||
-                hasNotEnoughTokens ||
-                isIllegalTokenForTokenCounterOffer
-              }
-              className={
-                submitting ||
-                quoteLoading ||
-                hasNotEnoughTokens ||
-                isIllegalTokenForTokenCounterOffer
-                  ? ""
-                  : "cursor-pointer"
-              }
+              disabled={confirmDisabled}
+              className={confirmDisabled ? "" : "cursor-pointer"}
               onClick={(e) => {
                 e.preventDefault()
                 void submit()

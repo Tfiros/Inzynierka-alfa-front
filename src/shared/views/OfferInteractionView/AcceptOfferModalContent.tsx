@@ -61,6 +61,10 @@ export default function AcceptOfferModalContent({ offerId, onCancel }: Props) {
       })
       .join(", ") ?? ""
 
+  const acceptDisabled =
+    !baseOffer || baseOfferLoading || submitting || !canAfford
+  const cancelDisabled = submitting
+
   return (
     <>
       <DialogHeader className="flex flex-col items-center gap-y-2">
@@ -148,14 +152,10 @@ export default function AcceptOfferModalContent({ offerId, onCancel }: Props) {
 
         <div className="mt-10 border-t pt-4 flex items-center gap-3">
           <Button
-            className={
-              !baseOffer || baseOfferLoading || submitting || !canAfford
-                ? "h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
-                : "h-10 flex-1 cursor-pointer rounded-xl text-base font-semibold bg-black text-white border-black"
-            }
-            disabled={
-              !baseOffer || baseOfferLoading || submitting || !canAfford
-            }
+            className={`h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black ${
+              acceptDisabled ? "" : "cursor-pointer"
+            }`}
+            disabled={acceptDisabled}
             onClick={() => {
               void submit()
             }}
@@ -166,13 +166,11 @@ export default function AcceptOfferModalContent({ offerId, onCancel }: Props) {
 
           <Button
             variant="outline"
-            className={
-              submitting
-                ? "h-10 rounded-xl px-8 text-base"
-                : "h-10 cursor-pointer rounded-xl px-8 text-base"
-            }
+            className={`h-10 rounded-xl px-8 text-base ${
+              cancelDisabled ? "" : "cursor-pointer"
+            }`}
             onClick={onCancel}
-            disabled={submitting}
+            disabled={cancelDisabled}
           >
             Anuluj
           </Button>

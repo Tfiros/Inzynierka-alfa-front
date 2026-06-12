@@ -55,7 +55,7 @@ const PackageCard = ({ item, selected, onSelect }: CardProps) => {
                 checked={selected}
                 onClick={(e) => e.stopPropagation()}
                 className={cn(
-                  "h-5 w-5 cursor-pointer rounded-md border-2 transition-colors",
+                  "h-5 w-5 rounded-md border-2 transition-colors",
                   selected
                     ? "border-primary bg-primary text-primary-foreground"
                     : "border-input bg-background"
