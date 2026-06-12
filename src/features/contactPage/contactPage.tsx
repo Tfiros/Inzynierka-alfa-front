@@ -9,8 +9,8 @@ import useContactPage from "./hooks/UseContactPage"
 
 const ContactPage = () => {
   const {
-    register,
-    handleSubmit,
+    form,
+    setField,
     errors,
     isSubmitting,
     submitError,
@@ -42,11 +42,7 @@ const ContactPage = () => {
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-8 text-card-foreground shadow-sm">
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="space-y-6"
-                noValidate
-              >
+              <form onSubmit={onSubmit} className="space-y-6" noValidate>
                 {submitError && (
                   <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                     {submitError}
@@ -61,13 +57,9 @@ const ContactPage = () => {
                   <Input
                     id="name"
                     placeholder="Jan Kowalski"
-                    {...register("name", {
-                      required: "Imię i nazwisko jest wymagane",
-                      minLength: {
-                        value: 2,
-                        message: "Imię musi mieć przynajmniej 2 znaki",
-                      },
-                    })}
+                    value={form.name}
+                    onChange={(e) => setField("name", e.target.value)}
+                    disabled={isSubmitting}
                     aria-invalid={!!errors.name}
                     className={
                       errors.name
@@ -76,9 +68,7 @@ const ContactPage = () => {
                     }
                   />
                   {errors.name && (
-                    <p className="text-sm text-destructive">
-                      {errors.name.message}
-                    </p>
+                    <p className="text-sm text-destructive">{errors.name}</p>
                   )}
                 </div>
 
@@ -91,13 +81,9 @@ const ContactPage = () => {
                     id="email"
                     type="email"
                     placeholder="twoj@email.pl"
-                    {...register("email", {
-                      required: "Email jest wymagany",
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Nieprawidłowy adres email",
-                      },
-                    })}
+                    value={form.email}
+                    onChange={(e) => setField("email", e.target.value)}
+                    disabled={isSubmitting}
                     aria-invalid={!!errors.email}
                     className={
                       errors.email
@@ -106,9 +92,7 @@ const ContactPage = () => {
                     }
                   />
                   {errors.email && (
-                    <p className="text-sm text-destructive">
-                      {errors.email.message}
-                    </p>
+                    <p className="text-sm text-destructive">{errors.email}</p>
                   )}
                 </div>
 
@@ -120,13 +104,9 @@ const ContactPage = () => {
                   <Input
                     id="subject"
                     placeholder="W czym możemy pomóc?"
-                    {...register("subject", {
-                      required: "Temat jest wymagany",
-                      minLength: {
-                        value: 3,
-                        message: "Temat musi mieć przynajmniej 3 znaki",
-                      },
-                    })}
+                    value={form.subject}
+                    onChange={(e) => setField("subject", e.target.value)}
+                    disabled={isSubmitting}
                     aria-invalid={!!errors.subject}
                     className={
                       errors.subject
@@ -135,9 +115,7 @@ const ContactPage = () => {
                     }
                   />
                   {errors.subject && (
-                    <p className="text-sm text-destructive">
-                      {errors.subject.message}
-                    </p>
+                    <p className="text-sm text-destructive">{errors.subject}</p>
                   )}
                 </div>
 
@@ -147,13 +125,9 @@ const ContactPage = () => {
                     id="message"
                     placeholder="Opisz szczegółowo swoją sprawę (min 20 znaków) ..."
                     rows={6}
-                    {...register("message", {
-                      required: "Wiadomość jest wymagana",
-                      minLength: {
-                        value: 20,
-                        message: "Wiadomość musi mieć przynajmniej 20 znaków",
-                      },
-                    })}
+                    value={form.message}
+                    onChange={(e) => setField("message", e.target.value)}
+                    disabled={isSubmitting}
                     aria-invalid={!!errors.message}
                     className={
                       errors.message
@@ -162,16 +136,14 @@ const ContactPage = () => {
                     }
                   />
                   {errors.message && (
-                    <p className="text-sm text-destructive">
-                      {errors.message.message}
-                    </p>
+                    <p className="text-sm text-destructive">{errors.message}</p>
                   )}
                 </div>
 
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full"
+                  className={`w-full ${isSubmitting ? "" : "cursor-pointer"}`}
                   size="lg"
                 >
                   {isSubmitting ? "Wysyłanie..." : "Wyślij wiadomość"}
@@ -224,7 +196,7 @@ const ContactPage = () => {
 
             <Button
               type="button"
-              className="w-full"
+              className="w-full cursor-pointer"
               onClick={() => setIsSuccessModalOpen(false)}
             >
               Zamknij
