@@ -10,7 +10,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/shared/components/ui/tooltip"
+} from "@/shared/components/tooltip"
 import { useAppStore } from "@/shared/store/appStore"
 import { NotificationsDropdown } from "@/features/notifications/NotificationsDropdown/components/NotificationsDropdown"
 import NavbarChatDropdown from "@/features/chat/components/NavbarChatDropdown"

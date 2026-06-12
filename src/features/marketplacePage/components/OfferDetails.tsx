@@ -17,7 +17,7 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@/shared/components/ui/tooltip"
+} from "@/shared/components/tooltip"
 import { useState } from "react"
 import OfferCounterOffersSection from "./OfferCounterOffersDetails"
 import { useAcceptOffer } from "@/shared/views/OfferInteractionView/hooks/UseAcceptOffer"
