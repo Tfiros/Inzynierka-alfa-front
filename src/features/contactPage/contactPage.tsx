@@ -6,6 +6,15 @@ import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.webp"
 import { Textarea } from "@/shared/components/textarea"
 import { Label } from "@/shared/components/label"
 import useContactPage from "./hooks/UseContactPage"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/shared/components/alert-dialog"
 
 const ContactPage = () => {
   const {
@@ -179,31 +188,29 @@ const ContactPage = () => {
         </div>
       </section>
 
-      {isSuccessModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-          onClick={() => setIsSuccessModalOpen(false)}
-        >
-          <div
-            className="w-full max-w-md rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="mb-2 text-xl font-semibold">Wiadomość wysłana</h2>
-            <p className="mb-6 text-sm text-muted-foreground">
+      <AlertDialog
+        open={isSuccessModalOpen}
+        onOpenChange={setIsSuccessModalOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Wiadomość wysłana</AlertDialogTitle>
+            <AlertDialogDescription>
               Dziękujemy za kontakt. Twoja wiadomość została wysłana. Proszę
               czekaj na kontakt od jednego z naszych pracowników.
-            </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
 
-            <Button
-              type="button"
-              className="w-full cursor-pointer"
+          <AlertDialogFooter>
+            <AlertDialogAction
+              className="cursor-pointer"
               onClick={() => setIsSuccessModalOpen(false)}
             >
               Zamknij
-            </Button>
-          </div>
-        </div>
-      )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }
