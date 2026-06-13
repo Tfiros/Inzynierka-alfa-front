@@ -1,7 +1,7 @@
 import { useState } from "react"
 import SectionTitle from "../components/SectionTitle"
 import DurationCard from "../components/DurationCard"
-import { Switch } from "@/shared/components/ui/switch"
+import { Switch } from "@/shared/components/switch"
 import { Button } from "@/shared/components/button"
 import { Plus } from "lucide-react"
 import { DialogHeader, DialogTitle } from "@/shared/components/dialog"
@@ -69,6 +69,19 @@ const CreateOfferModalContent = ({
   const [wantLockedItem, setWantLockedItem] = useState<ItemOfferDto | null>(
     null
   )
+
+  const submitDisabled =
+    offer.isLoading ||
+    offer.quoteIsLoading ||
+    offer.title.trim().length === 0 ||
+    (offer.itemsHave.length === 0 && offer.itemsWant.length === 0) ||
+    (offer.itemsHave.length === 0 && offer.tokensOffered <= 0) ||
+    (offer.itemsWant.length === 0 && offer.tokensWanted <= 0) ||
+    !offer.canAfford
+
+  const cancelDisabled = offer.isLoading || offer.quoteIsLoading
+  const confirmDisabled = offer.isLoading || offer.quoteIsLoading
+
   return (
     <>
       <DialogHeader className="flex flex-col items-center gap-y-2">
@@ -390,16 +403,10 @@ const CreateOfferModalContent = ({
           </div>
           <Button
             type="button"
-            className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
-            disabled={
-              offer.isLoading ||
-              offer.quoteIsLoading ||
-              offer.title.trim().length === 0 ||
-              (offer.itemsHave.length === 0 && offer.itemsWant.length === 0) ||
-              (offer.itemsHave.length === 0 && offer.tokensOffered <= 0) ||
-              (offer.itemsWant.length === 0 && offer.tokensWanted <= 0) ||
-              !offer.canAfford
-            }
+            className={`h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black ${
+              submitDisabled ? "" : "cursor-pointer"
+            }`}
+            disabled={submitDisabled}
             onClick={() => void handleOpenConfirm()}
           >
             <Plus className="mr-2 h-5 w-5" />
@@ -409,9 +416,11 @@ const CreateOfferModalContent = ({
           <Button
             type="button"
             variant="outline"
-            className="h-10 rounded-xl px-8 text-base"
+            className={`h-10 rounded-xl px-8 text-base ${
+              cancelDisabled ? "" : "cursor-pointer"
+            }`}
             onClick={onCancel}
-            disabled={offer.isLoading || offer.quoteIsLoading}
+            disabled={cancelDisabled}
           >
             Anuluj
           </Button>
@@ -436,12 +445,15 @@ const CreateOfferModalContent = ({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              disabled={offer.isLoading || offer.quoteIsLoading}
+              disabled={confirmDisabled}
+              className={confirmDisabled ? "" : "cursor-pointer"}
             >
               Wróć
             </AlertDialogCancel>
+
             <AlertDialogAction
-              disabled={offer.isLoading || offer.quoteIsLoading}
+              disabled={confirmDisabled}
+              className={confirmDisabled ? "" : "cursor-pointer"}
               onClick={(e) => {
                 e.preventDefault()
                 void handleConfirmCreate()

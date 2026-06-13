@@ -237,13 +237,22 @@ const ChatWindow = ({
                             <DropdownMenuItem
                               onClick={() => startEdit(m)}
                               disabled={busy || deleted || editExpired}
+                              className={
+                                busy || deleted || editExpired
+                                  ? ""
+                                  : "cursor-pointer"
+                              }
                             >
                               <Pencil className="mr-2 h-4 w-4" />
                               {editExpired ? "Edycja wygasła" : "Edytuj"}
                             </DropdownMenuItem>
 
                             <DropdownMenuItem
-                              className="text-destructive"
+                              className={
+                                busy || deleted
+                                  ? "text-destructive"
+                                  : "text-destructive cursor-pointer"
+                              }
                               onClick={() => deleteMessage(m.id)}
                               disabled={busy || deleted}
                             >
@@ -280,6 +289,7 @@ const ChatWindow = ({
                             variant="ghost"
                             onClick={() => saveEdit(m.id)}
                             disabled={busy}
+                            className="cursor-pointer"
                           >
                             <Check className="h-4 w-4" />
                           </Button>
@@ -289,6 +299,7 @@ const ChatWindow = ({
                             variant="ghost"
                             onClick={cancelEdit}
                             disabled={busy}
+                            className="cursor-pointer"
                           >
                             <XIcon className="h-4 w-4" />
                           </Button>
@@ -322,7 +333,11 @@ const ChatWindow = ({
           disabled={isClosed}
         />
 
-        <Button onClick={send} disabled={sending || isClosed}>
+        <Button
+          onClick={send}
+          disabled={sending || isClosed}
+          className={sending || isClosed ? "" : "cursor-pointer"}
+        >
           {sending ? "..." : "Wyślij"}
         </Button>
       </div>

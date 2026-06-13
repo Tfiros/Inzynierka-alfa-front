@@ -23,7 +23,7 @@ import SectionTitle from "../components/SectionTitle"
 import SearchSuggest from "../components/SearchSuggest"
 import OfferPickedItemsList from "../components/OfferPickedItemsList"
 import DurationCard from "../components/DurationCard"
-import { Switch } from "@/shared/components/ui/switch"
+import { Switch } from "@/shared/components/switch"
 import { Plus } from "lucide-react"
 import { useEditOffer } from "../hooks/UseEditOffer"
 import { Input } from "@/shared/components/input"
@@ -76,6 +76,11 @@ const EditOfferModalContent = ({
     offer.reset()
     onCancel()
   }
+
+  const submitDisabled = !offer.canSubmit
+  const cancelDisabled = offer.isLoading
+  const confirmDisabled = offer.isLoading || offer.quoteIsLoading
+
   return (
     <>
       <DialogHeader className="flex flex-col items-center gap-y-2">
@@ -395,8 +400,10 @@ const EditOfferModalContent = ({
           </div>
           <Button
             type="button"
-            className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
-            disabled={!offer.canSubmit}
+            className={`h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black ${
+              submitDisabled ? "" : "cursor-pointer"
+            }`}
+            disabled={submitDisabled}
             onClick={() => {
               void handleOpenConfirm()
             }}
@@ -408,9 +415,11 @@ const EditOfferModalContent = ({
           <Button
             type="button"
             variant="outline"
-            className="h-10 rounded-xl px-8 text-base"
+            className={`h-10 rounded-xl px-8 text-base ${
+              cancelDisabled ? "" : "cursor-pointer"
+            }`}
             onClick={onCancel}
-            disabled={offer.isLoading}
+            disabled={cancelDisabled}
           >
             Anuluj
           </Button>
@@ -437,12 +446,14 @@ const EditOfferModalContent = ({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              disabled={offer.isLoading || offer.quoteIsLoading}
+              disabled={confirmDisabled}
+              className={confirmDisabled ? "" : "cursor-pointer"}
             >
               Wróć
             </AlertDialogCancel>
             <AlertDialogAction
-              disabled={offer.isLoading || offer.quoteIsLoading}
+              disabled={confirmDisabled}
+              className={confirmDisabled ? "" : "cursor-pointer"}
               onClick={(e) => {
                 e.preventDefault()
                 void handleConfirmUpdate()

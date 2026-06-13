@@ -1,4 +1,4 @@
-import { Command } from "@/shared/components/ui/command"
+import { Command } from "@/shared/components/command"
 import { Input } from "@/shared/components/input"
 import {
   Popover,
@@ -79,7 +79,7 @@ const SearchSuggest = ({
         <button
           type="button"
           onClick={onUnlock}
-          className="text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground cursor-pointer"
         >
           <X className="h-4 w-4" />
         </button>

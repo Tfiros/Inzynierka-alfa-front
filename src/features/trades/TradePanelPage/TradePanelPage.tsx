@@ -68,7 +68,7 @@ const TradePanelPage = () => {
             void details.actions.openFor(trade)
           }}
           onCancleTrade={(tradeId) => {
-            void cancelation.actions.openFor(tradeId)
+            cancelation.actions.openFor(tradeId)
           }}
           onCompleteClick={(trade) => {
             realised.actions.openFor(trade)
@@ -97,12 +97,11 @@ const TradePanelPage = () => {
           assign.assignToMe(tradeId).then(() => linkedTrade.close())
         }}
         onDetails={(trade) => {
-          linkedTrade.close()
           void details.actions.openFor(trade)
         }}
         onCancelTrade={(tradeId) => {
           linkedTrade.close()
-          void cancelation.actions.openFor(tradeId)
+          cancelation.actions.openFor(tradeId)
         }}
         onCompleteClick={(trade) => {
           linkedTrade.close()

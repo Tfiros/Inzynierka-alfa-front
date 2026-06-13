@@ -39,6 +39,8 @@ const DeleteUserDialog = (props: Props) => {
     onDeleted()
   }
 
+  const deleteDisabled = submitting || !user
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -56,7 +58,12 @@ const DeleteUserDialog = (props: Props) => {
         {error && <div className="text-sm text-destructive">{error}</div>}
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={submitting}>Anuluj</AlertDialogCancel>
+          <AlertDialogCancel
+            disabled={submitting}
+            className={submitting ? "" : "cursor-pointer"}
+          >
+            Anuluj
+          </AlertDialogCancel>
 
           <AlertDialogAction
             onClick={(e) => {
@@ -64,7 +71,9 @@ const DeleteUserDialog = (props: Props) => {
               void handleDelete()
             }}
             disabled={submitting || !user}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className={`bg-destructive text-destructive-foreground hover:bg-destructive/90 ${
+              deleteDisabled ? "" : "cursor-pointer"
+            }`}
           >
             {submitting ? "Usuwanie..." : "Usuń"}
           </AlertDialogAction>

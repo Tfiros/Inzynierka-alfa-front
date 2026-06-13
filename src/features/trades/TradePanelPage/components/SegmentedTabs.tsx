@@ -24,7 +24,7 @@ const SegmentedTabs = <T extends string>({
               type="button"
               onClick={() => onChange(t.value)}
               className={cn(
-                "rounded-lg px-3 py-2 text-sm transition",
+                "cursor-pointer rounded-lg px-3 py-2 text-sm transition",
                 active
                   ? "bg-background shadow-sm font-medium"
                   : "text-muted-foreground hover:text-foreground"

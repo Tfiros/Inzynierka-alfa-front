@@ -54,7 +54,9 @@ const ItemsTab = () => {
       </Select>
 
       <div className="flex items-center justify-end">
-        <Button onClick={vm.actions.openAdd}>Dodaj itemek</Button>
+        <Button onClick={vm.actions.openAdd} className="cursor-pointer">
+          Dodaj itemek
+        </Button>
       </div>
 
       <SearchInput

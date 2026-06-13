@@ -128,6 +128,7 @@ const AddItemRarityDialog = (props: {
             variant="outline"
             onClick={() => props.onOpenChange(false)}
             disabled={saving}
+            className={saving ? "" : "cursor-pointer"}
           >
             Anuluj
           </Button>
@@ -135,6 +136,9 @@ const AddItemRarityDialog = (props: {
           <Button
             onClick={submit}
             disabled={saving || !name.trim() || !props.gameId}
+            className={
+              saving || !name.trim() || !props.gameId ? "" : "cursor-pointer"
+            }
           >
             Dodaj
           </Button>

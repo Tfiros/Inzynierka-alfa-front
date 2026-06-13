@@ -70,14 +70,17 @@ const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
           <button
             type="button"
             onClick={() => onSwitch("forgot-email")}
-            className="text-sm font-semibold cursor-pointer"
+            className={`text-sm font-semibold ${busy ? "" : "cursor-pointer"}`}
             disabled={busy}
           >
             Zapomniałeś hasła?
           </button>
         </div>
-
-        <Button type="submit" className="w-full" disabled={busy}>
+        <Button
+          type="submit"
+          className={`w-full ${busy ? "" : "cursor-pointer"}`}
+          disabled={busy}
+        >
           {busy ? "Logowanie…" : "Zaloguj się"}
         </Button>
       </form>
@@ -86,7 +89,7 @@ const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
         Nie masz konta?{" "}
         <button
           onClick={() => onSwitch("register")}
-          className="text-blue-500 cursor-pointer"
+          className={`text-blue-500 ${busy ? "" : "cursor-pointer"}`}
           disabled={busy}
         >
           Zarejestruj się

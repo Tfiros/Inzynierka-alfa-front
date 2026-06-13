@@ -16,11 +16,14 @@ const EntityMenu = (props: { onEdit: () => void; onDelete: () => void }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={props.onEdit}>
+        <DropdownMenuItem onClick={props.onEdit} className="cursor-pointer">
           <Pencil className="mr-2 h-4 w-4" />
           Edytuj
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={props.onDelete} className="text-red-600">
+        <DropdownMenuItem
+          onClick={props.onDelete}
+          className="text-red-600 cursor-pointer"
+        >
           <Trash2 className="mr-2 h-4 w-4" />
           Usuń
         </DropdownMenuItem>

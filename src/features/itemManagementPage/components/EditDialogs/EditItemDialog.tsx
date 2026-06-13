@@ -249,12 +249,21 @@ const EditItemDialog = (props: {
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => props.onOpenChange(false)}>
+          <Button
+            variant="outline"
+            onClick={() => props.onOpenChange(false)}
+            className="cursor-pointer"
+          >
             Anuluj
           </Button>
           <Button
             onClick={submit}
             disabled={!name.trim() || !gameId || !rarityId || !isTokenOk}
+            className={
+              !name.trim() || !gameId || !rarityId || !isTokenOk
+                ? ""
+                : "cursor-pointer"
+            }
           >
             Zapisz
           </Button>

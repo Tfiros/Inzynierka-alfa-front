@@ -1,5 +1,6 @@
 import { TradeService } from "@/shared/api/services/TradeService"
 import { useCallback, useState } from "react"
+import { toast } from "sonner"
 
 type Options = {
   onSuccess?: () => void
@@ -34,11 +35,7 @@ const useDeleteTrade = (options?: Options) => {
       const res = await TradeService.setTradeAsFaild(tradeId)
 
       if (!res.isSuccess) {
-        let message = "Nie udało się anulować wymiany."
-        try {
-          message = res.message ?? message
-        } catch {}
-        throw new Error(message)
+        throw new Error(res.message ?? "Nie udało się anulować wymiany.")
       }
 
       options?.onSuccess?.()
@@ -49,6 +46,7 @@ const useDeleteTrade = (options?: Options) => {
     } catch (e) {
       const message = e instanceof Error ? e.message : "Wystąpił błąd."
       setError(message)
+      toast.error(message)
       options?.onError?.(message)
       return false
     } finally {

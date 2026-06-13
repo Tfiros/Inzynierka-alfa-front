@@ -163,11 +163,16 @@ const UseMarkDialog = ({
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={loading}
+            className={loading ? "" : "cursor-pointer"}
           >
             Anuluj
           </Button>
 
-          <Button onClick={handleConfirm} disabled={!canConfirm || loading}>
+          <Button
+            onClick={handleConfirm}
+            disabled={!canConfirm || loading}
+            className={!canConfirm || loading ? "" : "cursor-pointer"}
+          >
             {loading ? "Zapisywanie..." : "Zakończ i zapisz oceny"}
           </Button>
         </div>

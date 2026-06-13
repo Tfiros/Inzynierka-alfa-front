@@ -48,7 +48,7 @@ const ProfileDataSection = ({
         <Button
           onClick={onSaveProfile}
           disabled={savingProfile}
-          className="min-w-28"
+          className={savingProfile ? "min-w-28" : "min-w-28 cursor-pointer"}
         >
           {savingProfile ? "Zapisywanie..." : "Zapisz zmiany"}
         </Button>

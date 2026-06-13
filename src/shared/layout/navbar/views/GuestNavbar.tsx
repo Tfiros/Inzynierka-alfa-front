@@ -37,11 +37,14 @@ export default function GuestNavbar() {
           </div>
           <div className="hidden lg:flex gap-1">
             <div className="flex gap-4 w-full max-w-sm">
-              <Button className="flex-1" onClick={authRequestLogin}>
+              <Button
+                className="flex-1 cursor-pointer"
+                onClick={authRequestLogin}
+              >
                 Zaloguj
               </Button>
               <Button
-                className="flex-1"
+                className="flex-1 cursor-pointer"
                 onClick={authRequestRegister}
                 variant="secondary"
               >

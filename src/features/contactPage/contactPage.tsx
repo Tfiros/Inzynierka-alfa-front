@@ -209,11 +209,11 @@ const ContactPage = () => {
 
       {isSuccessModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 cursor-pointer"
           onClick={() => setIsSuccessModalOpen(false)}
         >
           <div
-            className="w-full max-w-md rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-xl"
+            className="w-full max-w-md rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-xl cursor-pointer"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="mb-2 text-xl font-semibold">Wiadomość wysłana</h2>
@@ -224,7 +224,7 @@ const ContactPage = () => {
 
             <Button
               type="button"
-              className="w-full"
+              className="w-full cursor-pointer"
               onClick={() => setIsSuccessModalOpen(false)}
             >
               Zamknij

@@ -16,7 +16,7 @@ const DurationCard = ({
       type="button"
       onClick={onClick}
       className={cn(
-        "p-4 rounded-2xl border text-left",
+        "p-4 cursor-pointer rounded-2xl border text-left",
         "transition shadow-sm",
         selected
           ? "bg-primary text-primary-foreground"
