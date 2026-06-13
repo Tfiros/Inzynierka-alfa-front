@@ -27,7 +27,9 @@ export const GenresTab = () => {
 
       <div className="flex items-center justify-between">
         <div className="text-lg font-semibold">Genres</div>
-        <Button onClick={vm.actions.openAdd}>Dodaj gatunek</Button>
+        <Button onClick={vm.actions.openAdd} className="cursor-pointer">
+          Dodaj gatunek
+        </Button>
       </div>
 
       <div className="space-y-3">

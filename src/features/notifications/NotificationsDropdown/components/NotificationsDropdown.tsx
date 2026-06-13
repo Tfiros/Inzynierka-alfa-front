@@ -77,7 +77,7 @@ export const NotificationsDropdown = () => {
             size="sm"
             onClick={handleMarkAllAsRead}
             disabled={unread === 0}
-            className="text-xs"
+            className="text-xs cursor-pointer"
           >
             Oznacz wszystkie jako przeczytane
           </Button>

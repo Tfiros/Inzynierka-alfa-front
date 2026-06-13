@@ -102,7 +102,7 @@ const TradeCard = ({
             <>
               <Button
                 variant="outline"
-                className="gap-2"
+                className="gap-2 cursor-pointer"
                 disabled={!hasMiddleman || isLoadingChats}
                 onClick={() => void openBuyerChat()}
               >
@@ -111,7 +111,7 @@ const TradeCard = ({
               </Button>
               <Button
                 variant="outline"
-                className="gap-2"
+                className="gap-2 cursor-pointer"
                 disabled={!hasMiddleman || isLoadingChats}
                 onClick={() => void openSellerChat()}
               >
@@ -122,7 +122,7 @@ const TradeCard = ({
           ) : (
             <Button
               variant="outline"
-              className="gap-2"
+              className="gap-2 cursor-pointer"
               disabled={!hasMiddleman || isLoadingChats}
               onClick={() => void openMyChat()}
             >

@@ -57,10 +57,16 @@ const AvatarChangeDialog = ({
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={saving}
+            className={saving ? "" : "cursor-pointer"}
           >
             Anuluj
           </Button>
-          <Button onClick={handleSubmit} disabled={!file || saving}>
+
+          <Button
+            onClick={handleSubmit}
+            disabled={!file || saving}
+            className={!file || saving ? "" : "cursor-pointer"}
+          >
             {saving ? "Zapisywanie..." : "Zapisz"}
           </Button>
         </DialogFooter>

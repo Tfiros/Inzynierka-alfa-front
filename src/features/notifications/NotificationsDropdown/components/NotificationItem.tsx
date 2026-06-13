@@ -19,7 +19,7 @@ export const NotificationItem = ({ notification, onRead, onDelete }: Props) => {
         if (isUnread) onRead(notification.id)
       }}
       className={cn(
-        "group flex w-full items-start justify-between gap-3 border-b px-3 py-3 text-left transition",
+        "group flex w-full cursor-pointer items-start justify-between gap-3 border-b px-3 py-3 text-left transition",
         "hover:bg-muted/50",
         isUnread ? "bg-blue-500/5 dark:bg-blue-500/10" : "bg-transparent"
       )}
@@ -71,7 +71,7 @@ export const NotificationItem = ({ notification, onRead, onDelete }: Props) => {
             text-muted-foreground opacity-50
             transition
             hover:bg-destructive/10 hover:text-destructive
-            group-hover:opacity-100
+            group-hover:opacity-100 cursor-pointer
           "
         >
           <X className="h-4 w-4" />

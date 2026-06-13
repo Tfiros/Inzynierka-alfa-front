@@ -30,7 +30,11 @@ const ProfileCardSection = ({ profile, onOpenAvatarDialog }: Props) => {
         </Avatar>
 
         <div className="flex flex-col items-center gap-2">
-          <Button type="button" onClick={onOpenAvatarDialog}>
+          <Button
+            type="button"
+            onClick={onOpenAvatarDialog}
+            className="cursor-pointer"
+          >
             Zmień avatar
           </Button>
         </div>

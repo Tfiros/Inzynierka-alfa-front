@@ -50,7 +50,7 @@ const ProfileSecurityDataSection = ({
 
           <div className="flex justify-center">
             <Button
-              className="gap-2"
+              className="gap-2 cursor-pointer"
               onClick={onSaveSecurity}
               disabled={savingSecurity}
             >
