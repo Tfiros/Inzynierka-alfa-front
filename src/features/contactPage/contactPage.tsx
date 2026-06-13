@@ -6,17 +6,23 @@ import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.webp"
 import { Textarea } from "@/shared/components/textarea"
 import { Label } from "@/shared/components/label"
 import useContactPage from "./hooks/UseContactPage"
+import SuccessDialog from "./components/SuccessDialog"
 
 const ContactPage = () => {
   const {
-    register,
-    handleSubmit,
-    errors,
-    isSubmitting,
-    submitError,
+    name,
+    setName,
+    email,
+    setEmail,
+    subject,
+    setSubject,
+    message,
+    setMessage,
+    busy,
+    error,
     isSuccessModalOpen,
     setIsSuccessModalOpen,
-    onSubmit,
+    submit,
   } = useContactPage()
   return (
     <>
@@ -42,14 +48,10 @@ const ContactPage = () => {
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-8 text-card-foreground shadow-sm">
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="space-y-6"
-                noValidate
-              >
-                {submitError && (
+              <form onSubmit={submit} className="space-y-6" noValidate>
+                {error && (
                   <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                    {submitError}
+                    {error}
                   </div>
                 )}
 
@@ -61,25 +63,10 @@ const ContactPage = () => {
                   <Input
                     id="name"
                     placeholder="Jan Kowalski"
-                    {...register("name", {
-                      required: "Imię i nazwisko jest wymagane",
-                      minLength: {
-                        value: 2,
-                        message: "Imię musi mieć przynajmniej 2 znaki",
-                      },
-                    })}
-                    aria-invalid={!!errors.name}
-                    className={
-                      errors.name
-                        ? "border-destructive focus-visible:ring-destructive/30"
-                        : ""
-                    }
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    disabled={busy}
                   />
-                  {errors.name && (
-                    <p className="text-sm text-destructive">
-                      {errors.name.message}
-                    </p>
-                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -91,25 +78,10 @@ const ContactPage = () => {
                     id="email"
                     type="email"
                     placeholder="twoj@email.pl"
-                    {...register("email", {
-                      required: "Email jest wymagany",
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Nieprawidłowy adres email",
-                      },
-                    })}
-                    aria-invalid={!!errors.email}
-                    className={
-                      errors.email
-                        ? "border-destructive focus-visible:ring-destructive/30"
-                        : ""
-                    }
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={busy}
                   />
-                  {errors.email && (
-                    <p className="text-sm text-destructive">
-                      {errors.email.message}
-                    </p>
-                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -120,25 +92,10 @@ const ContactPage = () => {
                   <Input
                     id="subject"
                     placeholder="W czym możemy pomóc?"
-                    {...register("subject", {
-                      required: "Temat jest wymagany",
-                      minLength: {
-                        value: 3,
-                        message: "Temat musi mieć przynajmniej 3 znaki",
-                      },
-                    })}
-                    aria-invalid={!!errors.subject}
-                    className={
-                      errors.subject
-                        ? "border-destructive focus-visible:ring-destructive/30"
-                        : ""
-                    }
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    disabled={busy}
                   />
-                  {errors.subject && (
-                    <p className="text-sm text-destructive">
-                      {errors.subject.message}
-                    </p>
-                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -147,34 +104,19 @@ const ContactPage = () => {
                     id="message"
                     placeholder="Opisz szczegółowo swoją sprawę (min 20 znaków) ..."
                     rows={6}
-                    {...register("message", {
-                      required: "Wiadomość jest wymagana",
-                      minLength: {
-                        value: 20,
-                        message: "Wiadomość musi mieć przynajmniej 20 znaków",
-                      },
-                    })}
-                    aria-invalid={!!errors.message}
-                    className={
-                      errors.message
-                        ? "border-destructive focus-visible:ring-destructive/30"
-                        : ""
-                    }
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    disabled={busy}
                   />
-                  {errors.message && (
-                    <p className="text-sm text-destructive">
-                      {errors.message.message}
-                    </p>
-                  )}
                 </div>
 
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
-                  className="w-full"
+                  disabled={busy}
+                  className={`w-full ${busy ? "" : "cursor-pointer"}`}
                   size="lg"
                 >
-                  {isSubmitting ? "Wysyłanie..." : "Wyślij wiadomość"}
+                  {busy ? "Wysyłanie..." : "Wyślij wiadomość"}
                 </Button>
               </form>
 
@@ -207,31 +149,10 @@ const ContactPage = () => {
         </div>
       </section>
 
-      {isSuccessModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 cursor-pointer"
-          onClick={() => setIsSuccessModalOpen(false)}
-        >
-          <div
-            className="w-full max-w-md rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-xl cursor-pointer"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="mb-2 text-xl font-semibold">Wiadomość wysłana</h2>
-            <p className="mb-6 text-sm text-muted-foreground">
-              Dziękujemy za kontakt. Twoja wiadomość została wysłana. Proszę
-              czekaj na kontakt od jednego z naszych pracowników.
-            </p>
-
-            <Button
-              type="button"
-              className="w-full cursor-pointer"
-              onClick={() => setIsSuccessModalOpen(false)}
-            >
-              Zamknij
-            </Button>
-          </div>
-        </div>
-      )}
+      <SuccessDialog
+        open={isSuccessModalOpen}
+        onOpenChange={setIsSuccessModalOpen}
+      />
     </>
   )
 }
