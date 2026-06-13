@@ -77,8 +77,3 @@ export const validateOfferDraft = (
   }
   return null
 }
-
-export const extractBackendMessage = (e: unknown): string =>
-  typeof e === "object" && e !== null && "message" in e
-    ? String((e as { message?: unknown }).message ?? "unknown")
-    : "unknown"
