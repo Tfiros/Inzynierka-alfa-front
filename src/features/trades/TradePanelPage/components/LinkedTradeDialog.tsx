@@ -48,7 +48,7 @@ const LinkedTradeDialog = ({
   const tab = trade ? tabByTradeStatus(trade.tradeStatusId) : null
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[calc(100vh-4rem)] max-w-4xl overflow-y-auto">
+      <DialogContent className="sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>
             {trade ? `Wymiana #${trade?.tradeId}` : "Wymiana"}

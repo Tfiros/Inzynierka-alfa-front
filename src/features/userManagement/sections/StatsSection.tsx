@@ -16,7 +16,7 @@ const StatsSection = (props: Props) => {
   const middlemenCount = data?.middlemenCount ?? 0
 
   return (
-    <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div className="mt-6 grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-3">
       <StatCard
         title="Wszyscy użytkownicy"
         value={loading ? <Skeleton className="h-9 w-16" /> : totalCount}

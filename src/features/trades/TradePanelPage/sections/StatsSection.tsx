@@ -12,7 +12,7 @@ const StatsSection = ({ loading, stats }: Props) => {
   const val = (n: number) => (loading ? <Skeleton className="h-9 w-16" /> : n)
 
   return (
-    <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
       <StatCard
         title="Wszystkie"
         value={val(stats?.all ?? 0)}
@@ -24,7 +24,7 @@ const StatsSection = ({ loading, stats }: Props) => {
         icon={<CheckCircle2 className="h-4 w-4" />}
       />
       <StatCard
-        title="Moje aktywne"
+        title="Aktywne"
         value={val(stats?.myActive ?? 0)}
         icon={<UserCheck className="h-4 w-4" />}
       />

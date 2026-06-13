@@ -156,8 +156,8 @@ export default function CreateCounterOfferModalContent({
             pending={suggestions.pending}
           />
 
-          <div className="mt-4 flex items-center gap-3">
-            <div className="flex-1">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="sm:flex-1">
               <Select
                 value={itemDropdown.gameId ? String(itemDropdown.gameId) : ""}
                 onValueChange={(v) =>
@@ -189,7 +189,7 @@ export default function CreateCounterOfferModalContent({
               )}
             </div>
 
-            <div className="flex-[2]">
+            <div className="sm:flex-[2] sm:pt-2">
               <SearchSuggest
                 value={itemDropdown.query}
                 onChange={itemDropdown.setQuery}

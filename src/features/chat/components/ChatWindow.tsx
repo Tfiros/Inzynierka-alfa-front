@@ -153,7 +153,7 @@ const ChatWindow = ({
     !!m.deletedAt || m.message === "[deleted]"
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[420px] overflow-hidden rounded-xl border bg-background shadow-lg">
+    <div className="fixed bottom-4 right-4 z-50 w-[min(420px,calc(100vw-1rem))] overflow-hidden rounded-xl border bg-background shadow-lg">
       <div className="flex items-center justify-between border-b px-4 py-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -227,7 +227,7 @@ const ChatWindow = ({
                             <button
                               type="button"
                               disabled={busy || deleted}
-                              className="rounded-md p-1 hover:bg-accent opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="rounded-md p-1 hover:bg-accent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                             >
                               <MoreVertical className="h-4 w-4" />
                             </button>

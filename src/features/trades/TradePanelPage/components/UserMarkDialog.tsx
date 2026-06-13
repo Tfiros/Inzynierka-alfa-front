@@ -71,7 +71,7 @@ const UseMarkDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>Zakończ wymianę i oceń użytkowników</DialogTitle>
         </DialogHeader>

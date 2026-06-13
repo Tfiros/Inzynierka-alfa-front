@@ -126,7 +126,7 @@ const TabSection = ({
         className="mt-6"
       >
         <TabsList
-          className={`w-full grid ${isOwnProfile ? "grid-cols-5" : "grid-cols-2"}`}
+          className={`h-auto w-full flex flex-wrap gap-1 md:grid ${isOwnProfile ? "grid-cols-5" : "grid-cols-2"}`}
         >
           <TabsTrigger value="offers">
             {isOwnProfile ? "Moje Oferty" : "Oferty"}

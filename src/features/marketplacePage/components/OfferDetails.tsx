@@ -71,8 +71,8 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
           !isActive && "bg-muted grayscale-75"
         )}
       >
-        <DialogHeader className="flex flex-col sm:flex-row sm:justify-between mr-12">
-          <div>
+        <DialogHeader className="flex flex-col text-left sm:flex-row sm:justify-between sm:mr-12">
+          <div className="pr-8 sm:pr-0">
             <DialogTitle>{offer.offerCoreDto.title}</DialogTitle>
             <DialogDescription>
               {offer.offerCoreDto.description}

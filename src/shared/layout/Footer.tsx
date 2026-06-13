@@ -8,7 +8,7 @@ export const Footer = () => {
   const year = new Date().getFullYear()
   return (
     <footer className="w-full border-t bg-background/80">
-      <div className="flex h-24 w-full items-center justify-between px-6">
+      <div className="flex h-24 w-full items-center justify-between px-4 sm:px-6">
         <Link to="/" className="inline-flex items-center gap-3">
           <img
             src={CrossTradeLogo_light}
@@ -20,11 +20,14 @@ export const Footer = () => {
             alt="CROSSTRADE"
             className="hidden h-15 w-15 object-contain dark:block"
           />
-          <span className="font-semibold tracking-wide">CROSSTRADE</span>
+          <span className="hidden font-semibold tracking-wide sm:inline">
+            CROSSTRADE
+          </span>
         </Link>
 
         <p className="text-sm text-muted-foreground">
-          © {year} CROSSTRADE. All rights reserved.
+          © {year} CROSSTRADE
+          <span className="hidden md:inline">. All rights reserved.</span>
         </p>
 
         <div className="flex items-center gap-3">

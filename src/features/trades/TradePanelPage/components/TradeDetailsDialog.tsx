@@ -82,10 +82,10 @@ const TradeDetailsDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
-          <div className="flex items-start justify-between gap-3">
-            <DialogTitle>
+          <div className="flex flex-col gap-3 text-left sm:mr-12 sm:flex-row sm:items-start sm:justify-between">
+            <DialogTitle className="pr-8 sm:pr-0">
               Szczegóły wymiany{" "}
               {trade ? (
                 <span className="text-muted-foreground font-normal">
