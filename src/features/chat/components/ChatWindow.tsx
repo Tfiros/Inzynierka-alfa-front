@@ -1,21 +1,7 @@
-import { useEffect, useRef, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import { Button } from "@/shared/components/button"
 import { Input } from "@/shared/components/input"
-import {
-  X,
-  MoreVertical,
-  Pencil,
-  Trash2,
-  Check,
-  X as XIcon,
-} from "lucide-react"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/shared/components/dropdown-menu"
+import { X } from "lucide-react"
 
 import { chatHubClient } from "@/shared/api/hubs/ChatHub"
 import { useAppStore, chatSelectors } from "@/shared/store/appStore"
@@ -28,7 +14,7 @@ import { useChatMessageActions } from "../hooks/UseChatMessagesActions"
 import useChatMembership from "../hooks/UseChatMembership"
 import { Link } from "react-router-dom"
 import { isMessageEditExpired } from "@/shared/utilities/Chat/isMessageEditExpired"
-
+import ChatMessageItem from "./ChatMessageItem"
 type Props = {
   chatId: number
   title: string | null
@@ -206,111 +192,23 @@ const ChatWindow = ({
             const editExpired = isMessageEditExpired(m.createdAt)
 
             return (
-              <div
+              <ChatMessageItem
                 key={m.id}
-                className={`flex ${mine ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-[78%] ${mine ? "text-right" : "text-left"}`}
-                >
-                  <div className="mb-1 text-[11px] text-muted-foreground">
-                    {mine ? "Ty" : displayTitle} •{" "}
-                    {new Date(m.createdAt).toLocaleString()}
-                    {m.editedAt ? " (edyt.)" : ""}
-                  </div>
-
-                  <div className="group flex items-start gap-2">
-                    <div className="pt-1">
-                      {canEditOrDelete(m) && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button
-                              type="button"
-                              disabled={busy || deleted}
-                              className="rounded-md p-1 hover:bg-accent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-                            >
-                              <MoreVertical className="h-4 w-4" />
-                            </button>
-                          </DropdownMenuTrigger>
-
-                          <DropdownMenuContent align="start">
-                            <DropdownMenuItem
-                              onClick={() => startEdit(m)}
-                              disabled={busy || deleted || editExpired}
-                              className={
-                                busy || deleted || editExpired
-                                  ? ""
-                                  : "cursor-pointer"
-                              }
-                            >
-                              <Pencil className="mr-2 h-4 w-4" />
-                              {editExpired ? "Edycja wygasła" : "Edytuj"}
-                            </DropdownMenuItem>
-
-                            <DropdownMenuItem
-                              className={
-                                busy || deleted
-                                  ? "text-destructive"
-                                  : "text-destructive cursor-pointer"
-                              }
-                              onClick={() => deleteMessage(m.id)}
-                              disabled={busy || deleted}
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Usuń
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
-                    </div>
-
-                    <div
-                      className={[
-                        "inline-block rounded-2xl px-3 py-2 leading-snug shadow-sm border",
-                        mine
-                          ? "bg-primary text-primary-foreground border-primary/30 rounded-br-sm"
-                          : "bg-muted text-foreground border-border rounded-bl-sm",
-                        deleted ? "opacity-70 italic" : "",
-                      ].join(" ")}
-                    >
-                      {editingId === m.id ? (
-                        <div className="flex items-center gap-2">
-                          <Input
-                            value={editText}
-                            onChange={(e) => setEditText(e.target.value)}
-                            onKeyDown={(e) =>
-                              e.key === "Enter" && saveEdit(m.id)
-                            }
-                            disabled={busy}
-                          />
-
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => saveEdit(m.id)}
-                            disabled={busy}
-                            className="cursor-pointer"
-                          >
-                            <Check className="h-4 w-4" />
-                          </Button>
-
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={cancelEdit}
-                            disabled={busy}
-                            className="cursor-pointer"
-                          >
-                            <XIcon className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ) : (
-                        m.message
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                message={m}
+                mine={mine}
+                busy={busy}
+                deleted={deleted}
+                editExpired={editExpired}
+                displayTitle={displayTitle}
+                editingId={editingId}
+                editText={editText}
+                setEditText={setEditText}
+                canEditOrDelete={canEditOrDelete}
+                startEdit={startEdit}
+                cancelEdit={cancelEdit}
+                saveEdit={saveEdit}
+                deleteMessage={deleteMessage}
+              />
             )
           })}
 
@@ -345,4 +243,4 @@ const ChatWindow = ({
   )
 }
 
-export default ChatWindow
+export default memo(ChatWindow)
