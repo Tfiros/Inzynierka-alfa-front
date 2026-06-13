@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"
+import { Button } from "@/shared/components/button"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/shared/components/ui/tooltip"
-import { Button } from "@/shared/components/button"
+} from "@/shared/components/tooltip"
 
 const ProfileTokens = ({
   tokens,
