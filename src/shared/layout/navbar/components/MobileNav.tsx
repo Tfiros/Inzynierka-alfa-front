@@ -1,17 +1,17 @@
 import type { NavbarLink } from "../navLinks"
 import { Menu } from "lucide-react"
+import { Button } from "@/shared/components/button"
+import { NavLink } from "react-router-dom"
+import { useAppStore } from "@/shared/store/appStore"
+import { useState } from "react"
 import {
+  Sheet,
   SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  Sheet,
-} from "@/shared/components/ui/sheet"
-import { Button } from "@/shared/components/button"
-import { NavLink } from "react-router-dom"
-import { useAppStore } from "@/shared/store/appStore"
-import { useState } from "react"
+} from "@/shared/components/sheet"
 
 type Props = {
   links: NavbarLink[]
