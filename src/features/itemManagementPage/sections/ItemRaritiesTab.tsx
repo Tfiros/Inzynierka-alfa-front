@@ -57,7 +57,9 @@ const ItemRaritiesTab = () => {
         <div className="text-sm opacity-70">
           {vm.game.id ? `Filtr gry: ${vm.game.selectedName}` : "Wybierz grę"}
         </div>
-        <Button onClick={vm.actions.openAdd}>Dodaj rzadkość</Button>
+        <Button onClick={vm.actions.openAdd} className="cursor-pointer">
+          Dodaj rzadkość
+        </Button>
       </div>
 
       <SearchInput

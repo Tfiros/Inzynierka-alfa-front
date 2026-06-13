@@ -17,7 +17,7 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@/shared/components/ui/tooltip"
+} from "@/shared/components/tooltip"
 import { useState } from "react"
 import OfferCounterOffersSection from "./OfferCounterOffersDetails"
 import { useAcceptOffer } from "@/shared/views/OfferInteractionView/hooks/UseAcceptOffer"
@@ -71,8 +71,8 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
           !isActive && "bg-muted grayscale-75"
         )}
       >
-        <DialogHeader className="flex flex-col sm:flex-row sm:justify-between mr-12">
-          <div>
+        <DialogHeader className="flex flex-col text-left sm:flex-row sm:justify-between sm:mr-12">
+          <div className="pr-8 sm:pr-0">
             <DialogTitle>{offer.offerCoreDto.title}</DialogTitle>
             <DialogDescription>
               {offer.offerCoreDto.description}
@@ -210,7 +210,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
           <div className="mt-4 rounded-2xl border bg-muted/20 p-4">
             <button
               type="button"
-              className="flex w-full items-center justify-between gap-3 text-left"
+              className="flex w-full items-center justify-between gap-3 text-left cursor-pointer"
               onClick={() => setCounterOffersOpen((v) => !v)}
             >
               <div>
@@ -269,6 +269,11 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
             </AlertDialogCancel>
             <AlertDialogAction
               disabled={acceptOffer.submitting || !acceptOffer.canAfford}
+              className={
+                acceptOffer.submitting || !acceptOffer.canAfford
+                  ? ""
+                  : "cursor-pointer"
+              }
               onClick={(e) => {
                 e.preventDefault()
                 void acceptOffer.submit()

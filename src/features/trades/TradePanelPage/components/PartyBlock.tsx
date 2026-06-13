@@ -3,7 +3,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/shared/components/ui/tooltip"
+} from "@/shared/components/tooltip"
 import type { InTradeUser } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import { User, Package } from "lucide-react"
 import PointsIcon from "@/shared/photos/PointsIcon.svg"

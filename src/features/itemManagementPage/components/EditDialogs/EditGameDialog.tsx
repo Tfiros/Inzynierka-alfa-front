@@ -87,10 +87,17 @@ const EditGameDialog = (props: {
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => props.onOpenChange(false)}>
+          <Button
+            variant="outline"
+            onClick={() => props.onOpenChange(false)}
+            className="cursor-pointer"
+          >
             Anuluj
           </Button>
-          <Button onClick={() => props.onSave({ name, genreId, image })}>
+          <Button
+            onClick={() => props.onSave({ name, genreId, image })}
+            className="cursor-pointer"
+          >
             Zapisz
           </Button>
         </DialogFooter>

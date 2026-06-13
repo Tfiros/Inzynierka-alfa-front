@@ -82,10 +82,10 @@ const TradeDetailsDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
-          <div className="flex items-start justify-between gap-3">
-            <DialogTitle>
+          <div className="flex flex-col gap-3 text-left sm:mr-12 sm:flex-row sm:items-start sm:justify-between">
+            <DialogTitle className="pr-8 sm:pr-0">
               Szczegóły wymiany{" "}
               {trade ? (
                 <span className="text-muted-foreground font-normal">
@@ -98,7 +98,7 @@ const TradeDetailsDialog = ({
               <Button
                 type="button"
                 variant="outline"
-                className="gap-2"
+                className="gap-2 cursor-pointer"
                 onClick={() => setMode("edit")}
                 disabled={!trade}
               >
@@ -109,7 +109,7 @@ const TradeDetailsDialog = ({
               <Button
                 type="button"
                 variant="outline"
-                className="gap-2"
+                className="gap-2 cursor-pointer"
                 onClick={() => setMode("view")}
                 disabled={saving}
               >
@@ -270,7 +270,15 @@ const TradeDetailsDialog = ({
               />
               <Button
                 type="button"
-                className="w-full"
+                className={
+                  !trade ||
+                  (side === "buyer"
+                    ? !photos.buyerFiles.length
+                    : !photos.sellerFiles.length) ||
+                  photos.uploadTradeSide !== null
+                    ? "w-full"
+                    : "w-full cursor-pointer"
+                }
                 disabled={
                   !trade ||
                   (side === "buyer"
@@ -300,12 +308,17 @@ const TradeDetailsDialog = ({
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={saving}
+            className={saving ? "" : "cursor-pointer"}
           >
             Zamknij
           </Button>
 
           {mode === "edit" ? (
-            <Button onClick={save} disabled={!trade || saving}>
+            <Button
+              onClick={save}
+              disabled={!trade || saving}
+              className={!trade || saving ? "" : "cursor-pointer"}
+            >
               {saving ? "Zapisywanie..." : "Zapisz"}
             </Button>
           ) : null}

@@ -77,7 +77,12 @@ const MarketplacePage = () => {
               <p>{totalCount} znalezionych ofert</p>
             </div>
             <div className="flex items-center gap-2">
-              <Button type="button" variant="outline" onClick={refreshOffers}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={refreshOffers}
+                className="cursor-pointer"
+              >
                 <RotateCcw className="h-4 w-4" />
                 Odśwież
               </Button>
@@ -131,7 +136,9 @@ const MarketplacePage = () => {
       </div>
       <Button
         type="button"
-        className="fixed bottom-6 right-6 z-50 rounded-full shadow-lg"
+        className={`fixed bottom-6 right-6 z-50 rounded-full shadow-lg ${
+          isAuthenticated ? "cursor-pointer" : ""
+        }`}
         size="lg"
         onClick={() => {
           requestCreate()

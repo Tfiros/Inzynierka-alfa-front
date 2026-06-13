@@ -29,13 +29,16 @@ export const DeleteEntityDialog = (props: {
             variant="outline"
             onClick={() => props.onOpenChange(false)}
             disabled={props.isLoading}
+            className={props.isLoading ? "" : "cursor-pointer"}
           >
             Anuluj
           </Button>
+
           <Button
             variant="destructive"
             onClick={props.onConfirm}
             disabled={props.isLoading}
+            className={props.isLoading ? "" : "cursor-pointer"}
           >
             Usuń
           </Button>

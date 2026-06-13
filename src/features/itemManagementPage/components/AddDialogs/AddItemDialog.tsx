@@ -190,10 +190,16 @@ const AddItemDialog = (p: Props) => {
             variant="outline"
             onClick={() => p.onOpenChange(false)}
             disabled={p.saving}
+            className={p.saving ? "" : "cursor-pointer"}
           >
             Anuluj
           </Button>
-          <Button onClick={p.onSubmit} disabled={p.saving || !p.canSubmit}>
+
+          <Button
+            onClick={p.onSubmit}
+            disabled={p.saving || !p.canSubmit}
+            className={p.saving || !p.canSubmit ? "" : "cursor-pointer"}
+          >
             Dodaj
           </Button>
         </DialogFooter>

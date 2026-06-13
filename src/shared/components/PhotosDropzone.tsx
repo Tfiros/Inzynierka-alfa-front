@@ -95,6 +95,7 @@ const PhotosDropzone = ({
                 variant="ghost"
                 size="icon"
                 onClick={() => actions.removeAt(idx)}
+                className="cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </Button>

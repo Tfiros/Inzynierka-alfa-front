@@ -49,16 +49,26 @@ export const SimplePagination = (props: SimplePaginationProps) => {
         Łącznie: <b>{totalCount}</b>
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="outline" disabled={page <= 1} onClick={onPrev}>
+        <Button
+          variant="outline"
+          disabled={page <= 1}
+          onClick={onPrev}
+          className={page <= 1 ? "" : "cursor-pointer"}
+        >
           Poprzednia
         </Button>
+
         <div className="text-sm opacity-70">
           Strona <b>{page}</b> / <b>{totalPages || 1}</b>
         </div>
+
         <Button
           variant="outline"
           disabled={totalPages > 0 ? page >= totalPages : true}
           onClick={onNext}
+          className={
+            totalPages > 0 && page < totalPages ? "cursor-pointer" : ""
+          }
         >
           Następna
         </Button>
@@ -100,6 +110,7 @@ export const DetailedPagination = (props: DetailedPaginationProps) => {
             size="sm"
             disabled={loading || page <= 1}
             onClick={onPrev}
+            className={loading || page <= 1 ? "" : "cursor-pointer"}
           >
             <ChevronLeft className="mr-1 h-4 w-4" />
             Poprzednia
@@ -114,6 +125,7 @@ export const DetailedPagination = (props: DetailedPaginationProps) => {
             size="sm"
             disabled={loading || page >= totalPages}
             onClick={onNext}
+            className={loading || page >= totalPages ? "" : "cursor-pointer"}
           >
             Następna
             <ChevronRight className="ml-1 h-4 w-4" />
@@ -166,13 +178,16 @@ export const UniversalPagination = (props: UniversalPaginationProps) => {
           variant="outline"
           onClick={goPrev}
           disabled={!canPrev || loading}
+          className={!canPrev || loading ? "" : "cursor-pointer"}
         >
           Poprzednia
         </Button>
+
         <Button
           variant="outline"
           onClick={goNext}
           disabled={!canNext || loading}
+          className={!canNext || loading ? "" : "cursor-pointer"}
         >
           Następna
         </Button>
