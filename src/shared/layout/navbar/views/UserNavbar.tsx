@@ -4,11 +4,11 @@ import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.webp"
 import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
 import { useAppStore } from "@/shared/store/appStore"
-import { NotificationsDropdown } from "@/features/notifications/NotificationsDropdown/components/NotificationsDropdown"
 import NavbarChatDropdown from "@/features/chat/components/NavbarChatDropdown"
 import { userLinks } from "../navLinks"
 import MobileNav from "../components/MobileNav"
 import ProfileTokens from "../components/ProfileTokens"
+import NotificationsDropdown from "@/features/notifications/NotificationsDropdown/components/NotificationsDropdown"
 
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
