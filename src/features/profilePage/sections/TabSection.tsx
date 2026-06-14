@@ -5,7 +5,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components/tabs"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { useUserOffers } from "../hooks/UseProfileOffers"
 import Offer from "@/features/marketplacePage/components/Offer"
 import OfferDetails from "@/features/marketplacePage/components/OfferDetails"
@@ -54,10 +54,10 @@ const TabSection = ({
     detailsOpen
   )
 
-  const handleShowDetails = (offerId: number) => {
+  const handleShowDetails = useCallback((offerId: number) => {
     setSelectedOffer(offerId)
     setDetailsOpen(true)
-  }
+  }, [])
 
   const handleOpenDialogChange = (open: boolean) => {
     setDetailsOpen(open)
