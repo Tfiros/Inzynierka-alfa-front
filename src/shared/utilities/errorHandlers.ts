@@ -1,16 +1,15 @@
 import { toast } from "sonner"
 
-export const handleError = (error: unknown, fallback: string) => {
+export const extractErrorMessage = (
+  error: unknown,
+  fallback = "unknown"
+): string => {
   if (error instanceof Error) {
-    toast.error(error.message)
-    return
+    return error.message
   }
-
   if (typeof error === "string") {
-    toast.error(error)
-    return
+    return error
   }
-
   if (error && typeof error === "object") {
     const err = error as {
       message?: string
@@ -18,17 +17,16 @@ export const handleError = (error: unknown, fallback: string) => {
         text?: string
       }
     }
-
     if (err.message) {
-      toast.error(err.message)
-      return
+      return err.message
     }
-
     if (err.details?.text) {
-      toast.error(err.details.text)
-      return
+      return err.details.text
     }
   }
+  return fallback
+}
 
-  toast.error(fallback)
+export const handleError = (error: unknown, fallback: string) => {
+  toast.error(extractErrorMessage(error, fallback))
 }
