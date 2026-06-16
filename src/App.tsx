@@ -1,31 +1,54 @@
-import { useEffect } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { useAppStore } from "./shared/store/appStore"
 import AdminRoute from "./routes/AdminRoutes"
 import BlankLayout from "./shared/layout/BlankLayout"
 import MainLayout from "./shared/layout/MainLayout"
-import ItemManagementPage from "./features/itemManagementPage/ItemManagementPage"
-import TradePanelPage from "./features/trades/TradePanelPage/TradePanelPage"
-import FaqsSite from "./features/faqsPage/faqsSite"
 import LandingPage from "./features/landingPage/LandingPage"
 import NotFoundPage from "./features/notFoundPage/NotFoundPage"
-import PointShop from "./features/pointShop/pointShop"
-import ProfileEdit from "./features/profileEditPage/ProfileEdit"
-import SettingsPage from "./features/settingsPage/SettingsPage"
-import StatutePage from "./features/statutePage/statutePage"
-import UserManagementPage from "./features/userManagement/UserManagementPage"
-import OfferInteractionHost from "./shared/views/OfferInteractionView/OfferInteractionHost"
-import ProfilePage from "./features/profilePage/profilePage"
-import CounterOfferInteractionHost from "./shared/views/OfferInteractionView/CounterOfferInteractionHost"
 import { TooltipProvider } from "./shared/components/tooltip"
-import MarketplacePage from "./features/marketplacePage/Marketplace"
-import AcceptOfferInteractionHost from "./shared/views/OfferInteractionView/AcceptOfferInteractionHost"
 import { Toaster } from "sonner"
-import ContactPage from "./features/contactPage/contactPage"
-import AuthModalHost from "./shared/utilities/Auth/AuthModalHost"
+import InteractionHostFallback from "./shared/views/OfferInteractionView/components/InteractionHostFallback"
+import ErrorBoundary from "./shared/components/ErrorBoundary"
+
+const AuthModalHost = lazy(
+  () => import("./shared/utilities/Auth/AuthModalHost")
+)
+
+const FaqsSite = lazy(() => import("./features/faqsPage/faqsSite"))
+const ItemManagementPage = lazy(
+  () => import("./features/itemManagementPage/ItemManagementPage")
+)
+const TradePanelPage = lazy(
+  () => import("./features/trades/TradePanelPage/TradePanelPage")
+)
+const PointShop = lazy(() => import("./features/pointShop/pointShop"))
+const ProfileEdit = lazy(() => import("./features/profileEditPage/ProfileEdit"))
+const SettingsPage = lazy(() => import("./features/settingsPage/SettingsPage"))
+const StatutePage = lazy(() => import("./features/statutePage/statutePage"))
+const UserManagementPage = lazy(
+  () => import("./features/userManagement/UserManagementPage")
+)
+const ProfilePage = lazy(() => import("./features/profilePage/profilePage"))
+const MarketplacePage = lazy(
+  () => import("./features/marketplacePage/Marketplace")
+)
+const ContactPage = lazy(() => import("./features/contactPage/contactPage"))
+const InteractionHosts = lazy(
+  () => import("./shared/views/OfferInteractionView/InteractionHosts")
+)
 
 function App() {
   const initSecurity = useAppStore((s) => s.initSecurity)
+
+  const anyInteractionToMount = useAppStore(
+    (s) =>
+      s.offerInteractionOpen ||
+      s.offerDeleteConfirmOpen ||
+      s.counterOfferOpen ||
+      s.acceptOfferOpen
+  )
+  const authToMount = useAppStore((s) => s.authModalOpen)
 
   useEffect(() => {
     initSecurity().catch(() => {})
@@ -57,12 +80,19 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
+        <ErrorBoundary errorMessage="Nie udało się załadować okna. Odśwież stronę">
+          {authToMount && (
+            <Suspense fallback={<InteractionHostFallback />}>
+              <AuthModalHost />
+            </Suspense>
+          )}
+          {anyInteractionToMount && (
+            <Suspense fallback={<InteractionHostFallback />}>
+              <InteractionHosts />
+            </Suspense>
+          )}
+        </ErrorBoundary>
 
-        <AuthModalHost />
-
-        <OfferInteractionHost />
-        <CounterOfferInteractionHost />
-        <AcceptOfferInteractionHost />
         <Toaster position="bottom-left" richColors />
       </BrowserRouter>
     </TooltipProvider>

@@ -3,12 +3,25 @@ import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.webp"
 import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.webp"
 import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
+import { lazy, Suspense } from "react"
 import { useAppStore } from "@/shared/store/appStore"
 import NavbarChatDropdown from "@/features/chat/components/NavbarChatDropdown"
 import { userLinks } from "../navLinks"
+import { useAppStore } from "@/shared/store/appStore"
+import NavbarFallback from "../components/NavbarFallback"
+import ErrorBoundary from "@/shared/components/ErrorBoundary"
 import MobileNav from "../components/MobileNav"
 import ProfileTokens from "../components/ProfileTokens"
 import NotificationsDropdown from "@/features/notifications/NotificationsDropdown/components/NotificationsDropdown"
+
+const NavbarChatDropdown = lazy(
+  () => import("@/features/chat/components/NavbarChatDropdown")
+)
+
+const NotificationsDropdown = lazy(
+  () =>
+    import("@/features/notifications/NotificationsDropdown/components/NotificationsDropdown")
+)
 
 export const UserNavbar = () => {
   const navbarUser = useAppStore((s) => s.navbarUser)
@@ -55,8 +68,22 @@ export const UserNavbar = () => {
             </span>
             <MobileNav links={links} />
 
-            <NotificationsDropdown />
-            <NavbarChatDropdown />
+            <ErrorBoundary
+              fallback={<NavbarFallback />}
+              errorMessage="Nie udało się załadować powiadomień. Odśwież stronę"
+            >
+              <Suspense fallback={<NavbarFallback />}>
+                <NotificationsDropdown />
+              </Suspense>
+            </ErrorBoundary>
+            <ErrorBoundary
+              fallback={<NavbarFallback />}
+              errorMessage="Nie udało się załadować chatu. Odśwież stronę"
+            >
+              <Suspense fallback={<NavbarFallback />}>
+                <NavbarChatDropdown />
+              </Suspense>
+            </ErrorBoundary>
 
             <ProfileMenu />
           </div>
