@@ -5,18 +5,12 @@ import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
 import { lazy, Suspense } from "react"
 import { userLinks } from "../navLinks"
-
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/shared/components/ui/tooltip"
 import { useAppStore } from "@/shared/store/appStore"
 import NavbarFallback from "../components/NavbarFallback"
 import ErrorBoundary from "@/shared/components/ErrorBoundary"
 import MobileNav from "../components/MobileNav"
 import ProfileTokens from "../components/ProfileTokens"
-        
+
 const NavbarChatDropdown = lazy(
   () => import("@/features/chat/components/NavbarChatDropdown")
 )
