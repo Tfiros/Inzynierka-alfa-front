@@ -10,7 +10,10 @@ import { TooltipProvider } from "./shared/components/tooltip"
 import { Toaster } from "sonner"
 import InteractionHostFallback from "./shared/views/OfferInteractionView/components/InteractionHostFallback"
 import ErrorBoundary from "./shared/components/ErrorBoundary"
-import AuthModalHost from "./shared/utilities/Auth/AuthModalHost"
+
+const AuthModalHost = lazy(
+  () => import("./shared/utilities/Auth/AuthModalHost")
+)
 
 const FaqsSite = lazy(() => import("./features/faqsPage/faqsSite"))
 const ItemManagementPage = lazy(
@@ -45,6 +48,7 @@ function App() {
       s.counterOfferOpen ||
       s.acceptOfferOpen
   )
+  const authToMount = useAppStore((s) => s.authModalOpen)
 
   useEffect(() => {
     initSecurity().catch(() => {})
@@ -76,14 +80,19 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
-        <AuthModalHost />
-        {anyInteractionToMount && (
-          <ErrorBoundary errorMessage="Nie udało się załadować okna. Odśwież stronę">
+        <ErrorBoundary errorMessage="Nie udało się załadować okna. Odśwież stronę">
+          {authToMount && (
+            <Suspense fallback={<InteractionHostFallback />}>
+              <AuthModalHost />
+            </Suspense>
+          )}
+          {anyInteractionToMount && (
             <Suspense fallback={<InteractionHostFallback />}>
               <InteractionHosts />
             </Suspense>
-          </ErrorBoundary>
-        )}
+          )}
+        </ErrorBoundary>
+
         <Toaster position="bottom-left" richColors />
       </BrowserRouter>
     </TooltipProvider>
