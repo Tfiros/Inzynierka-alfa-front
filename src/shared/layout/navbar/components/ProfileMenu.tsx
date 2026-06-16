@@ -70,7 +70,7 @@ export const ProfileMenu = () => {
         <DropdownMenuSeparator />
 
         {userId != null && (
-          <DropdownMenuItem asChild>
+          <DropdownMenuItem asChild className="cursor-pointer">
             <Link to={`/profile/${userId}`} className="flex items-center gap-2">
               <UserIcon className="h-4 w-4" />
               <span>Mój profil</span>
@@ -78,7 +78,7 @@ export const ProfileMenu = () => {
           </DropdownMenuItem>
         )}
 
-        <DropdownMenuItem asChild>
+        <DropdownMenuItem asChild className="cursor-pointer">
           <Link to="/settings" className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
             <span>Ustawienia</span>
@@ -89,7 +89,7 @@ export const ProfileMenu = () => {
           onSelect={(e) => {
             e.preventDefault()
           }}
-          className="p-0"
+          className="cursor-pointer p-0"
         >
           <div className="flex items-center justify-between w-full px-2 py-1.5">
             <div className="flex items-center gap-2">
@@ -103,7 +103,7 @@ export const ProfileMenu = () => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer p-0">
           <LogoutButton />
         </DropdownMenuItem>
       </DropdownMenuContent>
