@@ -1,5 +1,5 @@
 import type { offerListingDtoResponse } from "@/shared/types/offerTypes/RequestResponseTypes"
-import Offer from "../../../shared/api/services/Offer"
+import Offer from "../../../shared/components/Offer"
 
 type OfferGridProps = {
   offers: offerListingDtoResponse[]
