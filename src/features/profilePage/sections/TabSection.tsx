@@ -8,7 +8,7 @@ import {
 import { useCallback, useState } from "react"
 import { useUserOffers } from "../hooks/UseProfileOffers"
 import { useOfferDetails } from "@/features/marketplacePage/hooks/UseOfferDetails"
-import { useCounterOffers } from "../hooks/UseCounterOffers"
+import { useCounterOffers } from "../../../shared/hooks/UseCounterOffers"
 import { useUpdateCounterOfferStatus } from "../hooks/UseUpdateCounterOfferStatus"
 import { UseAcceptCounterOffer } from "../hooks/UseAcceptCounterOffer"
 import CounterOfferCard from "../component/CounterOfferCard"

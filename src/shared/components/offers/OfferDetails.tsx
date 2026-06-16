@@ -32,7 +32,7 @@ import {
 } from "@/shared/components/alert-dialog"
 import { useOfferPermissions } from "@/shared/hooks/UseOfferPermissions"
 import { useRequestOfferEdit } from "@/shared/hooks/UseRequestOfferEdit"
-import OfferCounterOffersSection from "@/features/marketplacePage/components/OfferCounterOffersDetails"
+import OfferCounterOffersSection from "./OfferCounterOffersDetails"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
