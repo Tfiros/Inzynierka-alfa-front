@@ -34,7 +34,7 @@ const OfferPickedItemsList = ({
               <img
                 src={line.item.photoUrl?.trim() || "/placeholder.webp"}
                 alt={line.item.name}
-                className="h-full w-full object-cover"
+                className="h-10 w-10 border object-cover"
                 loading="lazy"
                 onError={(e) => {
                   e.currentTarget.src = "/placeholder.webp"
