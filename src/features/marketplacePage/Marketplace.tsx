@@ -2,7 +2,7 @@ import { Plus, RotateCcw } from "lucide-react"
 import { Button } from "@/shared/components/button"
 import { UniversalPagination } from "@/shared/components/Pagination"
 import { useAppStore } from "@/shared/store/appStore"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import FilterBar from "./components/FilterBar"
 import OfferDetails from "./components/OfferDetails"
 import OffersGrid from "./components/OffersGrid"
@@ -47,11 +47,10 @@ const MarketplacePage = () => {
 
   const requestCreate = useAppStore((s) => s.offerRequestCreate)
 
-  const handleShowDetails = (offerId: number) => {
+  const handleShowDetails = useCallback((offerId: number) => {
     setSelectedOffer(offerId)
     setDetailsOpen(true)
-  }
-
+  }, [])
   const handleOpenDialogChange = (open: boolean) => {
     setDetailsOpen(open)
     if (!open) {
