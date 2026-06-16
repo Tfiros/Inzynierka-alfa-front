@@ -73,7 +73,7 @@ const SearchSuggest = ({
   }, [canShow, query])
   if (lockedItem) {
     return (
-      <div className="flex items-center gap-2 h-10 rounded-xl border bg-white border-muted-foreground px-3">
+      <div className="flex h-10 items-center gap-2 rounded-xl border border-input bg-background px-3 text-foreground">
         <Thumb src={lockedItem.photoUrl} alt={lockedItem.name} size="sm" />
         <span className="flex-1 text-sm truncate">{lockedItem.name}</span>
         <button

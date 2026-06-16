@@ -28,13 +28,13 @@ const OfferPickedItemsList = ({
         return (
           <div
             key={line.item.id}
-            className="flex items-center gap-3 rounded-2xl border border-border bg-card px-3 py-2 text-card-foreground shadow-sm"
+            className="flex items-center gap-3 rounded-2xl border border-border bg-background px-3 py-2 text-foreground shadow-sm"
           >
-            <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-muted/30">
+            <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl border border-border bg-muted">
               <img
                 src={line.item.photoUrl?.trim() || "/placeholder.webp"}
                 alt={line.item.name}
-                className="h-12 w-12 border object-cover"
+                className="h-full w-full object-cover"
                 loading="lazy"
                 onError={(e) => {
                   e.currentTarget.src = "/placeholder.webp"
