@@ -4,10 +4,10 @@ import { UniversalPagination } from "@/shared/components/Pagination"
 import { useAppStore } from "@/shared/store/appStore"
 import { useCallback, useState } from "react"
 import FilterBar from "./components/FilterBar"
-import OfferDetails from "./components/OfferDetails"
 import OffersGrid from "./components/OffersGrid"
 import { useOfferDetails } from "./hooks/UseOfferDetails"
 import { useOffersListing } from "./hooks/UseOfferListing"
+import OfferDetails from "@/shared/components/offers/OfferDetails"
 
 const MarketplacePage = () => {
   const {

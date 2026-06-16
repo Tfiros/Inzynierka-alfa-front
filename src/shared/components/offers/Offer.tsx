@@ -28,7 +28,7 @@ import {
   TooltipContent,
 } from "@/shared/components/tooltip"
 import OfferItemCard from "./OfferItemCard"
-import OfferStatusPill from "../OfferStatusPill"
+import OfferStatusPill from "./OfferStatusPill"
 import { formatRating, formatSuccessRating } from "@/shared/lib/formatters"
 import { useToggleFavourite } from "@/shared/hooks/UseToggleFavourite"
 import { Link } from "react-router-dom"
