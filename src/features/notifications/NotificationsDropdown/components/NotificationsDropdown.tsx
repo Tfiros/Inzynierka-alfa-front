@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { memo, useState } from "react"
 import { Button } from "@/shared/components/button"
 import {
   DropdownMenu,
@@ -7,10 +7,10 @@ import {
 } from "@/shared/components/dropdown-menu"
 import NoifyIcon from "@/shared/photos/NotificationIcon.svg"
 import NoifyIcon_Dark from "@/shared/photos/NotificationIcon_Dark.svg"
-import { NotificationItem } from "./NotificationItem"
+import NotificationItem from "./NotificationItem"
 import { useNotificationsDropdown } from "../hooks/UseNotificationsDropdown"
 
-export const NotificationsDropdown = () => {
+const NotificationsDropdown = () => {
   const [open, setOpen] = useState(false)
 
   const {
@@ -119,3 +119,5 @@ export const NotificationsDropdown = () => {
     </DropdownMenu>
   )
 }
+
+export default memo(NotificationsDropdown)

@@ -1,3 +1,4 @@
+import { memo } from "react"
 import type { NotificationDto } from "@/shared/types/notificationsTypes/notificationsDtos"
 import { X } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
@@ -9,7 +10,7 @@ type Props = {
   onDelete: (id: number) => void
 }
 
-export const NotificationItem = ({ notification, onRead, onDelete }: Props) => {
+const NotificationItem = ({ notification, onRead, onDelete }: Props) => {
   const isUnread = !notification.isRead
 
   return (
@@ -80,3 +81,5 @@ export const NotificationItem = ({ notification, onRead, onDelete }: Props) => {
     </button>
   )
 }
+
+export default memo(NotificationItem)
