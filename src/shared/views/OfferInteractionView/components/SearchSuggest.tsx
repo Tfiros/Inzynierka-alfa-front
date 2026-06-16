@@ -1,4 +1,4 @@
-import { Command } from "@/shared/components/ui/command"
+import { Command } from "@/shared/components/command"
 import { Input } from "@/shared/components/input"
 import {
   Popover,
@@ -50,6 +50,7 @@ const SearchSuggest = ({
   const canSearch = query.length >= 3
   const isSearching = pending || loading
   const closeTimer = useRef<number | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
 
   const groups = useMemo(() => groupBy(suggestions), [suggestions])
 
@@ -69,7 +70,7 @@ const SearchSuggest = ({
         window.clearTimeout(closeTimer.current)
       }
     }
-  }, [canShow])
+  }, [canShow, query])
   if (lockedItem) {
     return (
       <div className="flex items-center gap-2 h-10 rounded-xl border bg-white border-muted-foreground px-3">
@@ -78,7 +79,7 @@ const SearchSuggest = ({
         <button
           type="button"
           onClick={onUnlock}
-          className="text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground cursor-pointer"
         >
           <X className="h-4 w-4" />
         </button>
@@ -88,12 +89,17 @@ const SearchSuggest = ({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverAnchor asChild>
-        <div className="relative">
+        <div ref={ref} className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
           <Input
             value={value}
             onChange={(e) => {
               onChange(e.target.value)
+            }}
+            onFocus={() => {
+              if (canShow) {
+                setOpen(true)
+              }
             }}
             placeholder="Wpisz nazwę przedmiotu..."
             className="h-10 rounded-xl pl-12 bg-white border-muted-foreground/20"
@@ -107,6 +113,11 @@ const SearchSuggest = ({
           className="z-[100] w-[min(900px,calc(100vw-3rem))] p-0"
           onOpenAutoFocus={(e) => e.preventDefault()}
           onCloseAutoFocus={(e) => e.preventDefault()}
+          onInteractOutside={(e) => {
+            if (ref.current?.contains(e.target as Node)) {
+              e.preventDefault()
+            }
+          }}
         >
           <Command shouldFilter={false}>
             <CommandList

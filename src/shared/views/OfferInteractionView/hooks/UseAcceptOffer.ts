@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { OfferService } from "@/shared/api/services/OfferService"
 import { useAppStore } from "@/shared/store/appStore"
-import { extractBackendMessage } from "../utils/OfferHelpers"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 type UseAcceptOfferArgs = {
   offerId: number | null
@@ -46,7 +46,7 @@ export function useAcceptOffer({
       onSuccess?.()
     } catch (e) {
       setSubmitError(
-        `Nie udało się zaakceptować oferty: ${extractBackendMessage(e)}`
+        `Nie udało się zaakceptować oferty: ${extractErrorMessage(e)}`
       )
     } finally {
       setSubmitting(false)

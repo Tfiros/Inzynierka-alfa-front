@@ -49,6 +49,9 @@ const OfferDeleteConfirmationDialog = () => {
           </AlertDialogCancel>
           <AlertDialogAction
             disabled={deleter.isLoading || offerId == null}
+            className={
+              deleter.isLoading || offerId == null ? "" : "cursor-pointer"
+            }
             onClick={(e) => {
               e.preventDefault()
               void confirm()

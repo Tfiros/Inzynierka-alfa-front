@@ -121,12 +121,17 @@ const EditItemRarityDialog = (props: {
             variant="outline"
             onClick={() => props.onOpenChange(false)}
             disabled={saving}
+            className={saving ? "" : "cursor-pointer"}
           >
             Anuluj
           </Button>
+
           <Button
             onClick={submit}
             disabled={saving || !name.trim() || !props.gameId}
+            className={
+              saving || !name.trim() || !props.gameId ? "" : "cursor-pointer"
+            }
           >
             Zapisz
           </Button>

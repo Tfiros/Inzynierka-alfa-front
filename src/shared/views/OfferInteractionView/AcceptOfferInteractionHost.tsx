@@ -9,7 +9,7 @@ const AcceptOfferInteractionHost = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent>
         <AcceptOfferModalContent
           offerId={targetOfferId}
           onCancel={() => setOpen(false)}

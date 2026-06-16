@@ -177,11 +177,16 @@ const EditUserDialog = ({ open, user, onOpenChange, onSaved }: Props) => {
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={submitting}
+            className={submitting ? "" : "cursor-pointer"}
           >
             Anuluj
           </Button>
 
-          <Button onClick={handleSave} disabled={savingDisabled}>
+          <Button
+            onClick={handleSave}
+            disabled={savingDisabled}
+            className={savingDisabled ? "" : "cursor-pointer"}
+          >
             {submitting
               ? "Zapisywanie..."
               : form.loadingDetails

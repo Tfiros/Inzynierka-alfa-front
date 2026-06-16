@@ -153,6 +153,7 @@ export default function CounterOfferCard({
               variant="outline"
               size="sm"
               onClick={() => onOpenOffer(data.offerId)}
+              className="cursor-pointer"
             >
               Otwórz ofertę
             </Button>
@@ -167,12 +168,12 @@ export default function CounterOfferCard({
                 className="flex items-center gap-2 rounded-md border p-2"
               >
                 <img
-                  src={it.photoUrl?.trim() || "/placeholder.png"}
+                  src={it.photoUrl?.trim() || "/placeholder.webp"}
                   alt={it.name}
                   className="h-10 w-10 rounded object-cover bg-muted"
                   loading="lazy"
                   onError={(e) => {
-                    e.currentTarget.src = "/placeholder.png"
+                    e.currentTarget.src = "/placeholder.webp"
                   }}
                 />
 
@@ -225,6 +226,7 @@ export default function CounterOfferCard({
                           e.preventDefault()
                           await handleDeny()
                         }}
+                        className="cursor-pointer"
                       >
                         {denying ? "Odrzucam..." : "Tak, odrzuć"}
                       </Button>
@@ -255,7 +257,7 @@ export default function CounterOfferCard({
 
                     <AlertDialogAction asChild>
                       <Button
-                        className="bg-green-600 hover:bg-green-700 text-white"
+                        className="bg-green-600 hover:bg-green-700 text-white cursor-pointer"
                         disabled={disabled}
                         onClick={async (e) => {
                           e.preventDefault()
@@ -295,6 +297,11 @@ export default function CounterOfferCard({
                         variant="destructive"
                         disabled={
                           disabled || accepting || denying || cancelling
+                        }
+                        className={
+                          disabled || accepting || denying || cancelling
+                            ? ""
+                            : "cursor-pointer"
                         }
                         onClick={async (e) => {
                           e.preventDefault()

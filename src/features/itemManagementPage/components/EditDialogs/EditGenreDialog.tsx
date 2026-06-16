@@ -29,10 +29,16 @@ const EditGenreDialog = (props: {
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => props.onOpenChange(false)}>
+          <Button
+            variant="outline"
+            onClick={() => props.onOpenChange(false)}
+            className="cursor-pointer"
+          >
             Anuluj
           </Button>
-          <Button onClick={() => props.onSave(name)}>Zapisz</Button>
+          <Button onClick={() => props.onSave(name)} className="cursor-pointer">
+            Zapisz
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -71,11 +71,10 @@ export const useAppStore = create<AppState>()(
         }
 
         get().chat?.actions?.resetChat?.()
+        get().setNavbarUser(null)
 
         set({
           userLogin: null,
-          userId: null,
-          navbarUser: null,
           isAuthenticated: false,
           roles: [],
           sessionChecked: true,
@@ -134,11 +133,14 @@ export const chatSelectors = {
   activeChatTitle: (s: AppState) => s.chat.activeChatTitle,
   activeChatTradeId: (s: AppState) => s.chat.activeChatTradeId,
   activeChatClosedAt: (s: AppState) => s.chat.activeChatClosedAt,
+  activeChatOtherAuth0UserId: (s: AppState) =>
+    s.chat.activeChatOtherAuth0UserId,
+  activeChatOtherIsOnline: (s: AppState) => s.chat.activeChatOtherIsOnline,
 
   threads: (s: AppState) => s.chat.threads,
   messagesByChatId: (s: AppState) => s.chat.messagesByChatId,
   onlineMap: (s: AppState) => s.chat.onlineMap,
   chatActions: (s: AppState) => s.chat.actions,
 
-  totalUnread: (s: AppState) => s.counters?.chat_unread_total ?? 0,
+  totalUnread: (s: AppState) => s.chatUnreadTotal,
 }

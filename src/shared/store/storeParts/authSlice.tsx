@@ -5,6 +5,8 @@ import { UserInfoService } from "@/shared/api/services/UserInfoService"
 import type { FavouriteSlice } from "./FavouriteSlice"
 import { tokenRefreshScheduler } from "@/shared/lib/TokenRefreshScheduler"
 import { clearCsrfToken, setAuthFailureHandler } from "@/shared/api/Api"
+import type { UiSlice } from "./uiSlice"
+import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
 
 export type AuthMeDto = {
   isAuthenticated: boolean
@@ -19,6 +21,14 @@ export type AuthSlice = {
   navbarUser: UserNavbarInfoDto | null
   isAuthenticated: boolean
   roles: string[]
+
+  authModalOpen: boolean
+  authModalView: AuthModalView
+
+  setAuthModalOpen: (open: boolean) => void
+  setAuthModalView: (view: AuthModalView) => void
+  authRequestLogin: () => void
+  authRequestRegister: () => void
 
   sessionChecked: boolean
   csrfReady: boolean
@@ -36,6 +46,7 @@ type HasHardReset = { hardReset: () => Promise<void> }
 type StoreState = AuthSlice &
   HasHardReset &
   FavouriteSlice &
+  UiSlice &
   Record<string, unknown>
 
 export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
@@ -46,12 +57,12 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     tokenRefreshScheduler.cancel()
     clearCsrfToken()
 
+    get().setNavbarUser(null)
+
     set({
       userLogin: null,
       isAuthenticated: false,
       roles: [],
-      userId: null,
-      navbarUser: null,
       sessionChecked: true,
       favouriteIds: new Set(),
       favouriteIdsLoaded: false,
@@ -60,14 +71,14 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
 
   const loadNavbarInfoIfPossible = async (userId: number | null) => {
     if (!userId) {
-      set({ navbarUser: null })
+      get().setNavbarUser(null)
       return
     }
 
     const navRes = await UserInfoService.getNavbarInfo(userId)
 
     if (navRes.isSuccess && navRes.data) {
-      set({ navbarUser: navRes.data })
+      get().setNavbarUser(navRes.data)
     } else {
       set({ navbarUser: null })
     }
@@ -108,6 +119,29 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     csrfReady: false,
     sessionChecked: false,
 
+    authModalOpen: false,
+    authModalView: "login",
+
+    authRequestLogin: () => {
+      set({ authModalOpen: true, authModalView: "login" })
+    },
+
+    authRequestRegister: () => {
+      set({ authModalOpen: true, authModalView: "register" })
+    },
+
+    setAuthModalOpen: (open) => {
+      set(
+        open
+          ? { authModalOpen: true }
+          : { authModalOpen: false, authModalView: "login" }
+      )
+    },
+
+    setAuthModalView: (view) => {
+      set({ authModalView: view })
+    },
+
     initSecurity: async () => {
       await initSecurityOnce()
 
@@ -117,10 +151,17 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     },
 
     setNavbarUser: (info) => {
+      var ids = (info?.chatUnreadIds ?? [])
+        .map((x) => Number(x))
+        .filter((x) => Number.isFinite(x) && x > 0)
+      const unreadIds = new Set<number>(ids)
       set({
         navbarUser: info,
         userId: info?.id ?? null,
+        chatUnreadTotal: unreadIds.size,
+        unreadChatsLocal: unreadIds,
       })
+      get().setChatThreadIds(info?.chatIds ?? [])
     },
 
     syncSession: async () => {
@@ -166,6 +207,9 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
       scheduleRefreshIfPossible((res.data as any).expiresIn)
 
       await get().syncSession()
+      if (get().isAuthenticated) {
+        set({ authModalOpen: false, authModalView: "login" })
+      }
     },
 
     refresh: async () => {

@@ -11,7 +11,7 @@ const OfferItemCard = ({
     <div className="flex h-full flex-col gap-2">
       <AspectRatio ratio={16 / 9} className="flex items-center justify-center">
         <img
-          src={listingItemDto.itemDto.photoUrl?.trim() || "/placeholder.png"}
+          src={listingItemDto.itemDto.photoUrl?.trim() || "/placeholder.webp"}
           alt={listingItemDto.itemDto.name}
           className="w-full h-full object-cover cursor-pointer"
         />

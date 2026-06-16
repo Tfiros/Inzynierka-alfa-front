@@ -166,7 +166,11 @@ const FiltersSection = ({
         </Select>
 
         <div className="flex justify-end">
-          <Button variant="outline" className="gap-2" onClick={onRefresh}>
+          <Button
+            variant="outline"
+            className="gap-2 cursor-pointer"
+            onClick={onRefresh}
+          >
             <RotateCcw className="h-4 w-4" />
             Odśwież
           </Button>

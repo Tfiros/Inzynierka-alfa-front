@@ -7,13 +7,13 @@ import type {
 import { useCallback, useMemo, useState } from "react"
 import {
   addOfferLine,
-  extractBackendMessage,
   removeOfferLine,
   setOfferLineQuantity,
   toOfferItemDto,
   validateOfferDraft,
   type OfferLine,
 } from "../utils/OfferHelpers"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 export const useCreateOffer = () => {
   const [itemsHave, setItemsHave] = useState<OfferLine[]>([])
@@ -144,7 +144,7 @@ export const useCreateOffer = () => {
       return res.data.finalCost
     } catch (e) {
       setQuoteError(
-        `Wystąpił błąd podczas pobierania wyceny: ${extractBackendMessage(e)}`
+        `Wystąpił błąd podczas pobierania wyceny: ${extractErrorMessage(e)}`
       )
       return null
     } finally {
@@ -185,7 +185,7 @@ export const useCreateOffer = () => {
       return true
     } catch (e) {
       setError(
-        `Wystąpił błąd podczas tworzenia oferty: ${extractBackendMessage(e)}`
+        `Wystąpił błąd podczas tworzenia oferty: ${extractErrorMessage(e)}`
       )
       return false
     } finally {

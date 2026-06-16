@@ -7,6 +7,8 @@ const ChatWindowHost = () => {
   const tradeId = useAppStore(chatSelectors.activeChatTradeId)
   const closedAt = useAppStore(chatSelectors.activeChatClosedAt)
   const isWindowOpen = useAppStore(chatSelectors.isWindowOpen)
+  const otherAuth0UserId = useAppStore(chatSelectors.activeChatOtherAuth0UserId)
+  const otherIsOnline = useAppStore(chatSelectors.activeChatOtherIsOnline)
 
   if (!isWindowOpen || !activeChatId) return null
 
@@ -17,6 +19,8 @@ const ChatWindowHost = () => {
       title={title}
       tradeId={tradeId}
       closedAt={closedAt}
+      otherAuth0UserId={otherAuth0UserId}
+      otherIsOnline={otherIsOnline}
     />
   )
 }

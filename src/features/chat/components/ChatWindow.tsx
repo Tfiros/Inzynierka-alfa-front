@@ -34,15 +34,28 @@ type Props = {
   title: string | null
   tradeId: number | null
   closedAt: string | null
+  otherAuth0UserId: string | null
+  otherIsOnline: boolean | null
 }
 const EMPTY_MESSAGES: ChatMessage[] = []
 
-const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
+const ChatWindow = ({
+  chatId,
+  title,
+  tradeId,
+  closedAt,
+  otherAuth0UserId,
+  otherIsOnline,
+}: Props) => {
   const displayTitle =
     title ?? (tradeId ? `Wymiana #${tradeId}` : `Chat #${chatId}`)
   const isClosed = !!closedAt
   const actions = useAppStore(chatSelectors.chatActions)
   const userId = useAppStore((s: any) => s.userId as number | null)
+  const liveInMap = useAppStore((s) =>
+    otherAuth0UserId ? s.chat.onlineMap[otherAuth0UserId] : null
+  )
+  const online = otherAuth0UserId ? (liveInMap ?? otherIsOnline ?? false) : null
 
   useChatMembership(chatId, true)
 
@@ -140,20 +153,30 @@ const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
     !!m.deletedAt || m.message === "[deleted]"
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[420px] overflow-hidden rounded-xl border bg-background shadow-lg">
+    <div className="fixed bottom-4 right-4 z-50 w-[min(420px,calc(100vw-1rem))] overflow-hidden rounded-xl border bg-background shadow-lg">
       <div className="flex items-center justify-between border-b px-4 py-3">
         <div className="min-w-0">
-          {tradeId ? (
-            <Link
-              to={`/tradePanel?tradeId=${tradeId}`}
-              className="truncate text-sm font-semibold hover:underline"
-              title={displayTitle}
-            >
-              {displayTitle}
-            </Link>
-          ) : (
-            <div className="truncate text-sm font-semibold">{displayTitle}</div>
-          )}
+          <div className="flex items-center gap-2">
+            {online !== null && (
+              <span
+                title={online ? "Online" : "Offline"}
+                className={`h-2 w-2 shrink-0 rounded-full ${online ? "bg-green-500" : "bg-muted-foreground/30"}`}
+              ></span>
+            )}
+            {tradeId ? (
+              <Link
+                to={`/tradePanel?tradeId=${tradeId}`}
+                className="truncate text-sm font-semibold hover:underline"
+                title={displayTitle}
+              >
+                {displayTitle}
+              </Link>
+            ) : (
+              <div className="truncate text-sm font-semibold">
+                {displayTitle}
+              </div>
+            )}
+          </div>
           <div className="text-xs text-muted-foreground">
             {isClosed
               ? "Czat zamknięty (wymiana zakończona)"
@@ -204,7 +227,7 @@ const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
                             <button
                               type="button"
                               disabled={busy || deleted}
-                              className="rounded-md p-1 hover:bg-accent opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="rounded-md p-1 hover:bg-accent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                             >
                               <MoreVertical className="h-4 w-4" />
                             </button>
@@ -214,13 +237,22 @@ const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
                             <DropdownMenuItem
                               onClick={() => startEdit(m)}
                               disabled={busy || deleted || editExpired}
+                              className={
+                                busy || deleted || editExpired
+                                  ? ""
+                                  : "cursor-pointer"
+                              }
                             >
                               <Pencil className="mr-2 h-4 w-4" />
                               {editExpired ? "Edycja wygasła" : "Edytuj"}
                             </DropdownMenuItem>
 
                             <DropdownMenuItem
-                              className="text-destructive"
+                              className={
+                                busy || deleted
+                                  ? "text-destructive"
+                                  : "text-destructive cursor-pointer"
+                              }
                               onClick={() => deleteMessage(m.id)}
                               disabled={busy || deleted}
                             >
@@ -257,6 +289,7 @@ const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
                             variant="ghost"
                             onClick={() => saveEdit(m.id)}
                             disabled={busy}
+                            className="cursor-pointer"
                           >
                             <Check className="h-4 w-4" />
                           </Button>
@@ -266,6 +299,7 @@ const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
                             variant="ghost"
                             onClick={cancelEdit}
                             disabled={busy}
+                            className="cursor-pointer"
                           >
                             <XIcon className="h-4 w-4" />
                           </Button>
@@ -299,7 +333,11 @@ const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
           disabled={isClosed}
         />
 
-        <Button onClick={send} disabled={sending || isClosed}>
+        <Button
+          onClick={send}
+          disabled={sending || isClosed}
+          className={sending || isClosed ? "" : "cursor-pointer"}
+        >
           {sending ? "..." : "Wyślij"}
         </Button>
       </div>

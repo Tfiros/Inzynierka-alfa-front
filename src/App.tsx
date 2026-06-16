@@ -10,6 +10,7 @@ import { TooltipProvider } from "./shared/components/ui/tooltip"
 import { Toaster } from "sonner"
 import InteractionHostFallback from "./shared/views/OfferInteractionView/components/InteractionHostFallback"
 import ErrorBoundary from "./shared/components/ErrorBoundary"
+import AuthModalHost from "./shared/utilities/Auth/AuthModalHost"
 
 const FaqsSite = lazy(() => import("./features/faqsPage/faqsSite"))
 const ItemManagementPage = lazy(
@@ -75,6 +76,7 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
+        <AuthModalHost />
         {anyInteractionToMount && (
           <ErrorBoundary errorMessage="Nie udało się załadować okna. Odśwież stronę">
             <Suspense fallback={<InteractionHostFallback />}>

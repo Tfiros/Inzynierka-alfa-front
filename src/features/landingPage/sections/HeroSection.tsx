@@ -1,17 +1,13 @@
 import { Button } from "@/shared/components/button"
-import LPPhoto from "@/shared/photos/LandingPageGamesPhoto.jpg"
-import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
-import { useState } from "react"
+import LPPhoto from "@/shared/photos/LandingPageGamesPhoto.webp"
 import { useNavigate } from "react-router-dom"
-import AuthModal from "@/shared/utilities/Auth/AuthModal"
 import { useAppStore } from "@/shared/store/appStore"
 
 const HeroSection = () => {
   const navigate = useNavigate()
   const isAuthenticated = useAppStore((s) => s.isAuthenticated)
 
-  const [open, setOpen] = useState(false)
-  const [view, setView] = useState<AuthModalView>("login")
+  const authRequestRegister = useAppStore((s) => s.authRequestRegister)
   return (
     <section className="container mx-auto px-4 pt-16 pb-12 lg:pt-24 lg:pb-20">
       <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
@@ -26,13 +22,7 @@ const HeroSection = () => {
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             {!isAuthenticated && (
-              <Button
-                className="cursor-pointer"
-                onClick={() => {
-                  setView("register")
-                  setOpen(true)
-                }}
-              >
+              <Button className="cursor-pointer" onClick={authRequestRegister}>
                 Zacznij teraz za darmo
               </Button>
             )}
@@ -56,12 +46,6 @@ const HeroSection = () => {
           />
         </div>
       </div>
-      <AuthModal
-        open={open}
-        onOpenChange={setOpen}
-        view={view}
-        onViewChange={setView}
-      />
     </section>
   )
 }
