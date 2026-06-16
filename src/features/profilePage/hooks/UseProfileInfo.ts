@@ -1,4 +1,3 @@
-import type { ApiResult } from "@/shared/api/ApiResult"
 import { UserInfoService } from "@/shared/api/services/UserInfoService"
 import { useAppStore } from "@/shared/store/appStore"
 import type { UserProfileInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
