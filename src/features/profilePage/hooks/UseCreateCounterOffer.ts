@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from "react"
+import { toast } from "sonner"
 import { CounterOfferService } from "@/shared/api/services/CounterOfferService"
 import { useAppStore } from "@/shared/store/appStore"
 import type { CounterOfferDraftRequest } from "@/shared/types/counterOfferTypes/RequestResponseTypes"
-import type { ItemOfferDto } from "@/shared/types/offerTypes/RequestResponseTypes"
+import type {
+  ItemOfferDto,
+  offerDetailsDtoResponse,
+} from "@/shared/types/offerTypes/RequestResponseTypes"
 import {
   addOfferLine,
   removeOfferLine,
@@ -12,15 +16,18 @@ import {
 
 type UseCreateCounterOfferProps = {
   offerId: number | null
+  baseOffer: offerDetailsDtoResponse | null
   onSuccess: () => void
 }
 
 export const useCreateCounterOffer = ({
   offerId,
+  baseOffer,
   onSuccess,
 }: UseCreateCounterOfferProps) => {
   const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
   const inc = useAppStore((s) => s.inc)
+  const userTokens = useAppStore((s) => s.navbarUser?.tokens ?? 0)
 
   const [items, setItems] = useState<OfferLine[]>([])
   const [tokens, setTokens] = useState(0)
@@ -31,6 +38,32 @@ export const useCreateCounterOffer = ({
   const [serverCost, setServerCost] = useState<number | null>(null)
   const [quoteLoading, setQuoteLoading] = useState(false)
   const [quoteError, setQuoteError] = useState<string | null>(null)
+
+  const COUNTER_OFFER_CREATION_FEE = 20
+
+  const estimatedCost = useMemo(() => COUNTER_OFFER_CREATION_FEE, [])
+
+  const counterOfferTokens = tokens
+  const offerTokenCost = serverCost ?? estimatedCost
+  const totalTokensNeeded = offerTokenCost + counterOfferTokens
+
+  const hasNotEnoughTokens = totalTokensNeeded > userTokens
+
+  const baseOfferTokens = baseOffer?.offerCoreDto.tokensOffered ?? 0
+
+  const isIllegalTokenForTokenCounterOffer =
+    baseOffer != null &&
+    baseOffer.offeredItems.length === 0 &&
+    baseOfferTokens > 0 &&
+    items.length === 0 &&
+    counterOfferTokens > 0
+
+  const canConfirm =
+    (items.length > 0 || tokens > 0) &&
+    tokens >= 0 &&
+    !submitting &&
+    !hasNotEnoughTokens &&
+    !isIllegalTokenForTokenCounterOffer
 
   useEffect(() => {
     setSubmitError(null)
@@ -50,11 +83,6 @@ export const useCreateCounterOffer = ({
     setItems((previousItems) => removeOfferLine(previousItems, itemId))
   }
 
-  const canConfirm =
-    (items.length > 0 || tokens > 0) && tokens >= 0 && !submitting
-  const COUNTER_OFFER_CREATION_FEE = 20
-  const estimatedCost = useMemo(() => COUNTER_OFFER_CREATION_FEE, [])
-
   const buildRequest = (): CounterOfferDraftRequest => ({
     tokensOffered: tokens,
     items: items.map((i) => ({
@@ -65,6 +93,7 @@ export const useCreateCounterOffer = ({
 
   const openConfirm = async () => {
     if (!offerId) return false
+    if (hasNotEnoughTokens || isIllegalTokenForTokenCounterOffer) return false
 
     setQuoteLoading(true)
     setQuoteError(null)
@@ -90,6 +119,7 @@ export const useCreateCounterOffer = ({
 
   const submit = async () => {
     if (!offerId) return false
+    if (hasNotEnoughTokens || isIllegalTokenForTokenCounterOffer) return false
 
     setSubmitting(true)
     setSubmitError(null)
@@ -102,9 +132,12 @@ export const useCreateCounterOffer = ({
         return false
       }
 
+      toast.success("Kontroferta została wysłana.")
+
       inc("counterOffers:sent")
       void refreshNavbar()
       onSuccess()
+
       return true
     } catch {
       setSubmitError("Nie udało się wysłać kontroferty.")
@@ -121,6 +154,7 @@ export const useCreateCounterOffer = ({
 
   return {
     items,
+    tokens,
     setTokens,
     submitError,
     submitting,
@@ -135,5 +169,11 @@ export const useCreateCounterOffer = ({
     removeItem,
     openConfirm,
     submit,
+
+    userTokens,
+    baseOfferTokens,
+    totalTokensNeeded,
+    hasNotEnoughTokens,
+    isIllegalTokenForTokenCounterOffer,
   }
 }

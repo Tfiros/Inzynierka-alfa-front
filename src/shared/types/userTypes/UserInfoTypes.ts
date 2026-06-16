@@ -7,14 +7,13 @@ export type UserNavbarInfoDto = {
   experience: number
   level: number
   chatIds: number[]
-  chatUnreadTotal: number
+  chatUnreadIds: number[]
   notificationsUnreadTotal: number
   imageUrl?: string | null
 }
 
 export type UserProfileInfoDto = {
   id: number
-  experience: number
   level: number
   registrationDate: string
   nickname: string

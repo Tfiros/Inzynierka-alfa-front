@@ -2,12 +2,12 @@ import { Plus, RotateCcw } from "lucide-react"
 import { Button } from "@/shared/components/button"
 import { UniversalPagination } from "@/shared/components/Pagination"
 import { useAppStore } from "@/shared/store/appStore"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import FilterBar from "./components/FilterBar"
-import OfferDetails from "./components/OfferDetails"
 import OffersGrid from "./components/OffersGrid"
 import { useOfferDetails } from "./hooks/UseOfferDetails"
 import { useOffersListing } from "./hooks/UseOfferListing"
+import OfferDetails from "@/shared/components/offers/OfferDetails"
 
 const MarketplacePage = () => {
   const {
@@ -47,11 +47,10 @@ const MarketplacePage = () => {
 
   const requestCreate = useAppStore((s) => s.offerRequestCreate)
 
-  const handleShowDetails = (offerId: number) => {
+  const handleShowDetails = useCallback((offerId: number) => {
     setSelectedOffer(offerId)
     setDetailsOpen(true)
-  }
-
+  }, [])
   const handleOpenDialogChange = (open: boolean) => {
     setDetailsOpen(open)
     if (!open) {
@@ -77,7 +76,12 @@ const MarketplacePage = () => {
               <p>{totalCount} znalezionych ofert</p>
             </div>
             <div className="flex items-center gap-2">
-              <Button type="button" variant="outline" onClick={refreshOffers}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={refreshOffers}
+                className="cursor-pointer"
+              >
                 <RotateCcw className="h-4 w-4" />
                 Odśwież
               </Button>
@@ -131,7 +135,9 @@ const MarketplacePage = () => {
       </div>
       <Button
         type="button"
-        className="fixed bottom-6 right-6 z-50 rounded-full shadow-lg"
+        className={`fixed bottom-6 right-6 z-50 rounded-full shadow-lg ${
+          isAuthenticated ? "cursor-pointer" : ""
+        }`}
         size="lg"
         onClick={() => {
           requestCreate()

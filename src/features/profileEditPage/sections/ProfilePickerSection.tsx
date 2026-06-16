@@ -1,4 +1,4 @@
-import { TabsList, TabsTrigger } from "@radix-ui/react-tabs"
+import { TabsList, TabsTrigger } from "@/shared/components/tabs"
 
 const ProfilePickerSection = () => {
   return (

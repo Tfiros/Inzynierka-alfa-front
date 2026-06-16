@@ -59,7 +59,11 @@ const GamesTab = () => {
             ? `Gatunek: ${vm.genre.selectedName}`
             : "Wybierz gatunek"}
         </div>
-        <Button onClick={vm.actions.openAdd} disabled={!vm.genre.id}>
+        <Button
+          onClick={vm.actions.openAdd}
+          disabled={!vm.genre.id}
+          className="cursor-pointer"
+        >
           Dodaj grę
         </Button>
       </div>

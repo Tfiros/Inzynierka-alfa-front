@@ -1,54 +1,85 @@
-import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { useCallback, useState, type FormEvent } from "react"
 import { ContactService } from "@/shared/api/services/ContactService"
-import type { ContactFormData } from "@/shared/types/contactTypes"
 
 const useContactPage = () => {
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [subject, setSubject] = useState("")
+  const [message, setMessage] = useState("")
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<ContactFormData>({
-    defaultValues: {
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    },
-    mode: "onTouched",
-  })
+  const resetForm = useCallback(() => {
+    setName("")
+    setEmail("")
+    setSubject("")
+    setMessage("")
+  }, [])
 
-  const onSubmit = async (data: ContactFormData) => {
-    setSubmitError(null)
+  const submit = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault()
+      if (busy) return
 
-    try {
-      const result = await ContactService.sendMessage(data)
+      setError(null)
 
-      if (!result.isSuccess) {
-        setSubmitError(result.message || "Spróbuj ponownie za chwilę.")
-        return
+      if (!name.trim()) return setError("Podaj imię i nazwisko.")
+      if (name.trim().length < 2)
+        return setError("Imię musi mieć przynajmniej 2 znaki.")
+
+      if (!email.trim()) return setError("Podaj email.")
+      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email))
+        return setError("Nieprawidłowy adres email.")
+
+      if (!subject.trim()) return setError("Podaj temat.")
+      if (subject.trim().length < 3)
+        return setError("Temat musi mieć przynajmniej 3 znaki.")
+
+      if (!message.trim()) return setError("Podaj treść wiadomości.")
+      if (message.trim().length < 20)
+        return setError("Wiadomość musi mieć przynajmniej 20 znaków.")
+
+      setBusy(true)
+
+      try {
+        const res = await ContactService.sendMessage({
+          name: name.trim(),
+          email: email.trim(),
+          subject: subject.trim(),
+          message: message.trim(),
+        })
+
+        if (!res.isSuccess) {
+          setError(res.message || "Spróbuj ponownie za chwilę.")
+          return
+        }
+
+        resetForm()
+        setIsSuccessModalOpen(true)
+      } catch {
+        setError("Spróbuj ponownie za chwilę.")
+      } finally {
+        setBusy(false)
       }
-
-      reset()
-      setIsSuccessModalOpen(true)
-    } catch {
-      setSubmitError("Spróbuj ponownie za chwilę.")
-    }
-  }
+    },
+    [busy, email, message, name, resetForm, subject]
+  )
 
   return {
-    register,
-    handleSubmit,
-    errors,
-    isSubmitting,
-    submitError,
+    name,
+    setName,
+    email,
+    setEmail,
+    subject,
+    setSubject,
+    message,
+    setMessage,
+    busy,
+    error,
     isSuccessModalOpen,
     setIsSuccessModalOpen,
-    onSubmit,
+    submit,
   }
 }
 

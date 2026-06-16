@@ -1,4 +1,3 @@
-import type { ApiResult } from "@/shared/api/ApiResult"
 import { UserInfoService } from "@/shared/api/services/UserInfoService"
 import { useAppStore } from "@/shared/store/appStore"
 import type { UserProfileInfoDto } from "@/shared/types/userTypes/UserInfoTypes"
@@ -30,8 +29,7 @@ export const useProfileInfo = (profileId: number) => {
       try {
         setLoading(true)
         setError(null)
-        const res: ApiResult<UserProfileInfoDto> =
-          await UserInfoService.getProfileInfo(profileId)
+        const res = await UserInfoService.getProfileInfo(profileId)
         if (!res.isSuccess || !res.data) {
           setError(res.message ?? "Nie udało się załadować profilu.")
           return

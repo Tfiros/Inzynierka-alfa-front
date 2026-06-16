@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { memo, useState } from "react"
 import { Button } from "@/shared/components/button"
 import {
   DropdownMenu,
@@ -7,10 +7,10 @@ import {
 } from "@/shared/components/dropdown-menu"
 import NoifyIcon from "@/shared/photos/NotificationIcon.svg"
 import NoifyIcon_Dark from "@/shared/photos/NotificationIcon_Dark.svg"
-import { NotificationItem } from "./NotificationItem"
+import NotificationItem from "./NotificationItem"
 import { useNotificationsDropdown } from "../hooks/UseNotificationsDropdown"
 
-export const NotificationsDropdown = () => {
+const NotificationsDropdown = () => {
   const [open, setOpen] = useState(false)
 
   const {
@@ -59,7 +59,7 @@ export const NotificationsDropdown = () => {
       <DropdownMenuContent
         align="end"
         sideOffset={8}
-        className="w-[380px] overflow-hidden rounded-xl border bg-background p-0 shadow-xl"
+        className="w-[min(380px,calc(100vw-1rem))] overflow-hidden rounded-xl border bg-background p-0 shadow-xl"
       >
         <div className="flex items-center justify-between border-b px-4 py-3">
           <div>
@@ -77,7 +77,7 @@ export const NotificationsDropdown = () => {
             size="sm"
             onClick={handleMarkAllAsRead}
             disabled={unread === 0}
-            className="text-xs"
+            className="text-xs cursor-pointer"
           >
             Oznacz wszystkie jako przeczytane
           </Button>
@@ -119,3 +119,5 @@ export const NotificationsDropdown = () => {
     </DropdownMenu>
   )
 }
+
+export default memo(NotificationsDropdown)

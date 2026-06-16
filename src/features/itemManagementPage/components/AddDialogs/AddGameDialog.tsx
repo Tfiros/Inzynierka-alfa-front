@@ -146,6 +146,9 @@ const AddGameDialog = (props: {
                 variant="secondary"
                 onClick={addRarity}
                 disabled={saving || !rarityInput.trim()}
+                className={
+                  saving || !rarityInput.trim() ? "" : "cursor-pointer"
+                }
               >
                 Dodaj
               </Button>
@@ -166,7 +169,7 @@ const AddGameDialog = (props: {
                       <span>{r}</span>
                       <button
                         type="button"
-                        className="opacity-60 hover:opacity-100"
+                        className="opacity-60 hover:opacity-100 cursor-pointer"
                         onClick={() => removeRarity(r)}
                         aria-label={`Usuń rarity ${r}`}
                       >
@@ -198,12 +201,17 @@ const AddGameDialog = (props: {
             variant="outline"
             onClick={() => props.onOpenChange(false)}
             disabled={saving}
+            className={saving ? "" : "cursor-pointer"}
           >
             Anuluj
           </Button>
+
           <Button
             onClick={submit}
             disabled={saving || !name.trim() || !genreId}
+            className={
+              saving || !name.trim() || !genreId ? "" : "cursor-pointer"
+            }
           >
             Dodaj
           </Button>

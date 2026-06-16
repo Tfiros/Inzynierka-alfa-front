@@ -1,21 +1,7 @@
-import { useEffect, useRef, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import { Button } from "@/shared/components/button"
 import { Input } from "@/shared/components/input"
-import {
-  X,
-  MoreVertical,
-  Pencil,
-  Trash2,
-  Check,
-  X as XIcon,
-} from "lucide-react"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/shared/components/dropdown-menu"
+import { X } from "lucide-react"
 
 import { chatHubClient } from "@/shared/api/hubs/ChatHub"
 import { useAppStore, chatSelectors } from "@/shared/store/appStore"
@@ -28,21 +14,34 @@ import { useChatMessageActions } from "../hooks/UseChatMessagesActions"
 import useChatMembership from "../hooks/UseChatMembership"
 import { Link } from "react-router-dom"
 import { isMessageEditExpired } from "@/shared/utilities/Chat/isMessageEditExpired"
-
+import ChatMessageItem from "./ChatMessageItem"
 type Props = {
   chatId: number
   title: string | null
   tradeId: number | null
   closedAt: string | null
+  otherAuth0UserId: string | null
+  otherIsOnline: boolean | null
 }
 const EMPTY_MESSAGES: ChatMessage[] = []
 
-const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
+const ChatWindow = ({
+  chatId,
+  title,
+  tradeId,
+  closedAt,
+  otherAuth0UserId,
+  otherIsOnline,
+}: Props) => {
   const displayTitle =
     title ?? (tradeId ? `Wymiana #${tradeId}` : `Chat #${chatId}`)
   const isClosed = !!closedAt
   const actions = useAppStore(chatSelectors.chatActions)
   const userId = useAppStore((s: any) => s.userId as number | null)
+  const liveInMap = useAppStore((s) =>
+    otherAuth0UserId ? s.chat.onlineMap[otherAuth0UserId] : null
+  )
+  const online = otherAuth0UserId ? (liveInMap ?? otherIsOnline ?? false) : null
 
   useChatMembership(chatId, true)
 
@@ -140,20 +139,30 @@ const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
     !!m.deletedAt || m.message === "[deleted]"
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[420px] overflow-hidden rounded-xl border bg-background shadow-lg">
+    <div className="fixed bottom-4 right-4 z-50 w-[min(420px,calc(100vw-1rem))] overflow-hidden rounded-xl border bg-background shadow-lg">
       <div className="flex items-center justify-between border-b px-4 py-3">
         <div className="min-w-0">
-          {tradeId ? (
-            <Link
-              to={`/tradePanel?tradeId=${tradeId}`}
-              className="truncate text-sm font-semibold hover:underline"
-              title={displayTitle}
-            >
-              {displayTitle}
-            </Link>
-          ) : (
-            <div className="truncate text-sm font-semibold">{displayTitle}</div>
-          )}
+          <div className="flex items-center gap-2">
+            {online !== null && (
+              <span
+                title={online ? "Online" : "Offline"}
+                className={`h-2 w-2 shrink-0 rounded-full ${online ? "bg-green-500" : "bg-muted-foreground/30"}`}
+              ></span>
+            )}
+            {tradeId ? (
+              <Link
+                to={`/tradePanel?tradeId=${tradeId}`}
+                className="truncate text-sm font-semibold hover:underline"
+                title={displayTitle}
+              >
+                {displayTitle}
+              </Link>
+            ) : (
+              <div className="truncate text-sm font-semibold">
+                {displayTitle}
+              </div>
+            )}
+          </div>
           <div className="text-xs text-muted-foreground">
             {isClosed
               ? "Czat zamknięty (wymiana zakończona)"
@@ -183,100 +192,23 @@ const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
             const editExpired = isMessageEditExpired(m.createdAt)
 
             return (
-              <div
+              <ChatMessageItem
                 key={m.id}
-                className={`flex ${mine ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-[78%] ${mine ? "text-right" : "text-left"}`}
-                >
-                  <div className="mb-1 text-[11px] text-muted-foreground">
-                    {mine ? "Ty" : displayTitle} •{" "}
-                    {new Date(m.createdAt).toLocaleString()}
-                    {m.editedAt ? " (edyt.)" : ""}
-                  </div>
-
-                  <div className="group flex items-start gap-2">
-                    <div className="pt-1">
-                      {canEditOrDelete(m) && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button
-                              type="button"
-                              disabled={busy || deleted}
-                              className="rounded-md p-1 hover:bg-accent opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <MoreVertical className="h-4 w-4" />
-                            </button>
-                          </DropdownMenuTrigger>
-
-                          <DropdownMenuContent align="start">
-                            <DropdownMenuItem
-                              onClick={() => startEdit(m)}
-                              disabled={busy || deleted || editExpired}
-                            >
-                              <Pencil className="mr-2 h-4 w-4" />
-                              {editExpired ? "Edycja wygasła" : "Edytuj"}
-                            </DropdownMenuItem>
-
-                            <DropdownMenuItem
-                              className="text-destructive"
-                              onClick={() => deleteMessage(m.id)}
-                              disabled={busy || deleted}
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Usuń
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
-                    </div>
-
-                    <div
-                      className={[
-                        "inline-block rounded-2xl px-3 py-2 leading-snug shadow-sm border",
-                        mine
-                          ? "bg-primary text-primary-foreground border-primary/30 rounded-br-sm"
-                          : "bg-muted text-foreground border-border rounded-bl-sm",
-                        deleted ? "opacity-70 italic" : "",
-                      ].join(" ")}
-                    >
-                      {editingId === m.id ? (
-                        <div className="flex items-center gap-2">
-                          <Input
-                            value={editText}
-                            onChange={(e) => setEditText(e.target.value)}
-                            onKeyDown={(e) =>
-                              e.key === "Enter" && saveEdit(m.id)
-                            }
-                            disabled={busy}
-                          />
-
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => saveEdit(m.id)}
-                            disabled={busy}
-                          >
-                            <Check className="h-4 w-4" />
-                          </Button>
-
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={cancelEdit}
-                            disabled={busy}
-                          >
-                            <XIcon className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ) : (
-                        m.message
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                message={m}
+                mine={mine}
+                busy={busy}
+                deleted={deleted}
+                editExpired={editExpired}
+                displayTitle={displayTitle}
+                editingId={editingId}
+                editText={editText}
+                setEditText={setEditText}
+                canEditOrDelete={canEditOrDelete}
+                startEdit={startEdit}
+                cancelEdit={cancelEdit}
+                saveEdit={saveEdit}
+                deleteMessage={deleteMessage}
+              />
             )
           })}
 
@@ -299,7 +231,11 @@ const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
           disabled={isClosed}
         />
 
-        <Button onClick={send} disabled={sending || isClosed}>
+        <Button
+          onClick={send}
+          disabled={sending || isClosed}
+          className={sending || isClosed ? "" : "cursor-pointer"}
+        >
           {sending ? "..." : "Wyślij"}
         </Button>
       </div>
@@ -307,4 +243,4 @@ const ChatWindow = ({ chatId, title, tradeId, closedAt }: Props) => {
   )
 }
 
-export default ChatWindow
+export default memo(ChatWindow)

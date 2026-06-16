@@ -138,11 +138,38 @@ npm install
 
 Przed pierwszym lokalnym uruchomieniem naley wygenerować ceryfikat HTTPS:
 
+Najpierw nalezy w zalezności od systemu zainstalować narzędzie mkcert:
+
 ```bash
-dotnet dev-certs https --trust
+# macOS
+brew install mkcert
+
+# Windows
+choco install mkcert
+
+# Linux
+sudo apt install libnss3-tools
+brew install mkcert
 ```
 
-Następnie można uruchomić aplikację
+Następnie nalezy zaufać lokalnemu urzędowi certyfikacyjnemu:
+
+```bash
+mkcert -install
+```
+
+```bash
+mkcert -install
+```
+
+W katalogu projektu nalezy wygenerować certyfikat dla lokalnego środowiska:
+
+```bash
+mkdir -p certs
+mkcert -key-file ./certs/localhost-key.pem -cert-file ./certs/localhost.pem localhost 127.0.0.1 ::1
+```
+
+Po przygotowaniu certyfikatów można uruchomić aplikację
 
 ```bash
 npm run dev

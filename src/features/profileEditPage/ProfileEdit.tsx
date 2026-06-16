@@ -14,6 +14,7 @@ const ProfileEdit = () => {
     security,
     loading,
     error,
+    avatarError,
     savingProfile,
     savingSecurity,
     savingAvatar,
@@ -22,6 +23,7 @@ const ProfileEdit = () => {
     onChangeAvatar,
     setProfile,
     setSecurity,
+    setAvatarError,
   } = useProfileEdit()
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false)
 
@@ -68,8 +70,17 @@ const ProfileEdit = () => {
         <AvatarChangeDialog
           open={avatarDialogOpen}
           saving={savingAvatar}
-          onOpenChange={setAvatarDialogOpen}
-          onSubmit={onChangeAvatar}
+          onOpenChange={(open) => {
+            setAvatarDialogOpen(open)
+            if (!open) {
+              setAvatarError(null)
+            }
+          }}
+          error={avatarError}
+          onSubmit={async (file) => {
+            const submited = await onChangeAvatar(file)
+            if (submited) setAvatarDialogOpen(false)
+          }}
         />
       </div>
     </div>

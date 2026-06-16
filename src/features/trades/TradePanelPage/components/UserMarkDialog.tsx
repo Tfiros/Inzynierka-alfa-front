@@ -71,14 +71,14 @@ const UseMarkDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>Zakończ wymianę i oceń użytkowników</DialogTitle>
         </DialogHeader>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="rounded-xl border p-4">
-            <div className="text-xs text-muted-foreground">Kupujący</div>
+            <div className="text-xs text-muted-foreground">Odbierający</div>
             <div className="mt-1 text-sm font-medium">
               {buyer?.nickname ?? "—"}
             </div>
@@ -163,11 +163,16 @@ const UseMarkDialog = ({
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={loading}
+            className={loading ? "" : "cursor-pointer"}
           >
             Anuluj
           </Button>
 
-          <Button onClick={handleConfirm} disabled={!canConfirm || loading}>
+          <Button
+            onClick={handleConfirm}
+            disabled={!canConfirm || loading}
+            className={!canConfirm || loading ? "" : "cursor-pointer"}
+          >
             {loading ? "Zapisywanie..." : "Zakończ i zapisz oceny"}
           </Button>
         </div>

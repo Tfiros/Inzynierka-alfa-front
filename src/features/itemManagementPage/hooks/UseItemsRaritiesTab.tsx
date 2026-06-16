@@ -144,8 +144,8 @@ const useItemRaritiesTab = () => {
           rarityName: payload.name,
         })
 
-        if (!res?.isSuccess) {
-          throw new Error(res?.message ?? "Błąd żądania")
+        if (res && res.isSuccess === false) {
+          throw new Error(res.message ?? "Błąd żądania")
         }
 
         setEditOpen(false)

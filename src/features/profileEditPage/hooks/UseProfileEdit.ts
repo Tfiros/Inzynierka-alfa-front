@@ -1,15 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
-import {
-  ProfileInfoService,
-  mapBackendToProfile,
-  type Profile,
-} from "@/shared/api/services/ProfileInfoService"
 import { UserSettingsService } from "@/shared/api/services/UserSettingsService"
 import {
   mapSecurityBackendToFields,
   mapSecurityToUpdateRequest,
-} from "../components/ProfileSecurityData"
+} from "../utils/ProfileSecurityData"
 import { useAppStore } from "@/shared/store/appStore"
+import { UserInfoService } from "@/shared/api/services/UserInfoService"
+import { mapBackendToProfile, type Profile } from "../utils/ProfileMapper"
 
 export const useProfileEdit = () => {
   const userId = useAppStore((s) => s.userId)
@@ -22,15 +19,21 @@ export const useProfileEdit = () => {
   const [savingProfile, setSavingProfile] = useState(false)
   const [savingSecurity, setSavingSecurity] = useState(false)
   const [savingAvatar, setSavingAvatar] = useState(false)
+  const [avatarError, setAvatarError] = useState<string | null>(null)
 
   const fetchProfileData = useCallback(async () => {
     let alive = true
+    if (userId === null) {
+      setError("Brak zalogowanego użytkownika")
+      setLoading(false)
+      return
+    }
     try {
       setLoading(true)
       setError(null)
 
       const [resProfile, resSecurity] = await Promise.all([
-        ProfileInfoService.getProfileInfo(userId),
+        UserInfoService.getProfileInfo(userId),
         UserSettingsService.getProfileInfo(userId),
       ])
 
@@ -66,7 +69,7 @@ export const useProfileEdit = () => {
   }, [fetchProfileData])
 
   const onSaveProfile = useCallback(async () => {
-    if (!profile) return
+    if (!profile || userId === null) return
     try {
       setSavingProfile(true)
       setError(null)
@@ -76,7 +79,7 @@ export const useProfileEdit = () => {
         description: profile.bio,
       }
 
-      const res = await ProfileInfoService.updateProfile(body, userId)
+      const res = await UserInfoService.updateProfileInfo(body, userId)
       if (!res.isSuccess) {
         throw new Error(res.message ?? "Nie udało się zapisać profilu")
       }
@@ -92,7 +95,7 @@ export const useProfileEdit = () => {
   }, [profile, refreshNavbar, userId])
 
   const onSaveSecurity = useCallback(async () => {
-    if (!security) return
+    if (!security || userId === null) return
     try {
       setSavingSecurity(true)
       setError(null)
@@ -118,11 +121,11 @@ export const useProfileEdit = () => {
 
   const onChangeAvatar = useCallback(
     async (file: File) => {
-      if (!profile) return
+      if (!profile || userId === null) return false
       try {
         setSavingAvatar(true)
-        setError(null)
-        const res = await ProfileInfoService.updateAvatar(file, userId)
+        setAvatarError(null)
+        const res = await UserInfoService.updateAvatar(file, userId)
         if (!res.isSuccess) {
           throw new Error(res.message ?? "Nie udało się zmienić avatara")
         }
@@ -130,8 +133,10 @@ export const useProfileEdit = () => {
           setProfile(mapBackendToProfile(res.data))
         }
         await refreshNavbar()
+        return true
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Błąd zapisu avatara")
+        setAvatarError(e instanceof Error ? e.message : "Błąd zapisu avatara")
+        return false
       } finally {
         setSavingAvatar(false)
       }
@@ -144,6 +149,7 @@ export const useProfileEdit = () => {
     security,
     loading,
     error,
+    avatarError,
     savingProfile,
     savingSecurity,
     savingAvatar,
@@ -154,6 +160,7 @@ export const useProfileEdit = () => {
     setProfile,
     setSecurity,
     setError,
+    setAvatarError,
   }
 }
 

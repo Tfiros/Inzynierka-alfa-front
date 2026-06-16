@@ -60,7 +60,7 @@ type Props = {
 const AddItemDialog = (p: Props) => {
   return (
     <Dialog open={p.open} onOpenChange={p.onOpenChange}>
-      <DialogContent className="rounded-2xl">
+      <DialogContent className="rounded-2xl border bg-background text-foreground">
         <DialogHeader>
           <DialogTitle>Dodaj itemek</DialogTitle>
         </DialogHeader>
@@ -74,11 +74,13 @@ const AddItemDialog = (p: Props) => {
               open={p.gamesOpen}
               onOpenChange={p.onGamesOpenChange}
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Wybierz grę..." />
-              </SelectTrigger>
+              <div className="rounded-md border bg-background text-foreground">
+                <SelectTrigger>
+                  <SelectValue placeholder="Wybierz grę..." />
+                </SelectTrigger>
+              </div>
 
-              <SelectContent>
+              <SelectContent className="border bg-background text-foreground">
                 <div className="p-2">
                   <Input
                     value={p.gameSearch}
@@ -86,6 +88,7 @@ const AddItemDialog = (p: Props) => {
                     placeholder="Szukaj gry..."
                     onKeyDown={(e) => e.stopPropagation()}
                     onPointerDown={(e) => e.stopPropagation()}
+                    className="bg-background text-foreground placeholder:text-muted-foreground"
                   />
                 </div>
 
@@ -110,6 +113,7 @@ const AddItemDialog = (p: Props) => {
               value={p.name}
               onChange={(e) => p.onNameChange(e.target.value)}
               placeholder="np. Legendary Sword"
+              className="bg-background text-foreground placeholder:text-muted-foreground"
             />
           </div>
 
@@ -120,6 +124,7 @@ const AddItemDialog = (p: Props) => {
               onChange={(e) => p.onTokenChange(e.target.value)}
               placeholder="np. 150"
               inputMode="numeric"
+              className="bg-background text-foreground placeholder:text-muted-foreground"
             />
           </div>
 
@@ -132,11 +137,13 @@ const AddItemDialog = (p: Props) => {
               onOpenChange={p.onRaritiesOpenChange}
               disabled={!p.gameId}
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Wybierz rarity..." />
-              </SelectTrigger>
+              <div className="rounded-md border bg-background text-foreground">
+                <SelectTrigger>
+                  <SelectValue placeholder="Wybierz rarity..." />
+                </SelectTrigger>
+              </div>
 
-              <SelectContent>
+              <SelectContent className="border bg-background text-foreground">
                 <div className="p-2">
                   <Input
                     value={p.raritySearch}
@@ -144,6 +151,7 @@ const AddItemDialog = (p: Props) => {
                     placeholder="Szukaj rarity..."
                     onKeyDown={(e) => e.stopPropagation()}
                     onPointerDown={(e) => e.stopPropagation()}
+                    className="bg-background text-foreground placeholder:text-muted-foreground"
                   />
                 </div>
 
@@ -182,10 +190,16 @@ const AddItemDialog = (p: Props) => {
             variant="outline"
             onClick={() => p.onOpenChange(false)}
             disabled={p.saving}
+            className={p.saving ? "" : "cursor-pointer"}
           >
             Anuluj
           </Button>
-          <Button onClick={p.onSubmit} disabled={p.saving || !p.canSubmit}>
+
+          <Button
+            onClick={p.onSubmit}
+            disabled={p.saving || !p.canSubmit}
+            className={p.saving || !p.canSubmit ? "" : "cursor-pointer"}
+          >
             Dodaj
           </Button>
         </DialogFooter>

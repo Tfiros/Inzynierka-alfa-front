@@ -1,6 +1,6 @@
 import { Input } from "@/shared/components/input"
 import { Button } from "@/shared/components/button"
-import type { SecurityFields } from "../components/ProfileSecurityData"
+import type { SecurityFields } from "../utils/ProfileSecurityData"
 import { TabsContent } from "@/shared/components/tabs"
 import { Label } from "@/shared/components/label"
 
@@ -50,7 +50,7 @@ const ProfileSecurityDataSection = ({
 
           <div className="flex justify-center">
             <Button
-              className="gap-2"
+              className="gap-2 cursor-pointer"
               onClick={onSaveSecurity}
               disabled={savingSecurity}
             >

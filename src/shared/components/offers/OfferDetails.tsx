@@ -17,9 +17,8 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@/shared/components/ui/tooltip"
+} from "@/shared/components/tooltip"
 import { useState } from "react"
-import OfferCounterOffersSection from "./OfferCounterOffersDetails"
 import { useAcceptOffer } from "@/shared/views/OfferInteractionView/hooks/UseAcceptOffer"
 import {
   AlertDialog,
@@ -33,6 +32,7 @@ import {
 } from "@/shared/components/alert-dialog"
 import { useOfferPermissions } from "@/shared/hooks/UseOfferPermissions"
 import { useRequestOfferEdit } from "@/shared/hooks/UseRequestOfferEdit"
+import OfferCounterOffersSection from "./OfferCounterOffersDetails"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
@@ -71,8 +71,8 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
           !isActive && "bg-muted grayscale-75"
         )}
       >
-        <DialogHeader className="flex flex-col sm:flex-row sm:justify-between mr-12">
-          <div>
+        <DialogHeader className="flex flex-col text-left sm:flex-row sm:justify-between sm:mr-12">
+          <div className="pr-8 sm:pr-0">
             <DialogTitle>{offer.offerCoreDto.title}</DialogTitle>
             <DialogDescription>
               {offer.offerCoreDto.description}
@@ -86,7 +86,12 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                   type="button"
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => requestEdit(offer.offerCoreDto.offerId)}
+                  onClick={async () => {
+                    const opened = await requestEdit(offer.offerCoreDto.offerId)
+                    if (opened) {
+                      onOpenChange(false)
+                    }
+                  }}
                   disabled={!isActive || !isOwner || isChecking}
                 >
                   <SquarePen className="mr-1 h-4 w-4" />{" "}
@@ -97,7 +102,10 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
                   type="button"
                   variant="outline"
                   className="text-xs cursor-pointer w-full sm:w-auto"
-                  onClick={() => requestDelete(offer.offerCoreDto.offerId)}
+                  onClick={() => {
+                    onOpenChange(false)
+                    requestDelete(offer.offerCoreDto.offerId)
+                  }}
                   disabled={!isActive || !isOwner}
                 >
                   <Trash2 className="mr-1 h-4 w-4" /> Usuń
@@ -202,7 +210,7 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
           <div className="mt-4 rounded-2xl border bg-muted/20 p-4">
             <button
               type="button"
-              className="flex w-full items-center justify-between gap-3 text-left"
+              className="flex w-full items-center justify-between gap-3 text-left cursor-pointer"
               onClick={() => setCounterOffersOpen((v) => !v)}
             >
               <div>
@@ -261,6 +269,11 @@ const OfferDetails = ({ offer, open, onOpenChange }: OfferDetailsProps) => {
             </AlertDialogCancel>
             <AlertDialogAction
               disabled={acceptOffer.submitting || !acceptOffer.canAfford}
+              className={
+                acceptOffer.submitting || !acceptOffer.canAfford
+                  ? ""
+                  : "cursor-pointer"
+              }
               onClick={(e) => {
                 e.preventDefault()
                 void acceptOffer.submit()

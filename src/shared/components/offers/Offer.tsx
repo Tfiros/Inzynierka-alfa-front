@@ -26,7 +26,7 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@/shared/components/ui/tooltip"
+} from "@/shared/components/tooltip"
 import OfferItemCard from "./OfferItemCard"
 import OfferStatusPill from "./OfferStatusPill"
 import { formatRating, formatSuccessRating } from "@/shared/lib/formatters"
@@ -34,7 +34,7 @@ import { useToggleFavourite } from "@/shared/hooks/UseToggleFavourite"
 import { Link } from "react-router-dom"
 import { useOfferPermissions } from "@/shared/hooks/UseOfferPermissions"
 import { useRequestOfferEdit } from "@/shared/hooks/UseRequestOfferEdit"
-
+import { memo } from "react"
 type OfferProps = {
   offer: offerListingDtoResponse
   onShowDetails: (offerId: number) => void
@@ -282,4 +282,4 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   )
 }
 
-export default Offer
+export default memo(Offer)

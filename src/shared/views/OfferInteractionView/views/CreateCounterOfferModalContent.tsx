@@ -38,6 +38,7 @@ export default function CreateCounterOfferModalContent({
 }: Props) {
   const { baseOffer, baseOfferLoading, baseOfferError } =
     useCounterOfferModal(offerId)
+
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [tokensInput, setTokensInput] = useState("0")
 
@@ -60,13 +61,33 @@ export default function CreateCounterOfferModalContent({
     removeItem,
     openConfirm,
     submit,
+    userTokens,
+    baseOfferTokens,
+    totalTokensNeeded,
+    hasNotEnoughTokens,
+    isIllegalTokenForTokenCounterOffer,
   } = useCreateCounterOffer({
     offerId,
+    baseOffer,
     onSuccess: () => {
       setConfirmOpen(false)
       onCancel()
     },
   })
+
+  const submitDisabled =
+    !canConfirm ||
+    quoteLoading ||
+    hasNotEnoughTokens ||
+    isIllegalTokenForTokenCounterOffer
+
+  const cancelDisabled = submitting || quoteLoading
+
+  const confirmDisabled =
+    submitting ||
+    quoteLoading ||
+    hasNotEnoughTokens ||
+    isIllegalTokenForTokenCounterOffer
 
   return (
     <>
@@ -87,21 +108,33 @@ export default function CreateCounterOfferModalContent({
           )}
 
           {!baseOfferLoading && !baseOfferError && baseOffer && (
-            <div className="flex items-center justify-between gap-4">
-              <p className="min-w-0 text-sm font-medium text-foreground line-clamp-1">
-                {baseOffer.offeredItems
-                  .slice(0, 2)
-                  .map((x) => {
-                    const itemName = x.itemDto.name
-                    const gameName = x.itemDto.game.name
-                    return gameName ? `${itemName} · ${gameName}` : itemName
-                  })
-                  .join(", ")}
-                {baseOffer.offeredItems.length > 3 ? "..." : ""}
-              </p>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-4">
+                <p className="min-w-0 text-sm font-medium text-foreground line-clamp-1">
+                  {baseOffer.offeredItems.length > 0
+                    ? baseOffer.offeredItems
+                        .slice(0, 2)
+                        .map((x) => {
+                          const itemName = x.itemDto.name
+                          const gameName = x.itemDto.game.name
+                          return gameName
+                            ? `${itemName} · ${gameName}`
+                            : itemName
+                        })
+                        .join(", ")
+                    : "Brak itemów po stronie właściciela oferty"}
+                  {baseOffer.offeredItems.length > 3 ? "..." : ""}
+                </p>
 
-              <div className="shrink-0 text-xs text-muted-foreground">
-                {baseOffer.offeredItems.length} szt.
+                <div className="shrink-0 text-xs text-muted-foreground">
+                  {baseOffer.offeredItems.length} szt.
+                </div>
+              </div>
+              <div className="grid gap-2 text-sm">
+                <div className="rounded-xl border border-border bg-background px-3 py-2">
+                  <span className="text-muted-foreground">Ilość tokenów:</span>{" "}
+                  <span className="font-semibold">{baseOfferTokens}</span>
+                </div>
               </div>
             </div>
           )}
@@ -123,8 +156,8 @@ export default function CreateCounterOfferModalContent({
             pending={suggestions.pending}
           />
 
-          <div className="mt-4 flex items-center gap-3">
-            <div className="flex-1">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="sm:flex-1">
               <Select
                 value={itemDropdown.gameId ? String(itemDropdown.gameId) : ""}
                 onValueChange={(v) =>
@@ -156,7 +189,7 @@ export default function CreateCounterOfferModalContent({
               )}
             </div>
 
-            <div className="flex-[2]">
+            <div className="sm:flex-[2] sm:pt-2">
               <SearchSuggest
                 value={itemDropdown.query}
                 onChange={itemDropdown.setQuery}
@@ -214,6 +247,20 @@ export default function CreateCounterOfferModalContent({
           </div>
         </div>
 
+        {hasNotEnoughTokens && (
+          <div className="mt-4 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            Nie masz wystarczającej liczby tokenów, aby złożyć tę kontrofertę.
+            Wymagane: {totalTokensNeeded}, posiadane: {userTokens}.
+          </div>
+        )}
+
+        {isIllegalTokenForTokenCounterOffer && (
+          <div className="mt-4 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            Nie można złożyć kontroferty, która prowadziłaby do wymiany tokenów
+            za tokeny.
+          </div>
+        )}
+
         {submitError && (
           <div className="mt-4 text-sm text-red-500">{submitError}</div>
         )}
@@ -224,8 +271,10 @@ export default function CreateCounterOfferModalContent({
           </div>
 
           <Button
-            className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
-            disabled={!canConfirm || quoteLoading}
+            className={`h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black ${
+              submitDisabled ? "" : "cursor-pointer"
+            }`}
+            disabled={submitDisabled}
             onClick={async () => {
               const ok = await openConfirm()
               if (ok) {
@@ -239,9 +288,11 @@ export default function CreateCounterOfferModalContent({
 
           <Button
             variant="outline"
-            className="h-10 rounded-xl px-8 text-base"
+            className={`h-10 rounded-xl px-8 text-base ${
+              cancelDisabled ? "" : "cursor-pointer"
+            }`}
             onClick={onCancel}
-            disabled={submitting || quoteLoading}
+            disabled={cancelDisabled}
           >
             Anuluj
           </Button>
@@ -272,11 +323,16 @@ export default function CreateCounterOfferModalContent({
           )}
 
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={submitting || quoteLoading}>
+            <AlertDialogCancel
+              disabled={cancelDisabled}
+              className={cancelDisabled ? "" : "cursor-pointer"}
+            >
               Wróć
             </AlertDialogCancel>
+
             <AlertDialogAction
-              disabled={submitting || quoteLoading}
+              disabled={confirmDisabled}
+              className={confirmDisabled ? "" : "cursor-pointer"}
               onClick={(e) => {
                 e.preventDefault()
                 void submit()

@@ -9,7 +9,6 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   addOfferLine,
-  extractBackendMessage,
   MIN_DESCRIPTION_LEN,
   MIN_TITLE_LEN,
   removeOfferLine,
@@ -18,6 +17,7 @@ import {
   validateOfferDraft,
   type OfferLine,
 } from "../utils/OfferHelpers"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 export const useEditOffer = (offerId: number | null) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -192,7 +192,7 @@ export const useEditOffer = (offerId: number | null) => {
         return res.data
       } catch (e) {
         setQuoteError(
-          `Wystąpił błąd podczas pobierania wyceny: ${extractBackendMessage(e)}`
+          `Wystąpił błąd podczas pobierania wyceny: ${extractErrorMessage(e)}`
         )
         return null
       } finally {
@@ -259,7 +259,7 @@ export const useEditOffer = (offerId: number | null) => {
       return true
     } catch (e) {
       setError(
-        `Wystąpił błąd podczas aktualizacji oferty: ${extractBackendMessage(e)}`
+        `Wystąpił błąd podczas aktualizacji oferty: ${extractErrorMessage(e)}`
       )
       return false
     } finally {

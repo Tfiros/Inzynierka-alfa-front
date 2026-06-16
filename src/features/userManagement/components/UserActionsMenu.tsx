@@ -17,7 +17,12 @@ const UserActionsMenu = ({ onEdit, onDelete }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Akcje">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Akcje"
+          className="cursor-pointer"
+        >
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -26,7 +31,7 @@ const UserActionsMenu = ({ onEdit, onDelete }: Props) => {
         <DropdownMenuItem onClick={onEdit}>Edytuj</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="text-destructive focus:text-destructive"
+          className="text-destructive focus:text-destructive cursor-pointer"
           onClick={onDelete}
         >
           Usuń

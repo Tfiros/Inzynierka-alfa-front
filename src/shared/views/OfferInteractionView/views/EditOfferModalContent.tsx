@@ -23,7 +23,7 @@ import SectionTitle from "../components/SectionTitle"
 import SearchSuggest from "../components/SearchSuggest"
 import OfferPickedItemsList from "../components/OfferPickedItemsList"
 import DurationCard from "../components/DurationCard"
-import { Switch } from "@/shared/components/ui/switch"
+import { Switch } from "@/shared/components/switch"
 import { Plus } from "lucide-react"
 import { useEditOffer } from "../hooks/UseEditOffer"
 import { Input } from "@/shared/components/input"
@@ -76,6 +76,11 @@ const EditOfferModalContent = ({
     offer.reset()
     onCancel()
   }
+
+  const submitDisabled = !offer.canSubmit
+  const cancelDisabled = offer.isLoading
+  const confirmDisabled = offer.isLoading || offer.quoteIsLoading
+
   return (
     <>
       <DialogHeader className="flex flex-col items-center gap-y-2">
@@ -120,8 +125,8 @@ const EditOfferModalContent = ({
             pending={haveSuggestions.pending}
           />
 
-          <div className="mt-4 flex items-center gap-3">
-            <div className="flex-1">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="sm:flex-1">
               <Select
                 value={haveDropdown.gameId ? String(haveDropdown.gameId) : ""}
                 onValueChange={(v) =>
@@ -152,43 +157,45 @@ const EditOfferModalContent = ({
               )}
             </div>
 
-            <div className="flex-[2]">
-              <SearchSuggest
-                value={haveDropdown.query}
-                onChange={haveDropdown.setQuery}
-                suggestions={haveDropdown.items}
-                loading={haveDropdown.itemsLoading}
-                error={haveDropdown.itemsError}
-                disabled={
-                  offer.isLoading ||
-                  offer.quoteIsLoading ||
-                  haveDropdown.gameId == null ||
-                  haveDropdown.gamesLoading
-                }
-                onPickSuggestion={(item) => {
-                  setHaveLockedItem(item)
-                }}
-                lockedItem={haveLockedItem}
-                onUnlock={() => {
-                  setHaveLockedItem(null)
-                  haveDropdown.setQuery("")
-                }}
-                pending={haveDropdown.itemsPending}
-              />
-            </div>
-            <div className="shrink-0">
-              <IconSquareButton
-                ariaLabel="Dodaj oferowany przedmiot"
-                disabled={
-                  !haveLockedItem || offer.isLoading || offer.quoteIsLoading
-                }
-                onClick={() => {
-                  if (!haveLockedItem) return
-                  offer.addHaveItem(haveLockedItem)
-                  setHaveLockedItem(null)
-                  haveDropdown.reset()
-                }}
-              />
+            <div className="flex items-center gap-3 sm:flex-[2]">
+              <div className="flex-1">
+                <SearchSuggest
+                  value={haveDropdown.query}
+                  onChange={haveDropdown.setQuery}
+                  suggestions={haveDropdown.items}
+                  loading={haveDropdown.itemsLoading}
+                  error={haveDropdown.itemsError}
+                  disabled={
+                    offer.isLoading ||
+                    offer.quoteIsLoading ||
+                    haveDropdown.gameId == null ||
+                    haveDropdown.gamesLoading
+                  }
+                  onPickSuggestion={(item) => {
+                    setHaveLockedItem(item)
+                  }}
+                  lockedItem={haveLockedItem}
+                  onUnlock={() => {
+                    setHaveLockedItem(null)
+                    haveDropdown.setQuery("")
+                  }}
+                  pending={haveDropdown.itemsPending}
+                />
+              </div>
+              <div className="shrink-0">
+                <IconSquareButton
+                  ariaLabel="Dodaj oferowany przedmiot"
+                  disabled={
+                    !haveLockedItem || offer.isLoading || offer.quoteIsLoading
+                  }
+                  onClick={() => {
+                    if (!haveLockedItem) return
+                    offer.addHaveItem(haveLockedItem)
+                    setHaveLockedItem(null)
+                    haveDropdown.reset()
+                  }}
+                />
+              </div>
             </div>
           </div>
           <OfferPickedItemsList
@@ -233,8 +240,8 @@ const EditOfferModalContent = ({
             pending={wantSuggestions.pending}
           />
 
-          <div className="mt-4 flex items-center gap-3">
-            <div className="flex-1">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="sm:flex-1">
               <Select
                 value={wantDropdown.gameId ? String(wantDropdown.gameId) : ""}
                 onValueChange={(v) =>
@@ -264,44 +271,45 @@ const EditOfferModalContent = ({
                 </div>
               )}
             </div>
-
-            <div className="flex-[2]">
-              <SearchSuggest
-                value={wantDropdown.query}
-                onChange={wantDropdown.setQuery}
-                suggestions={wantDropdown.items}
-                loading={wantDropdown.itemsLoading}
-                error={wantDropdown.itemsError}
-                disabled={
-                  offer.isLoading ||
-                  offer.quoteIsLoading ||
-                  wantDropdown.gameId == null ||
-                  wantDropdown.gamesLoading
-                }
-                onPickSuggestion={(item) => {
-                  setWantLockedItem(item)
-                }}
-                lockedItem={wantLockedItem}
-                onUnlock={() => {
-                  setWantLockedItem(null)
-                  wantDropdown.setQuery("")
-                }}
-                pending={wantDropdown.itemsPending}
-              />
-            </div>
-            <div className="shrink-0">
-              <IconSquareButton
-                ariaLabel="Dodaj szukany przedmiot"
-                disabled={
-                  !wantLockedItem || offer.isLoading || offer.quoteIsLoading
-                }
-                onClick={() => {
-                  if (!wantLockedItem) return
-                  offer.addWantItem(wantLockedItem)
-                  setWantLockedItem(null)
-                  wantDropdown.reset()
-                }}
-              />
+            <div className="flex items-center gap-3 sm:flex-[2]">
+              <div className="flex-1">
+                <SearchSuggest
+                  value={wantDropdown.query}
+                  onChange={wantDropdown.setQuery}
+                  suggestions={wantDropdown.items}
+                  loading={wantDropdown.itemsLoading}
+                  error={wantDropdown.itemsError}
+                  disabled={
+                    offer.isLoading ||
+                    offer.quoteIsLoading ||
+                    wantDropdown.gameId == null ||
+                    wantDropdown.gamesLoading
+                  }
+                  onPickSuggestion={(item) => {
+                    setWantLockedItem(item)
+                  }}
+                  lockedItem={wantLockedItem}
+                  onUnlock={() => {
+                    setWantLockedItem(null)
+                    wantDropdown.setQuery("")
+                  }}
+                  pending={wantDropdown.itemsPending}
+                />
+              </div>
+              <div className="shrink-0">
+                <IconSquareButton
+                  ariaLabel="Dodaj szukany przedmiot"
+                  disabled={
+                    !wantLockedItem || offer.isLoading || offer.quoteIsLoading
+                  }
+                  onClick={() => {
+                    if (!wantLockedItem) return
+                    offer.addWantItem(wantLockedItem)
+                    setWantLockedItem(null)
+                    wantDropdown.reset()
+                  }}
+                />
+              </div>
             </div>
           </div>
           <OfferPickedItemsList
@@ -392,8 +400,10 @@ const EditOfferModalContent = ({
           </div>
           <Button
             type="button"
-            className="h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black"
-            disabled={!offer.canSubmit}
+            className={`h-10 flex-1 rounded-xl text-base font-semibold bg-black text-white border-black ${
+              submitDisabled ? "" : "cursor-pointer"
+            }`}
+            disabled={submitDisabled}
             onClick={() => {
               void handleOpenConfirm()
             }}
@@ -405,9 +415,11 @@ const EditOfferModalContent = ({
           <Button
             type="button"
             variant="outline"
-            className="h-10 rounded-xl px-8 text-base"
+            className={`h-10 rounded-xl px-8 text-base ${
+              cancelDisabled ? "" : "cursor-pointer"
+            }`}
             onClick={onCancel}
-            disabled={offer.isLoading}
+            disabled={cancelDisabled}
           >
             Anuluj
           </Button>
@@ -434,12 +446,14 @@ const EditOfferModalContent = ({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              disabled={offer.isLoading || offer.quoteIsLoading}
+              disabled={confirmDisabled}
+              className={confirmDisabled ? "" : "cursor-pointer"}
             >
               Wróć
             </AlertDialogCancel>
             <AlertDialogAction
-              disabled={offer.isLoading || offer.quoteIsLoading}
+              disabled={confirmDisabled}
+              className={confirmDisabled ? "" : "cursor-pointer"}
               onClick={(e) => {
                 e.preventDefault()
                 void handleConfirmUpdate()

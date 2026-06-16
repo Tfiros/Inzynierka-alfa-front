@@ -10,11 +10,20 @@ const useOpenThread = () => {
       chatId: number,
       tradeId: number,
       closedAtUtc?: string | null,
-      title?: string | null
+      title?: string | null,
+      otherAuth0UserId?: string | null,
+      otherIsOnline?: boolean | null
     ) => {
       if (!Number.isFinite(chatId) || chatId <= 0) return
 
-      actions.openWindow(chatId, tradeId, closedAtUtc ?? null, title ?? null)
+      actions.openWindow(
+        chatId,
+        tradeId,
+        closedAtUtc ?? null,
+        title ?? null,
+        otherAuth0UserId ?? null,
+        otherIsOnline ?? null
+      )
       actions.resetUnread(chatId)
 
       const res = await ChatService.getMessages({

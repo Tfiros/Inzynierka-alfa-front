@@ -11,6 +11,8 @@ type ChatState = {
   activeChatTradeId: number | null
   activeChatClosedAt: string | null
   activeChatTitle: string | null
+  activeChatOtherAuth0UserId: string | null
+  activeChatOtherIsOnline: boolean | null
 
   threads: ChatThreadListItemDto[]
   messagesByChatId: Record<number, ChatMessage[]>
@@ -25,7 +27,9 @@ type ChatActions = {
     chatId: number,
     tradeId: number,
     closedAtUtc?: string | null,
-    title?: string | null
+    title?: string | null,
+    otherAuth0UserId?: string | null,
+    otherIsOnline?: boolean | null
   ) => void
   closeWindow: () => void
   markThreadClosed: (chatId: number, closedAtUtc: string) => void
@@ -65,6 +69,8 @@ const initialChatState: ChatState = {
   activeChatTitle: null,
   activeChatTradeId: null,
   activeChatClosedAt: null,
+  activeChatOtherAuth0UserId: null,
+  activeChatOtherIsOnline: null,
   threads: [],
   messagesByChatId: {},
   onlineMap: {},
@@ -100,7 +106,9 @@ export const createChatSlice: StateCreator<ChatSlice, [], [], ChatSlice> = (
         chatId: number,
         tradeId: number,
         closedAtUtc?: string | null,
-        title?: string | null
+        title?: string | null,
+        otherAuth0UserId?: string | null,
+        otherIsOnline?: boolean | null
       ) =>
         set((state) => ({
           chat: {
@@ -110,6 +118,8 @@ export const createChatSlice: StateCreator<ChatSlice, [], [], ChatSlice> = (
             activeChatTitle: title ?? null,
             activeChatTradeId: tradeId,
             activeChatClosedAt: closedAtUtc ?? null,
+            activeChatOtherAuth0UserId: otherAuth0UserId ?? null,
+            activeChatOtherIsOnline: otherIsOnline ?? null,
             isPopoverOpen: false,
           },
         })),
@@ -123,6 +133,8 @@ export const createChatSlice: StateCreator<ChatSlice, [], [], ChatSlice> = (
             activeChatTitle: null,
             activeChatTradeId: null,
             activeChatClosedAt: null,
+            activeChatOtherAuth0UserId: null,
+            activeChatOtherIsOnline: null,
           },
         })),
       markThreadClosed: (chatId: number, closedAtUtc: string) =>

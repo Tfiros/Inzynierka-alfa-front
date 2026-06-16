@@ -155,10 +155,16 @@ const AddUserDialog = (props: Props) => {
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={submitting}
+              className={submitting ? "" : "cursor-pointer"}
             >
               Anuluj
             </Button>
-            <Button type="submit" disabled={submitting}>
+
+            <Button
+              type="submit"
+              disabled={submitting}
+              className={submitting ? "" : "cursor-pointer"}
+            >
               {submitting ? "Dodawanie..." : "Zatwierdź"}
             </Button>
           </DialogFooter>

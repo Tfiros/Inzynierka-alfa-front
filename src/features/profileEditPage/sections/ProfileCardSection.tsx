@@ -1,8 +1,8 @@
-import type { Profile } from "@/shared/api/services/ProfileInfoService"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
 import { Button } from "@/shared/components/button"
 import { Card } from "@/shared/components/card"
 import { Separator } from "@/shared/components/separator"
+import type { Profile } from "../utils/ProfileMapper"
 
 type Props = {
   profile: Profile
@@ -30,7 +30,11 @@ const ProfileCardSection = ({ profile, onOpenAvatarDialog }: Props) => {
         </Avatar>
 
         <div className="flex flex-col items-center gap-2">
-          <Button type="button" onClick={onOpenAvatarDialog}>
+          <Button
+            type="button"
+            onClick={onOpenAvatarDialog}
+            className="cursor-pointer"
+          >
             Zmień avatar
           </Button>
         </div>
@@ -40,9 +44,6 @@ const ProfileCardSection = ({ profile, onOpenAvatarDialog }: Props) => {
         <div className="w-full text-sm text-muted-foreground grid grid-cols-2 gap-y-2">
           <span>Poziom</span>
           <span className="text-right text-foreground">{profile.level}</span>
-
-          <span>Monety</span>
-          <span className="text-right text-foreground">{profile.coins}</span>
 
           <span>Członek od</span>
           <span className="text-right text-foreground">

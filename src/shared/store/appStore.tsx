@@ -7,13 +7,11 @@ import {
 } from "./storeParts/NotificationSlice"
 import { createOfferSlice, type OfferSlice } from "./storeParts/OfferSlice"
 import { createChatSlice, type ChatSlice } from "./storeParts/ChatSlice"
-import { chatHubClient } from "@/shared/api/hubs/ChatHub"
 import { createUiSlice, type UiSlice } from "./storeParts/uiSlice"
 import {
   createCounterOfferSlice,
   type CounterOfferSlice,
 } from "./storeParts/CounterOfferSlice"
-import { NotificationsHubClient } from "../api/hubs/NotificationsHubClient"
 import {
   createAcceptOfferSlice,
   type AcceptOfferSlice,
@@ -58,23 +56,25 @@ export const useAppStore = create<AppState>()(
         clearCsrfToken()
 
         try {
+          const { chatHubClient } = await import("@/shared/api/hubs/ChatHub")
           await chatHubClient.stop()
         } catch (e) {
           console.error("chatHub stop failed", e)
         }
 
         try {
+          const { NotificationsHubClient } =
+            await import("@/shared/api/hubs/NotificationsHubClient")
           await NotificationsHubClient.stop()
         } catch (e) {
           console.error("notificationsHub stop failed", e)
         }
 
         get().chat?.actions?.resetChat?.()
+        get().setNavbarUser(null)
 
         set({
           userLogin: null,
-          userId: null,
-          navbarUser: null,
           isAuthenticated: false,
           roles: [],
           sessionChecked: true,
@@ -133,11 +133,14 @@ export const chatSelectors = {
   activeChatTitle: (s: AppState) => s.chat.activeChatTitle,
   activeChatTradeId: (s: AppState) => s.chat.activeChatTradeId,
   activeChatClosedAt: (s: AppState) => s.chat.activeChatClosedAt,
+  activeChatOtherAuth0UserId: (s: AppState) =>
+    s.chat.activeChatOtherAuth0UserId,
+  activeChatOtherIsOnline: (s: AppState) => s.chat.activeChatOtherIsOnline,
 
   threads: (s: AppState) => s.chat.threads,
   messagesByChatId: (s: AppState) => s.chat.messagesByChatId,
   onlineMap: (s: AppState) => s.chat.onlineMap,
   chatActions: (s: AppState) => s.chat.actions,
 
-  totalUnread: (s: AppState) => s.counters?.chat_unread_total ?? 0,
+  totalUnread: (s: AppState) => s.chatUnreadTotal,
 }

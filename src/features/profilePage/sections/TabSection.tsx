@@ -5,12 +5,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components/tabs"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { useUserOffers } from "../hooks/UseProfileOffers"
-import Offer from "@/features/marketplacePage/components/Offer"
-import OfferDetails from "@/features/marketplacePage/components/OfferDetails"
-import { useOfferDetails } from "@/features/marketplacePage/hooks/UseOfferDetails"
-import { useCounterOffers } from "../hooks/UseCounterOffers"
 import { useUpdateCounterOfferStatus } from "../hooks/UseUpdateCounterOfferStatus"
 import { UseAcceptCounterOffer } from "../hooks/UseAcceptCounterOffer"
 import CounterOfferCard from "../component/CounterOfferCard"
@@ -19,6 +15,10 @@ import { useAppStore } from "@/shared/store/appStore"
 import { useFavouriteOffers } from "../hooks/UseFavouriteOffers"
 import { useCancelCounterOffer } from "../hooks/UseCancelCounterOffer"
 import { UniversalPagination } from "@/shared/components/Pagination"
+import { useOfferDetails } from "@/features/marketplacePage/hooks/UseOfferDetails"
+import Offer from "@/shared/components/offers/Offer"
+import OfferDetails from "@/shared/components/offers/OfferDetails"
+import { useCounterOffers } from "../hooks/UseCounterOffers"
 type ProfileTabViews =
   | "offers"
   | "counterOffersSent"
@@ -54,10 +54,10 @@ const TabSection = ({
     detailsOpen
   )
 
-  const handleShowDetails = (offerId: number) => {
+  const handleShowDetails = useCallback((offerId: number) => {
     setSelectedOffer(offerId)
     setDetailsOpen(true)
-  }
+  }, [])
 
   const handleOpenDialogChange = (open: boolean) => {
     setDetailsOpen(open)
@@ -126,7 +126,7 @@ const TabSection = ({
         className="mt-6"
       >
         <TabsList
-          className={`w-full grid ${isOwnProfile ? "grid-cols-5" : "grid-cols-2"}`}
+          className={`h-auto w-full flex flex-wrap gap-1 md:grid ${isOwnProfile ? "grid-cols-5" : "grid-cols-2"}`}
         >
           <TabsTrigger value="offers">
             {isOwnProfile ? "Moje Oferty" : "Oferty"}
