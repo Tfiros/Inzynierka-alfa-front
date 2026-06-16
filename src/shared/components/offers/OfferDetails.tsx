@@ -19,7 +19,6 @@ import {
   TooltipContent,
 } from "@/shared/components/tooltip"
 import { useState } from "react"
-import OfferCounterOffersSection from "./OfferCounterOffersDetails"
 import { useAcceptOffer } from "@/shared/views/OfferInteractionView/hooks/UseAcceptOffer"
 import {
   AlertDialog,
@@ -33,6 +32,7 @@ import {
 } from "@/shared/components/alert-dialog"
 import { useOfferPermissions } from "@/shared/hooks/UseOfferPermissions"
 import { useRequestOfferEdit } from "@/shared/hooks/UseRequestOfferEdit"
+import OfferCounterOffersSection from "./OfferCounterOffersDetails"
 
 type OfferDetailsProps = {
   offer: offerDetailsDtoResponse
