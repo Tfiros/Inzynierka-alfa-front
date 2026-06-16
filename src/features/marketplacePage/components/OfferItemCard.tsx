@@ -17,15 +17,17 @@ const OfferItemCard = ({
         />
       </AspectRatio>
 
-      <div className="mt-2 flex flex-col gap-2">
-        <p className="font-medium line-clamp-2 text-sm text-left min-h-[2.5rem]">
+      <div className="mt-2 flex min-w-0 flex-col gap-2">
+        <p className="min-h-[2.5rem] min-w-0 text-left text-sm font-medium line-clamp-2 break-words">
           {listingItemDto.quantity}x {listingItemDto.itemDto.name}
         </p>
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          <Badge className="inline-flex h-6 items-center justify-center rounded-full bg-white px-2.5 text-black leading-none">
+
+        <div className="flex min-w-0 flex-wrap items-center gap-2 overflow-hidden text-xs">
+          <Badge className="max-w-full truncate rounded-full bg-muted px-2.5 text-muted-foreground">
             {listingItemDto.itemDto.game.name}
           </Badge>
-          <Badge className="inline-flex h-6 items-center justify-center rounded-full bg-gray-100 px-2.5 text-gray-900 leading-none">
+
+          <Badge className="max-w-full truncate rounded-full bg-muted px-2.5 text-muted-foreground">
             {listingItemDto.rarityName}
           </Badge>
         </div>
