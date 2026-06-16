@@ -30,7 +30,7 @@ const OfferPickedItemsList = ({
             key={line.item.id}
             className="flex items-center gap-3 rounded-2xl border border-border bg-background px-3 py-2 text-foreground shadow-sm"
           >
-            <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl border border-border bg-muted">
+            <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl border border-border bg-muted/30">
               <img
                 src={line.item.photoUrl?.trim() || "/placeholder.webp"}
                 alt={line.item.name}
