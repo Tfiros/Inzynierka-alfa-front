@@ -30,6 +30,19 @@ export const ProfileMenu = () => {
     return letters.slice(0, 2) || "U"
   }, [displayName])
 
+  const showEmail = (email: string) => {
+    if (email.length <= 25) {
+      return email
+    }
+    const [firstPart, domainPart] = email.split("@")
+    return (
+      <>
+        {firstPart}
+        <br />@{domainPart}
+      </>
+    )
+  }
+
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -62,7 +75,9 @@ export const ProfileMenu = () => {
               <span className="text-sm font-medium leading-none">
                 {displayName}
               </span>
-              <span className="text-xs text-muted-foreground">{email}</span>
+              <span className="text-xs text-muted-foreground break-all leading-snug">
+                {showEmail(email)}
+              </span>
             </div>
           </div>
         </DropdownMenuLabel>
