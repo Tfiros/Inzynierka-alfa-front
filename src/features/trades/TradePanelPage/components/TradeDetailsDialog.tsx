@@ -182,11 +182,11 @@ const TradeDetailsDialog = ({
                   <>
                     <Flag
                       ok={!!details?.hasBuyersItems}
-                      label="Otrzymano przedmioty odbierającego"
+                      label="Otrzymano przedmioty od odbierającego"
                     />
                     <Flag
                       ok={!!details?.hasSellersItems}
-                      label="Otrzymano przedmioty wystawiającego"
+                      label="Otrzymano przedmioty od wystawiającego"
                     />
                   </>
                 )}
@@ -232,7 +232,7 @@ const TradeDetailsDialog = ({
                 <CheckboxRow
                   checked={hasBuyersItems}
                   onChange={setHasBuyersItems}
-                  title="Odbierający ma przedmioty"
+                  title="Odbierający przekzał przedmioty"
                   description="Zaznacz, jeśli otrzymałeś przedmioty od odbierającego."
                   disabled={saving}
                 />
@@ -240,7 +240,7 @@ const TradeDetailsDialog = ({
                 <CheckboxRow
                   checked={hasSellersItems}
                   onChange={setHasSellersItems}
-                  title="Wystawiający ma przedmioty"
+                  title="Wystawiający przekazał przedmioty"
                   description="Zaznacz, jeśli otrzymałeś przedmioty od wystawiającego"
                   disabled={saving}
                 />
