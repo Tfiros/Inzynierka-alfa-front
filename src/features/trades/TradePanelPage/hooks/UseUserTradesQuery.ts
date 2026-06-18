@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react"
-import type {
-  TradesQuery,
+import {
+  type TradesQuery,
+  type TradeSortBy,
   TradeSearchBy,
-  TradeSortBy,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import type { MiddlemanTab } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
@@ -70,7 +70,14 @@ const useUserTradesQuery = (initialTab: MiddlemanTab = "available") => {
 
   const q = useMemo<TradesQuery>(() => {
     const searchText = debouncedSearchText.trim()
-    const shouldSearch = searchText.length >= MIN_SEARCH_LENGTH
+
+    const isIdSearch =
+      state.searchBy === TradeSearchBy.TradeId ||
+      state.searchBy === TradeSearchBy.OfferId
+
+    const shouldSearch = isIdSearch
+      ? searchText.length > 0
+      : searchText.length >= MIN_SEARCH_LENGTH
 
     return {
       searchText: shouldSearch ? searchText : null,
