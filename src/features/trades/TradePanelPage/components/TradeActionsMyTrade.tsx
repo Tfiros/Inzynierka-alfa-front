@@ -4,7 +4,6 @@ import { List, PackageOpen, X } from "lucide-react"
 
 type Props = {
   tab: MiddlemanTab
-  tokenCost: number
   onDetails: () => void
   onCanceleTrade: () => void
   onCompleteClick: () => void
@@ -12,7 +11,6 @@ type Props = {
 
 const TradeActionsMyTrade = ({
   tab,
-  tokenCost,
   onDetails,
   onCanceleTrade,
   onCompleteClick,
@@ -23,10 +21,6 @@ const TradeActionsMyTrade = ({
   const DetailsButtonIcon = isReturnTab ? PackageOpen : List
   return (
     <div className="mt-6 border-t pt-4">
-      <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>Koszt oferty: {tokenCost}</span>
-      </div>
-
       <Button
         variant="outline"
         className="mt-3 w-full gap-2 border-gray-900 hover:bg-gray-100 cursor-pointer"
