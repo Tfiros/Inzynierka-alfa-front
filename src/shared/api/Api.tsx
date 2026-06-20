@@ -40,7 +40,8 @@ export const clearCsrfToken = () => {
 export const hasCsrfToken = () => !!csrfToken
 
 const storeCsrfFromHeaders = (headers: any) => {
-  const token = headers?.["x-xsrf-token"]
+  const axiosHeaders = AxiosHeaders.from(headers)
+  const token = axiosHeaders.get("X-XSRF-TOKEN")
 
   if (typeof token === "string" && token.length > 0) {
     csrfToken = token
@@ -55,7 +56,6 @@ const isAuthEndpoint = (url?: string) => {
     u.includes("/auth/register") ||
     u.includes("/auth/forgot-password") ||
     u.includes("/auth/refresh") ||
-    u.includes("/auth/logout") ||
     u.includes("/auth/csrf")
   )
 }
