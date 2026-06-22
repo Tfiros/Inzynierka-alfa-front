@@ -1,6 +1,7 @@
 import { useCallback, useState, type FormEvent } from "react"
 import { AuthService } from "@/shared/api/services/AuthService"
 import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 export const useRecoveryEmail = (onSwitch: (view: AuthModalView) => void) => {
   const [email, setEmail] = useState("")
@@ -30,12 +31,11 @@ export const useRecoveryEmail = (onSwitch: (view: AuthModalView) => void) => {
             "Jeśli podany email istnieje w systemie, wysłaliśmy instrukcje resetu hasła."
         )
         setTimeout(() => onSwitch("forgot-success"), 800)
-      } catch (err: any) {
-        const msg =
-          err?.message ??
-          err?.details?.error_description ??
-          err?.details?.error ??
+      } catch (err) {
+        const msg = extractErrorMessage(
+          err,
           "Nie udało się wysłać maila resetującego hasło."
+        )
         setError(msg)
       } finally {
         setBusy(false)

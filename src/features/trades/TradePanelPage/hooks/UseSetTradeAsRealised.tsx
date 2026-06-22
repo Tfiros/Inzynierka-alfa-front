@@ -6,6 +6,7 @@ import type {
   CompleteAndMarkTradeRequest,
   TradeListItem,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 type Props = {
   onSuccess?: () => void
@@ -17,14 +18,6 @@ type UserLite = {
   id: number
   nickname?: string | null
   email?: string | null
-}
-
-function getErrorMessage(e: unknown) {
-  if (typeof e === "object" && e && "message" in e) {
-    const msg = (e as any).message
-    if (typeof msg === "string" && msg.trim()) return msg
-  }
-  return "Nie udało się potwierdzić zakończenia wymiany."
 }
 
 const clamp10 = (v: number) => Math.max(0, Math.min(10, v))
@@ -136,7 +129,10 @@ const useSetTradeAsRealised = (opts?: Props) => {
         actions.close()
         opts?.onSuccess?.()
       } catch (e) {
-        const msg = getErrorMessage(e)
+        const msg = extractErrorMessage(
+          e,
+          "Nie udało się potwierdzić zakończenia wymiany."
+        )
         toast.error(msg)
         opts?.onError?.(e)
       } finally {

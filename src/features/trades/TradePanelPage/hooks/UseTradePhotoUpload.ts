@@ -1,4 +1,5 @@
 import { TradeService } from "@/shared/api/services/TradeService"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 import { useCallback, useMemo, useState } from "react"
 
 type Args = {
@@ -35,8 +36,8 @@ const useTradePhotoUpload = ({ tradeId, onUpload }: Args) => {
         }
         clearFiles()
         await onUpload()
-      } catch (e: any) {
-        setUploadError(e?.message ?? "Nie udało się wysłać zdjęcia")
+      } catch (e) {
+        setUploadError(extractErrorMessage(e, "Nie udało się wysłać zdjęcia"))
       } finally {
         setUploadTradeSide(null)
       }

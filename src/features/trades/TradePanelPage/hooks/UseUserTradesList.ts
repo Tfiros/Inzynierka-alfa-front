@@ -6,6 +6,7 @@ import type {
   TradesQuery,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
 import type { PagedResponse } from "@/shared/types/PagedType"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 type State = {
   itemsTab: MiddlemanTab
@@ -87,12 +88,12 @@ const useUserTradesList = ({
         totalCount: data.totalCount ?? 0,
         errorList: null,
       }))
-    } catch (e: any) {
+    } catch (e) {
       if (seq !== reqSeq.current) return
       setState((s) => ({
         ...s,
         loadingList: false,
-        errorList: e?.message ?? "Nie udało się pobrać danych.",
+        errorList: extractErrorMessage(e, "Nie udało się pobrać danych."),
       }))
     }
   }, [tab, page, pageSize, query, clearOnLoad, isMiddleman])

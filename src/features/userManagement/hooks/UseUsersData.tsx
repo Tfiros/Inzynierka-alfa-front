@@ -5,6 +5,7 @@ import type {
   UserListOrderBy,
 } from "@/shared/types/userTypes/UserManagementTypes"
 import { UserManagementService } from "@/shared/api/services/UserManagementService"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 type Props = {
   page: number
@@ -58,9 +59,9 @@ const useUsersData = ({
       }
 
       setData(res.data)
-    } catch (e: any) {
+    } catch (e) {
       setData(null)
-      setError(e?.message ?? "Nie udało się pobrać użytkowników.")
+      setError(extractErrorMessage(e, "Nie udało się pobrać użytkowników."))
     } finally {
       setLoading(false)
     }
