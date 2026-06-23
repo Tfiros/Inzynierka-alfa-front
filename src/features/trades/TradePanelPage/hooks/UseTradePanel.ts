@@ -23,7 +23,6 @@ const useTradePanel = () => {
     pageSize: state.pageSize,
     query: q,
     clearOnLoad: false,
-    isMiddleman: isMiddleman,
   })
 
   const assign = useAssignMiddleman({

@@ -22,7 +22,6 @@ type Args = {
   pageSize: number
   query: TradesQuery
   clearOnLoad?: boolean
-  isMiddleman: boolean
 }
 
 const useUserTradesList = ({
@@ -31,7 +30,6 @@ const useUserTradesList = ({
   pageSize,
   query,
   clearOnLoad = false,
-  isMiddleman,
 }: Args) => {
   const reqSeq = useRef(0)
 
@@ -96,7 +94,7 @@ const useUserTradesList = ({
         errorList: extractErrorMessage(e, "Nie udało się pobrać danych."),
       }))
     }
-  }, [tab, page, pageSize, query, clearOnLoad, isMiddleman])
+  }, [tab, page, pageSize, query, clearOnLoad])
 
   useEffect(() => {
     void fetchList()
