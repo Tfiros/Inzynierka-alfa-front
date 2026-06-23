@@ -5,10 +5,10 @@ import GamesTab from "./sections/GamesTab"
 import ItemsTab from "./sections/ItemsTab"
 import ItemRaritiesTab from "./sections/ItemRaritiesTab"
 
+type tabVals = "genres" | "games" | "items" | "itemRarities"
+
 const ItemManagementPage = () => {
-  const [tab, setTab] = useState<"genres" | "games" | "items" | "itemRarities">(
-    "genres"
-  )
+  const [tab, setTab] = useState<tabVals>("genres")
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
@@ -19,7 +19,7 @@ const ItemManagementPage = () => {
         </div>
       </div>
 
-      <TabsSection value={tab} onChange={(v) => setTab(v as any)} />
+      <TabsSection value={tab} onChange={(v) => setTab(v as tabVals)} />
 
       {tab === "genres" && <GenresTab />}
       {tab === "games" && <GamesTab />}

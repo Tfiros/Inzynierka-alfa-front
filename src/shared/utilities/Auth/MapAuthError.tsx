@@ -1,6 +1,6 @@
 import type { RawBodyResponse } from "@/shared/types/authTypes/AuthErrorTypes"
 
-export function mapAuthError(e: any): { title: string; desc?: string } {
+export function mapAuthError(e): { title: string; desc?: string } {
   const r = e as Partial<RawBodyResponse>
   const code = r.message ?? "auth_error"
 

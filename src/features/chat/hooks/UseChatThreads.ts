@@ -25,7 +25,7 @@ const useChatThreads = ({
 }: Params) => {
   const actions = useAppStore(chatSelectors.chatActions)
   const setChatThreadIds = useAppStore(
-    (s: any) => s.setChatThreadIds as ((ids: number[]) => void) | undefined
+    (s) => s.setChatThreadIds as ((ids: number[]) => void) | undefined
   )
 
   const [loading, setLoading] = useState(false)
@@ -89,7 +89,7 @@ const useChatThreads = ({
         setPage(initialPage)
         await fetchPage(initialPage, false)
       } catch (e) {
-        if (!cancelled) setError((e as any)?.message ?? "threads_load_failed")
+        if (!cancelled) setError(extractErrorMessage(e, "threads_load_failed"))
       }
     })()
 
