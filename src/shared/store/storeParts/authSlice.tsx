@@ -151,7 +151,7 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     },
 
     setNavbarUser: (info) => {
-      var ids = (info?.chatUnreadIds ?? [])
+      const ids = (info?.chatUnreadIds ?? [])
         .map((x) => Number(x))
         .filter((x) => Number.isFinite(x) && x > 0)
       const unreadIds = new Set<number>(ids)
