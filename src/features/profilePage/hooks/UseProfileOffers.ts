@@ -100,7 +100,7 @@ export const useUserOffers = (
     void fetchActiveOffers()
     void fetchHistoryOffers()
     void useAppStore.getState().loadFavouriteIds()
-  }, [fetchActiveOffers, myOffersRefresh, fetchHistoryOffers])
+  }, [fetchActiveOffers, myOffersRefresh, fetchHistoryOffers, userId])
   return {
     activeOffers,
     historyOffers,

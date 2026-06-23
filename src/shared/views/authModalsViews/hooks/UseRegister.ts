@@ -69,6 +69,7 @@ export const useRegister = (onSwitch: (view: AuthModalView) => void) => {
       }
     },
     [
+      username,
       busy,
       birthDate,
       checked,
