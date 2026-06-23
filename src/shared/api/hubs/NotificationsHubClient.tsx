@@ -31,18 +31,26 @@ export class NotificationsHubClient {
       .configureLogging(signalR.LogLevel.Information)
       .build()
 
-    conn.on("notificationCreated", (payload: any) => {
-      const notification: NotificationDto = {
-        id: payload.id,
-        title: payload.title,
-        message: payload.message,
-        createdAt: payload.createdAt,
-        readAt: null,
-        isRead: false,
-      }
+    conn.on(
+      "notificationCreated",
+      (payload: {
+        id: number
+        title: string
+        message: string
+        createdAt: string
+      }) => {
+        const notification: NotificationDto = {
+          id: payload.id,
+          title: payload.title,
+          message: payload.message,
+          createdAt: payload.createdAt,
+          readAt: null,
+          isRead: false,
+        }
 
-      this.handlers.notificationCreated?.(notification)
-    })
+        this.handlers.notificationCreated?.(notification)
+      }
+    )
 
     conn.onclose((err) => {
       if (err) {

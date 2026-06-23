@@ -2,7 +2,9 @@ import axios, {
   AxiosHeaders,
   HttpStatusCode,
   type AxiosRequestConfig,
+  type AxiosResponseHeaders,
   type InternalAxiosRequestConfig,
+  type RawAxiosResponseHeaders,
 } from "axios"
 import type {
   RawBodyResponse,
@@ -39,7 +41,9 @@ export const clearCsrfToken = () => {
 
 export const hasCsrfToken = () => !!csrfToken
 
-const storeCsrfFromHeaders = (headers: any) => {
+const storeCsrfFromHeaders = (
+  headers: AxiosResponseHeaders | RawAxiosResponseHeaders
+) => {
   const token = headers?.["x-xsrf-token"]
 
   if (typeof token === "string" && token.length > 0) {
@@ -119,7 +123,7 @@ api.interceptors.response.use(
         }
       }
 
-      const data = error.response?.data as any
+      const data = error.response?.data
 
       if (
         data &&
@@ -127,7 +131,7 @@ api.interceptors.response.use(
         "isSuccess" in data &&
         "status" in data
       ) {
-        return Promise.reject(data as ApiResult<unknown>)
+        return Promise.reject(data)
       }
 
       const raw = data as Partial<RawBodyResponse> | undefined

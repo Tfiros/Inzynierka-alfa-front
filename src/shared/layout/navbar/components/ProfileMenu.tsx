@@ -14,6 +14,7 @@ import DarkModeSwitch from "@/shared/components/DarkModeSwitch"
 import LogoutButton from "@/shared/components/logoutButton"
 import { useAppStore } from "@/shared/store/appStore"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar"
+import { initials } from "@/shared/lib/formatters"
 
 export const ProfileMenu = () => {
   const [open, setOpen] = useState(false)
@@ -24,10 +25,8 @@ export const ProfileMenu = () => {
   const displayName = navbarUser?.nickname ?? "Użytkownik"
   const email = navbarUser?.email ?? "—"
 
-  const initials = useMemo(() => {
-    const parts = displayName.trim().split(/\s+/)
-    const letters = parts.map((p) => p[0]?.toUpperCase()).join("")
-    return letters.slice(0, 2) || "U"
+  const userInitials = useMemo(() => {
+    return initials(displayName)
   }, [displayName])
 
   const showEmail = (email: string) => {
@@ -68,7 +67,7 @@ export const ProfileMenu = () => {
                 className="rounded-md object-cover"
               />
               <AvatarFallback className="rounded-md bg-black text-xs font-semibold text-white">
-                {initials}
+                {userInitials}
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">

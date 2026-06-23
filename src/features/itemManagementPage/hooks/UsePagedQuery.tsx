@@ -1,14 +1,20 @@
 import { useEffect, useMemo, useState } from "react"
 import { mapApiList, mapPagedMeta } from "./MapApiList"
 import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
+import type { ApiResult } from "@/shared/api/ApiResult"
+import type { PagedResponse } from "@/shared/types/PagedType"
 
-type Args = {
+type Args<T> = {
   pageSize?: number
   searchDelayMs?: number
   search: string
-  deps?: any[]
+  deps?: readonly unknown[]
   enabled?: boolean
-  load: (args: { page: number; pageSize: number; q?: string }) => Promise<any>
+  load: (args: {
+    page: number
+    pageSize: number
+    q?: string
+  }) => Promise<ApiResult<PagedResponse<T>>>
 }
 
 const usePagedQuery = <T,>({
@@ -18,7 +24,7 @@ const usePagedQuery = <T,>({
   deps = [],
   enabled = true,
   load,
-}: Args) => {
+}: Args<T>) => {
   const [page, setPage] = useState(1)
   const q = useDebounceValue(search, searchDelayMs)
 
@@ -34,7 +40,7 @@ const usePagedQuery = <T,>({
     setLoading(true)
     setError(null)
 
-    const res = await load({ page: p, pageSize, q: (q as any) || undefined })
+    const res = await load({ page: p, pageSize, q: q || undefined })
 
     setLoading(false)
 
@@ -74,7 +80,7 @@ const usePagedQuery = <T,>({
   )
 
   return {
-    q: (q as any) || "",
+    q,
     pageSize,
     items,
     totalCount,

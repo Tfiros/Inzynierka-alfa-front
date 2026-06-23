@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from "react"
-import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
+import type {
+  DropdownOption,
+  DropdownResponse,
+} from "@/shared/types/itemManagementTypes/DropdownTypes"
 import { mapApiList } from "./MapApiList"
 import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
+import type { ApiResult } from "@/shared/api/ApiResult"
 
 type Args = {
   enabled?: boolean
@@ -9,7 +13,7 @@ type Args = {
   search: string
   delayMs?: number
   loadOnMount?: boolean
-  load: (q: string) => Promise<any>
+  load: (q: string) => Promise<ApiResult<DropdownResponse>>
   selectedId: number | null
   setSelectedId: (v: number | null) => void
 }
@@ -39,7 +43,7 @@ const useDropdownQuery = ({
 
     setLoading(true)
     try {
-      const res = await load((q as any) || "")
+      const res = await load(q)
 
       if (!res?.isSuccess) {
         setItems([])

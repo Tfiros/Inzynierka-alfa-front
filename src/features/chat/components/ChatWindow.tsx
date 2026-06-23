@@ -62,7 +62,7 @@ const ChatWindow = ({
 
   const setListRef = (el: HTMLDivElement | null) => {
     listRef.current = el
-    ;(infiniteListRef as any).current = el
+    infiniteListRef.current = el
   }
 
   useChatAutoScroll({

@@ -3,20 +3,12 @@ import { Button } from "@/shared/components/button"
 import { Card } from "@/shared/components/card"
 import { Separator } from "@/shared/components/separator"
 import type { Profile } from "../utils/ProfileMapper"
+import { initials } from "@/shared/lib/formatters"
 
 type Props = {
   profile: Profile
   onOpenAvatarDialog: () => void
 }
-
-export const initials = (name?: string) =>
-  (
-    name
-      ?.split(/\s+/)
-      .map((p) => p[0])
-      .slice(0, 2)
-      .join("") || "?"
-  ).toUpperCase()
 
 const ProfileCardSection = ({ profile, onOpenAvatarDialog }: Props) => {
   return (

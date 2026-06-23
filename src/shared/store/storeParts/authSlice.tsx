@@ -200,11 +200,11 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
       }
 
       set({
-        userId: (res.data as any).id ?? null,
+        userId: res.data.id ?? null,
         sessionChecked: false,
       })
 
-      scheduleRefreshIfPossible((res.data as any).expiresIn)
+      scheduleRefreshIfPossible(res.data.expiresIn)
 
       await get().syncSession()
       if (get().isAuthenticated) {
@@ -220,11 +220,11 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
       }
 
       set({
-        userId: (res.data as any).id ?? null,
+        userId: res.data.id ?? null,
         sessionChecked: false,
       })
 
-      scheduleRefreshIfPossible((res.data as any).expiresIn)
+      scheduleRefreshIfPossible(res.data.expiresIn)
 
       await get().syncSession()
     },

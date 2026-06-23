@@ -2,15 +2,7 @@ import { CalendarDays, Edit } from "lucide-react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/shared/components/avatar"
 import { Button } from "@/shared/components/button"
 import { Link } from "react-router-dom"
-
-const initials = (name?: string) =>
-  (
-    name
-      ?.split(/\s+/)
-      .map((p) => p[0])
-      .slice(0, 2)
-      .join("") || "?"
-  ).toUpperCase()
+import { initials } from "@/shared/lib/formatters"
 
 type ProfileHeaderProps = {
   handle: string
