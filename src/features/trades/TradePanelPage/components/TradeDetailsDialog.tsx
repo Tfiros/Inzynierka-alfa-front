@@ -78,7 +78,13 @@ const TradeDetailsDialog = ({
     setHasBuyersItems(initial.hasBuyersItems)
     setHasSellersItems(initial.hasSellersItems)
     photos.actions.reset()
-  }, [open, initial.hasBuyersItems, initial.hasSellersItems, setSaveError])
+  }, [
+    open,
+    initial.hasBuyersItems,
+    initial.hasSellersItems,
+    setSaveError,
+    photos.actions,
+  ])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
