@@ -53,7 +53,7 @@ const TradeDetailsDialog = ({
       hasBuyersItems: !!details?.hasBuyersItems,
       hasSellersItems: !!details?.hasSellersItems,
     }
-  }, [details])
+  }, [details?.hasBuyersItems, details?.hasSellersItems])
 
   const [hasBuyersItems, setHasBuyersItems] = useState(false)
   const [hasSellersItems, setHasSellersItems] = useState(false)
@@ -71,19 +71,35 @@ const TradeDetailsDialog = ({
     onUpload: onPhotoUpload,
   })
 
+  const {
+    buyerFiles,
+    setBuyerFiles,
+    sellerFiles,
+    setSellerFiles,
+    uploadTradeSide,
+    uploadError,
+    uploadBuyer,
+    uploadSeller,
+    resetPhotos,
+  } = photos
+
   useEffect(() => {
+    if (!open) {
+      return
+    }
+
     setMode("view")
     setSide("buyer")
     setSaveError(null)
     setHasBuyersItems(initial.hasBuyersItems)
     setHasSellersItems(initial.hasSellersItems)
-    photos.actions.reset()
+    resetPhotos()
   }, [
     open,
     initial.hasBuyersItems,
     initial.hasSellersItems,
     setSaveError,
-    photos.actions,
+    resetPhotos,
   ])
 
   return (
@@ -238,7 +254,7 @@ const TradeDetailsDialog = ({
                 <CheckboxRow
                   checked={hasBuyersItems}
                   onChange={setHasBuyersItems}
-                  title="Odbierający przekzał przedmioty"
+                  title="Odbierający przekazał przedmioty"
                   description="Zaznacz, jeśli otrzymałeś przedmioty od odbierającego."
                   disabled={saving}
                 />
@@ -247,13 +263,15 @@ const TradeDetailsDialog = ({
                   checked={hasSellersItems}
                   onChange={setHasSellersItems}
                   title="Wystawiający przekazał przedmioty"
-                  description="Zaznacz, jeśli otrzymałeś przedmioty od wystawiającego"
+                  description="Zaznacz, jeśli otrzymałeś przedmioty od wystawiającego."
                   disabled={saving}
                 />
               </div>
             </div>
+
             <div className="space-y-3">
               <div className="text-sm font-medium">Upload zdjęć</div>
+
               <SegmentedTabs
                 value={side}
                 onChange={setSide}
@@ -262,49 +280,46 @@ const TradeDetailsDialog = ({
                   { value: "seller", label: "Wystawiający" },
                 ]}
               />
+
               <PhotosDropzone
-                photos={
-                  side === "buyer" ? photos.buyerFiles : photos.sellerFiles
-                }
-                onChange={
-                  side === "buyer"
-                    ? photos.setBuyerFiles
-                    : photos.setSellerFiles
-                }
+                photos={side === "buyer" ? buyerFiles : sellerFiles}
+                onChange={side === "buyer" ? setBuyerFiles : setSellerFiles}
                 maxFiles={5}
-                disabled={saving || photos.uploadTradeSide !== null}
+                disabled={saving || uploadTradeSide !== null}
               />
+
               <Button
                 type="button"
                 className={
                   !trade ||
                   (side === "buyer"
-                    ? !photos.buyerFiles.length
-                    : !photos.sellerFiles.length) ||
-                  photos.uploadTradeSide !== null
+                    ? !buyerFiles.length
+                    : !sellerFiles.length) ||
+                  uploadTradeSide !== null
                     ? "w-full"
                     : "w-full cursor-pointer"
                 }
                 disabled={
                   !trade ||
                   (side === "buyer"
-                    ? !photos.buyerFiles.length
-                    : !photos.sellerFiles.length) ||
-                  photos.uploadTradeSide !== null
+                    ? !buyerFiles.length
+                    : !sellerFiles.length) ||
+                  uploadTradeSide !== null
                 }
                 onClick={() =>
-                  void (side === "buyer"
-                    ? photos.actions.uploadBuyer()
-                    : photos.actions.uploadSeller())
+                  void (side === "buyer" ? uploadBuyer() : uploadSeller())
                 }
               >
-                {photos.uploadTradeSide === side
+                {uploadTradeSide === side
                   ? "Wysyłanie..."
-                  : `Wyślij (${side === "buyer" ? photos.buyerFiles.length : photos.sellerFiles.length})`}
+                  : `Wyślij (${
+                      side === "buyer" ? buyerFiles.length : sellerFiles.length
+                    })`}
               </Button>
-              {photos.uploadError && (
-                <div className="text-xs text-red-600">{photos.uploadError}</div>
-              )}
+
+              {uploadError ? (
+                <div className="text-xs text-red-600">{uploadError}</div>
+              ) : null}
             </div>
           </div>
         )}
