@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/shared/components/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/shared/components/dialog"
 import { Loader2 } from "lucide-react"
 
 const InteractionHostFallback = () => {
@@ -8,6 +8,7 @@ const InteractionHostFallback = () => {
         showCloseButton={false}
         className="w-fit border-none bg-transparent p-0 shadow-none"
       >
+        <DialogTitle className="sr-only">Loading...</DialogTitle>
         <Loader2 className="size-8 animate-spin text-white" />
       </DialogContent>
     </Dialog>
