@@ -231,9 +231,9 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
 
     logout: async () => {
       tokenRefreshScheduler.cancel()
-      clearCsrfToken()
 
       await AuthService.logout().catch(() => {})
+      clearCsrfToken()
 
       await get().hardReset()
     },

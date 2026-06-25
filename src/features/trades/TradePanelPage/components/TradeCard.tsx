@@ -82,16 +82,21 @@ const TradeCard = ({
           />
         </div>
 
+        <div className="mt-4 rounded-xl border border-border bg-muted/40 px-4 py-3">
+          <div className="flex items-center justify-between gap-3 text-sm">
+            <span className="text-muted-foreground">Koszt wymiany</span>
+            <span className="font-semibold text-foreground">
+              {trade.creationCost} tokenów
+            </span>
+          </div>
+        </div>
+
         {tab === "available" && canUseMiddlemanActions ? (
-          <TradeActionsAvailable
-            tokenCost={trade.creationCost}
-            onAssign={onAssign}
-          />
+          <TradeActionsAvailable onAssign={onAssign} />
         ) : (tab === "mine" || tab == "failedReturns") &&
           canUseMiddlemanActions ? (
           <TradeActionsMyTrade
             tab={tab}
-            tokenCost={trade.creationCost}
             onDetails={onDetails}
             onCanceleTrade={onCancleTrade}
             onCompleteClick={onCompleteClick}

@@ -42,7 +42,7 @@ export const useRegister = (onSwitch: (view: AuthModalView) => void) => {
       if (!password) return setError("Podaj hasło.")
       if (!validatePassword(password, confirm))
         return setError(
-          "Hasło musi mieć co najmniej 8 znaków i zawierać przynajmniej trzy z następujących: małą literę, dużą literę, cyfrę, znak specjalny."
+          "Hasło musi mieć co najmniej 8 znaków i zawierać przynajmniej trzy z następujących: małą literę, dużą literę, cyfrę, znak specjalny. Hasło musi być zgodne z potwierdzeniem."
         )
       if (!birthDate) {
         return setError("Podaj datę urodzenia")
