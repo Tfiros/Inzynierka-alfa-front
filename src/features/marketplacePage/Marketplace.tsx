@@ -5,9 +5,9 @@ import { useAppStore } from "@/shared/store/appStore"
 import { useCallback, useState } from "react"
 import FilterBar from "./components/FilterBar"
 import OffersGrid from "./components/OffersGrid"
-import { useOfferDetails } from "./hooks/UseOfferDetails"
 import { useOffersListing } from "./hooks/UseOfferListing"
 import OfferDetails from "@/shared/components/offers/OfferDetails"
+import { useOfferDetails } from "@/shared/hooks/UseOfferDetails"
 
 const MarketplacePage = () => {
   const {

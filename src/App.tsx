@@ -11,6 +11,23 @@ import { Toaster } from "sonner"
 import InteractionHostFallback from "./shared/views/OfferInteractionView/components/InteractionHostFallback"
 import ErrorBoundary from "./shared/components/ErrorBoundary"
 
+const NotificationsHubConnector = lazy(
+  () => import("@/features/notifications/NotificationsHubConnector")
+)
+
+const ChatWindowHost = lazy(
+  () => import("@/features/chat/components/ChatWindowHost")
+)
+
+const NavbarChatDropdown = lazy(
+  () => import("@/features/chat/components/NavbarChatDropdown")
+)
+
+const NotificationsDropdown = lazy(
+  () =>
+    import("@/features/notifications/NotificationsDropdown/components/NotificationsDropdown")
+)
+
 const AuthModalHost = lazy(
   () => import("./shared/utilities/Auth/AuthModalHost")
 )
@@ -58,7 +75,16 @@ function App() {
     <TooltipProvider>
       <BrowserRouter>
         <Routes>
-          <Route element={<MainLayout />}>
+          <Route
+            element={
+              <MainLayout
+                notificationConnector={<NotificationsHubConnector />}
+                chatHost={<ChatWindowHost />}
+                chatDropdown={<NavbarChatDropdown />}
+                notificationsDropdown={<NotificationsDropdown />}
+              />
+            }
+          >
             <Route path="/" element={<LandingPage />} />
             <Route path="faqs" element={<FaqsSite />} />
             <Route path="profile/:id" element={<ProfilePage />} />

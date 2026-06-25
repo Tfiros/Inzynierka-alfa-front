@@ -3,7 +3,7 @@ import CrossTradeLogo_light from "@/shared/photos/CrossTradeLogo-light.webp"
 import CrossTradeLogo_dark from "@/shared/photos/CrossTradeLogo-Dark.webp"
 import { NavItem } from "../components/NavItem"
 import { ProfileMenu } from "../components/ProfileMenu"
-import { lazy, Suspense } from "react"
+import { Suspense, type ReactNode } from "react"
 import { useAppStore } from "@/shared/store/appStore"
 import { userLinks } from "../navLinks"
 import NavbarFallback from "../components/NavbarFallback"
@@ -11,16 +11,15 @@ import ErrorBoundary from "@/shared/components/ErrorBoundary"
 import MobileNav from "../components/MobileNav"
 import ProfileTokens from "../components/ProfileTokens"
 
-const NavbarChatDropdown = lazy(
-  () => import("@/features/chat/components/NavbarChatDropdown")
-)
+type UserNavbarProps = {
+  chatDropdown: ReactNode
+  notificationsDropdown: ReactNode
+}
 
-const NotificationsDropdown = lazy(
-  () =>
-    import("@/features/notifications/NotificationsDropdown/components/NotificationsDropdown")
-)
-
-export const UserNavbar = () => {
+export const UserNavbar = ({
+  chatDropdown,
+  notificationsDropdown,
+}: UserNavbarProps) => {
   const navbarUser = useAppStore((s) => s.navbarUser)
   const roles = useAppStore((s) => s.roles)
   const isAdmin = roles.some((r) => r.toLowerCase() === "admin")
@@ -70,16 +69,14 @@ export const UserNavbar = () => {
               errorMessage="Nie udało się załadować powiadomień. Odśwież stronę"
             >
               <Suspense fallback={<NavbarFallback />}>
-                <NotificationsDropdown />
+                {notificationsDropdown}
               </Suspense>
             </ErrorBoundary>
             <ErrorBoundary
               fallback={<NavbarFallback />}
               errorMessage="Nie udało się załadować chatu. Odśwież stronę"
             >
-              <Suspense fallback={<NavbarFallback />}>
-                <NavbarChatDropdown />
-              </Suspense>
+              <Suspense fallback={<NavbarFallback />}>{chatDropdown}</Suspense>
             </ErrorBoundary>
 
             <ProfileMenu />
