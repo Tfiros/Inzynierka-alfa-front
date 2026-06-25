@@ -12,7 +12,7 @@ import type {
   BodyDetailsResponseDto,
 } from "@/shared/types/authTypes/AuthErrorTypes"
 import type { ApiResult } from "./ApiResult"
-
+import { useAppStore } from "@/shared/store/appStore"
 type ErrorBody = { message?: string; [k: string]: unknown }
 
 let onAuthFailure: (() => Promise<void>) | null = null
@@ -69,7 +69,14 @@ const isUnsafeMethod = (method?: string) => {
   const m = (method ?? "get").toLowerCase()
   return m === "post" || m === "put" || m === "patch" || m === "delete"
 }
+const canTryAuthRefresh = () => {
+  return useAppStore.getState().isAuthenticated === true
+}
+const isHubEndpoint = (url?: string) => {
+  const u = (url ?? "").toLowerCase()
 
+  return u.includes("/hubs/chat") || u.includes("/hubs/notifications")
+}
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const cfg = config as InternalAxiosRequestConfig & ApiClientConfig
 
@@ -100,9 +107,11 @@ api.interceptors.response.use(
 
       const shouldTryRefresh =
         status === HttpStatusCode.Unauthorized &&
+        canTryAuthRefresh() &&
         !originalRequest._retry &&
         !originalRequest.skipAuthRefresh &&
-        !isAuthEndpoint(originalRequest.url)
+        !isAuthEndpoint(originalRequest.url) &&
+        !isHubEndpoint(originalRequest.url)
 
       if (shouldTryRefresh) {
         originalRequest._retry = true

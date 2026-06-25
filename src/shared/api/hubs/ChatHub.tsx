@@ -1,6 +1,6 @@
 import * as signalR from "@microsoft/signalr"
 import type { ChatMessage } from "@/shared/types/chat/ChatDtos"
-
+import { useAppStore } from "@/shared/store/appStore"
 export type PresencePayload = { auth0UserId: string; isOnline: boolean }
 
 export type ThreadReadPayload = {
@@ -44,7 +44,7 @@ class ChatHubClient {
   private starting: Promise<void> | null = null
   private handlers: Handlers = {}
   private joinedChats = new Set<number>()
-
+  private isAuthenticated = useAppStore((s) => s.isAuthenticated)
   setHandlers(h: Handlers) {
     this.handlers = h
   }
@@ -113,6 +113,10 @@ class ChatHubClient {
   }
 
   async start() {
+    if (!this.isAuthenticated) {
+      await this.stop()
+      return
+    }
     if (!this.conn) {
       this.conn = this.buildConnection()
     }
@@ -170,6 +174,10 @@ class ChatHubClient {
   }
 
   async joinChat(chatId: number) {
+    if (!this.isAuthenticated) {
+      await this.stop()
+      return
+    }
     this.joinedChats.add(chatId)
     await this.ensureStarted()
     await this.conn!.invoke("JoinChat", chatId)

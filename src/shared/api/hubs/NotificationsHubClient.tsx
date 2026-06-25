@@ -1,6 +1,6 @@
 import * as signalR from "@microsoft/signalr"
 import type { NotificationDto } from "@/shared/types/notificationsTypes/notificationsDtos"
-
+import { useAppStore } from "@/shared/store/appStore"
 type NotificationCreatedHandler = (notification: NotificationDto) => void
 
 type NotificationsHubHandlers = {
@@ -11,6 +11,7 @@ export class NotificationsHubClient {
   private static connection: signalR.HubConnection | null = null
   private static starting: Promise<void> | null = null
   private static stopping: Promise<void> | null = null
+  private static isAuthenticated = useAppStore((s) => s.isAuthenticated)
 
   private static handlers: NotificationsHubHandlers = {}
 
@@ -62,6 +63,11 @@ export class NotificationsHubClient {
   }
 
   public static async start(): Promise<void> {
+    if (!this.isAuthenticated) {
+      this.clearHandlers()
+      await this.stop()
+      return
+    }
     if (this.stopping) {
       await this.stopping.catch(() => {})
     }

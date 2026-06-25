@@ -10,6 +10,7 @@ import { TooltipProvider } from "./shared/components/tooltip"
 import { Toaster } from "sonner"
 import InteractionHostFallback from "./shared/views/OfferInteractionView/components/InteractionHostFallback"
 import ErrorBoundary from "./shared/components/ErrorBoundary"
+import UserRoutes from "./routes/UserRoutes"
 
 const NotificationsHubConnector = lazy(
   () => import("@/features/notifications/NotificationsHubConnector")
@@ -87,15 +88,17 @@ function App() {
           >
             <Route path="/" element={<LandingPage />} />
             <Route path="faqs" element={<FaqsSite />} />
-            <Route path="profile/:id" element={<ProfilePage />} />
             <Route path="statute" element={<StatutePage />} />
             <Route path="shop" element={<PointShop />} />
-            <Route path="profileEdit" element={<ProfileEdit />} />
             <Route path="marketplace" element={<MarketplacePage />} />
             <Route path="contact" element={<ContactPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-            <Route path="tradePanel" element={<TradePanelPage />} />
 
+            <Route element={<UserRoutes />}>
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="tradePanel" element={<TradePanelPage />} />
+              <Route path="profile/:id" element={<ProfilePage />} />
+              <Route path="profileEdit" element={<ProfileEdit />} />
+            </Route>
             <Route element={<AdminRoute />}>
               <Route path="userManagement" element={<UserManagementPage />} />
               <Route path="itemManagement" element={<ItemManagementPage />} />
