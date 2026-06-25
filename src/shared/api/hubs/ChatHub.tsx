@@ -44,7 +44,7 @@ class ChatHubClient {
   private starting: Promise<void> | null = null
   private handlers: Handlers = {}
   private joinedChats = new Set<number>()
-  private isAuthenticated = useAppStore((s) => s.isAuthenticated)
+  private isAuthenticated = useAppStore.getState().isAuthenticated
   setHandlers(h: Handlers) {
     this.handlers = h
   }

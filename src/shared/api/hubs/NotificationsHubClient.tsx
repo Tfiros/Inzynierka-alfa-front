@@ -11,7 +11,7 @@ export class NotificationsHubClient {
   private static connection: signalR.HubConnection | null = null
   private static starting: Promise<void> | null = null
   private static stopping: Promise<void> | null = null
-  private static isAuthenticated = useAppStore((s) => s.isAuthenticated)
+  private static isAuthenticated = useAppStore.getState().isAuthenticated
 
   private static handlers: NotificationsHubHandlers = {}
 
