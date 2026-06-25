@@ -7,7 +7,6 @@ import {
 } from "@/shared/components/tabs"
 import { useCallback, useState } from "react"
 import { useUserOffers } from "../hooks/UseProfileOffers"
-import { useUpdateCounterOfferStatus } from "../hooks/UseUpdateCounterOfferStatus"
 import { UseAcceptCounterOffer } from "../hooks/UseAcceptCounterOffer"
 import CounterOfferCard from "../../../shared/components/CounterOfferCard"
 import { CounterOfferStatus } from "@/shared/enums/CounterOfferStatus"
@@ -19,6 +18,7 @@ import { useOfferDetails } from "@/features/marketplacePage/hooks/UseOfferDetail
 import Offer from "@/shared/components/offers/Offer"
 import OfferDetails from "@/shared/components/offers/OfferDetails"
 import { useCounterOffers } from "../hooks/UseCounterOffers"
+import { useUpdateCounterOfferStatus } from "@/shared/hooks/UseUpdateCounterOfferStatus"
 type ProfileTabViews =
   | "offers"
   | "counterOffersSent"
