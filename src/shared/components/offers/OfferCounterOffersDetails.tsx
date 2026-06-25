@@ -1,8 +1,8 @@
-import CounterOfferCard from "@/features/profilePage/component/CounterOfferCard"
+import CounterOfferCard from "@/shared/components/CounterOfferCard"
 import { CounterOfferStatus } from "@/shared/enums/CounterOfferStatus"
 import { useOfferCounterOffers } from "../../hooks/UseOfferCounterOffers"
-import { useUpdateCounterOfferStatus } from "@/features/profilePage/hooks/UseUpdateCounterOfferStatus"
-import { UseAcceptCounterOffer } from "@/features/profilePage/hooks/UseAcceptCounterOffer"
+import { useUpdateCounterOfferStatus } from "@/shared/hooks/UseUpdateCounterOfferStatus"
+import { UseAcceptCounterOffer } from "@/shared/hooks/UseAcceptCounterOffer"
 
 type Props = {
   offerId: number
