@@ -4,6 +4,7 @@ import axios, {
   type AxiosRequestConfig,
   type AxiosResponseHeaders,
   type InternalAxiosRequestConfig,
+  type RawAxiosHeaders,
   type RawAxiosResponseHeaders,
 } from "axios"
 import type {
@@ -41,8 +42,10 @@ export const clearCsrfToken = () => {
 
 export const hasCsrfToken = () => !!csrfToken
 
-const storeCsrfFromHeaders = (headers: any) => {
-  const axiosHeaders = AxiosHeaders.from(headers)
+const storeCsrfFromHeaders = (
+  headers: RawAxiosResponseHeaders | AxiosResponseHeaders
+) => {
+  const axiosHeaders = AxiosHeaders.from(headers as RawAxiosHeaders)
   const token = axiosHeaders.get("X-XSRF-TOKEN")
 
   if (typeof token === "string" && token.length > 0) {
