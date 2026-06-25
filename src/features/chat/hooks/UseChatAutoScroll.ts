@@ -20,11 +20,11 @@ export function useChatAutoScroll(args: {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "auto" })
-  }, [chatId])
+  }, [chatId, bottomRef])
 
   useEffect(() => {
     if (didPrependRef?.current) return
     if (!wasAtBottomRef.current) return
     bottomRef.current?.scrollIntoView({ behavior: "auto" })
-  }, [messagesLength])
+  }, [messagesLength, bottomRef, didPrependRef])
 }

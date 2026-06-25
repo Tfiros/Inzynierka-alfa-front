@@ -5,6 +5,7 @@ import type { ModalViewPropsTypes } from "../../utilities/Auth/ModalTypes"
 import PasswordInput from "../../components/PasswordInput"
 import { Label } from "../../components/label"
 import { useAppStore } from "../../store/appStore"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
   const [email, setEmail] = useState("")
@@ -23,9 +24,8 @@ const LoginView = ({ onSwitch }: ModalViewPropsTypes) => {
 
     try {
       await login(email, password)
-    } catch (err: any) {
-      console.error("Login error:", err)
-      setError(err.message ?? "Wystąpił błąd podczas logowania.")
+    } catch (err) {
+      setError(extractErrorMessage(err, "Wystąpił błąd podczas logowania."))
     } finally {
       setBusy(false)
     }

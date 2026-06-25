@@ -16,7 +16,7 @@ const useChatMessages = (enabled: boolean, chatId: number | null) => {
         const res = await ChatService.getMessages({ chatId, pageSize: 50 })
         const items = res?.data
         if (!cancelled) actions.setMessages(chatId, items ?? [])
-      } catch (e) {
+      } catch {
         if (!cancelled) actions.setMessages(chatId, [])
       }
     })()

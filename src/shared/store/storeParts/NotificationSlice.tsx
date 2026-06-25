@@ -1,4 +1,6 @@
 import type { NotificationDto } from "@/shared/types/notificationsTypes/notificationsDtos"
+import type { StateCreator } from "zustand"
+import type { AuthSlice } from "./authSlice"
 
 export type NotificationsSlice = {
   notifications: NotificationDto[]
@@ -13,6 +15,10 @@ export type NotificationsSlice = {
 
   setNavbarNotificationsUnreadTotal: (count: number) => void
 }
+
+type StoreState = NotificationsSlice &
+  Pick<AuthSlice, "navbarUser"> &
+  Record<string, unknown>
 
 const mergeUnique = (
   existing: NotificationDto[],
@@ -33,7 +39,10 @@ const mergeUnique = (
   })
 }
 
-const setNavbarUnreadCount = (state: any, count: number) =>
+const setNavbarUnreadCount = (
+  state: Pick<AuthSlice, "navbarUser">,
+  count: number
+) =>
   state.navbarUser
     ? {
         ...state.navbarUser,
@@ -41,9 +50,12 @@ const setNavbarUnreadCount = (state: any, count: number) =>
       }
     : null
 
-export const createNotificationsSlice = (
-  set: (fn: (state: any) => any) => void
-): NotificationsSlice => ({
+export const createNotificationsSlice: StateCreator<
+  StoreState,
+  [],
+  [],
+  NotificationsSlice
+> = (set) => ({
   notifications: [],
 
   setNotifications: (items) =>
@@ -52,7 +64,7 @@ export const createNotificationsSlice = (
     })),
 
   appendNotifications: (items) =>
-    set((s: any) => {
+    set((s) => {
       const merged = mergeUnique(s.notifications ?? [], items)
 
       return {
@@ -61,7 +73,7 @@ export const createNotificationsSlice = (
     }),
 
   pushNotification: (n) =>
-    set((s: any) => {
+    set((s) => {
       const exists = (s.notifications ?? []).some(
         (x: NotificationDto) => x.id === n.id
       )
@@ -79,7 +91,7 @@ export const createNotificationsSlice = (
     }),
 
   markNotificationAsReadLocal: (id) =>
-    set((s: any) => {
+    set((s) => {
       const wasUnread = (s.notifications ?? []).some(
         (n: NotificationDto) => n.id === id && !n.isRead
       )
@@ -105,7 +117,7 @@ export const createNotificationsSlice = (
     }),
 
   markAllNotificationsAsReadLocal: () =>
-    set((s: any) => {
+    set((s) => {
       const now = new Date().toISOString()
 
       return {
@@ -119,7 +131,7 @@ export const createNotificationsSlice = (
     }),
 
   removeNotificationLocal: (id) =>
-    set((s: any) => {
+    set((s) => {
       const removed = (s.notifications ?? []).find(
         (n: NotificationDto) => n.id === id
       )
@@ -140,7 +152,7 @@ export const createNotificationsSlice = (
     }),
 
   setNavbarNotificationsUnreadTotal: (count) =>
-    set((s: any) => ({
+    set((s) => ({
       navbarUser: setNavbarUnreadCount(s, count),
     })),
 })

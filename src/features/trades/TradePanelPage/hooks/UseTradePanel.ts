@@ -23,7 +23,6 @@ const useTradePanel = () => {
     pageSize: state.pageSize,
     query: q,
     clearOnLoad: false,
-    isMiddleman: isMiddleman,
   })
 
   const assign = useAssignMiddleman({
@@ -34,13 +33,13 @@ const useTradePanel = () => {
 
   const details = useTradeDetailsDialog()
 
+  const { refresh } = details.actions
+  const { refetchList } = list
+  const { refetchStats } = stats
+
   const onDetailsSaved = useCallback(async () => {
-    await Promise.all([
-      details.actions.refresh(),
-      list.refetchList(),
-      stats.refetchStats(),
-    ])
-  }, [details.actions.refresh, list.refetchList, stats.refetchStats])
+    await Promise.all([refresh(), refetchList(), refetchStats()])
+  }, [refresh, refetchList, refetchStats])
 
   const counts = {
     available: stats.stats?.created ?? 0,
@@ -58,18 +57,21 @@ const useTradePanel = () => {
   const linkTradeId = Number(searchParams.get("tradeId"))
   const linkedTrade = useLinkedTradeDialog()
 
+  const { close } = linkedTrade
+
   const closeLinkedTrade = useCallback(() => {
-    linkedTrade.close()
+    close()
 
     const next = new URLSearchParams(searchParams)
     next.delete("tradeId")
     setSearchParams(next, { replace: true })
-  }, [linkedTrade.close, searchParams, setSearchParams])
+  }, [close, searchParams, setSearchParams])
 
+  const { openForId } = linkedTrade
   useEffect(() => {
     if (!Number.isFinite(linkTradeId) || linkTradeId <= 0) return
-    void linkedTrade.openForId(linkTradeId)
-  }, [linkTradeId, linkedTrade.openForId])
+    void openForId(linkTradeId)
+  }, [linkTradeId, openForId])
 
   return {
     query: { state, actions, q },

@@ -28,17 +28,11 @@ type StoreState = UiSlice & {
   setNavbarUser?: (info: UserNavbarInfoDto | null) => void
 } & Record<string, unknown>
 
-const uniqPosInts = (ids: any): number[] => {
-  return Array.from(
-    new Set(
-      (ids ?? [])
-        .map((x: any) => Number(x))
-        .filter((x: number) => Number.isFinite(x) && x > 0)
-    )
-  )
+const uniqPosInts = (ids: number[]): number[] => {
+  return Array.from(new Set(ids.filter((x) => Number.isFinite(x) && x > 0)))
 }
 
-const normalizeNonNegInt = (v: any) => Math.max(0, Number(v) || 0)
+const normalizeNonNegInt = (v: number) => Math.max(0, Number(v) || 0)
 
 export const createUiSlice: StateCreator<StoreState, [], [], UiSlice> = (
   set,

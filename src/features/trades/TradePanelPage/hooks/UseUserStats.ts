@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { TradeService } from "@/shared/api/services/TradeService"
 import type { MiddlemanTradesStats } from "@/shared/types/tradeTypes/MiddlemanTypes"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 type State = {
   stats: MiddlemanTradesStats | null
@@ -36,11 +37,11 @@ const useUserStats = () => {
         loadingStats: false,
         errorStats: null,
       })
-    } catch (e: any) {
+    } catch (e) {
       setState({
         stats: null,
         loadingStats: false,
-        errorStats: e?.message ?? "Nie udało się pobrać statystyk.",
+        errorStats: extractErrorMessage(e, "Nie udało się pobrać statystyk."),
       })
     }
   }, [])

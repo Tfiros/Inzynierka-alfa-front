@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/shared/components/select"
 
-const AddItemRarityDialog = (props: {
+type AddItemRarityDialogProps = {
   open: boolean
   onOpenChange: (v: boolean) => void
 
@@ -35,38 +35,52 @@ const AddItemRarityDialog = (props: {
   games: DropdownOption[]
 
   onSave: (payload: { name: string; gameId: number }) => Promise<void> | void
-}) => {
+}
+
+const AddItemRarityDialog = ({
+  open,
+  onOpenChange,
+  initialGameId,
+  gameId,
+  onGameChange,
+  gamesOpen,
+  onGamesOpenChange,
+  gameSearch,
+  onGameSearchChange,
+  games,
+  onSave,
+}: AddItemRarityDialogProps) => {
   const [name, setName] = useState("")
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    if (!props.open) return
+    if (!open) return
 
     setName("")
-    props.onGameChange(props.initialGameId)
-  }, [props.open, props.initialGameId])
+    onGameChange(initialGameId)
+  }, [open, initialGameId, onGameChange])
 
   const submit = async () => {
     const trimmed = name.trim()
 
-    if (!trimmed || !props.gameId) return
+    if (!trimmed || !gameId) return
 
     setSaving(true)
 
     try {
-      await props.onSave({
+      await onSave({
         name: trimmed,
-        gameId: props.gameId,
+        gameId: gameId,
       })
 
-      props.onOpenChange(false)
+      onOpenChange(false)
     } finally {
       setSaving(false)
     }
   }
 
   return (
-    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="rounded-2xl">
         <DialogHeader>
           <DialogTitle>Dodaj rzadkość</DialogTitle>
@@ -77,10 +91,10 @@ const AddItemRarityDialog = (props: {
             <div className="text-sm opacity-70">Gra</div>
 
             <Select
-              value={props.gameId ? String(props.gameId) : undefined}
-              onValueChange={(v) => props.onGameChange(Number(v))}
-              open={props.gamesOpen}
-              onOpenChange={props.onGamesOpenChange}
+              value={gameId ? String(gameId) : undefined}
+              onValueChange={(v) => onGameChange(Number(v))}
+              open={gamesOpen}
+              onOpenChange={onGamesOpenChange}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Wybierz grę..." />
@@ -89,20 +103,20 @@ const AddItemRarityDialog = (props: {
               <SelectContent>
                 <div className="p-2">
                   <Input
-                    value={props.gameSearch}
-                    onChange={(e) => props.onGameSearchChange(e.target.value)}
+                    value={gameSearch}
+                    onChange={(e) => onGameSearchChange(e.target.value)}
                     placeholder="Szukaj gry..."
                     onKeyDown={(e) => e.stopPropagation()}
                     onPointerDown={(e) => e.stopPropagation()}
                   />
                 </div>
 
-                {props.games.length === 0 ? (
+                {games.length === 0 ? (
                   <div className="px-3 pb-2 text-sm opacity-70">
                     Brak wyników
                   </div>
                 ) : (
-                  props.games.map((g) => (
+                  games.map((g) => (
                     <SelectItem key={g.id} value={String(g.id)}>
                       {g.name}
                     </SelectItem>
@@ -126,7 +140,7 @@ const AddItemRarityDialog = (props: {
         <DialogFooter>
           <Button
             variant="outline"
-            onClick={() => props.onOpenChange(false)}
+            onClick={() => onOpenChange(false)}
             disabled={saving}
             className={saving ? "" : "cursor-pointer"}
           >
@@ -135,9 +149,9 @@ const AddItemRarityDialog = (props: {
 
           <Button
             onClick={submit}
-            disabled={saving || !name.trim() || !props.gameId}
+            disabled={saving || !name.trim() || !gameId}
             className={
-              saving || !name.trim() || !props.gameId ? "" : "cursor-pointer"
+              saving || !name.trim() || !gameId ? "" : "cursor-pointer"
             }
           >
             Dodaj

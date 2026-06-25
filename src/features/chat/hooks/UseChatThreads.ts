@@ -6,6 +6,7 @@ import {
   selectCounter,
 } from "@/shared/store/appStore"
 import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 type Params = {
   enabled?: boolean
@@ -24,7 +25,7 @@ const useChatThreads = ({
 }: Params) => {
   const actions = useAppStore(chatSelectors.chatActions)
   const setChatThreadIds = useAppStore(
-    (s: any) => s.setChatThreadIds as ((ids: number[]) => void) | undefined
+    (s) => s.setChatThreadIds as ((ids: number[]) => void) | undefined
   )
 
   const [loading, setLoading] = useState(false)
@@ -71,8 +72,8 @@ const useChatThreads = ({
       setChatThreadIds?.(ids)
 
       setHasMore(items.length === pageSize)
-    } catch (e: any) {
-      setError(e?.message ?? "threads_load_failed")
+    } catch (e) {
+      setError(extractErrorMessage(e, "threads_load_failed"))
     } finally {
       setLoading(false)
     }
@@ -88,7 +89,7 @@ const useChatThreads = ({
         setPage(initialPage)
         await fetchPage(initialPage, false)
       } catch (e) {
-        if (!cancelled) setError((e as any)?.message ?? "threads_load_failed")
+        if (!cancelled) setError(extractErrorMessage(e, "threads_load_failed"))
       }
     })()
 

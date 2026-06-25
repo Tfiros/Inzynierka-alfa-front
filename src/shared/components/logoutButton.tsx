@@ -2,13 +2,9 @@ import { useState } from "react"
 import { useAppStore } from "../store/appStore"
 import { useNavigate } from "react-router-dom"
 import { LogOut } from "lucide-react"
-import type { Button } from "./button"
 
-type LogoutButtonProps = React.ComponentProps<typeof Button>
-
-function LogoutButton({}: LogoutButtonProps) {
+function LogoutButton() {
   const [busy, setBusy] = useState(false)
-  const [, setOpen] = useState(false)
 
   const logout = useAppStore((s) => s.logout)
   const navigate = useNavigate()
@@ -18,7 +14,6 @@ function LogoutButton({}: LogoutButtonProps) {
     setBusy(true)
     try {
       await logout()
-      setOpen(false)
       navigate("/")
     } catch (e) {
       console.warn("Logout error (ignored):", e)

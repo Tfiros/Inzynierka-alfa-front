@@ -3,6 +3,7 @@ import { AuthService } from "@/shared/api/services/AuthService"
 import type { RegisterRequestDto } from "@/shared/types/authTypes/AuthRequestTypes"
 import type { ApiResult } from "@/shared/api/ApiResult"
 import type { RegisterResponseDto } from "@/shared/types/authTypes/AuthResponseTypes"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 const useAddUser = () => {
   const [submitting, setSubmitting] = useState(false)
@@ -28,8 +29,8 @@ const useAddUser = () => {
         }
 
         return res
-      } catch (e: any) {
-        const msg = e?.message ?? "Nie udało się dodać użytkownika."
+      } catch (e) {
+        const msg = extractErrorMessage(e, "Nie udało się dodać użytkownika.")
         setError(msg)
         return { isSuccess: false, message: msg, data: undefined, status: 500 }
       } finally {

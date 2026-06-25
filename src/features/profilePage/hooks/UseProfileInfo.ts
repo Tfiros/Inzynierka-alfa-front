@@ -35,7 +35,7 @@ export const useProfileInfo = (profileId: number) => {
           return
         }
         setProfileInfo(res.data)
-      } catch (e) {
+      } catch {
         if (!cancelled) {
           setError("Wystąpił błąd podczas ładowania profilu.")
         }

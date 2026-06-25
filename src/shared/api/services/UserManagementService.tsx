@@ -54,7 +54,7 @@ export class UserManagementService {
       return {
         isSuccess: true,
         status: 204,
-        data: null as any,
+        data: undefined,
         message: "User deleted successfully",
       }
     }

@@ -3,8 +3,8 @@ import { chatHubClient } from "@/shared/api/hubs/ChatHub"
 import { useAppStore } from "@/shared/store/appStore"
 
 export const useChatAutoSubscribe = () => {
-  const isAuthenticated = useAppStore((s: any) => s.isAuthenticated)
-  const ids = useAppStore((s: any) => s.chatThreadIds ?? [])
+  const isAuthenticated = useAppStore((s) => s.isAuthenticated)
+  const ids = useAppStore((s) => s.chatThreadIds ?? [])
   const joinedRef = useRef<Set<number>>(new Set())
 
   useEffect(() => {
