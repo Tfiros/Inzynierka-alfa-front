@@ -1,4 +1,4 @@
-import CounterOfferCard from "@/features/profilePage/component/CounterOfferCard"
+import CounterOfferCard from "@/shared/components/CounterOfferCard"
 import { CounterOfferStatus } from "@/shared/enums/CounterOfferStatus"
 import { useOfferCounterOffers } from "../../hooks/UseOfferCounterOffers"
 import { useUpdateCounterOfferStatus } from "@/features/profilePage/hooks/UseUpdateCounterOfferStatus"
