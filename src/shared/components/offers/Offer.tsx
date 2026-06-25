@@ -31,7 +31,7 @@ import OfferItemCard from "./OfferItemCard"
 import OfferStatusPill from "./OfferStatusPill"
 import { formatRating, formatSuccessRating } from "@/shared/lib/formatters"
 import { useToggleFavourite } from "@/shared/hooks/UseToggleFavourite"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useOfferPermissions } from "@/shared/hooks/UseOfferPermissions"
 import { useRequestOfferEdit } from "@/shared/hooks/UseRequestOfferEdit"
 import { memo } from "react"
@@ -42,6 +42,9 @@ type OfferProps = {
 }
 
 const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
+  const navigate = useNavigate()
+  const setAuthModalOpen = useAppStore((s) => s.setAuthModalOpen)
+  const setAuthModalView = useAppStore((s) => s.setAuthModalView)
   const remainingOffered =
     offer.offeredItemsTotalCount - offer.offeredItems.length
   const remainingWanted = offer.wantedItemsTotalCount - offer.wantedItems.length
@@ -58,6 +61,15 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
   const favouritesReady = !isAuthenticated || favouritesLoaded
   const { toggle, loading } = useToggleFavourite()
   const { requestEdit, isChecking } = useRequestOfferEdit()
+  const handleProfileClick = () => {
+    if (!isAuthenticated) {
+      setAuthModalView("login")
+      setAuthModalOpen(true)
+      return
+    }
+
+    navigate(`/profile/${offer.offerUserDto.userId}`)
+  }
   return (
     <Card
       className={cn(
@@ -198,7 +210,11 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
 
       <CardFooter className="mt-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full">
         <div className="flex flex-row items-center">
-          <Link to={`/profile/${offer.offerUserDto.userId}`}>
+          <button
+            type="button"
+            onClick={handleProfileClick}
+            className="cursor-pointer"
+          >
             <Avatar>
               <AvatarImage
                 src={offer.offerUserDto.imageUrl ?? undefined}
@@ -208,7 +224,7 @@ const Offer = ({ offer, onShowDetails, onOpenCounterOffer }: OfferProps) => {
                 {offer.offerUserDto.nickname.slice(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-          </Link>
+          </button>
           <div className="flex flex-col items-start pl-4">
             <span className="font-medium text-foreground">
               {offer.offerUserDto.nickname}

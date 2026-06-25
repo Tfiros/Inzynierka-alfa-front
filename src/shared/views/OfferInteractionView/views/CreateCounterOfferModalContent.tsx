@@ -25,8 +25,8 @@ import {
 } from "@/shared/components/select"
 import { useOfferGameItemDropdown } from "../hooks/UseOfferGameItemDropdown"
 import OfferPickedItemsList from "../components/OfferPickedItemsList"
-import { useCreateCounterOffer } from "@/features/profilePage/hooks/UseCreateCounterOffer"
-import { useCounterOfferModal } from "@/features/marketplacePage/hooks/UseCounterOfferModal"
+import { useCounterOfferModal } from "@/shared/views/OfferInteractionView/hooks/UseCounterOfferModal"
+import { useCreateCounterOffer } from "../hooks/UseCreateCounterOffer"
 
 type Props = {
   offerId: number | null

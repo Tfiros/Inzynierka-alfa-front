@@ -151,7 +151,7 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
     },
 
     setNavbarUser: (info) => {
-      var ids = (info?.chatUnreadIds ?? [])
+      const ids = (info?.chatUnreadIds ?? [])
         .map((x) => Number(x))
         .filter((x) => Number.isFinite(x) && x > 0)
       const unreadIds = new Set<number>(ids)
@@ -200,11 +200,11 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
       }
 
       set({
-        userId: (res.data as any).id ?? null,
+        userId: res.data.id ?? null,
         sessionChecked: false,
       })
 
-      scheduleRefreshIfPossible((res.data as any).expiresIn)
+      scheduleRefreshIfPossible(res.data.expiresIn)
 
       await get().syncSession()
       if (get().isAuthenticated) {
@@ -220,20 +220,20 @@ export const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
       }
 
       set({
-        userId: (res.data as any).id ?? null,
+        userId: res.data.id ?? null,
         sessionChecked: false,
       })
 
-      scheduleRefreshIfPossible((res.data as any).expiresIn)
+      scheduleRefreshIfPossible(res.data.expiresIn)
 
       await get().syncSession()
     },
 
     logout: async () => {
       tokenRefreshScheduler.cancel()
-      clearCsrfToken()
 
       await AuthService.logout().catch(() => {})
+      clearCsrfToken()
 
       await get().hardReset()
     },

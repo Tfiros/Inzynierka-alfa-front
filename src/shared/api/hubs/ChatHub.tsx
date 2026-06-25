@@ -32,7 +32,7 @@ export type ChatCreatedPayload = {
 
 type Handlers = {
   onPresenceChanged?: (payload: PresencePayload) => void
-  onMessageNew?: (payload: ChatMessage | any) => void
+  onMessageNew?: (payload: ChatMessage) => void
   onMessageUpdated?: (payload: MessageUpdatedPayload) => void
   onMessageDeleted?: (payload: MessageDeletedPayload) => void
   onChatClosed?: (payload: ChatClosedPayload) => void
@@ -76,7 +76,7 @@ class ChatHubClient {
       this.handlers.onPresenceChanged?.(p)
     })
 
-    connection.on("message.new", (m: ChatMessage | any) => {
+    connection.on("message.new", (m: ChatMessage) => {
       this.handlers.onMessageNew?.(m)
     })
 

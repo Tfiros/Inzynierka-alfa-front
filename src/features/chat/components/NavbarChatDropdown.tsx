@@ -8,10 +8,8 @@ import {
 } from "@/shared/components/dropdown-menu"
 import { Button } from "@/shared/components/button"
 import { MessageCircle, Search } from "lucide-react"
-
 import useChatHub from "../hooks/UseChatHub"
 import useChatThreads from "../hooks/UseChatThreads"
-import useOpenThread from "../hooks/UseOpenThread"
 import { useAppStore, chatSelectors } from "@/shared/store/appStore"
 import { useChatAutoSubscribe } from "../hooks/UseThreadsSubscriptions"
 import type { ChatThreadListItemDto } from "@/shared/types/chat/ChatDtos"
@@ -19,6 +17,7 @@ import { chatThreadTitle } from "@/shared/utilities/Chat/chatThreadTitle"
 import { useDebounceValue } from "@/shared/hooks/UseDebounceValue"
 import { Input } from "@/shared/components/input"
 import ChatThreadItem from "./ChatThreadItem"
+import useOpenThread from "@/shared/hooks/UseOpenThread"
 
 const threadId = (t: ChatThreadListItemDto) => Number(t.chatConversationId)
 

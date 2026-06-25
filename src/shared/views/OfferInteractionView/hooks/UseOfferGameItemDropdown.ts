@@ -49,8 +49,9 @@ export const useOfferGameItemDropdown = () => {
         setGamesError("Błąd poczas pobierania gier")
         setGames([])
       } finally {
-        if (!alive) return
-        setGamesLoading(false)
+        if (alive) {
+          setGamesLoading(false)
+        }
       }
     }
     void loadGames()
@@ -95,10 +96,9 @@ export const useOfferGameItemDropdown = () => {
         setItemsError("Błąd podczas pobierania przedmiotów")
         setItems([])
       } finally {
-        if (current !== reqIdRef.current) {
-          return
+        if (current === reqIdRef.current) {
+          setItemsLoading(false)
         }
-        setItemsLoading(false)
       }
     },
     [minChars]

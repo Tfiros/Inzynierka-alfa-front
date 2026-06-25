@@ -1,13 +1,11 @@
 export type LoginResponseDto = {
   id: number
-  idToken?: string | null
   userId?: string | null
   expiresIn?: number
 }
 
 export type RefreshResponseDto = {
   id: number
-  idToken?: string | null
   userId?: string | null
   expiresIn?: number
 }

@@ -3,20 +3,24 @@ import { UserNavbar } from "./navbar/views/UserNavbar"
 import { Footer } from "./Footer"
 import GuestNavbar from "./navbar/views/GuestNavbar"
 import useMainLayout from "./hooks/UseMainLayout"
-import { lazy, Suspense } from "react"
+import { Suspense, type ReactNode } from "react"
 import PageFallback from "./PageFallback"
 import PageLoadError from "./PageLoadError"
 import ErrorBoundary from "../components/ErrorBoundary"
 
-const NotificationsHubConnector = lazy(
-  () => import("@/features/notifications/NotificationsHubConnector")
-)
+type MainLayoutProps = {
+  notificationConnector: ReactNode
+  chatHost: ReactNode
+  chatDropdown: ReactNode
+  notificationsDropdown: ReactNode
+}
 
-const ChatWindowHost = lazy(
-  () => import("@/features/chat/components/ChatWindowHost")
-)
-
-const MainLayout = () => {
+const MainLayout = ({
+  notificationConnector,
+  chatHost,
+  chatDropdown,
+  notificationsDropdown,
+}: MainLayoutProps) => {
   const { isLogged, hasHydrated } = useMainLayout()
   const location = useLocation()
 
@@ -26,7 +30,14 @@ const MainLayout = () => {
 
   return (
     <div className="flex min-h-screen flex-col">
-      {isLogged ? <UserNavbar /> : <GuestNavbar />}
+      {isLogged ? (
+        <UserNavbar
+          chatDropdown={chatDropdown}
+          notificationsDropdown={notificationsDropdown}
+        />
+      ) : (
+        <GuestNavbar />
+      )}
       <main className="flex-1 mx-auto w-full px-4 pt-6 pb-12">
         <ErrorBoundary path={location.pathname} fallback={<PageLoadError />}>
           <Suspense fallback={<PageFallback />}>
@@ -37,8 +48,8 @@ const MainLayout = () => {
       {isLogged && (
         <ErrorBoundary>
           <Suspense fallback={null}>
-            <NotificationsHubConnector />
-            <ChatWindowHost />
+            {notificationConnector}
+            {chatHost}
           </Suspense>
         </ErrorBoundary>
       )}

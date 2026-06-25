@@ -70,8 +70,8 @@ const useGenresTab = () => {
 
       try {
         const res = await GenresService.softDelete(selected.id)
-        if ((res as any)?.isSuccess === false) {
-          throw new Error((res as any).message ?? "Błąd żądania")
+        if (res?.isSuccess === false) {
+          throw new Error(res.message ?? "Błąd żądania")
         }
 
         setDeleteOpen(false)

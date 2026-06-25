@@ -150,7 +150,15 @@ export const useCreateOffer = () => {
     } finally {
       setQuoteIsLoading(false)
     }
-  }, [buildOfferDraftRequest, title, description, itemsHave, itemsWant])
+  }, [
+    buildOfferDraftRequest,
+    title,
+    description,
+    itemsHave,
+    itemsWant,
+    tokensOffered,
+    tokensWanted,
+  ])
 
   const createOffer = useCallback(async (): Promise<boolean> => {
     if (isLoading) {
@@ -197,6 +205,8 @@ export const useCreateOffer = () => {
     description,
     itemsHave,
     itemsWant,
+    tokensOffered,
+    tokensWanted,
     inc,
     refreshNavbar,
     isLoading,

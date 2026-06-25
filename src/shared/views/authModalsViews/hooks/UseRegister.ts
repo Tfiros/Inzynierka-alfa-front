@@ -1,6 +1,7 @@
 import { useCallback, useState, type FormEvent } from "react"
 import { AuthService } from "@/shared/api/services/AuthService"
 import type { AuthModalView } from "@/shared/utilities/Auth/ModalTypes"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 export const useRegister = (onSwitch: (view: AuthModalView) => void) => {
   const [email, setEmail] = useState("")
@@ -41,7 +42,7 @@ export const useRegister = (onSwitch: (view: AuthModalView) => void) => {
       if (!password) return setError("Podaj hasło.")
       if (!validatePassword(password, confirm))
         return setError(
-          "Hasło musi mieć co najmniej 8 znaków i zawierać przynajmniej trzy z następujących: małą literę, dużą literę, cyfrę, znak specjalny."
+          "Hasło musi mieć co najmniej 8 znaków i zawierać przynajmniej trzy z następujących: małą literę, dużą literę, cyfrę, znak specjalny. Hasło musi być zgodne z potwierdzeniem."
         )
       if (!birthDate) {
         return setError("Podaj datę urodzenia")
@@ -60,18 +61,15 @@ export const useRegister = (onSwitch: (view: AuthModalView) => void) => {
 
         setOkMsg(res?.message ?? "Konto zostało utworzone.")
         setTimeout(() => onSwitch("register-confirm-email"), 500)
-      } catch (err: any) {
-        const msg =
-          err?.message ??
-          err?.details?.error_description ??
-          err?.details?.error ??
-          "Rejestracja nie powiodła się."
+      } catch (err) {
+        const msg = extractErrorMessage(err, "Rejestracja nie powiodła się.")
         setError(msg)
       } finally {
         setBusy(false)
       }
     },
     [
+      username,
       busy,
       birthDate,
       checked,

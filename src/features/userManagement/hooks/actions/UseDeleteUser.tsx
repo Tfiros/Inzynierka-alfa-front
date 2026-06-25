@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react"
 import { UserManagementService } from "@/shared/api/services/UserManagementService"
 import type { ApiResult } from "@/shared/api/ApiResult"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 const useDeleteUser = () => {
   const [submitting, setSubmitting] = useState(false)
@@ -24,8 +25,8 @@ const useDeleteUser = () => {
         }
 
         return res
-      } catch (e: any) {
-        const msg = e?.message ?? "Nie udało się usunąć użytkownika."
+      } catch (e) {
+        const msg = extractErrorMessage(e, "Nie udało się usunąć użytkownika.")
         setError(msg)
         return { isSuccess: false, message: msg, data: msg, status: 500 }
       } finally {

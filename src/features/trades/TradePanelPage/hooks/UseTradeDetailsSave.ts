@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react"
 import { TradeService } from "@/shared/api/services/TradeService"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 type UseTradeDetailsSaveArgs = {
   tradeId: number | null
@@ -38,8 +39,8 @@ const useTradeDetailsSave = ({
 
       await onSaved()
       onAfterSave?.()
-    } catch (e: any) {
-      setSaveError(e?.message ?? "Nie udało się zapisać zmian.")
+    } catch (e) {
+      setSaveError(extractErrorMessage(e, "Nie udało się zapisać zmian."))
     } finally {
       setSaving(false)
     }

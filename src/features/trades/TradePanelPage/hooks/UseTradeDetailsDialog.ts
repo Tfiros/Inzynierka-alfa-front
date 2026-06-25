@@ -4,6 +4,7 @@ import type {
   TradeDetailsResponse,
   TradeListItem,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 type State = {
   open: boolean
@@ -69,13 +70,16 @@ const useTradeDetailsDialog = () => {
         details,
         error: null,
       }))
-    } catch (e: any) {
+    } catch (e) {
       if (seq !== reqSeq.current) return
       setState((s) => ({
         ...s,
         loading: false,
         details: null,
-        error: e?.message ?? "Nie udało się pobrać szczegółów wymiany.",
+        error: extractErrorMessage(
+          e,
+          "Nie udało się pobrać szczegółów wymiany."
+        ),
       }))
     }
   }, [])
@@ -110,12 +114,15 @@ const useTradeDetailsDialog = () => {
         details,
         error: null,
       }))
-    } catch (e: any) {
+    } catch (e) {
       if (seq !== reqSeq.current) return
       setState((s) => ({
         ...s,
         loading: false,
-        error: e?.message ?? "Nie udało się pobrać szczegółów wymiany.",
+        error: extractErrorMessage(
+          e,
+          "Nie udało się pobrać szczegółów wymiany."
+        ),
       }))
     }
   }, [state.trade])

@@ -3,6 +3,7 @@ import { UserSettingsService } from "@/shared/api/services/UserSettingsService"
 import {
   mapSecurityBackendToFields,
   mapSecurityToUpdateRequest,
+  type SecurityFields,
 } from "../utils/ProfileSecurityData"
 import { useAppStore } from "@/shared/store/appStore"
 import { UserInfoService } from "@/shared/api/services/UserInfoService"
@@ -13,7 +14,7 @@ export const useProfileEdit = () => {
   const refreshNavbar = useAppStore((s) => s.refreshNavbarUserFromAuth)
 
   const [profile, setProfile] = useState<Profile | null>(null)
-  const [security, setSecurity] = useState<any | null>(null)
+  const [security, setSecurity] = useState<SecurityFields | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [savingProfile, setSavingProfile] = useState(false)

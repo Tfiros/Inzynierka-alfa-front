@@ -44,7 +44,7 @@ export const useAppStore = create<AppState>()(
       ...createOfferSlice(set, get, api),
       ...createCounterOfferSlice(set, get, api),
       ...createAcceptOfferSlice(set, get, api),
-      ...createNotificationsSlice(set),
+      ...createNotificationsSlice(set, get, api),
       ...createFavouriteSlice(set, get, api),
       ...createChatSlice(set, get, api),
 

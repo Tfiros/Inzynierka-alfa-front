@@ -1,5 +1,6 @@
 import { TradeService } from "@/shared/api/services/TradeService"
 import type { TradeListItem } from "@/shared/types/tradeTypes/MiddlemanTypes"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 import { useCallback, useRef, useState } from "react"
 
 type State = {
@@ -7,11 +8,6 @@ type State = {
   loading: boolean
   error: string | null
   trade: TradeListItem | null
-}
-
-const getErrorMessage = (e: unknown) => {
-  if (e instanceof Error && e.message.trim()) return e.message
-  return "Nie udało się załadować wymiany."
 }
 
 const useLinkedTradeDialog = () => {
@@ -54,7 +50,7 @@ const useLinkedTradeDialog = () => {
       setState({
         open: true,
         loading: false,
-        error: getErrorMessage(e),
+        error: extractErrorMessage(e, "Nie udało się załadować wymiany."),
         trade: null,
       })
     }

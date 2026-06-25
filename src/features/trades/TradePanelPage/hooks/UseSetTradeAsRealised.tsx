@@ -4,8 +4,10 @@ import type { ApiResult } from "@/shared/api/ApiResult"
 import { TradeService } from "@/shared/api/services/TradeService"
 import type {
   CompleteAndMarkTradeRequest,
+  InTradeUser,
   TradeListItem,
 } from "@/shared/types/tradeTypes/MiddlemanTypes"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 type Props = {
   onSuccess?: () => void
@@ -19,52 +21,24 @@ type UserLite = {
   email?: string | null
 }
 
-function getErrorMessage(e: unknown) {
-  if (typeof e === "object" && e && "message" in e) {
-    const msg = (e as any).message
-    if (typeof msg === "string" && msg.trim()) return msg
-  }
-  return "Nie udało się potwierdzić zakończenia wymiany."
-}
-
 const clamp10 = (v: number) => Math.max(0, Math.min(10, v))
 
-function pickFirst<T>(obj: any, keys: string[]): T | undefined {
-  for (const k of keys) {
-    const v = obj?.[k]
-    if (v !== undefined && v !== null) return v as T
-  }
-  return undefined
-}
-
-function mapParty(party: any): UserLite | null {
+function mapParty(party: InTradeUser | undefined): UserLite | null {
   if (!party) return null
 
-  const id =
-    pickFirst<number>(party, ["id", "userId", "ID", "userID"]) ??
-    (typeof party === "number" ? party : undefined)
-
-  if (!id) return null
-
   return {
-    id,
-    nickname: pickFirst<string>(party, [
-      "nickname",
-      "userName",
-      "username",
-      "name",
-      "displayName",
-    ]),
-    email: pickFirst<string>(party, ["email", "mail"]),
+    id: party.userId,
+    nickname: party.nickname,
+    email: party.email,
   }
 }
 
 function extractBuyer(trade: TradeListItem | null): UserLite | null {
-  return mapParty((trade as any)?.customer)
+  return mapParty(trade?.customer)
 }
 
 function extractSeller(trade: TradeListItem | null): UserLite | null {
-  return mapParty((trade as any)?.postingUser)
+  return mapParty(trade?.postingUser)
 }
 
 const useSetTradeAsRealised = (opts?: Props) => {
@@ -92,7 +66,7 @@ const useSetTradeAsRealised = (opts?: Props) => {
 
   const confirm = useCallback(
     async (payload: CompleteAndMarkTradeRequest) => {
-      const tradeId = (trade as any)?.tradeId as number | undefined
+      const tradeId = trade?.tradeId
 
       if (!tradeId) {
         toast.error("Brak ID wymiany.")
@@ -136,7 +110,10 @@ const useSetTradeAsRealised = (opts?: Props) => {
         actions.close()
         opts?.onSuccess?.()
       } catch (e) {
-        const msg = getErrorMessage(e)
+        const msg = extractErrorMessage(
+          e,
+          "Nie udało się potwierdzić zakończenia wymiany."
+        )
         toast.error(msg)
         opts?.onError?.(e)
       } finally {

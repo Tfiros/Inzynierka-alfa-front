@@ -2,6 +2,7 @@ import { useCallback, useState } from "react"
 import { UserManagementService } from "@/shared/api/services/UserManagementService"
 import type { UpdateUserRequestDto } from "@/shared/types/userTypes/UserManagementTypes"
 import type { ApiResult } from "@/shared/api/ApiResult"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
 
 const useUpdateUser = () => {
   const [submitting, setSubmitting] = useState(false)
@@ -25,8 +26,11 @@ const useUpdateUser = () => {
         }
 
         return res
-      } catch (e: any) {
-        const msg = e?.message ?? "Nie udało się zaktualizować użytkownika."
+      } catch (e) {
+        const msg = extractErrorMessage(
+          e,
+          "Nie udało się zaktualizować użytkownika."
+        )
         setError(msg)
         return { isSuccess: false, message: msg, data: undefined, status: 500 }
       } finally {

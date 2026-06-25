@@ -37,7 +37,7 @@ const ChatWindow = ({
     title ?? (tradeId ? `Wymiana #${tradeId}` : `Chat #${chatId}`)
   const isClosed = !!closedAt
   const actions = useAppStore(chatSelectors.chatActions)
-  const userId = useAppStore((s: any) => s.userId as number | null)
+  const userId = useAppStore((s) => s.userId as number | null)
   const liveInMap = useAppStore((s) =>
     otherAuth0UserId ? s.chat.onlineMap[otherAuth0UserId] : null
   )
@@ -46,7 +46,7 @@ const ChatWindow = ({
   useChatMembership(chatId, true)
 
   const messages: ChatMessage[] = useAppStore(
-    (s: any) => s.chat.messagesByChatId?.[chatId] ?? EMPTY_MESSAGES
+    (s) => s.chat.messagesByChatId?.[chatId] ?? EMPTY_MESSAGES
   )
 
   const bottomRef = useRef<HTMLDivElement | null>(null)
@@ -62,7 +62,7 @@ const ChatWindow = ({
 
   const setListRef = (el: HTMLDivElement | null) => {
     listRef.current = el
-    ;(infiniteListRef as any).current = el
+    infiniteListRef.current = el
   }
 
   useChatAutoScroll({

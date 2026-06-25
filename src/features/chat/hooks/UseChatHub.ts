@@ -20,11 +20,11 @@ const useChatHub = (enabled = true) => {
         actions.setUserOnline(auth0UserId, isOnline)
       },
 
-      onMessageNew: (msg: any) => {
-        const chatId = Number(msg.chatConversationId ?? msg.chatId)
+      onMessageNew: (msg: ChatMessage) => {
+        const chatId = Number(msg.chatConversationId)
         if (!Number.isFinite(chatId) || chatId <= 0) return
 
-        actions.appendMessage(chatId, msg as ChatMessage)
+        actions.appendMessage(chatId, msg)
 
         const st = useAppStore.getState()
         const isActive = st.chat.isWindowOpen && st.chat.activeChatId === chatId

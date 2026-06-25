@@ -2,11 +2,11 @@ import { useEffect, useLayoutEffect, useRef } from "react"
 import { useAppStore } from "../../store/appStore"
 
 const useMainLayout = () => {
-  const isLogged = useAppStore((s: any) => s.isAuthenticated)
-  const syncSession = useAppStore((s: any) => s.syncSession)
+  const isLogged = useAppStore((s) => s.isAuthenticated)
+  const syncSession = useAppStore((s) => s.syncSession)
 
-  const darkMode = useAppStore((s: any) => s.darkMode)
-  const hasHydrated = useAppStore((s: any) => s.hasHydrated)
+  const darkMode = useAppStore((s) => s.darkMode)
+  const hasHydrated = useAppStore((s) => s.hasHydrated)
 
   const ranRef = useRef(false)
 

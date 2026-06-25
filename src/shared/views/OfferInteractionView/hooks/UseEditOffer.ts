@@ -198,7 +198,16 @@ export const useEditOffer = (offerId: number | null) => {
       } finally {
         setQuoteIsLoading(false)
       }
-    }, [offerId, title, description, itemsHave, itemsWant, buildUpdateRequest])
+    }, [
+      offerId,
+      title,
+      description,
+      itemsHave,
+      itemsWant,
+      buildUpdateRequest,
+      tokensOffered,
+      tokensWanted,
+    ])
   const newTotalPreview = useMemo(() => {
     const durationFee = durationDays === 14 ? 30 : durationDays === 31 ? 60 : 0
     const highlighFee = isHighlighted ? 50 : 0
@@ -265,7 +274,18 @@ export const useEditOffer = (offerId: number | null) => {
     } finally {
       setIsLoading(false)
     }
-  }, [offerId, buildUpdateRequest, inc, refreshNavbar])
+  }, [
+    title,
+    description,
+    itemsHave,
+    itemsWant,
+    tokensOffered,
+    tokensWanted,
+    offerId,
+    buildUpdateRequest,
+    inc,
+    refreshNavbar,
+  ])
   const canSubmit =
     !isLoading &&
     !quoteIsLoading &&

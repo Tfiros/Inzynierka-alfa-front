@@ -40,8 +40,9 @@ export const useItemSuggestions = () => {
       setError("Wystąpił błąd podczas pobierania sugestii.")
       setSuggestions([])
     } finally {
-      if (currentReqId !== reqIdRef.current) return
-      setLoading(false)
+      if (currentReqId === reqIdRef.current) {
+        setLoading(false)
+      }
     }
   }, [])
 

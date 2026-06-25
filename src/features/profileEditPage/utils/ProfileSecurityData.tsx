@@ -17,7 +17,7 @@ export function toDateInputValue(v: unknown): string {
     if (!Number.isNaN(d.getTime())) return d.toISOString().slice(0, 10)
     return ""
   }
-  const d = v instanceof Date ? v : new Date(v as any)
+  const d = v instanceof Date ? v : new Date(v as string | number)
   if (Number.isNaN(d.getTime())) return ""
   return d.toISOString().slice(0, 10)
 }

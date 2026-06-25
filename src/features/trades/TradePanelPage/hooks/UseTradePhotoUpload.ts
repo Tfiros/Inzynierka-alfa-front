@@ -1,5 +1,6 @@
 import { TradeService } from "@/shared/api/services/TradeService"
-import { useCallback, useMemo, useState } from "react"
+import { extractErrorMessage } from "@/shared/utilities/errorHandlers"
+import { useCallback, useState } from "react"
 
 type Args = {
   tradeId: number | null
@@ -19,8 +20,10 @@ const useTradePhotoUpload = ({ tradeId, onUpload }: Args) => {
       if (!tradeId || !files.length) {
         return
       }
+
       setUploadTradeSide(side)
       setUploadError(null)
+
       try {
         for (const file of files) {
           const res = await TradeService.uploadTradePhoto(
@@ -28,15 +31,17 @@ const useTradePhotoUpload = ({ tradeId, onUpload }: Args) => {
             file,
             side === "buyer"
           )
+
           if (!res.isSuccess) {
             setUploadError(res.message ?? "Nie udało się wysłać zdjęcia")
             return
           }
         }
+
         clearFiles()
         await onUpload()
-      } catch (e: any) {
-        setUploadError(e?.message ?? "Nie udało się wysłać zdjęcia")
+      } catch (e) {
+        setUploadError(extractErrorMessage(e, "Nie udało się wysłać zdjęcia"))
       } finally {
         setUploadTradeSide(null)
       }
@@ -44,27 +49,20 @@ const useTradePhotoUpload = ({ tradeId, onUpload }: Args) => {
     [tradeId, onUpload]
   )
 
-  const uploadBuyer = useCallback(
-    () => uploadFiles("buyer", buyerFiles, () => setBuyerFiles([])),
-    [uploadFiles, buyerFiles]
-  )
+  const uploadBuyer = useCallback(() => {
+    return uploadFiles("buyer", buyerFiles, () => setBuyerFiles([]))
+  }, [uploadFiles, buyerFiles])
 
-  const uploadSeller = useCallback(
-    () => uploadFiles("seller", sellerFiles, () => setSellerFiles([])),
-    [uploadFiles, sellerFiles]
-  )
+  const uploadSeller = useCallback(() => {
+    return uploadFiles("seller", sellerFiles, () => setSellerFiles([]))
+  }, [uploadFiles, sellerFiles])
 
-  const reset = useCallback(() => {
+  const resetPhotos = useCallback(() => {
     setBuyerFiles([])
     setSellerFiles([])
     setUploadTradeSide(null)
     setUploadError(null)
   }, [])
-
-  const actions = useMemo(
-    () => ({ uploadBuyer, uploadSeller, reset }),
-    [uploadBuyer, uploadSeller, reset]
-  )
 
   return {
     buyerFiles,
@@ -73,7 +71,9 @@ const useTradePhotoUpload = ({ tradeId, onUpload }: Args) => {
     setSellerFiles,
     uploadTradeSide,
     uploadError,
-    actions,
+    uploadBuyer,
+    uploadSeller,
+    resetPhotos,
   }
 }
 
