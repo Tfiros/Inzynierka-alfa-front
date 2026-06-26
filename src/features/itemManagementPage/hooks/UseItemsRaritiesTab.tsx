@@ -38,7 +38,7 @@ const useItemRaritiesTab = () => {
   })
 
   const dialogGamesDd = useDropdownQuery({
-    enabled: addOpen || editOpen,
+    enabled: addOpen,
     open: dialogGamesOpen,
     search: dialogGameSearch,
     load: (q) => GamesService.dropdown(q),
@@ -136,7 +136,7 @@ const useItemRaritiesTab = () => {
       }
     },
 
-    saveEdit: async (payload: { name: string; gameId: number }) => {
+    saveEdit: async (payload: { name: string }) => {
       if (!selected) return
 
       try {
