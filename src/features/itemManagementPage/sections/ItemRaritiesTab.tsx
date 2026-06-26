@@ -117,14 +117,6 @@ const ItemRaritiesTab = () => {
             open={vm.ui.editOpen}
             onOpenChange={vm.ui.setEditOpen}
             initialName={vm.ui.selected.name}
-            initialGameId={vm.ui.selected.gameId ?? vm.game.id}
-            gameId={vm.dialogGame.id}
-            onGameChange={vm.dialogGame.setId}
-            gamesOpen={vm.dialogGame.open}
-            onGamesOpenChange={vm.dialogGame.setOpen}
-            gameSearch={vm.dialogGame.search}
-            onGameSearchChange={vm.dialogGame.setSearch}
-            games={vm.dialogGame.items}
             onSave={vm.actions.saveEdit}
           />
 
