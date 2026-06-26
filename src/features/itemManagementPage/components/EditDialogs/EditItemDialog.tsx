@@ -18,7 +18,6 @@ import {
 } from "@/shared/components/select"
 import PhotosDropzone from "@/shared/components/PhotosDropzone"
 import type { DropdownOption } from "@/shared/types/itemManagementTypes/DropdownTypes"
-import { GamesService } from "@/shared/api/services/GamesService"
 import { ItemRaritiesService } from "@/shared/api/services/ItemRaritiesService"
 import useDropdownQuery from "../../hooks/UseDropdownQuery"
 
@@ -47,8 +46,6 @@ const EditItemDialog = (props: {
   )
 
   const [gameId, setGameIdState] = useState<number | null>(props.initialGameId)
-  const [gamesOpen, setGamesOpen] = useState(false)
-  const [gameSearch, setGameSearch] = useState("")
 
   const [rarityId, setRarityId] = useState<number | null>(
     props.initialRarityItemId
@@ -58,31 +55,24 @@ const EditItemDialog = (props: {
 
   const [image, setImage] = useState<File | null>(null)
 
-  const gamesDd = useDropdownQuery({
-    enabled: props.open,
-    open: gamesOpen,
-    search: gameSearch,
-    load: (q) => GamesService.dropdown(q),
-    selectedId: gameId,
-    setSelectedId: setGameIdState,
-    loadOnMount: true,
-  })
-
-  const setGameId = (id: number | null) => {
-    setGameIdState(id)
-    setRarityId(null)
-    setRaritySearch("")
-    setRaritiesOpen(false)
-  }
-
   const raritiesDd = useDropdownQuery({
     enabled: !!gameId && props.open,
     open: raritiesOpen,
     search: raritySearch,
+    loadOnMount: true,
     load: (q) => ItemRaritiesService.dropdown(gameId!, q),
     selectedId: rarityId,
     setSelectedId: setRarityId,
   })
+
+  useEffect(() => {
+    if (!props.open || !gameId) return
+
+    setRarityId(null)
+    setRaritySearch("")
+    setRaritiesOpen(false)
+    void raritiesDd.refetch()
+  }, [props.open, gameId])
 
   useEffect(() => {
     if (!props.open) return
@@ -91,8 +81,6 @@ const EditItemDialog = (props: {
     setEstimatedTokenValue(String(props.initialEstimatedTokenValue ?? ""))
 
     setGameIdState(props.initialGameId)
-    setGamesOpen(false)
-    setGameSearch("")
 
     setRarityId(props.initialRarityItemId)
     setRaritiesOpen(false)
@@ -135,48 +123,6 @@ const EditItemDialog = (props: {
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="space-y-2">
-            <div className="text-sm opacity-70">Gra</div>
-            <Select
-              value={String(gameId ?? "")}
-              onValueChange={(v) => setGameId(Number(v))}
-              open={gamesOpen}
-              onOpenChange={setGamesOpen}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Wybierz grę..." />
-              </SelectTrigger>
-
-              <SelectContent>
-                <div className="p-2">
-                  <Input
-                    value={gameSearch}
-                    onChange={(e) => setGameSearch(e.target.value)}
-                    placeholder="Szukaj gry..."
-                    onKeyDown={(e) => e.stopPropagation()}
-                    onPointerDown={(e) => e.stopPropagation()}
-                  />
-                </div>
-
-                {gamesDd.loading ? (
-                  <div className="px-3 pb-2 text-sm opacity-70">
-                    Ładowanie...
-                  </div>
-                ) : gamesDd.items.length === 0 ? (
-                  <div className="px-3 pb-2 text-sm opacity-70">
-                    Brak wyników
-                  </div>
-                ) : (
-                  (gamesDd.items as DropdownOption[]).map((g) => (
-                    <SelectItem key={g.id} value={String(g.id)}>
-                      {g.name}
-                    </SelectItem>
-                  ))
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-
           <div className="space-y-2">
             <div className="text-sm opacity-70">Nazwa</div>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
